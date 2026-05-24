@@ -8,12 +8,14 @@ function startApp() {
     const btnModeInteractive = document.getElementById("btn-mode-interactive");
     const btnModePrint = document.getElementById("btn-mode-print");
     const btnToggleSandbox = document.getElementById("btn-toggle-sandbox");
+    const btnToggleSidebar = document.getElementById("btn-toggle-sidebar");
     const btnTriggerPrint = document.getElementById("btn-trigger-print");
     
     const interactiveLayout = document.getElementById("interactive-layout");
     const printLayout = document.getElementById("print-layout");
     const readingContent = document.getElementById("reading-content");
     const visualizerSandbox = document.getElementById("visualizer-sandbox");
+    const tocSidebar = document.querySelector(".toc-sidebar");
     const sidebarItems = document.querySelectorAll(".toc-item");
     
     // Sandbox Elements
@@ -99,6 +101,18 @@ function startApp() {
             btnToggleSandbox.innerHTML = '<i class="fa-solid fa-cubes"></i> Hiện Sandbox';
         }
     });
+
+    // Hide/Show left sidebar catalog
+    if (btnToggleSidebar && tocSidebar) {
+        btnToggleSidebar.addEventListener("click", () => {
+            tocSidebar.classList.toggle("collapsed");
+            if (tocSidebar.classList.contains("collapsed")) {
+                btnToggleSidebar.innerHTML = '<i class="fa-solid fa-bars"></i> Hiện Danh Mục';
+            } else {
+                btnToggleSidebar.innerHTML = '<i class="fa-solid fa-bars"></i> Ẩn Danh Mục';
+            }
+        });
+    }
 
     // Print button
     btnTriggerPrint.addEventListener("click", () => {
@@ -415,6 +429,12 @@ function startApp() {
                 break;
             case 11: // Sorting
                 setupSortingSandbox();
+                break;
+            case 12: // Dynamic Programming
+                setupDPSandbox();
+                break;
+            case 13: // Trie (Prefix Tree)
+                setupTrieSandbox();
                 break;
             default:
                 setupPointerSandbox();
@@ -3798,6 +3818,986 @@ function startApp() {
                         </table>
                     `;
                     showTooltip(barEl, title, content);
+                });
+            }
+        });
+    }
+
+    // --------------------------------------------------------------------------
+    // 2.12 CHAPTER 12: DYNAMIC PROGRAMMING SANDBOX
+    // --------------------------------------------------------------------------
+
+    function setupDPSandbox() {
+        sandboxTitle.innerHTML = '<i class="fa-solid fa-code"></i> Trực quan hóa Quy hoạch động (Dynamic Programming)';
+        
+        sandboxControls.innerHTML = `
+            <div class="control-group" style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-bottom:5px;">
+                <div style="display:flex; align-items:center; gap:4px; background:#1e293b; padding:2px 8px; border-radius:6px; border:1px solid #334155;">
+                    <span style="font-size:0.65rem; color:#94a3b8; font-weight:600;">Bài toán:</span>
+                    <select id="dp-problem-select" style="background:transparent; border:none; color:var(--accent); font-size:0.75rem; font-weight:700; cursor:pointer;">
+                        <option value="fib" style="background:#0f172a;">Dãy số Fibonacci</option>
+                        <option value="knapsack" style="background:#0f172a;">Bài toán Cái túi (0/1 Knapsack)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Fibonacci Sub-Controls -->
+            <div id="dp-fib-controls" class="control-group" style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-bottom:5px;">
+                <div style="display:flex; align-items:center; gap:4px; background:#1e293b; padding:2px 8px; border-radius:6px; border:1px solid #334155;">
+                    <span style="font-size:0.65rem; color:#94a3b8; font-weight:600;">N =</span>
+                    <input type="number" id="dp-fib-n" min="3" max="7" value="5" style="width:30px; background:transparent; border:none; color:white; font-size:0.75rem; font-weight:700; text-align:center;">
+                </div>
+                <button id="btn-dp-fib-naive" class="btn-ctrl" style="background:#ef4444; color:white; padding: 4px 8px;"><i class="fa-solid fa-tree"></i> Đệ quy lặp (Wasteful)</button>
+                <button id="btn-dp-fib-tab" class="btn-ctrl" style="background:#10b981; color:white; padding: 4px 8px;"><i class="fa-solid fa-table"></i> DP Lập bảng (Tabulation)</button>
+            </div>
+            
+            <!-- Knapsack Sub-Controls -->
+            <div id="dp-knapsack-controls" class="control-group" style="display:none; flex-wrap:wrap; gap:4px; justify-content:center; margin-bottom:5px;">
+                <div style="display:flex; align-items:center; gap:4px; background:#1e293b; padding:2px 8px; border-radius:6px; border:1px solid #334155;">
+                    <span style="font-size:0.65rem; color:#94a3b8; font-weight:600;">Sức chứa W =</span>
+                    <input type="number" id="dp-knapsack-w" min="4" max="7" value="6" style="width:30px; background:transparent; border:none; color:white; font-size:0.75rem; font-weight:700; text-align:center;">
+                </div>
+                <button id="btn-dp-knapsack-run" class="btn-ctrl" style="background:#a855f7; color:white; padding: 4px 15px;"><i class="fa-solid fa-play"></i> Quy hoạch Knapsack</button>
+            </div>
+            
+            <div class="speed-slider-container" style="margin-top:5px;">
+                <span>Tốc độ:</span>
+                <input type="range" class="speed-slider" id="speed-dp" min="100" max="1500" value="500">
+            </div>
+        `;
+
+        const problemSelect = document.getElementById("dp-problem-select");
+        const fibControls = document.getElementById("dp-fib-controls");
+        const knapsackControls = document.getElementById("dp-knapsack-controls");
+        const sizeInput = document.getElementById("dp-fib-n");
+        const knapsackWInput = document.getElementById("dp-knapsack-w");
+
+        document.getElementById("speed-dp").addEventListener("input", (e) => {
+            animationSpeed = parseInt(e.target.value);
+        });
+
+        // Set initial view
+        renderFibonacciCanvas(5);
+        log("Học thuyết Quy hoạch động: Chọn bài toán Fibonacci hoặc Cái túi Knapsack để học đệ quy trùng lặp và lập bảng tối ưu!", "success");
+
+        problemSelect.addEventListener("change", (e) => {
+            currentTask = null;
+            if (e.target.value === "fib") {
+                fibControls.style.display = "flex";
+                knapsackControls.style.display = "none";
+                const n = parseInt(sizeInput.value) || 5;
+                renderFibonacciCanvas(n);
+                log("Đã chuyển sang mô phỏng Dãy số Fibonacci.", "info");
+            } else {
+                fibControls.style.display = "none";
+                knapsackControls.style.display = "flex";
+                const w = parseInt(knapsackWInput.value) || 6;
+                renderKnapsackCanvas(w);
+                log("Đã chuyển sang mô phỏng Cái túi 0/1 Knapsack.", "info");
+            }
+        });
+
+        // 1. Fibonacci Handlers
+        sizeInput.addEventListener("change", (e) => {
+            currentTask = null;
+            let n = parseInt(e.target.value);
+            if (isNaN(n) || n < 3) n = 3;
+            if (n > 7) n = 7;
+            e.target.value = n;
+            renderFibonacciCanvas(n);
+        });
+
+        document.getElementById("btn-dp-fib-naive").addEventListener("click", async () => {
+            const n = parseInt(sizeInput.value);
+            log(`[Đệ quy thuần túy] Bắt đầu dựng cây đệ quy Fibonacci F(${n}) độ phức tạp O(2^N)...`, "step");
+            
+            const taskId = Math.random();
+            currentTask = taskId;
+            
+            let nodesList = [];
+            let uniqueCallIds = 0;
+
+            function buildTree(val, depth, x, width, parentId = null) {
+                const id = uniqueCallIds++;
+                const node = { id, val, depth, x, y: 30 + depth * 32, parentId, status: "idle" };
+                nodesList.push(node);
+                
+                if (val > 1) {
+                    const nextWidth = width / 2;
+                    buildTree(val - 1, depth + 1, x - nextWidth, nextWidth, id);
+                    buildTree(val - 2, depth + 1, x + nextWidth, nextWidth, id);
+                }
+                return id;
+            }
+
+            buildTree(n, 0, 220, 100);
+
+            let visitedCount = {};
+            let stepOrder = [];
+            
+            function recurseStep(nodeId) {
+                const node = nodesList.find(nd => nd.id === nodeId);
+                if (!node) return;
+                
+                stepOrder.push({ type: "enter", node });
+                
+                if (!visitedCount[node.val]) {
+                    visitedCount[node.val] = 1;
+                } else {
+                    visitedCount[node.val]++;
+                }
+                
+                const isRedundant = visitedCount[node.val] > 1 && node.val >= 2;
+
+                const children = nodesList.filter(nd => nd.parentId === nodeId);
+                if (children.length > 0) {
+                    recurseStep(children[0].id);
+                    recurseStep(children[1].id);
+                }
+                
+                stepOrder.push({ type: "exit", node, isRedundant });
+            }
+
+            recurseStep(0);
+            renderFibonacciTreeSVG(nodesList);
+
+            for (let step of stepOrder) {
+                if (currentTask !== taskId) return;
+                
+                const nodeCircle = document.getElementById(`fib-node-circle-${step.node.id}`);
+                if (!nodeCircle) continue;
+
+                if (step.type === "enter") {
+                    nodeCircle.style.fill = "#38bdf8"; 
+                    nodeCircle.style.stroke = "#0284c7";
+                    log(`Gọi đệ quy: <b>F(${step.node.val})</b>`, "info");
+                    await sleep(animationSpeed);
+                } else {
+                    if (step.isRedundant) {
+                        nodeCircle.style.fill = "#ef4444"; 
+                        nodeCircle.style.stroke = "#b91c1c";
+                        log(`LẶP LẠI! <b>F(${step.node.val})</b> đã được tính trước đó ở nhánh khác! Bị tính trùng lặp lãng phí CPU.`, "warning");
+                        await sleep(animationSpeed * 1.5);
+                    } else {
+                        nodeCircle.style.fill = "#10b981"; 
+                        nodeCircle.style.stroke = "#047857";
+                        log(`Hoàn thành nhánh F(${step.node.val})`, "success");
+                        await sleep(animationSpeed * 0.8);
+                    }
+                }
+            }
+
+            log("Hoàn thành mô phỏng cây đệ quy. Hãy quan sát số lượng nút ĐỎ lãng phí bộ nhớ Stack!", "success");
+        });
+
+        document.getElementById("btn-dp-fib-tab").addEventListener("click", async () => {
+            const n = parseInt(sizeInput.value);
+            log(`[DP Tabulation] Bắt đầu lập bảng quy hoạch động F(${n}) từ dưới lên độ phức tạp O(N)...`, "step");
+            
+            const taskId = Math.random();
+            currentTask = taskId;
+            
+            let dp = Array(n + 1).fill(0);
+            renderFibonacciGrid(n, dp);
+            await sleep(animationSpeed);
+
+            if (currentTask !== taskId) return;
+            dp[0] = 0;
+            updateFibGridCell(0, 0, "success");
+            log("Điền bài toán cơ sở thứ nhất: dp[0] = 0", "info");
+            await sleep(animationSpeed * 1.5);
+
+            if (currentTask !== taskId) return;
+            dp[1] = 1;
+            updateFibGridCell(1, 1, "success");
+            log("Điền bài toán cơ sở thứ hai: dp[1] = 1", "info");
+            await sleep(animationSpeed * 1.5);
+
+            for (let i = 2; i <= n; i++) {
+                if (currentTask !== taskId) return;
+                
+                updateFibGridCell(i - 1, dp[i - 1], "active");
+                updateFibGridCell(i - 2, dp[i - 2], "active");
+                log(`Tính F(${i}) = F(${i-1}) + F(${i-2}) = ${dp[i-1]} + ${dp[i-2]}`, "info");
+                await sleep(animationSpeed * 1.5);
+                
+                dp[i] = dp[i - 1] + dp[i - 2];
+                
+                updateFibGridCell(i - 1, dp[i - 1], "success");
+                updateFibGridCell(i - 2, dp[i - 2], "success");
+                updateFibGridCell(i, dp[i], "success");
+                log(`Đã ghi nhận: F(${i}) = <b>${dp[i]}</b> vào bảng lưu trữ dp[${i}].`, "success");
+                await sleep(animationSpeed * 1.2);
+            }
+            
+            log(`Quy hoạch động hoàn tất! F(${n}) = <b>${dp[n]}</b> chạy cực nhanh không tính trùng lặp bất kỳ phép nào!`, "success");
+        });
+
+        // 2. Knapsack Handlers
+        knapsackWInput.addEventListener("change", (e) => {
+            currentTask = null;
+            let w = parseInt(e.target.value);
+            if (isNaN(w) || w < 4) w = 4;
+            if (w > 7) w = 7;
+            e.target.value = w;
+            renderKnapsackCanvas(w);
+        });
+
+        document.getElementById("btn-dp-knapsack-run").addEventListener("click", async () => {
+            const W = parseInt(knapsackWInput.value);
+            const taskId = Math.random();
+            currentTask = taskId;
+            
+            log(`[0/1 Knapsack] Bắt đầu dựng bảng quy hoạch động 2D sức chứa W = ${W}...`, "step");
+            
+            const items = [
+                { name: "Đồ vật A", wt: 2, val: 3 },
+                { name: "Đồ vật B", wt: 3, val: 4 },
+                { name: "Đồ vật C", wt: 4, val: 5 }
+            ];
+
+            let n = items.length;
+            let dp = Array(n + 1).fill(0).map(() => Array(W + 1).fill(0));
+            
+            renderKnapsackGrid(items, W, dp);
+            await sleep(animationSpeed);
+
+            for (let i = 1; i <= n; i++) {
+                const item = items[i - 1];
+                log(`Bắt đầu xét vật phẩm: <b>${item.name}</b> (Trọng lượng: ${item.wt}, Giá trị: ${item.val})`, "warning");
+                await sleep(animationSpeed);
+
+                for (let w = 1; w <= W; w++) {
+                    if (currentTask !== taskId) return;
+                    
+                    const cellEl = document.getElementById(`ks-cell-${i}-${w}`);
+                    if (cellEl) {
+                        cellEl.style.background = "rgba(56, 189, 248, 0.25)"; 
+                        cellEl.style.borderColor = "#38bdf8";
+                    }
+                    
+                    let prevVal = dp[i - 1][w];
+                    const aboveCell = document.getElementById(`ks-cell-${i - 1}-${w}`);
+                    if (aboveCell) aboveCell.style.background = "rgba(245, 158, 11, 0.2)"; 
+
+                    if (item.wt <= w) {
+                        let includeVal = item.val + dp[i - 1][w - item.wt];
+                        const pickCell = document.getElementById(`ks-cell-${i - 1}-${w - item.wt}`);
+                        if (pickCell) pickCell.style.background = "rgba(168, 85, 247, 0.2)"; 
+
+                        log(`Xét dp[${i}][${w}]: Sức chứa ${w} đủ chứa ${item.name} (${item.wt}). Công thức lựa chọn:`, "info");
+                        log(`- Không lấy: dp[${i-1}][${w}] = ${prevVal}`, "info");
+                        log(`- Có lấy: val + dp[${i-1}][${w-item.wt}] = ${item.val} + ${dp[i-1][w-item.wt]} = ${includeVal}`, "info");
+                        await sleep(animationSpeed * 1.5);
+
+                        dp[i][w] = Math.max(prevVal, includeVal);
+
+                        if (cellEl) {
+                            cellEl.innerHTML = dp[i][w];
+                            cellEl.style.background = "rgba(16, 185, 129, 0.2)"; 
+                            cellEl.style.borderColor = "#10b981";
+                        }
+                        log(`Chọn giá trị lớn nhất: dp[${i}][${w}] = <b>${dp[i][w]}</b>`, "success");
+                        await sleep(animationSpeed);
+
+                        if (pickCell) pickCell.style.background = "transparent";
+                    } else {
+                        log(`Xét dp[${i}][${w}]: Sức chứa ${w} nhỏ hơn trọng lượng ${item.name} (${item.wt}). Không thể chọn lấy!`, "info");
+                        log(`- Mượn giá trị hàng trên: dp[${i}][${w}] = dp[${i-1}][${w}] = ${prevVal}`, "info");
+                        await sleep(animationSpeed * 1.2);
+
+                        dp[i][w] = prevVal;
+
+                        if (cellEl) {
+                            cellEl.innerHTML = dp[i][w];
+                            cellEl.style.background = "rgba(16, 185, 129, 0.2)";
+                            cellEl.style.borderColor = "#10b981";
+                        }
+                        log(`Cập nhật: dp[${i}][${w}] = <b>${dp[i][w]}</b>`, "success");
+                        await sleep(animationSpeed);
+                    }
+
+                    if (aboveCell) aboveCell.style.background = "transparent";
+                    if (cellEl) {
+                        cellEl.style.background = "transparent";
+                        cellEl.style.borderColor = "#334155";
+                    }
+                }
+            }
+
+            log(`Lập bảng Quy hoạch hoàn thành! Giá trị tối đa thu được trong túi là: <b>${dp[n][W]}</b>`, "success");
+        });
+    }
+
+    function renderFibonacciCanvas(n) {
+        let html = `
+            <div style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%; justify-content:center;">
+                <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:10px;"><i class="fa-solid fa-circle-info"></i> Bấm "Đệ quy" để vẽ cây, "DP Lập bảng" để xem mảng tuyến tính</div>
+                <div id="fib-arena" style="width:100%; min-height:180px; display:flex; justify-content:center; align-items:center;">
+                </div>
+            </div>
+        `;
+        sandboxCanvas.innerHTML = html;
+    }
+
+    function renderFibonacciTreeSVG(nodesList) {
+        const width = 440;
+        const height = 180;
+        let html = `<svg class="tree-svg" viewBox="0 0 ${width} ${height}">`;
+        
+        nodesList.forEach(nd => {
+            if (nd.parentId !== null) {
+                const parent = nodesList.find(p => p.id === nd.parentId);
+                if (parent) {
+                    html += `<line x1="${parent.x}" y1="${parent.y}" x2="${nd.x}" y2="${nd.y}" style="stroke:#475569; stroke-width:2px;" />`;
+                }
+            }
+        });
+
+        nodesList.forEach(nd => {
+            html += `
+                <g>
+                    <circle cx="${nd.x}" cy="${nd.y}" r="11" id="fib-node-circle-${nd.id}" style="fill:#1e293b; stroke:#334155; stroke-width:2px; transition: all 0.3s; cursor:pointer;" />
+                    <text x="${nd.x}" y="${nd.y}" dy="3" style="fill:white; font-size:8px; font-weight:700; text-anchor:middle; cursor:pointer;">F${nd.val}</text>
+                </g>
+            `;
+        });
+
+        html += `</svg>`;
+        document.getElementById("fib-arena").innerHTML = html;
+        
+        nodesList.forEach(nd => {
+            const circleEl = document.getElementById(`fib-node-circle-${nd.id}`);
+            if (circleEl) {
+                circleEl.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll("circle").forEach(el => el.classList.remove("selected"));
+                    circleEl.classList.add("selected");
+                    
+                    const baseAddr = 0xD280 + nd.id * 8;
+                    const hexAddr = "0x" + baseAddr.toString(16).toUpperCase();
+                    
+                    const title = "Bài toán con Đệ quy (Stack Frame)";
+                    const content = `
+                        <div style="font-weight:700; font-size:0.8rem; color:#38bdf8; margin-bottom:4px;">Lời gọi đệ quy: F(${nd.val})</div>
+                        <table class="tooltip-meta-table">
+                            <tr><td>Địa chỉ Khung Stack</td><td>${hexAddr}</td></tr>
+                            <tr><td>Tham số truyền vào</td><td>n = ${nd.val}</td></tr>
+                            <tr><td>Độ sâu cuộc gọi</td><td>Depth = ${nd.depth}</td></tr>
+                            <tr><td>Kích thước khung</td><td>sizeof(StackFrame) = 32 Bytes</td></tr>
+                        </table>
+                    `;
+                    showTooltip(circleEl, title, content);
+                });
+            }
+        });
+    }
+
+    function renderFibonacciGrid(n, dp) {
+        let html = `
+            <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+                <div style="font-weight:700; font-size:0.8rem; color:#38bdf8;">Mảng bộ nhớ Quy hoạch động: dp[0...${n}]</div>
+                <div style="display:flex; gap:4px;">
+        `;
+        
+        for (let i = 0; i <= n; i++) {
+            html += `
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:0.6rem; color:#64748b; margin-bottom:2px;">dp[${i}]</span>
+                    <div id="fib-grid-cell-${i}" style="width:40px; height:40px; border:2px solid #334155; border-radius:6px; display:flex; justify-content:center; align-items:center; font-weight:700; font-size:0.85rem; color:#94a3b8; transition:all 0.3s; cursor:pointer;">
+                        ${dp[i]}
+                    </div>
+                </div>
+            `;
+        }
+
+        html += `
+                </div>
+            </div>
+        `;
+        document.getElementById("fib-arena").innerHTML = html;
+
+        for (let i = 0; i <= n; i++) {
+            const cellEl = document.getElementById(`fib-grid-cell-${i}`);
+            if (cellEl) {
+                cellEl.addEventListener("click", () => {
+                    document.querySelectorAll('[id^="fib-grid-cell-"]').forEach(el => el.classList.remove("selected"));
+                    cellEl.classList.add("selected");
+                    
+                    const baseAddr = 0xE100 + i * 4;
+                    const hexAddr = "0x" + baseAddr.toString(16).toUpperCase();
+                    
+                    const title = "Ô nhớ mảng Lập bảng (Tabulation Array Cell)";
+                    const content = `
+                        <div style="font-weight:700; font-size:0.8rem; color:#38bdf8; margin-bottom:4px;">Phần tử mảng: dp[${i}] = ${dp[i]}</div>
+                        <table class="tooltip-meta-table">
+                            <tr><td>Địa chỉ bộ nhớ RAM</td><td>${hexAddr}</td></tr>
+                            <tr><td>Kiểu dữ liệu</td><td>int (Số nguyên)</td></tr>
+                            <tr><td>Kích thước</td><td>4 Bytes</td></tr>
+                            <tr><td>Độ dời (Offset)</td><td>+${i * 4} Bytes</td></tr>
+                        </table>
+                    `;
+                    showTooltip(cellEl, title, content);
+                });
+            }
+        }
+    }
+
+    function updateFibGridCell(i, val, status) {
+        const cell = document.getElementById(`fib-grid-cell-${i}`);
+        if (cell) {
+            cell.innerHTML = val;
+            cell.style.borderColor = "#334155";
+            cell.style.background = "transparent";
+            cell.style.color = "#94a3b8";
+            
+            if (status === "active") {
+                cell.style.borderColor = "#fb923c"; 
+                cell.style.background = "rgba(251, 146, 60, 0.15)";
+                cell.style.color = "white";
+            } else if (status === "success") {
+                cell.style.borderColor = "var(--accent)"; 
+                cell.style.background = "rgba(16, 185, 129, 0.15)";
+                cell.style.color = "white";
+            }
+        }
+    }
+
+    function renderKnapsackCanvas(w) {
+        let html = `
+            <div style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%; justify-content:center; padding:5px;">
+                <div style="font-size:0.65rem; color:#94a3b8; margin-bottom:5px;"><i class="fa-solid fa-circle-info"></i> Bấm "Quy hoạch Knapsack" để lập bảng lặp, click ô để xem công thức</div>
+                <div id="knapsack-arena" style="width:100%; display:flex; justify-content:center; align-items:center;">
+                </div>
+            </div>
+        `;
+        sandboxCanvas.innerHTML = html;
+        renderKnapsackGrid([
+            { name: "Đồ vật A", wt: 2, val: 3 },
+            { name: "Đồ vật B", wt: 3, val: 4 },
+            { name: "Đồ vật C", wt: 4, val: 5 }
+        ], w, Array(4).fill(0).map(() => Array(w + 1).fill(0)));
+    }
+
+    function renderKnapsackGrid(items, W, dp) {
+        let html = `
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div style="font-weight:700; font-size:0.75rem; color:#38bdf8; margin-bottom:5px;">Bảng trạng thái Quy hoạch động 2D: dp[i][w]</div>
+                <table style="border-collapse:collapse; font-size:0.65rem; text-align:center;">
+                    <thead>
+                        <tr style="background:#1e293b; color:#94a3b8;">
+                            <th style="border:1px solid #334155; padding:4px 6px;">Vật phẩm (i)</th>
+                            <th style="border:1px solid #334155; padding:4px 6px;">(wt, val)</th>
+        `;
+        
+        for (let w = 0; w <= W; w++) {
+            html += `<th style="border:1px solid #334155; padding:4px 6px; width:32px;">w=${w}</th>`;
+        }
+
+        html += `
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        for (let i = 0; i <= items.length; i++) {
+            const item = i > 0 ? items[i - 1] : { name: "Nền cơ sở", wt: 0, val: 0 };
+            const isBase = i === 0;
+
+            html += `
+                <tr style="background:${isBase ? 'rgba(255,255,255,0.02)' : 'transparent'};">
+                    <td style="border:1px solid #334155; padding:4px 6px; text-align:left; font-weight:700; color:#e2e8f0;">i=${i} (${i > 0 ? item.name[7] : 'Nền'})</td>
+                    <td style="border:1px solid #334155; padding:4px 6px; color:#64748b;">${i > 0 ? '(' + item.wt + ', ' + item.val + ')' : '--'}</td>
+            `;
+
+            for (let w = 0; w <= W; w++) {
+                const val = dp[i] && dp[i][w] !== undefined ? dp[i][w] : 0;
+                html += `
+                    <td id="ks-cell-${i}-${w}" style="border:1px solid #334155; width:32px; height:24px; color:#cbd5e1; font-weight:700; transition:all 0.2s; cursor:pointer;">
+                        ${val}
+                    </td>
+                `;
+            }
+            html += `</tr>`;
+        }
+
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+        document.getElementById("knapsack-arena").innerHTML = html;
+
+        for (let i = 0; i <= items.length; i++) {
+            const item = i > 0 ? items[i - 1] : { name: "Nền", wt: 0, val: 0 };
+            for (let w = 0; w <= W; w++) {
+                const cellEl = document.getElementById(`ks-cell-${i}-${w}`);
+                if (cellEl) {
+                    cellEl.addEventListener("click", () => {
+                        document.querySelectorAll('[id^="ks-cell-"]').forEach(el => {
+                            el.style.boxShadow = "none";
+                            el.classList.remove("selected");
+                        });
+                        cellEl.classList.add("selected");
+                        
+                        const baseAddr = 0xF200 + (i * (W + 1) + w) * 4;
+                        const hexAddr = "0x" + baseAddr.toString(16).toUpperCase();
+                        
+                        let formula = `dp[${i}][${w}] = 0 (Base Case)`;
+                        if (i > 0 && w > 0) {
+                            if (item.wt <= w) {
+                                formula = `dp[${i}][${w}] = max(dp[${i-1}][${w}], ${item.val} + dp[${i-1}][${w - item.wt}])`;
+                            } else {
+                                formula = `dp[${i}][${w}] = dp[${i-1}][${w}]`;
+                            }
+                        }
+
+                        const title = "Ô nhớ Bảng Quy hoạch 2D (2D Table Cell)";
+                        const content = `
+                            <div style="font-weight:700; font-size:0.8rem; color:#38bdf8; margin-bottom:4px;">Giá trị dp[${i}][${w}] = ${cellEl.innerHTML.trim()}</div>
+                            <table class="tooltip-meta-table">
+                                <tr><td>Địa chỉ bộ nhớ RAM</td><td>${hexAddr}</td></tr>
+                                <tr><td>Xét vật phẩm</td><td>${i > 0 ? item.name + ' (wt=' + item.wt + ')' : 'Nền cơ sở (dp[0])'}</td></tr>
+                                <tr><td>Sức chứa túi hiện tại</td><td>w = ${w} kg</td></tr>
+                                <tr><td>Công thức trạng thái</td><td style="color:#fb923c; font-size:0.65rem;"><code>${formula}</code></td></tr>
+                                <tr><td>Kích thước phần tử</td><td>4 Bytes (sizeof(int))</td></tr>
+                            </table>
+                        `;
+                        showTooltip(cellEl, title, content);
+                    });
+                }
+            }
+        }
+    }
+
+    // --------------------------------------------------------------------------
+    // 2.13 CHAPTER 13: TRIE (PREFIX TREE) & AUTOCOMPLETE SANDBOX (NEW!)
+    // --------------------------------------------------------------------------
+    let trieUniqueId = 0;
+    let trieRoot = null;
+
+    class TrieNode {
+        constructor(char = '') {
+            this.id = ++trieUniqueId;
+            this.char = char;
+            this.children = {}; // key is char ('a'-'z'), value is TrieNode
+            this.isEndOfWord = false;
+            this.address = 0xA200 + this.id * 224; // Simulated Heap RAM address
+            this.status = "idle"; // "idle", "active", "created", "success", "fail"
+            this.x = 0;
+            this.y = 0;
+        }
+    }
+
+    function insertWordSilent(root, word) {
+        let curr = root;
+        for (let i = 0; i < word.length; i++) {
+            const ch = word[i].toLowerCase();
+            if (!curr.children[ch]) {
+                curr.children[ch] = new TrieNode(ch);
+            }
+            curr = curr.children[ch];
+        }
+        curr.isEndOfWord = true;
+    }
+
+    function findWordsWithPrefix(root, prefix) {
+        let curr = root;
+        for (let i = 0; i < prefix.length; i++) {
+            const ch = prefix[i];
+            if (!curr.children[ch]) return [];
+            curr = curr.children[ch];
+        }
+        
+        let results = [];
+        function collect(node, currentWord) {
+            if (node.isEndOfWord) {
+                results.push(currentWord);
+            }
+            for (let ch in node.children) {
+                collect(node.children[ch], currentWord + ch);
+            }
+        }
+        collect(curr, prefix);
+        return results;
+    }
+
+    function calculateTrieCoords(root, width = 440) {
+        function assign(node, x, y, span) {
+            node.x = x;
+            node.y = y;
+            const keys = Object.keys(node.children).sort();
+            if (keys.length === 0) return;
+            
+            const segment = span / keys.length;
+            const startX = x - span / 2 + segment / 2;
+            keys.forEach((k, idx) => {
+                const childX = startX + idx * segment;
+                const childY = y + 42;
+                assign(node.children[k], childX, childY, segment * 0.85);
+            });
+        }
+        assign(root, 220, 22, width * 0.85);
+    }
+
+    function collectTrieNodesAndLinks(root) {
+        let nodes = [];
+        let links = [];
+        function traverse(node) {
+            nodes.push(node);
+            for (let k in node.children) {
+                const child = node.children[k];
+                links.push({
+                    x1: node.x,
+                    y1: node.y,
+                    x2: child.x,
+                    y2: child.y,
+                    parent: node,
+                    child: child
+                });
+                traverse(child);
+            }
+        }
+        traverse(root);
+        return { nodes, links };
+    }
+
+    function setupTrieSandbox() {
+        sandboxTitle.innerHTML = '<i class="fa-solid fa-folder-tree"></i> Cây tiền tố Trie &amp; Autocomplete';
+        
+        if (!trieRoot) {
+            trieUniqueId = 0;
+            trieRoot = new TrieNode('');
+            const defaults = ["cat", "car", "cart", "dog", "do"];
+            defaults.forEach(w => insertWordSilent(trieRoot, w));
+        }
+        
+        sandboxControls.innerHTML = `
+            <div class="control-group" style="display:flex; flex-direction:column; gap:4px; align-items:center; width:100%;">
+                <div style="display:flex; gap:4px; width:100%; justify-content:center;">
+                    <div style="position:relative; display:flex; flex-direction:column; width:120px;">
+                        <input type="text" id="trie-input-word" placeholder="Nhập từ..." maxlength="8" style="background:#1e293b; border:1px solid #334155; color:white; font-size:0.75rem; font-weight:700; padding:4px 8px; border-radius:6px; outline:none; text-align:center;">
+                    </div>
+                    <button id="btn-trie-insert" class="btn-ctrl" style="background:var(--accent); color:white; padding:4px 8px; font-size:0.75rem;"><i class="fa-solid fa-plus"></i> Thêm</button>
+                    <button id="btn-trie-search" class="btn-ctrl" style="background:#38bdf8; color:white; padding:4px 8px; font-size:0.75rem;"><i class="fa-solid fa-magnifying-glass"></i> Tìm</button>
+                </div>
+                
+                <div id="trie-suggestions-container" style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center; width:100%; min-height:18px; margin-top:2px;">
+                    <!-- Autocomplete suggestion tags go here -->
+                </div>
+            </div>
+            
+            <div class="speed-slider-container" style="margin-top:2px;">
+                <span>Tốc độ:</span>
+                <input type="range" class="speed-slider" id="speed-trie" min="100" max="1500" value="500">
+            </div>
+        `;
+
+        const trieInput = document.getElementById("trie-input-word");
+        const btnInsert = document.getElementById("btn-trie-insert");
+        const btnSearch = document.getElementById("btn-trie-search");
+        const suggestionsContainer = document.getElementById("trie-suggestions-container");
+        const speedSlider = document.getElementById("speed-trie");
+        
+        speedSlider.addEventListener("input", (e) => {
+            animationSpeed = parseInt(e.target.value);
+        });
+
+        trieInput.addEventListener("input", () => {
+            updateSuggestions();
+        });
+
+        function updateSuggestions() {
+            const val = trieInput.value.toLowerCase().trim();
+            suggestionsContainer.innerHTML = "";
+            if (val === "") return;
+            
+            const matches = findWordsWithPrefix(trieRoot, val);
+            if (matches.length > 0) {
+                matches.forEach(word => {
+                    const tag = document.createElement("span");
+                    tag.innerHTML = word;
+                    tag.style.background = "#1e293b";
+                    tag.style.border = "1px solid #334155";
+                    tag.style.color = "var(--accent)";
+                    tag.style.padding = "1px 6px";
+                    tag.style.borderRadius = "4px";
+                    tag.style.cursor = "pointer";
+                    tag.style.fontSize = "0.6rem";
+                    tag.style.fontWeight = "700";
+                    tag.style.transition = "all 0.2s";
+                    
+                    tag.addEventListener("mouseover", () => {
+                        tag.style.background = "var(--accent)";
+                        tag.style.color = "white";
+                    });
+                    tag.addEventListener("mouseout", () => {
+                        tag.style.background = "#1e293b";
+                        tag.style.color = "var(--accent)";
+                    });
+                    tag.addEventListener("click", () => {
+                        trieInput.value = word;
+                        updateSuggestions();
+                    });
+                    suggestionsContainer.appendChild(tag);
+                });
+            }
+        }
+
+        renderTrie();
+        log("Cây tiền tố Trie đã sẵn sàng. Hãy bấm nút 'Thêm' hoặc 'Tìm' để xem hoạt họa bộ nhớ RAM!", "success");
+
+        btnInsert.addEventListener("click", async () => {
+            let word = trieInput.value.toLowerCase().trim();
+            if (word === "") {
+                word = "caps";
+                trieInput.value = word;
+                log("Từ rỗng! Hệ thống tự động điền từ mẫu: <b>caps</b>", "warning");
+            }
+            
+            if (!/^[a-z]+$/.test(word)) {
+                log("Lỗi: Từ nhập vào chỉ được phép chứa các ký tự chữ cái viết liền không dấu (a-z)!", "error");
+                return;
+            }
+
+            const taskId = Math.random();
+            currentTask = taskId;
+            
+            log(`[Insert] Bắt đầu thêm từ "${word}" vào cây Trie...`, "step");
+            
+            let curr = trieRoot;
+            resetTrieNodeStatuses(trieRoot);
+            renderTrie();
+            await sleep(animationSpeed);
+
+            for (let i = 0; i < word.length; i++) {
+                if (currentTask !== taskId) return;
+                const ch = word[i];
+                
+                curr.status = "active";
+                renderTrie();
+                await sleep(animationSpeed * 0.8);
+                
+                if (!curr.children[ch]) {
+                    if (currentTask !== taskId) return;
+                    log(`Ký tự '${ch}' chưa tồn tại dưới nút này. Thực hiện <b>malloc(sizeof(TrieNode))</b> cấp phát ô nhớ mới!`, "info");
+                    
+                    const newNode = new TrieNode(ch);
+                    newNode.status = "created";
+                    curr.children[ch] = newNode;
+                    
+                    renderTrie();
+                    await sleep(animationSpeed * 1.2);
+                    newNode.status = "active";
+                } else {
+                    log(`Ký tự '${ch}' đã tồn tại ở địa chỉ ${"0x" + curr.children[ch].address.toString(16).toUpperCase()}. **Chia sẻ tiền tố** để tối ưu RAM!`, "success");
+                    curr.children[ch].status = "active";
+                }
+                
+                curr = curr.children[ch];
+            }
+            
+            if (currentTask !== taskId) return;
+            curr.isEndOfWord = true;
+            curr.status = "success";
+            renderTrie();
+            log(`Thêm từ "${word}" thành công! Cờ <b>isEndOfWord</b> được bật lên TRUE (xanh lá).`, "success");
+            
+            trieInput.value = "";
+            suggestionsContainer.innerHTML = "";
+        });
+
+        btnSearch.addEventListener("click", async () => {
+            let word = trieInput.value.toLowerCase().trim();
+            if (word === "") {
+                word = "car";
+                trieInput.value = word;
+                log("Từ rỗng! Hệ thống tự động tìm kiếm từ mẫu: <b>car</b>", "warning");
+            }
+            
+            if (!/^[a-z]+$/.test(word)) {
+                log("Lỗi: Từ tìm kiếm chỉ được phép chứa các ký tự chữ cái viết liền không dấu (a-z)!", "error");
+                return;
+            }
+
+            const taskId = Math.random();
+            currentTask = taskId;
+            
+            log(`[Search] Bắt đầu tìm kiếm từ "${word}" trên cây Trie...`, "step");
+            
+            let curr = trieRoot;
+            resetTrieNodeStatuses(trieRoot);
+            renderTrie();
+            await sleep(animationSpeed);
+
+            let success = true;
+            for (let i = 0; i < word.length; i++) {
+                if (currentTask !== taskId) return;
+                const ch = word[i];
+                
+                curr.status = "active";
+                renderTrie();
+                await sleep(animationSpeed * 0.8);
+                
+                if (!curr.children[ch]) {
+                    success = false;
+                    log(`Mất dấu tại ký tự '${ch}'! Không có con trỏ nào trỏ tới nút này. Kết luận: Từ không tồn tại!`, "warning");
+                    curr.status = "fail";
+                    renderTrie();
+                    break;
+                } else {
+                    log(`Khớp ký tự '${ch}' -> Di chuyển xuống nút con ở địa chỉ ${"0x" + curr.children[ch].address.toString(16).toUpperCase()}.`, "info");
+                    curr.children[ch].status = "active";
+                    curr = curr.children[ch];
+                }
+            }
+            
+            if (currentTask !== taskId) return;
+            if (success) {
+                if (curr.isEndOfWord) {
+                    curr.status = "success";
+                    renderTrie();
+                    log(`Tìm thấy từ "${word}"! Điểm dừng khớp với cờ isEndOfWord = TRUE.`, "success");
+                } else {
+                    curr.status = "fail";
+                    renderTrie();
+                    log(`Chuỗi "${word}" có khớp ký tự nhưng cờ isEndOfWord = FALSE (không phải là từ hoàn chỉnh). Tìm kiếm thất bại!`, "warning");
+                }
+            } else {
+                log(`Không tìm thấy từ "${word}" trên cây Trie.`, "warning");
+            }
+        });
+    }
+
+    function resetTrieNodeStatuses(node) {
+        if (!node) return;
+        node.status = "idle";
+        for (let k in node.children) {
+            resetTrieNodeStatuses(node.children[k]);
+        }
+    }
+
+    function renderTrie() {
+        if (!trieRoot) return;
+        
+        calculateTrieCoords(trieRoot, 440);
+        
+        const { nodes, links } = collectTrieNodesAndLinks(trieRoot);
+        
+        const width = 440;
+        const height = 240;
+        
+        let svgHtml = `<svg class="tree-svg" viewBox="0 0 ${width} ${height}">`;
+        
+        links.forEach(l => {
+            let strokeColor = "#475569";
+            let strokeWidth = "1.5px";
+            if (l.child.status === "active" || l.child.status === "success") {
+                strokeColor = "var(--accent)";
+                strokeWidth = "2.5px";
+            } else if (l.child.status === "created") {
+                strokeColor = "#fb7185";
+                strokeWidth = "2.5px";
+            } else if (l.child.status === "fail") {
+                strokeColor = "#ef4444";
+                strokeWidth = "2.5px";
+            }
+            svgHtml += `<line x1="${l.x1}" y1="${l.y1}" x2="${l.x2}" y2="${l.y2}" style="stroke:${strokeColor}; stroke-width:${strokeWidth}; transition: all 0.3s;" />`;
+        });
+        
+        nodes.forEach(nd => {
+            let border = "#334155";
+            let fill = "#1e293b";
+            let strokeWidth = nd.isEndOfWord ? "3px" : "2px";
+            
+            if (nd.isEndOfWord) {
+                border = "#10b981";
+            }
+            
+            if (nd.status === "active") {
+                border = "#fb923c";
+                fill = "rgba(251, 146, 60, 0.2)";
+            } else if (nd.status === "created") {
+                border = "#fb7185";
+                fill = "rgba(251, 113, 133, 0.25)";
+            } else if (nd.status === "success") {
+                border = "#10b981";
+                fill = "rgba(16, 185, 129, 0.25)";
+            } else if (nd.status === "fail") {
+                border = "#ef4444";
+                fill = "rgba(239, 68, 68, 0.25)";
+            }
+            
+            svgHtml += `
+                <g>
+                    <circle cx="${nd.x}" cy="${nd.y}" r="11" id="trie-node-circle-${nd.id}" style="fill:${fill}; stroke:${border}; stroke-width:${strokeWidth}; cursor:pointer; transition: all 0.3s;" />
+                    <text x="${nd.x}" y="${nd.y}" dy="3.5" style="fill:white; font-size:8px; font-weight:700; text-anchor:middle; cursor:pointer; user-select:none;">
+                        ${nd.char === '' ? '★' : nd.char.toUpperCase()}
+                    </text>
+                </g>
+            `;
+        });
+        
+        svgHtml += `</svg>`;
+        sandboxCanvas.innerHTML = svgHtml;
+        
+        nodes.forEach(nd => {
+            const circleEl = document.getElementById(`trie-node-circle-${nd.id}`);
+            if (circleEl) {
+                circleEl.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('[id^="trie-node-circle-"]').forEach(el => {
+                        el.style.boxShadow = "none";
+                        el.classList.remove("selected");
+                    });
+                    circleEl.classList.add("selected");
+                    
+                    const hexAddr = "0x" + nd.address.toString(16).toUpperCase();
+                    
+                    let activePtrsHtml = "";
+                    let childrenKeys = Object.keys(nd.children).sort();
+                    
+                    if (childrenKeys.length > 0) {
+                        childrenKeys.forEach(k => {
+                            const childNode = nd.children[k];
+                            const childHex = "0x" + childNode.address.toString(16).toUpperCase();
+                            activePtrsHtml += `
+                                <div style="display:flex; justify-content:space-between; width:100%; padding: 1px 0;">
+                                    <span style="color:var(--accent);">children['${k}']</span>
+                                    <span style="color:#e2e8f0;">-&gt; ${childHex}</span>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        activePtrsHtml = `<div style="color:#64748b; font-style:italic; font-size:0.6rem; text-align:center;">Tất cả 26 con trỏ con đều là NULL</div>`;
+                    }
+                    
+                    const structCode = `struct TrieNode {
+    struct TrieNode* children[26]; // Mảng 26 con trỏ (offset +0, size 208B)
+    int isEndOfWord;             // Cờ kết thúc: ${nd.isEndOfWord ? 1 : 0} (offset +208, size 4B)
+    char _pad[4];                // Căn lề bộ nhớ (offset +212, size 4B)
+}; // sizeof(struct TrieNode) = 216 bytes`;
+
+                    const title = "Cây tiền tố (TrieNode Struct)";
+                    const content = `
+                        <div style="font-weight:700; font-size:0.8rem; color:#38bdf8; margin-bottom:4px;">
+                            ${nd.char === '' ? 'Nút gốc Root (★)' : 'Nút ký tự: \'' + nd.char + '\''}
+                        </div>
+                        <table class="tooltip-meta-table">
+                            <tr><td>Địa chỉ vật lý Heap</td><td>${hexAddr}</td></tr>
+                            <tr><td>Cờ kết thúc từ</td><td><code>isEndOfWord = ${nd.isEndOfWord ? '1 (TRUE)' : '0 (FALSE)'}</code></td></tr>
+                            <tr><td>Mảng con trỏ</td><td>children[26] (208 Bytes)</td></tr>
+                            <tr><td>Kích thước Node</td><td>216 Bytes (64-bit alignment)</td></tr>
+                        </table>
+                        <div style="margin-top:5px; border-top:1px solid #334155; padding-top:4px;">
+                            <div style="font-weight:600; font-size:0.65rem; color:#f8fafc; margin-bottom:2px;">Con trỏ con đang hoạt động:</div>
+                            <div style="max-height:60px; overflow-y:auto; background:#0f172a; padding:4px; border-radius:4px; border:1px solid #1e293b;">
+                                ${activePtrsHtml}
+                            </div>
+                        </div>
+                    `;
+                    
+                    showTooltip(circleEl, title, content, structCode);
                 });
             }
         });

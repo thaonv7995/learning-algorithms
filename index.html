@@ -27,6 +27,9 @@
         </div>
         
         <div class="nav-actions">
+            <button class="btn-action" id="btn-toggle-sidebar">
+                <i class="fa-solid fa-bars"></i> Ẩn/Hiện Danh Mục
+            </button>
             <button class="btn-action" id="btn-toggle-sandbox">
                 <i class="fa-solid fa-cubes"></i> Ẩn/Hiện Sandbox
             </button>
@@ -77,6 +80,12 @@
                 </li>
                 <li class="toc-item" data-chapter="11">
                     <a href="#ch7"><i class="fa-solid fa-arrow-down-wide-short"></i> 11. Sorting Algorithms</a>
+                </li>
+                <li class="toc-item" data-chapter="12">
+                    <a href="#ch12"><i class="fa-solid fa-code"></i> 12. Dynamic Programming</a>
+                </li>
+                <li class="toc-item" data-chapter="13">
+                    <a href="#ch13"><i class="fa-solid fa-folder-tree"></i> 13. Trie (Prefix Tree)</a>
                 </li>
             </ul>
         </aside>
@@ -225,10 +234,20 @@
                             <span class="toc-print-dots"></span>
                             <span class="toc-print-page">Trang 13</span>
                         </li>
+                        <li class="toc-print-item" style="color:var(--primary); font-weight:600;">
+                            <span class="toc-print-name">Chương 12: Thuật toán Quy hoạch động (Dynamic Programming)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 14</span>
+                        </li>
+                        <li class="toc-print-item" style="color:var(--primary); font-weight:600;">
+                            <span class="toc-print-name">Chương 13: Cây tiền tố Trie (Prefix Tree) &amp; Autocomplete</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 15</span>
+                        </li>
                         <li class="toc-print-item">
                             <span class="toc-print-name">Tổng kết giáo trình &amp; Tài liệu tham khảo</span>
                             <span class="toc-print-dots"></span>
-                            <span class="toc-print-page">Trang 14</span>
+                            <span class="toc-print-page">Trang 16</span>
                         </li>
                     </ul>
                 </div>
@@ -956,8 +975,195 @@ Node* create_node(<span class="ty">int</span> value) {
                 </div>
             </div>
 
-            <!-- PAGE 14: CONCLUSION & REFERENCES -->
+            <!-- PAGE 14: CH12 DYNAMIC PROGRAMMING -->
             <div class="a4-page" id="page-14">
+                <div class="a4-header">
+                    <span>Chương 12: Quy hoạch động</span>
+                    <span>Dynamic Programming &amp; Tối ưu hóa</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 12: Thuật toán Quy hoạch động (Dynamic Programming)</h2>
+                    <p>
+                        <strong>Quy hoạch động (Dynamic Programming - DP)</strong> là phương pháp thiết kế giải thuật nâng cao nhằm tối ưu hóa các bài toán tính toán phức tạp bằng cách chia nhỏ chúng thành các bài toán con. Khác với thuật toán Chia để trị (Divide and Conquer) giải quyết các bài toán độc lập, Quy hoạch động lưu trữ kết quả của các bài toán con trùng lặp để tránh việc tính toán lại lãng phí bộ nhớ và CPU.
+                    </p>
+                    
+                    <h3 style="font-size: 8.5pt; color: var(--primary); margin-top: 5px; margin-bottom: 2px;">1. Hai Điều Kiện Tiên Quyết Để Áp Dụng DP</h3>
+                    <p style="margin-top: 0; margin-bottom: 4px;">
+                        - <strong>Cấu trúc con tối ưu (Optimal Substructure)</strong>: Nghiệm tối ưu của bài toán lớn được cấu thành từ nghiệm tối ưu của các bài toán con. Ví dụ, đường đi ngắn nhất từ A đến C qua B chứa đường đi ngắn nhất từ A đến B.
+                        <br>
+                        - <strong>Bài toán con trùng lặp (Overlapping Subproblems)</strong>: Quá trình đệ quy liên tục gọi lại các bài toán con có cùng tham số. Ví dụ, cây đệ quy Fibonacci F(5) tính lại F(3) hai lần, F(2) ba lần, gây bùng nổ thời gian mũ <em>O</em>(2<sup>N</sup>).
+                    </p>
+
+                    <h3 style="font-size: 8.5pt; color: var(--primary); margin-top: 4px; margin-bottom: 2px;">2. Top-Down (Memoization) vs Bottom-Up (Tabulation)</h3>
+                    <p style="margin-top: 0; margin-bottom: 4px;">
+                        - <strong>Top-Down (Ghi nhớ đệ quy)</strong>: Giải bài toán lớn bằng cách gọi đệ quy đi xuống các bài toán con. Điểm đặc biệt là kết quả của mỗi bài toán con sau khi giải xong sẽ được lưu vào bảng nhớ (Memo table). Ưu điểm: Dễ cài đặt dựa trên tư duy toán đệ quy. Nhược điểm: Overhead gọi hàm lớn và có nguy cơ tràn bộ nhớ Call Stack hệ thống (Stack Overflow) khi độ sâu đệ quy quá lớn.
+                        <br>
+                        - <strong>Bottom-Up (Lập bảng lặp)</strong>: Giải các bài toán con cơ sở trước, dùng vòng lặp điền kết quả tích lũy dần lên bài toán lớn. Điền bảng 1D hoặc 2D tuần tự. Ưu điểm: Tốc độ thực thi cực nhanh, an toàn bộ nhớ tuyệt đối do không sử dụng đệ quy. Nhược điểm: Phải giải tất cả các bài toán con từ biên, kể cả bài toán không đóng góp vào kết quả cuối.
+                    </p>
+
+                    <h3 style="font-size: 8.5pt; color: var(--primary); margin-top: 4px; margin-bottom: 2px;">3. Mổ Xẻ Bài Toán Cái Túi 0/1 (0/1 Knapsack Problem)</h3>
+                    <p style="margin-top: 0; margin-bottom: 4px;">
+                        Xét <em>n</em> đồ vật, vật <em>i</em> có trọng lượng <em>wt[i]</em> và giá trị <em>val[i]</em>. Chiếc túi có sức chứa tối đa là <em>W</em>. Mục tiêu là chọn các đồ vật bỏ vào túi sao cho tổng trọng lượng không vượt quá <em>W</em> và tổng giá trị là lớn nhất.
+                        Gọi <code>dp[i][w]</code> là giá trị tối ưu khi chỉ được phép chọn trong số <em>i</em> đồ vật đầu tiên với sức chứa giới hạn của túi là <em>w</em>:
+                    </p>
+                    
+                    <div style="margin-bottom: 4px; page-break-inside: avoid; break-inside: avoid;">
+                        <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 5px 10px; border-radius: 6px; font-family: monospace; font-size: 7.5pt; text-align: center; font-weight: 700;">
+                            dp[i][w] = max( dp[i-1][w], &nbsp;val[i-1] + dp[i-1][w - wt[i-1]] ) &nbsp;&nbsp;(khi w &gt;= wt[i-1])
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 0; margin-bottom: 4px; font-size: 7.2pt; line-height: 1.3;">
+                        - <strong>Không chọn vật <em>i-1</em> (Exclude)</strong>: Giá trị mượn từ dòng trên <code>dp[i-1][w]</code> (cùng sức chứa nhưng không lấy thêm đồ vật mới).
+                        <br>
+                        - <strong>Chọn vật <em>i-1</em> (Include)</strong>: Lấy giá trị vật mới <code>val[i-1]</code> cộng với giá trị tối ưu của phần chứa còn lại <code>dp[i-1][w - wt[i-1]]</code>. Hàm <code>max()</code> chọn lựa quyết định đem lại lợi ích lớn nhất trong 2 phương án.
+                    </p>
+
+                    <pre style="margin-top: 0.2rem;"><code><span class="cm">// C cài đặt tối ưu 0/1 Knapsack bằng Lập bảng Bottom-Up</span>
+<span class="ty">int</span> knapsack(<span class="ty">int</span> W, <span class="ty">int</span> wt[], <span class="ty">int</span> val[], <span class="ty">int</span> n) {
+    <span class="ty">int</span> dp[n + <span class="st">1</span>][W + <span class="st">1</span>];
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt;= n; i++) {
+        <span class="kw">for</span> (<span class="ty">int</span> w = <span class="st">0</span>; w &lt;= W; w++) {
+            <span class="kw">if</span> (i == <span class="st">0</span> || w == <span class="st">0</span>) {
+                dp[i][w] = <span class="st">0</span>; <span class="cm">// Bài toán cơ sở: túi rỗng hoặc 0 vật phẩm</span>
+            } <span class="kw">else if</span> (wt[i - <span class="st">1</span>] &lt;= w) {
+                <span class="cm">// So sánh: Không chọn vật vs Chọn vật (cộng giá trị + tra cứu bảng)</span>
+                <span class="ty">int</span> exclude = dp[i - <span class="st">1</span>][w];
+                <span class="ty">int</span> include = val[i - <span class="st">1</span>] + dp[i - <span class="st">1</span>][w - wt[i - <span class="st">1</span>]];
+                dp[i][w] = (include &gt; exclude) ? include : exclude;
+            } <span class="kw">else</span> {
+                dp[i][w] = dp[i - <span class="st">1</span>][w]; <span class="cm">// Túi không đủ chứa vật i-1</span>
+            }
+        }
+    }
+    <span class="kw">return</span> dp[n][W]; <span class="cm">// Kết quả tối ưu của toàn bộ n vật phẩm ở sức chứa W</span>
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 12: Dynamic Programming</span>
+                    <span>Trang 14</span>
+                </div>
+            </div>
+
+            <!-- PAGE 15: CH13 TRIE (NEW!) -->
+            <div class="a4-page" id="page-15">
+                <div class="a4-header">
+                    <span>Chương 13: Cây tiền tố Trie</span>
+                    <span>Prefix Tree &amp; Tìm kiếm nhanh</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 13: Cây tiền tố Trie (Prefix Tree)</h2>
+                    <p>
+                        <strong>Trie (Cây tiền tố - Prefix Tree)</strong> là cấu trúc dữ liệu dạng cây phi tuyến tính cực kỳ tối ưu cho các bài toán xử lý chuỗi ký tự. Thay vì so khớp chuỗi tuần tự tốn kém <em>O</em>(<em>L</em> * <em>N</em>), Trie cho phép tìm kiếm, thêm mới một từ độ dài <em>L</em> với tốc độ tuyệt đối <strong><em>O</em>(<em>L</em>)</strong>, hoàn toàn độc lập với kích thước cơ sở dữ liệu.
+                    </p>
+                    <p>
+                        <strong>Nguyên lý hoạt động cốt lõi:</strong>
+                        - Mỗi nút (Node) đại diện cho một ký tự chuỗi.
+                        - Các từ có chung tiền tố (Prefix) sẽ <strong>chia sẻ chung các nút tổ tiên</strong>, giúp tiết kiệm tối đa không gian lưu trữ RAM khi tập từ vựng lớn.
+                        - Mỗi nút chứa một mảng con trỏ kích thước 26 phần tử (tương ứng bảng chữ cái `a-z`) và một cờ Boolean <code>isEndOfWord</code> để đánh dấu ký tự kết thúc của một từ hoàn chỉnh.
+                    </p>
+                    
+                    <div class="diagram-container" style="margin-bottom: 0.2rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 135" width="100%">
+                            <!-- Level 0 (Root) -->
+                            <circle cx="225" cy="12" r="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+                            <text x="225" y="15" font-family="Inter" font-size="6" font-weight="700" text-anchor="middle">root</text>
+
+                            <!-- Level 1 -->
+                            <line x1="220" y1="20" x2="155" y2="38" stroke="#94a3b8" stroke-width="1"/>
+                            <line x1="230" y1="20" x2="295" y2="38" stroke="#94a3b8" stroke-width="1"/>
+                            <circle cx="150" cy="42" r="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                            <text x="150" y="45.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">C</text>
+                            <circle cx="300" cy="42" r="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                            <text x="300" y="45.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">D</text>
+
+                            <!-- Level 2 -->
+                            <line x1="150" y1="52" x2="150" y2="62" stroke="#94a3b8" stroke-width="1"/>
+                            <line x1="300" y1="52" x2="300" y2="62" stroke="#94a3b8" stroke-width="1"/>
+                            <circle cx="150" cy="72" r="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                            <text x="150" y="75.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">A</text>
+                            <!-- DO (End of word) -->
+                            <circle cx="300" cy="72" r="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                            <text x="300" y="75.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">O</text>
+
+                            <!-- Level 3 -->
+                            <line x1="145" y1="80" x2="120" y2="94" stroke="#94a3b8" stroke-width="1"/>
+                            <line x1="155" y1="80" x2="180" y2="94" stroke="#94a3b8" stroke-width="1"/>
+                            <line x1="300" y1="82" x2="300" y2="92" stroke="#94a3b8" stroke-width="1"/>
+                            <!-- CAT (End of word) -->
+                            <circle cx="115" cy="102" r="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                            <text x="115" y="105.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">T</text>
+                            <circle cx="185" cy="102" r="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                            <text x="185" y="105.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">R</text>
+                            <!-- DOG (End of word) -->
+                            <circle cx="300" cy="102" r="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                            <text x="300" y="105.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">G</text>
+
+                            <!-- Level 4 -->
+                            <line x1="185" y1="112" x2="185" y2="118" stroke="#94a3b8" stroke-width="1"/>
+                            <!-- CART (End of word) -->
+                            <circle cx="185" cy="126" r="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                            <text x="185" y="129.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">T</text>
+                        </svg>
+                    </div>
+
+                    <h3 style="font-size: 8.5pt; color: var(--primary); margin-top: 4px; margin-bottom: 2px;">1. Phân Tích Cấu Trúc Bộ Nhớ Trong C (64-bit Architecture)</h3>
+                    <p style="margin-top: 0; margin-bottom: 4px; font-size: 7.2pt; line-height: 1.3;">
+                        Trong C, một nút của cây Trie được định nghĩa bằng <code>struct TrieNode</code> chứa một mảng 26 con trỏ và một cờ kết thúc.
+                        <br>
+                        - <strong>Mảng con trỏ <code>children[26]</code></strong>: Lưu trữ 26 địa chỉ trỏ tới các nút ký tự tiếp theo. Trên kiến trúc 64-bit, mỗi con trỏ (Pointer) có kích thước 8 Bytes. Do đó, mảng <code>children</code> tiêu thụ hết: 26 * 8 = <strong>208 Bytes</strong> (từ offset +0 đến +207).
+                        <br>
+                        - <strong>Biến <code>isEndOfWord</code> (int)</strong>: Chiếm <strong>4 Bytes</strong> bộ nhớ (từ offset +208 đến +211).
+                        <br>
+                        - <strong>Căn lề bộ nhớ (Memory Alignment &amp; Padding)</strong>: Hệ thống 64-bit yêu cầu các cấu trúc dữ liệu căn lề theo ranh giới 8-byte để tăng tốc độ nạp Cache Line của CPU. Trình biên dịch C sẽ tự động chèn thêm <strong>4 Bytes trống (Padding)</strong> vào sau biến <code>isEndOfWord</code>. Nhờ đó, tổng kích thước Node được làm tròn thành: 208 + 4 + 4 = <strong>216 Bytes</strong>.
+                    </p>
+
+                    <h3 style="font-size: 8.5pt; color: var(--primary); margin-top: 4px; margin-bottom: 2px;">2. Ánh Xạ Ký Tự &amp; Giải Thuật</h3>
+                    <p style="margin-top: 0; margin-bottom: 4px; font-size: 7.2pt; line-height: 1.3;">
+                        Trie ánh xạ ký tự <code>'a' - 'z'</code> thành các chỉ số từ <code>0 - 25</code> bằng biểu thức: <code>int index = key[i] - 'a'</code>. Khi thêm từ, ta đi từ nút gốc, nếu con trỏ tại vị trí <code>children[index]</code> đang là <code>NULL</code>, ta dùng <code>malloc</code> tạo nút mới. Hàm <code>startsWith</code> (Prefix matching) đi hết chuỗi tiền tố, nếu khớp hoàn chỉnh sẽ trả về true (1), là nền tảng cốt lõi của các tính năng <strong>Autocomplete</strong> và gợi ý từ vựng.
+                    </p>
+
+                    <pre style="margin-top: 0.15rem; font-size: 6.8pt; line-height: 1.1;"><code><span class="cm">// Mã nguồn C đầy đủ mô tả cấu trúc và 4 hàm API cơ bản của cây Trie</span>
+<span class="kw">struct</span> TrieNode {
+    <span class="kw">struct</span> TrieNode* children[<span class="st">26</span>]; <span class="cm">// Mảng 26 pointer (size 208B, offset +0)</span>
+    <span class="ty">int</span> isEndOfWord;             <span class="cm">// Cờ kết thúc từ (size 4B, offset +208)</span>
+};
+
+<span class="kw">struct</span> TrieNode* createNode() {
+    <span class="kw">struct</span> TrieNode* pNode = (<span class="kw">struct</span> TrieNode*)malloc(<span class="kw">sizeof</span>(<span class="kw">struct</span> TrieNode));
+    pNode-&gt;isEndOfWord = <span class="st">0</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; <span class="st">26</span>; i++) pNode-&gt;children[i] = NULL;
+    <span class="kw">return</span> pNode;
+}
+
+<span class="ty">void</span> insert(<span class="kw">struct</span> TrieNode* root, <span class="kw">const</span> <span class="ty">char</span>* key) {
+    <span class="kw">struct</span> TrieNode* curr = root;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; key[i] != <span class="st">'\0'</span>; i++) {
+        <span class="ty">int</span> idx = key[i] - <span class="st">'a'</span>;
+        <span class="kw">if</span> (!curr-&gt;children[idx]) curr-&gt;children[idx] = createNode();
+        curr = curr-&gt;children[idx];
+    }
+    curr-&gt;isEndOfWord = <span class="st">1</span>;
+}
+
+<span class="ty">int</span> search(<span class="kw">struct</span> TrieNode* root, <span class="kw">const</span> <span class="ty">char</span>* key) {
+    <span class="kw">struct</span> TrieNode* curr = root;
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; key[i] != <span class="st">'\0'</span>; i++) {
+        <span class="ty">int</span> idx = key[i] - <span class="st">'a'</span>;
+        <span class="kw">if</span> (!curr-&gt;children[idx]) <span class="kw">return</span> <span class="st">0</span>;
+        curr = curr-&gt;children[idx];
+    }
+    <span class="kw">return</span> (curr != NULL &amp;&amp; curr-&gt;isEndOfWord);
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 13: Trie (Prefix Tree)</span>
+                    <span>Trang 15</span>
+                </div>
+            </div>
+
+            <!-- PAGE 16: CONCLUSION & REFERENCES -->
+            <div class="a4-page" id="page-16">
                 <div class="a4-header">
                     <span>Tổng kết &amp; Tài liệu</span>
                     <span>Tài liệu học tập bổ sung</span>
@@ -966,7 +1172,7 @@ Node* create_node(<span class="ty">int</span> value) {
                     <div>
                         <h2>Tổng kết Giáo trình</h2>
                         <p>
-                            Cuốn sách này đã khái quát những cấu trúc dữ liệu tuyến tính và phi tuyến tính căn bản nhất trong Khoa học Máy tính. Việc nắm vững các cấu trúc dữ liệu và giải thuật không chỉ giúp bạn giải quyết các bài toán lập trình hiệu quả hơn, tối ưu tài nguyên máy tính tốt hơn mà còn là nền tảng cốt lõi của các hệ quản trị cơ sở dữ liệu lớn (Database index, B-Trees), hệ điều hành (Memory Allocators, Schedulers), và hệ thống phân tán (Consistent Hashing, Graphs).
+                            Cuốn sách giáo khoa tương tác này đã khái quát toàn bộ những cấu trúc dữ liệu tuyến tính, phi tuyến tính và các giải thuật cốt lõi bậc nhất của Khoa học Máy tính. Việc làm chủ Con trỏ RAM, Danh sách liên kết, Heap, Cây BST, Đồ thị, Sắp xếp đệ quy, Quy hoạch động và Cây tiền tố Trie mở ra cánh cổng để bạn tự tin giải quyết những hệ thống lớn, tối ưu hóa thuật toán và xây dựng tư duy lập trình chuyên sâu.
                         </p>
                         
                         <h2>Tài liệu Tham khảo &amp; Đọc thêm</h2>
@@ -984,7 +1190,7 @@ Node* create_node(<span class="ty">int</span> value) {
                 </div>
                 <div class="a4-footer">
                     <span>Tổng kết &amp; Tài liệu</span>
-                    <span>Trang 14</span>
+                    <span>Trang 16</span>
                 </div>
             </div>
 
