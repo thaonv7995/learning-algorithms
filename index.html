@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cấu Trúc Dữ Liệu & Giải Thuật - Sách Giáo Khoa Tương Tác A4</title>
+    <!-- FontAwesome for beautiful modern icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- TOP NAVBAR: Controls the viewing/printing mode -->
+    <header class="top-navbar no-print">
+        <div class="logo">
+            <i class="fa-solid fa-book-open-reader"></i>
+            <span>CẤU TRÚC DỮ LIỆU & GIẢI THUẬT</span>
+        </div>
+        
+        <div class="mode-selectors">
+            <button class="btn-mode active" id="btn-mode-interactive">
+                <i class="fa-solid fa-laptop-code"></i> Học Tương Tác
+            </button>
+            <button class="btn-mode" id="btn-mode-print">
+                <i class="fa-solid fa-file-pdf"></i> Trang In A4 (Preview)
+            </button>
+        </div>
+        
+        <div class="nav-actions">
+            <button class="btn-action" id="btn-toggle-sandbox">
+                <i class="fa-solid fa-cubes"></i> Ẩn/Hiện Sandbox
+            </button>
+            <button class="btn-action btn-primary" id="btn-trigger-print">
+                <i class="fa-solid fa-print"></i> In / Xuất PDF (A4)
+            </button>
+        </div>
+    </header>
+
+    <!-- ==========================================================================
+         MODE 1: INTERACTIVE WEB VIEW (Default Dashboard)
+         ========================================================================== -->
+    <main class="dashboard-layout" id="interactive-layout">
+        
+        <!-- Left Sidebar: Chapters Table of Contents -->
+        <aside class="toc-sidebar">
+            <h4 class="toc-title">Danh mục bài học</h4>
+            <ul class="toc-menu">
+                <li class="toc-item active" data-chapter="1">
+                    <a href="#ch1"><i class="fa-solid fa-memory"></i> 1. Pointer & Memory</a>
+                </li>
+                <li class="toc-item" data-chapter="2">
+                    <a href="#ch2"><i class="fa-solid fa-table-cells-large"></i> 2. Array & Dynamic Array</a>
+                </li>
+                <li class="toc-item" data-chapter="3">
+                    <a href="#ch3"><i class="fa-solid fa-link"></i> 3. Singly Linked List</a>
+                </li>
+                <li class="toc-item" data-chapter="4">
+                    <a href="#ch8"><i class="fa-solid fa-left-right"></i> 4. Doubly Linked List</a>
+                </li>
+                <li class="toc-item" data-chapter="5">
+                    <a href="#ch4"><i class="fa-solid fa-layer-group"></i> 5. Stack & Queue</a>
+                </li>
+                <li class="toc-item" data-chapter="6">
+                    <a href="#ch9"><i class="fa-solid fa-circle-notch"></i> 6. Circular Queue</a>
+                </li>
+                <li class="toc-item" data-chapter="7">
+                    <a href="#ch5"><i class="fa-solid fa-hashtag"></i> 7. Hash Table</a>
+                </li>
+                <li class="toc-item" data-chapter="8">
+                    <a href="#ch10"><i class="fa-solid fa-cubes"></i> 8. Binary Heap</a>
+                </li>
+                <li class="toc-item" data-chapter="9">
+                    <a href="#ch6"><i class="fa-solid fa-sitemap"></i> 9. Binary Search Tree</a>
+                </li>
+                <li class="toc-item" data-chapter="10">
+                    <a href="#ch11"><i class="fa-solid fa-diagram-project"></i> 10. Graph Traversals</a>
+                </li>
+                <li class="toc-item" data-chapter="11">
+                    <a href="#ch7"><i class="fa-solid fa-arrow-down-wide-short"></i> 11. Sorting Algorithms</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Middle Content Pane: Displays active chapter theory & code -->
+        <section class="reading-pane" id="reading-pane">
+            <article class="reading-content" id="reading-content">
+                <!-- Content gets dynamically injected here from pages by JS -->
+            </article>
+        </section>
+
+        <!-- Dynamic vertical resize bar -->
+        <div class="resize-divider" id="resize-divider" title="Kéo để thay đổi kích thước"></div>
+
+        <!-- Right Sidebar: The Interactive Algorithm Simulator Sandbox -->
+        <section class="visualizer-sandbox" id="visualizer-sandbox">
+            <div class="visualizer-header">
+                <h3 id="sandbox-title"><i class="fa-solid fa-terminal"></i> Mô phỏng Pointer</h3>
+                <span class="no-print" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Sandbox Tương Tác</span>
+            </div>
+            
+            <!-- Controls Panel -->
+            <div class="visualizer-controls" id="sandbox-controls">
+                <!-- Controls dynamically loaded here depending on active chapter -->
+            </div>
+            
+            <!-- Render Arena / Canvas -->
+            <div class="visualizer-canvas" id="sandbox-canvas">
+                <!-- Elements dynamically animated here -->
+            </div>
+            
+            <!-- Live Step Logs (Collapsible Console) -->
+            <div class="visualizer-logs-container" id="logs-container">
+                <div class="logs-header" id="btn-toggle-logs" title="Click để thu gọn/mở rộng Console">
+                    <span><i class="fa-solid fa-terminal"></i> Console Log</span>
+                    <button class="btn-toggle-logs-icon" id="toggle-logs-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="visualizer-logs" id="sandbox-logs">
+                    <div class="log-entry info">Hệ thống đã sẵn sàng. Hãy chọn các thao tác phía trên để bắt đầu mô phỏng thuật toán!</div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+
+    <!-- ==========================================================================
+         MODE 2: PRINT PREVIEW VIEW (A4 Paginated Sheets)
+         ========================================================================== -->
+    <main class="print-preview-layout" id="print-layout">
+        <div class="a4-page-container" id="a4-page-container">
+            
+            <!-- PAGE 1: COVER PAGE -->
+            <div class="a4-page" id="page-1">
+                <div class="cover-page">
+                    <div class="cover-title-group">
+                        <p class="cover-subtitle">Giáo Trình Khoa Học Máy Tính</p>
+                        <h1 class="cover-title">CẤU TRÚC DỮ LIỆU<br>& GIẢI THUẬT</h1>
+                        <div class="cover-divider"></div>
+                        <p style="margin-top: 1rem; font-family: 'Inter', sans-serif; font-size: 10pt; color: var(--text-muted); letter-spacing: 0.05em;">LÝ THUYẾT - HÌNH MINH HỌA - SO SÁNH - CODE C</p>
+                    </div>
+                    
+                    <div>
+                        <div class="cover-author">Biên soạn: Antigravity AI &amp; pairs</div>
+                    </div>
+                    
+                    <div class="cover-footer-text">
+                        Đại Học Công Nghệ &amp; Hệ Thống Nhúng • Xuất Bản 2026
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: PREFACE & TABLE OF CONTENTS -->
+            <div class="a4-page" id="page-2">
+                <div class="a4-header">
+                    <span>Cấu trúc dữ liệu &amp; Giải thuật</span>
+                    <span>Mục lục &amp; Lời nói đầu</span>
+                </div>
+                <div class="a4-content">
+                    <h1 style="font-size: 20pt; margin-top: 5mm; margin-bottom: 3mm;">Lời nói đầu</h1>
+                    <p style="font-style: italic; font-size: 9pt; line-height: 1.5; margin-bottom: 1rem;">
+                        &quot;Cấu trúc dữ liệu và giải thuật&quot; không chỉ là môn học nền tảng đối với mọi kỹ sư phần mềm, mà nó là chìa khóa cốt lõi giúp lập trình viên hiểu sâu sắc về cách thức bộ nhớ vật lý hoạt động, cách quản lý con trỏ (pointer), cách cấp phát và thu hồi ô nhớ tối ưu trong hệ thống. Giáo trình này được biên soạn định dạng A4 chuẩn in ấn kết hợp hình ảnh trực quan vector và code C thực chiến nhằm cung cấp cái nhìn thực tiễn nhất.
+                    </p>
+                    
+                    <h1 style="font-size: 18pt; margin-bottom: 0.8rem;">Mục lục Giáo trình</h1>
+                    <ul class="toc-print-list" style="margin-top: 0;">
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Lời nói đầu &amp; Mục lục sách</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 02</span>
+                        </li>
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Chương 1: Con trỏ &amp; Quản lý bộ nhớ động trong C</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 03</span>
+                        </li>
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Chương 2: Mảng động (Dynamic Array / Vector)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 04</span>
+                        </li>
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Chương 3: Danh sách liên kết đơn (Singly Linked List)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 05</span>
+                        </li>
+                        <li class="toc-print-item" style="color:var(--primary); font-weight:600;">
+                            <span class="toc-print-name">Chương 4: Danh sách liên kết kép (Doubly Linked List)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 06</span>
+                        </li>
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Chương 5: Ngăn xếp (Stack) &amp; Hàng đợi (Queue)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 07</span>
+                        </li>
+                        <li class="toc-print-item" style="color:var(--primary); font-weight:600;">
+                            <span class="toc-print-name">Chương 6: Hàng đợi vòng (Circular Queue)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 08</span>
+                        </li>
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Chương 7: Bảng băm (Hash Table) &amp; Xử lý va chạm</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 09</span>
+                        </li>
+                        <li class="toc-print-item" style="color:var(--primary); font-weight:600;">
+                            <span class="toc-print-name">Chương 8: Cây Heap nhị phân &amp; Hàng đợi ưu tiên (Binary Heap)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 10</span>
+                        </li>
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Chương 9: Cây tìm kiếm nhị phân (Binary Search Tree)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 11</span>
+                        </li>
+                        <li class="toc-print-item" style="color:var(--primary); font-weight:600;">
+                            <span class="toc-print-name">Chương 10: Đồ thị &amp; Giải thuật Duyệt đồ thị (BFS / DFS)</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 12</span>
+                        </li>
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Chương 11: Giải thuật Sắp xếp &amp; Độ phức tạp Big O</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 13</span>
+                        </li>
+                        <li class="toc-print-item">
+                            <span class="toc-print-name">Tổng kết giáo trình &amp; Tài liệu tham khảo</span>
+                            <span class="toc-print-dots"></span>
+                            <span class="toc-print-page">Trang 14</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="a4-footer">
+                    <span>Mục lục</span>
+                    <span>Trang 02</span>
+                </div>
+            </div>
+
+            <!-- PAGE 3: CH1 POINTER & MEMORY -->
+            <div class="a4-page" id="page-3">
+                <div class="a4-header">
+                    <span>Chương 1: Con trỏ &amp; Quản lý bộ nhớ</span>
+                    <span>Lý thuyết C cơ bản</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 1: Con trỏ &amp; Quản lý bộ nhớ động</h2>
+                    <p>
+                        Trong ngôn ngữ C, <strong>Con trỏ (Pointer)</strong> là một biến chứa địa chỉ bộ nhớ của một biến khác. Đây là công cụ cực kỳ mạnh mẽ cho phép thao tác trực tiếp trên bộ nhớ RAM vật lý. Việc hiểu rõ pointer là bước bắt buộc để tự xây dựng các cấu trúc dữ liệu phức tạp.
+                    </p>
+                    <p>
+                        Bộ nhớ chương trình chia làm 2 phân vùng lớn: 
+                        1. <strong>Stack</strong>: Nơi tự động cấp phát cho các biến cục bộ khi khai báo hàm, kích thước nhỏ và tự thu hồi khi ra khỏi scope.
+                        2. <strong>Heap</strong>: Vùng nhớ rộng lớn dùng để cấp phát động theo yêu cầu thời gian chạy (Runtime) thông qua các hàm <code>malloc()</code>, <code>calloc()</code> hoặc <code>realloc()</code>. Các vùng nhớ này phải được thu hồi thủ công bằng <code>free()</code>, nếu không sẽ dẫn đến rò rỉ bộ nhớ (<strong>Memory Leak</strong>).
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <!-- Pointer & Memory Address Visual Diagram -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 100" width="100%">
+                            <!-- Memory cell 1 -->
+                            <rect x="20" y="30" width="70" height="40" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                            <text x="55" y="48" font-family="Inter" font-size="9" font-weight="700" fill="#1e293b" text-anchor="middle">data = 42</text>
+                            <text x="55" y="62" font-family="Inter" font-size="7.5" fill="#64748b" text-anchor="middle">Address: 0x100</text>
+                            
+                            <!-- Pointer cell -->
+                            <rect x="200" y="30" width="70" height="40" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                            <text x="235" y="48" font-family="Inter" font-size="9" font-weight="700" fill="#1e293b" text-anchor="middle">ptr = 0x100</text>
+                            <text x="235" y="62" font-family="Inter" font-size="7.5" fill="#64748b" text-anchor="middle">Address: 0x208</text>
+                            
+                            <!-- Arrow connection -->
+                            <path d="M 200 50 L 100 50" stroke="#10b981" stroke-width="2" fill="none"/>
+                            <polygon points="100,50 108,46 108,54" fill="#10b981"/>
+                            
+                            <text x="145" y="42" font-family="Inter" font-size="8" font-style="italic" fill="#10b981" text-anchor="middle">Trỏ tới (ptr = &amp;data)</text>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="ty">int</span> data = <span class="st">42</span>;
+<span class="ty">int</span> *ptr = &amp;data; <span class="cm">// ptr lưu địa chỉ của data (0x100)</span>
+printf(<span class="st">"Gia tri: %d\n"</span>, *ptr); <span class="cm">// Dereference *ptr -> 42</span>
+
+<span class="cm">// Cấp phát động trên vùng nhớ Heap</span>
+<span class="ty">int</span> *arr = (<span class="ty">int</span>*) malloc(<span class="st">5</span> * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+<span class="kw">if</span> (arr == NULL) {
+    printf(<span class="st">"Cap phat bo nho that bai!\n"</span>);
+    <span class="kw">return</span> <span class="st">1</span>;
+}
+free(arr); <span class="cm">// Phải giải phóng sau khi sử dụng để tránh Leak!</span></code></pre>
+                    
+                    <div class="callout-box">
+                        <strong>Quy tắc Con trỏ an toàn:</strong> Luôn gán pointer về <code>NULL</code> ngay sau khi giải phóng bằng hàm <code>free()</code> để tránh lỗi con trỏ lơ lửng (<strong>Dangling pointer</strong>) trỏ vào vùng nhớ không hợp lệ.
+                    </div>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 1: Pointer &amp; Memory</span>
+                    <span>Trang 03</span>
+                </div>
+            </div>
+
+            <!-- PAGE 4: CH2 ARRAY & DYNAMIC ARRAY -->
+            <div class="a4-page" id="page-4">
+                <div class="a4-header">
+                    <span>Chương 2: Mảng &amp; Mảng động</span>
+                    <span>Cấu trúc dữ liệu tuyến tính</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 2: Mảng &amp; Mảng động (Dynamic Array)</h2>
+                    <p>
+                        <strong>Mảng (Array)</strong> là tập hợp các phần tử có cùng kiểu dữ liệu, nằm trong các ô nhớ liên tiếp nhau trên RAM. Ưu điểm tuyệt đối của mảng là khả năng truy cập ngẫu nhiên phần tử bằng chỉ số (Index) cực kỳ nhanh với độ phức tạp <em>O</em>(1). Tuy nhiên, mảng tĩnh có nhược điểm lớn là kích thước cố định, không thể thay đổi sau khi khai báo.
+                    </p>
+                    <p>
+                        <strong>Mảng động (Dynamic Array)</strong> tự động khắc phục nhược điểm này. Khi mảng đầy (<code>size == capacity</code>), nó sẽ tự động cấp phát một vùng nhớ mới rộng gấp đôi vùng cũ, sao chép toàn bộ dữ liệu sang vùng nhớ mới và giải phóng vùng nhớ cũ. Cơ chế này đảm bảo chi phí thêm phần tử trung bình (Amortized complexity) là <em>O</em>(1).
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 80" width="100%">
+                            <!-- Memory cells consecutive -->
+                            <g transform="translate(40, 15)">
+                                <rect x="0" y="10" width="50" height="40" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="25" y="35" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">10</text>
+                                <text x="25" y="62" font-family="Inter" font-size="8" fill="#64748b" text-anchor="middle">idx: 0</text>
+                                
+                                <rect x="50" y="10" width="50" height="40" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="75" y="35" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">20</text>
+                                <text x="75" y="62" font-family="Inter" font-size="8" fill="#64748b" text-anchor="middle">idx: 1</text>
+                                
+                                <rect x="100" y="10" width="50" height="40" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="125" y="35" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">30</text>
+                                <text x="125" y="62" font-family="Inter" font-size="8" fill="#64748b" text-anchor="middle">idx: 2</text>
+                                
+                                <rect x="150" y="10" width="50" height="40" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="3,3" stroke-width="2"/>
+                                <text x="175" y="35" font-family="Inter" font-size="9" fill="#94a3b8" text-anchor="middle">Trống</text>
+                                <text x="175" y="62" font-family="Inter" font-size="8" fill="#64748b" text-anchor="middle">idx: 3</text>
+                                
+                                <text x="220" y="30" font-family="Inter" font-size="8.5" font-weight="600" fill="#1e293b">Size = 3 (Thực tế chứa)</text>
+                                <text x="220" y="45" font-family="Inter" font-size="8.5" font-weight="600" fill="#2563eb">Capacity = 4 (Khả năng tối đa)</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="kw">typedef struct</span> {
+    <span class="ty">int</span> *data;     <span class="cm">// Con trỏ tới vùng nhớ chứa mảng</span>
+    <span class="ty">int</span> size;     <span class="cm">// Số lượng phần tử hiện tại</span>
+    <span class="ty">int</span> capacity; <span class="cm">// Sức chứa tối đa trước khi cần resize</span>
+} DynamicArray;
+
+<span class="ty">void</span> append(DynamicArray *arr, <span class="ty">int</span> value) {
+    <span class="kw">if</span> (arr-&gt;size == arr-&gt;capacity) {
+        arr-&gt;capacity *= <span class="st">2</span>; <span class="cm">// Nhân đôi sức chứa</span>
+        arr-&gt;data = (<span class="ty">int</span>*) realloc(arr-&gt;data, arr-&gt;capacity * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    }
+    arr-&gt;data[arr-&gt;size++] = value;
+}</code></pre>
+                    
+                    <div class="callout-box success">
+                        <strong>Amortized O(1):</strong> Mặc dù thao tác resize tốn <em>O</em>(<em>N</em>) để copy dữ liệu, nhưng do việc này chỉ xảy ra định kỳ rất hiếm, nên chia trung bình cho mỗi lần thêm cuối chỉ tốn đúng thời gian hằng số <em>O</em>(1).
+                    </div>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 2: Array &amp; Dynamic Array</span>
+                    <span>Trang 04</span>
+                </div>
+            </div>
+
+            <!-- PAGE 5: CH3 SINGLY LINKED LIST -->
+            <div class="a4-page" id="page-5">
+                <div class="a4-header">
+                    <span>Chương 3: Danh sách liên kết đơn</span>
+                    <span>Cấu trúc dữ liệu liên kết động</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 3: Danh sách liên kết đơn (Singly Linked List)</h2>
+                    <p>
+                        Khác với mảng, <strong>Danh sách liên kết (Linked List)</strong> không lưu trữ các phần tử ở các ô nhớ liên tiếp. Thay vào đó, mỗi phần tử là một <strong>Node</strong> (Nút) được phân bố tự do trên bộ nhớ Heap. Mỗi Node bao gồm hai thành phần cơ bản:
+                        1. <strong>Data</strong>: Giá trị thông tin cần lưu trữ.
+                        2. <strong>Next</strong>: Một biến con trỏ chứa địa chỉ của Node tiếp theo trong danh sách. Node cuối cùng trỏ tới <code>NULL</code>.
+                    </p>
+                    <p>
+                        Ưu điểm lớn nhất là chèn/xóa phần tử cực nhanh tại đầu danh sách với thời gian <em>O</em>(1) mà không cần dịch chuyển bất kỳ ô nhớ nào. Nhược điểm lớn nhất là không hỗ trợ truy cập ngẫu nhiên qua index; để tìm kiếm một phần tử, bạn phải duyệt tuần tự từ đầu (<code>Head</code>) tốn <em>O</em>(<em>N</em>) thời gian.
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 70" width="100%">
+                            <!-- Node 1 -->
+                            <rect x="10" y="15" width="55" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                            <line x1="45" y1="15" x2="45" y2="45" stroke="#2563eb" stroke-width="1.5"/>
+                            <text x="27.5" y="34" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">10</text>
+                            <text x="50" y="34" font-family="Inter" font-size="8" fill="#64748b" text-anchor="middle">ptr</text>
+                            <text x="37.5" y="58" font-family="Inter" font-size="7.5" fill="#64748b" text-anchor="middle">Head</text>
+                            
+                            <!-- Arrow 1 to 2 -->
+                            <line x1="65" y1="30" x2="105" y2="30" stroke="#2563eb" stroke-width="2"/>
+                            <polygon points="105,30 99,26 99,34" fill="#2563eb"/>
+                            
+                            <!-- Node 2 -->
+                            <rect x="105" y="15" width="55" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                            <line x1="140" y1="15" x2="140" y2="45" stroke="#2563eb" stroke-width="1.5"/>
+                            <text x="122.5" y="34" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">20</text>
+                            <text x="145" y="34" font-family="Inter" font-size="8" fill="#64748b" text-anchor="middle">ptr</text>
+                            
+                            <!-- Arrow 2 to 3 -->
+                            <line x1="160" y1="30" x2="200" y2="30" stroke="#2563eb" stroke-width="2"/>
+                            <polygon points="200,30 194,26 194,34" fill="#2563eb"/>
+                            
+                            <!-- Node 3 -->
+                            <rect x="200" y="15" width="65" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                            <line x1="235" y1="15" x2="235" y2="45" stroke="#2563eb" stroke-width="1.5"/>
+                            <text x="217.5" y="34" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">30</text>
+                            <text x="250" y="34" font-family="Inter" font-size="8" fill="#e11d48" font-weight="700" text-anchor="middle">NULL</text>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="kw">typedef struct</span> <span class="ty">Node</span> {
+    <span class="ty">int</span> data;
+    <span class="kw">struct</span> <span class="ty">Node</span> *next; <span class="cm">// Con trỏ trỏ tới Node tiếp theo</span>
+} Node;
+
+Node* create_node(<span class="ty">int</span> value) {
+    Node *new_node = (Node*) malloc(<span class="kw">sizeof</span>(Node));
+    new_node-&gt;data = value;
+    new_node-&gt;next = NULL;
+    <span class="kw">return</span> new_node;
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 3: Singly Linked List</span>
+                    <span>Trang 05</span>
+                </div>
+            </div>
+
+            <!-- PAGE 6: CH8 DOUBLY LINKED LIST (NEW!) -->
+            <div class="a4-page" id="page-6">
+                <div class="a4-header">
+                    <span>Chương 4: Danh sách liên kết kép</span>
+                    <span>Liên kết hai chiều tối ưu</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 4: Danh sách liên kết kép (Doubly Linked List)</h2>
+                    <p>
+                        <strong>Danh sách liên kết kép (Doubly Linked List)</strong> là một biến thể nâng cao của liên kết đơn. Trong đó, mỗi Node được bổ sung thêm một con trỏ thứ hai tên là <code>prev</code> trỏ ngược về Node đứng trước nó trong danh sách, bên cạnh con trỏ <code>next</code> trỏ tới Node đứng sau.
+                    </p>
+                    <p>
+                        <strong>So sánh &amp; Đánh đổi (Trade-offs):</strong>
+                        - <strong>Ưu điểm</strong>: Cho phép duyệt danh sách theo hai chiều (tiến và lùi). Thao tác xóa một Node khi đã có sẵn con trỏ trỏ tới Node đó cực kỳ nhanh chỉ tốn <em>O</em>(1) (trong liên kết đơn phải duyệt từ đầu để tìm Node trước nó tốn <em>O</em>(<em>N</em>)).
+                        - <strong>Nhược điểm</strong>: Tốn bộ nhớ hơn do mỗi Node phải lưu thêm 1 con trỏ <code>prev</code>. Thao tác chèn/xóa phức tạp hơn do phải cập nhật đồng thời nhiều con trỏ của cả các Node trước và sau.
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 70" width="100%">
+                            <!-- Node 1 -->
+                            <rect x="20" y="15" width="70" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                            <line x1="42" y1="15" x2="42" y2="45" stroke="#2563eb" stroke-width="1.5"/>
+                            <line x1="68" y1="15" x2="68" y2="45" stroke="#2563eb" stroke-width="1.5"/>
+                            <text x="31" y="34" font-family="Inter" font-size="7" fill="#e11d48" font-weight="700" text-anchor="middle">NULL</text>
+                            <text x="55" y="34" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">10</text>
+                            <text x="80" y="34" font-family="Inter" font-size="7" fill="#64748b" text-anchor="middle">next</text>
+                            
+                            <!-- Bi-directional Arrow 1 to 2 -->
+                            <path d="M 90,25 L 130,25" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+                            <polygon points="130,25 124,21 124,29" fill="#2563eb"/>
+                            <path d="M 130,35 L 90,35" stroke="#10b981" stroke-width="1.5" fill="none"/>
+                            <polygon points="90,35 96,31 96,39" fill="#10b981"/>
+                            
+                            <!-- Node 2 -->
+                            <rect x="130" y="15" width="70" height="30" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                            <line x1="152" y1="15" x2="152" y2="45" stroke="#2563eb" stroke-width="1.5"/>
+                            <line x1="178" y1="15" x2="178" y2="45" stroke="#2563eb" stroke-width="1.5"/>
+                            <text x="141" y="34" font-family="Inter" font-size="7" fill="#64748b" text-anchor="middle">prev</text>
+                            <text x="165" y="34" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">20</text>
+                            <text x="190" y="34" font-family="Inter" font-size="7" fill="#e11d48" font-weight="700" text-anchor="middle">NULL</text>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="kw">typedef struct</span> <span class="ty">DNode</span> {
+    <span class="ty">int</span> data;
+    <span class="kw">struct</span> <span class="ty">DNode</span> *prev; <span class="cm">// Trỏ ngược về Node trước</span>
+    <span class="kw">struct</span> <span class="ty">DNode</span> *next; <span class="cm">// Trỏ tới Node sau</span>
+} DNode;
+
+<span class="ty">void</span> insert_after(DNode* prev_node, <span class="ty">int</span> value) {
+    <span class="kw">if</span> (prev_node == NULL) <span class="kw">return</span>;
+    DNode* new_node = (DNode*) malloc(<span class="kw">sizeof</span>(DNode));
+    new_node-&gt;data = value;
+    new_node-&gt;next = prev_node-&gt;next;
+    prev_node-&gt;next = new_node;
+    new_node-&gt;prev = prev_node;
+    <span class="kw">if</span> (new_node-&gt;next != NULL)
+        new_node-&gt;next-&gt;prev = new_node;
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 4: Doubly Linked List</span>
+                    <span>Trang 06</span>
+                </div>
+            </div>
+
+            <!-- PAGE 7: CH4 STACK & QUEUE -->
+            <div class="a4-page" id="page-7">
+                <div class="a4-page-header a4-header">
+                    <span>Chương 5: Stack &amp; Queue</span>
+                    <span>Cấu trúc dữ liệu trừu tượng</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 5: Ngăn xếp (Stack) &amp; Hàng đợi (Queue)</h2>
+                    <p>
+                        <strong>Stack (Ngăn xếp)</strong> và <strong>Queue (Hàng đợi)</strong> là hai kiểu dữ liệu trừu tượng tuyến tính được sử dụng vô cùng phổ biến với quy trình truy xuất phần tử có quy luật nghiêm ngặt:
+                    </p>
+                    <p>
+                        1. <strong>Stack</strong>: Hoạt động theo quy tắc <strong>LIFO</strong> (Last In, First Out - Vào sau ra trước). Thao tác chèn gọi là <code>push()</code>, thao tác xóa gọi là <code>pop()</code>. Stack giống như một ống nghiệm dựng đứng, bạn chỉ có thể thao tác ở phần đỉnh (<code>top</code>) của Stack. Ứng dụng: Quản lý Call Stack của hàm, chức năng Undo/Redo, thuật toán DFS.
+                    </p>
+                    <p>
+                        2. <strong>Queue</strong>: Hoạt động theo quy tắc <strong>FIFO</strong> (First In, First Out - Vào trước ra trước). Thao tác chèn gọi là <code>enqueue()</code> ở cuối hàng (<code>rear</code>), thao tác xóa gọi là <code>dequeue()</code> ở đầu hàng (<code>front</code>). Giống như một hàng xếp hàng mua vé. Ứng dụng: Request Queue, hàng đợi BFS.
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 90" width="100%">
+                            <!-- Stack section left -->
+                            <g transform="translate(10, 5)">
+                                <text x="75" y="12" font-family="Inter" font-size="9" font-weight="700" fill="#1e293b" text-anchor="middle">STACK (LIFO)</text>
+                                <path d="M 50,20 L 50,80 L 100,80 L 100,20" stroke="#0f172a" stroke-width="2.5" fill="none"/>
+                                <!-- elements inside stack -->
+                                <rect x="55" y="62" width="40" height="15" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                                <text x="75" y="73" font-family="Inter" font-size="8.5" font-weight="700" text-anchor="middle">A</text>
+                                <rect x="55" y="44" width="40" height="15" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                                <text x="75" y="55" font-family="Inter" font-size="8.5" font-weight="700" text-anchor="middle">B (Top)</text>
+                                <!-- Arrow push pop -->
+                                <path d="M 75,10 C 65,-10 35,22 53,30" stroke="#10b981" stroke-width="1.5" fill="none"/>
+                                <polygon points="53,30 46,27 49,34" fill="#10b981"/>
+                                <text x="35" y="10" font-family="Inter" font-size="7" font-weight="700" fill="#10b981">Push</text>
+                            </g>
+                            
+                            <!-- Queue section right -->
+                            <g transform="translate(220, 5)">
+                                <text x="100" y="12" font-family="Inter" font-size="9" font-weight="700" fill="#1e293b" text-anchor="middle">QUEUE (FIFO)</text>
+                                <line x1="30" y1="30" x2="170" y2="30" stroke="#0f172a" stroke-width="2.5"/>
+                                <line x1="30" y1="65" x2="170" y2="65" stroke="#0f172a" stroke-width="2.5"/>
+                                
+                                <!-- Elements inside queue -->
+                                <rect x="50" y="38" width="30" height="20" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                                <text x="65" y="51" font-family="Inter" font-size="8.5" font-weight="700" text-anchor="middle">Z</text>
+                                <text x="65" y="25" font-family="Inter" font-size="7" fill="#64748b" text-anchor="middle">Front</text>
+                                
+                                <rect x="90" y="38" width="30" height="20" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                                <text x="105" y="51" font-family="Inter" font-size="8.5" font-weight="700" text-anchor="middle">Y</text>
+                                
+                                <rect x="130" y="38" width="30" height="20" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                                <text x="145" y="51" font-family="Inter" font-size="8.5" font-weight="700" text-anchor="middle">X</text>
+                                <text x="145" y="25" font-family="Inter" font-size="7" fill="#64748b" text-anchor="middle">Rear</text>
+                                
+                                <!-- In & Out Arrows -->
+                                <path d="M 185,50 L 165,50" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+                                <polygon points="165,50 171,46 171,54" fill="#2563eb"/>
+                                <text x="195" y="48" font-family="Inter" font-size="7" font-weight="700" fill="#2563eb">In</text>
+                                
+                                <path d="M 45,50 L 15,50" stroke="#e11d48" stroke-width="1.5" fill="none"/>
+                                <polygon points="15,50 21,46 21,54" fill="#e11d48"/>
+                                <text x="5" y="48" font-family="Inter" font-size="7" font-weight="700" fill="#e11d48">Out</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="cm">// Stack cài đặt bằng mảng tĩnh cơ bản</span>
+<span class="kw">#define</span> MAX 100
+<span class="kw">typedef struct</span> {
+    <span class="ty">int</span> data[MAX];
+    <span class="ty">int</span> top;
+} Stack;
+
+<span class="ty">void</span> push(Stack *s, <span class="ty">int</span> val) {
+    <span class="kw">if</span> (s-&gt;top &lt; MAX - <span class="st">1</span>) {
+        s-&gt;data[++(s-&gt;top)] = val;
+    }
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 5: Stack &amp; Queue</span>
+                    <span>Trang 07</span>
+                </div>
+            </div>
+
+            <!-- PAGE 8: CH9 CIRCULAR QUEUE (NEW!) -->
+            <div class="a4-page" id="page-8">
+                <div class="a4-header">
+                    <span>Chương 6: Hàng đợi vòng</span>
+                    <span>Tối ưu hóa không gian lưu trữ</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 6: Hàng đợi vòng (Circular Queue)</h2>
+                    <p>
+                        Trong hàng đợi tuyến tính thông thường cài đặt bằng mảng tĩnh, sau khi một phần tử bị lấy ra (<code>dequeue</code>), ô nhớ ở đầu mảng sẽ bị bỏ trống và không thể tái sử dụng cho các lần chèn tiếp theo. Điều này dẫn đến sự lãng phí bộ nhớ nghiêm trọng và lỗi &quot;Queue đầy giả&quot;.
+                    </p>
+                    <p>
+                        <strong>Giải pháp Hàng đợi vòng (Circular Queue)</strong> khắc phục triệt để bằng cách kết nối ô nhớ cuối cùng quay ngược lại ô nhớ đầu tiên bằng toán tử chia lấy dư (Modulo).
+                        - Chỉ số chèn (Rear) tăng theo: <code>rear = (rear + 1) % MAX</code>.
+                        - Chỉ số xóa (Front) tăng theo: <code>front = (front + 1) % MAX</code>.
+                        - Trạng thái <strong>Queue Đầy</strong> khi: <code>(rear + 1) % MAX == front</code>.
+                        - Trạng thái <strong>Queue Rỗng</strong> khi: <code>front == -1</code>.
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 90" width="100%">
+                            <!-- Circular Queue visual Ring representation -->
+                            <g transform="translate(180, 5)">
+                                <circle cx="45" cy="40" r="35" fill="none" stroke="#0f172a" stroke-width="2"/>
+                                <!-- Spokes / Divisions -->
+                                <line x1="45" y1="5" x2="45" y2="75" stroke="#94a3b8" stroke-dasharray="2,2"/>
+                                <line x1="10" y1="40" x2="80" y2="40" stroke="#94a3b8" stroke-dasharray="2,2"/>
+                                
+                                <!-- Cell Labels -->
+                                <circle cx="45" cy="18" r="8" fill="#eff6ff" stroke="#2563eb"/>
+                                <text x="45" y="21" font-family="Inter" font-size="7" font-weight="700" text-anchor="middle">10</text>
+                                <text x="63" y="15" font-family="Inter" font-size="6.5" fill="#2563eb" font-weight="700">front</text>
+                                
+                                <circle cx="68" cy="40" r="8" fill="#eff6ff" stroke="#2563eb"/>
+                                <text x="68" y="43" font-family="Inter" font-size="7" font-weight="700" text-anchor="middle">20</text>
+                                
+                                <circle cx="45" cy="62" r="8" fill="#eff6ff" stroke="#2563eb"/>
+                                <text x="45" y="65" font-family="Inter" font-size="7" font-weight="700" text-anchor="middle">30</text>
+                                <text x="63" y="70" font-family="Inter" font-size="6.5" fill="#10b981" font-weight="700">rear</text>
+                                
+                                <circle cx="22" cy="40" r="8" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="2,2"/>
+                                <text x="22" y="42.5" font-family="Inter" font-size="6" fill="#94a3b8" text-anchor="middle">-</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="kw">typedef struct</span> {
+    <span class="ty">int</span> items[MAX];
+    <span class="ty">int</span> front, rear;
+} CircularQueue;
+
+<span class="ty">void</span> enqueue(CircularQueue *q, <span class="ty">int</span> value) {
+    <span class="kw">if</span> ((q-&gt;rear + <span class="st">1</span>) % MAX == q-&gt;front) {
+        printf(<span class="st">"Queue day!\n"</span>);
+        <span class="kw">return</span>;
+    }
+    <span class="kw">if</span> (q-&gt;front == -<span class="st">1</span>) q-&gt;front = <span class="st">0</span>;
+    q-&gt;rear = (q-&gt;rear + <span class="st">1</span>) % MAX;
+    q-&gt;items[q-&gt;rear] = value;
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 6: Circular Queue</span>
+                    <span>Trang 08</span>
+                </div>
+            </div>
+
+            <!-- PAGE 9: CH5 HASH TABLE -->
+            <div class="a4-page" id="page-9">
+                <div class="a4-header">
+                    <span>Chương 7: Bảng băm</span>
+                    <span>Ánh xạ dữ liệu tốc độ O(1)</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 7: Bảng băm &amp; Xử lý va chạm</h2>
+                    <p>
+                        <strong>Bảng băm (Hash Table)</strong> là cấu trúc dữ liệu ánh xạ Khóa (Keys) sang Giá trị (Values) thông qua một <strong>Hàm băm (Hash Function)</strong>. Hàm băm biến đổi Key (ví dụ chuỗi ký tự) thành một chỉ số nguyên (Bucket Index) nằm trong phạm vi mảng nhằm thực hiện các phép tìm kiếm, thêm, xóa trong thời gian trung bình lý tưởng là <em>O</em>(1).
+                    </p>
+                    <p>
+                        <strong>So sánh hai kỹ thuật xử lý Va chạm (Collision):</strong>
+                        1. <strong>Kết nối chuỗi (Chaining)</strong>: Mỗi ô mảng chứa một danh sách liên kết. Các phần tử va chạm sẽ nối tiếp nhau trên danh sách này. Dễ cài đặt, không sợ đầy bảng băm nhưng tốn thêm bộ nhớ cấp phát động cho các Node.
+                        2. <strong>Địa chỉ mở (Open Addressing)</strong>: Khi va chạm, tìm ô trống tiếp theo bằng phương pháp Dò tuyến tính (Linear Probing: <code>(index + i) % MAX</code>). Tiết kiệm bộ nhớ hơn nhưng dễ gây hiện tượng bó cụm (clustering) và giảm hiệu suất khi Load Factor lớn hơn 0.7.
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 80" width="100%">
+                            <!-- Table buckets chaining diagram -->
+                            <rect x="10" y="10" width="60" height="18" rx="3" fill="#0f172a" stroke="#0f172a"/>
+                            <text x="40" y="22" font-family="Inter" font-size="8" font-weight="700" fill="#ffffff" text-anchor="middle">Bucket 0</text>
+                            <line x1="70" y1="19" x2="110" y2="19" stroke="#94a3b8" stroke-dasharray="3,3" stroke-width="1.5"/>
+                            <text x="120" y="23" font-family="Inter" font-size="8" fill="#94a3b8">NULL</text>
+                            
+                            <rect x="10" y="32" width="60" height="18" rx="3" fill="#2563eb" stroke="#2563eb"/>
+                            <text x="40" y="44" font-family="Inter" font-size="8" font-weight="700" fill="#ffffff" text-anchor="middle">Bucket 1</text>
+                            
+                            <line x1="70" y1="41" x2="100" y2="41" stroke="#2563eb" stroke-width="2"/>
+                            <polygon points="100,41 94,37 94,45" fill="#2563eb"/>
+                            
+                            <rect x="100" y="32" width="70" height="18" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                            <text x="135" y="44" font-family="Inter" font-size="7.5" font-weight="700" text-anchor="middle">"alice" -&gt; 25</text>
+                            
+                            <line x1="170" y1="41" x2="200" y2="41" stroke="#2563eb" stroke-width="2"/>
+                            <polygon points="200,41 194,37 194,45" fill="#2563eb"/>
+                            
+                            <rect x="200" y="32" width="70" height="18" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                            <text x="235" y="44" font-family="Inter" font-size="7.5" font-weight="700" text-anchor="middle">"bob" -&gt; 99</text>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="cm">// Hàm băm chuỗi DJB2 nổi tiếng, phân tán dữ liệu rất đều</span>
+<span class="ty">unsigned long</span> hash(<span class="ty">char</span> *str, <span class="ty">int</span> capacity) {
+    <span class="ty">unsigned long</span> hash = <span class="st">5381</span>;
+    <span class="ty">int</span> c;
+    <span class="kw">while</span> ((c = *str++)) {
+        hash = ((hash &lt;&lt; <span class="st">5</span>) + hash) + c; <span class="cm">// hash * 33 + c</span>
+    }
+    <span class="kw">return</span> hash % capacity;
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 7: Bảng băm</span>
+                    <span>Trang 09</span>
+                </div>
+            </div>
+
+            <!-- PAGE 10: CH10 BINARY HEAP (NEW!) -->
+            <div class="a4-page" id="page-10">
+                <div class="a4-header">
+                    <span>Chương 8: Cây Heap nhị phân</span>
+                    <span>Cơ chế hàng đợi ưu tiên</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 8: Cây Heap nhị phân (Binary Heap)</h2>
+                    <p>
+                        <strong>Binary Heap (Cây Heap nhị phân)</strong> là một cây nhị phân hoàn chỉnh (Complete Binary Tree) được lưu trữ cực kỳ tối ưu dưới dạng một mảng tuần tự dẹt, không cần sử dụng con trỏ liên kết trái/phải. Có hai loại Heap:
+                        - <strong>Max Heap</strong>: Giá trị của nút cha luôn lớn hơn hoặc bằng các nút con của nó. Nút gốc chứa giá trị lớn nhất.
+                        - <strong>Min Heap</strong>: Giá trị của nút cha luôn nhỏ hơn hoặc bằng các nút con của nó. Nút gốc chứa giá trị nhỏ nhất.
+                    </p>
+                    <p>
+                        Công thức ánh xạ vị trí nút trong mảng với chỉ số <code>i</code> (bắt đầu từ 0):
+                        - Con trái: <code>2 * i + 1</code>.
+                        - Con phải: <code>2 * i + 2</code>.
+                        - Nút cha: <code>(i - 1) / 2</code>.
+                        Khi chèn hoặc xóa gốc, ta thực hiện các kỹ thuật hoán đổi đổi chỗ đi lên (<strong>Heapify Up</strong>) hoặc đi xuống (<strong>Heapify Down</strong>) có độ phức tạp là <em>O</em>(log <em>N</em>).
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 70" width="100%">
+                            <!-- Heap structure represented as consecutive array slots -->
+                            <g transform="translate(60, 10)">
+                                <rect x="0" y="10" width="40" height="30" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="20" y="28" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">50</text>
+                                <text x="20" y="52" font-family="Inter" font-size="7.5" fill="#64748b" text-anchor="middle">[0]</text>
+                                
+                                <rect x="40" y="10" width="40" height="30" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="60" y="28" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">30</text>
+                                <text x="60" y="52" font-family="Inter" font-size="7.5" fill="#64748b" text-anchor="middle">[1]</text>
+                                
+                                <rect x="80" y="10" width="40" height="30" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="100" y="28" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">40</text>
+                                <text x="100" y="52" font-family="Inter" font-size="7.5" fill="#64748b" text-anchor="middle">[2]</text>
+                                
+                                <rect x="120" y="10" width="40" height="30" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="140" y="28" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle">10</text>
+                                <text x="140" y="52" font-family="Inter" font-size="7.5" fill="#64748b" text-anchor="middle">[3]</text>
+                                
+                                <text x="180" y="28" font-family="Inter" font-size="8.5" font-weight="600" fill="#10b981">Max-Heap Array</text>
+                                <text x="180" y="42" font-family="Inter" font-size="8" fill="#64748b">Root: 50 (lớn nhất)</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="ty">void</span> heapify_up(<span class="ty">int</span> arr[], <span class="ty">int</span> i) {
+    <span class="kw">while</span> (i &gt; <span class="st">0</span> &amp;&amp; arr[i] &gt; arr[(i - <span class="st">1</span>) / <span class="st">2</span>]) {
+        <span class="ty">int</span> temp = arr[i];
+        arr[i] = arr[(i - <span class="st">1</span>) / <span class="st">2</span>];
+        arr[(i - <span class="st">1</span>) / <span class="st">2</span>] = temp; <span class="cm">// Đổi chỗ với nút cha</span>
+        i = (i - <span class="st">1</span>) / <span class="st">2</span>;
+    }
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 8: Binary Heap</span>
+                    <span>Trang 10</span>
+                </div>
+            </div>
+
+            <!-- PAGE 11: CH6 BINARY SEARCH TREE -->
+            <div class="a4-page" id="page-11">
+                <div class="a4-header">
+                    <span>Chương 9: Cây tìm kiếm nhị phân</span>
+                    <span>Cấu trúc dữ liệu phân cấp</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 9: Cây tìm kiếm nhị phân (BST)</h2>
+                    <p>
+                        <strong>Cây tìm kiếm nhị phân (Binary Search Tree - BST)</strong> sắp xếp dữ liệu phân cấp theo quy luật: giá trị các Nút con bên Trái luôn nhỏ hơn cha, và các Nút con bên Phải luôn lớn hơn cha (<code>Left &lt; Parent &lt; Right</code>). Phép duyệt cây theo thứ tự giữa (<strong>Inorder Traversal</strong>) sẽ xuất ra một mảng đã sắp xếp tăng dần.
+                    </p>
+                    <p>
+                        <strong>So sánh hai giải pháp duyệt BST (Đệ quy vs Đệ quy giả/Vòng lặp):</strong>
+                        1. <strong>Đệ quy (Recursive)</strong>: Cực kỳ ngắn gọn, dễ hiểu và dễ viết code. Tuy nhiên, nó tiêu tốn không gian bộ nhớ của Stack (Stack space complexity là <em>O</em>(<em>H</em>) với <em>H</em> là chiều cao cây) do phải lưu trữ nhiều khung hoạt động (stack frames) của hàm đệ quy. Có nguy cơ bị Stack Overflow nếu cây quá sâu.
+                        2. <strong>Vòng lặp (Iterative + Stack thủ công)</strong>: Phải tự tạo một Stack riêng để lưu vết, code phức tạp hơn nhưng kiểm soát tốt không gian bộ nhớ Heap và tránh được lỗi tràn ngăn xếp hệ thống.
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 110" width="100%">
+                            <!-- Node 20 (Root) -->
+                            <circle cx="225" cy="20" r="14" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                            <text x="225" y="24" font-family="Inter" font-size="9" font-weight="700" text-anchor="middle">20</text>
+                            
+                            <!-- Links to children -->
+                            <line x1="215" y1="30" x2="165" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+                            <line x1="235" y1="30" x2="285" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+                            
+                            <!-- Node 10 (Left) -->
+                            <circle cx="160" cy="70" r="14" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                            <text x="160" y="74" font-family="Inter" font-size="9" font-weight="700" text-anchor="middle">10</text>
+                            
+                            <!-- Node 30 (Right) -->
+                            <circle cx="290" cy="70" r="14" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                            <text x="290" y="74" font-family="Inter" font-size="9" font-weight="700" text-anchor="middle">30</text>
+                            
+                            <!-- Link from 10 to left and right -->
+                            <line x1="150" y1="80" x2="125" y2="100" stroke="#94a3b8" stroke-width="1.5"/>
+                            <line x1="170" y1="80" x2="195" y2="100" stroke="#94a3b8" stroke-width="1.5"/>
+                            
+                            <circle cx="120" cy="100" r="8" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+                            <circle cx="200" cy="100" r="8" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="cm">// Phép duyệt cây Inorder (Left-Root-Right) bằng đệ quy gọn nhẹ</span>
+<span class="ty">void</span> inorder(TreeNode *root) {
+    <span class="kw">if</span> (root != NULL) {
+        inorder(root-&gt;left);
+        printf(<span class="st">"%d "</span>, root-&gt;data);
+        inorder(root-&gt;right);
+    }
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 9: Binary Search Tree</span>
+                    <span>Trang 11</span>
+                </div>
+            </div>
+
+            <!-- PAGE 12: CH11 GRAPH (NEW!) -->
+            <div class="a4-page" id="page-12">
+                <div class="a4-header">
+                    <span>Chương 10: Đồ thị &amp; Giải thuật duyệt</span>
+                    <span>Mạng lưới kết nối phức tạp</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 10: Đồ thị &amp; Giải thuật Duyệt (BFS / DFS)</h2>
+                    <p>
+                        <strong>Đồ thị (Graph)</strong> là cấu trúc biểu diễn các mối quan hệ mạng lưới giữa các đỉnh (Vertices - <code>V</code>) kết nối với nhau bởi các cạnh (Edges - <code>E</code>).
+                    </p>
+                    <p>
+                        <strong>So sánh hai phương pháp Biểu diễn Đồ thị:</strong>
+                        - <strong>Ma trận kề (Adjacency Matrix)</strong>: Mảng hai chiều kích thước <code>V x V</code>. Cho phép kiểm tra kết nối giữa 2 đỉnh trong <em>O</em>(1). Tuy nhiên, tốn không gian bộ nhớ lớn <em>O</em>(<em>V</em><sup>2</sup>), không tối ưu với đồ thị thưa.
+                        - <strong>Danh sách kề (Adjacency List)</strong>: Mảng chứa các danh sách liên kết. Tiết kiệm không gian bộ nhớ tối đa <em>O</em>(<em>V + E</em>), nhưng kiểm tra kết nối tốn <em>O</em>(<em>V</em>).
+                    </p>
+                    <p>
+                        <strong>Hai giải thuật duyệt cốt lõi:</strong>
+                        - <strong>BFS (Breadth-First Search)</strong>: Duyệt theo chiều rộng, quét từng tầng kề trước bằng cách sử dụng <strong>Hàng đợi (Queue)</strong>. Độ phức tạp <em>O</em>(<em>V + E</em>). Ứng dụng: Tìm đường đi ngắn nhất.
+                        - <strong>DFS (Depth-First Search)</strong>: Duyệt theo chiều sâu, đi sâu nhất có thể rồi lùi bước (backtrack) bằng <strong>Ngăn xếp (Stack / Đệ quy)</strong>. Ứng dụng: Tìm chu trình, liên thông mạnh.
+                    </p>
+                    
+                    <div class="diagram-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 80" width="100%">
+                            <!-- Connected Graph Diagram -->
+                            <g transform="translate(160, 5)">
+                                <circle cx="20" cy="40" r="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="20" y="43.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">A</text>
+                                
+                                <line x1="29" y1="35" x2="61" y2="15" stroke="#94a3b8" stroke-width="1.5"/>
+                                <line x1="29" y1="45" x2="61" y2="65" stroke="#94a3b8" stroke-width="1.5"/>
+                                
+                                <circle cx="70" cy="15" r="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="70" y="18.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">B</text>
+                                
+                                <line x1="70" y1="25" x2="70" y2="55" stroke="#94a3b8" stroke-width="1.5"/>
+                                
+                                <circle cx="70" cy="65" r="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+                                <text x="70" y="68.5" font-family="Inter" font-size="8" font-weight="700" text-anchor="middle">C</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <pre><code><span class="cm">// Cấu trúc DFS duyệt đệ quy dùng Call Stack hệ thống</span>
+<span class="ty">void</span> DFS(<span class="ty">int</span> v, <span class="ty">int</span> visited[], AdjList adj[]) {
+    visited[v] = <span class="st">1</span>; <span class="cm">// Đánh dấu đã duyệt</span>
+    printf(<span class="st">"%d "</span>, v);
+    Node* temp = adj[v].head;
+    <span class="kw">while</span> (temp != NULL) {
+        <span class="kw">if</span> (!visited[temp-&gt;dest])
+            DFS(temp-&gt;dest, visited, adj);
+        temp = temp-&gt;next;
+    }
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 10: Graph Traversals</span>
+                    <span>Trang 12</span>
+                </div>
+            </div>
+
+            <!-- PAGE 13: CH7 SORTING -->
+            <div class="a4-page" id="page-13">
+                <div class="a4-header">
+                    <span>Chương 11: Thuật toán sắp xếp</span>
+                    <span>Độ phức tạp và phân loại</span>
+                </div>
+                <div class="a4-content">
+                    <h2>Chương 11: Thuật toán sắp xếp &amp; Độ phức tạp Big O</h2>
+                    <p>
+                        <strong>Sắp xếp (Sorting)</strong> là bài toán tổ chức lại các phần tử của một danh sách theo một tiêu chí xác định (tăng dần hoặc giảm dần). Có hai nhóm giải thuật sắp xếp chính:
+                        1. <strong>Giải thuật cơ bản (<em>O</em>(<em>N</em><sup>2</sup>))</strong>: Bubble Sort (Sắp xếp nổi bọt), Selection Sort (Sắp xếp chọn), Insertion Sort (Sắp xếp chèn). Các giải thuật này dễ cài đặt nhưng kém hiệu quả với tập dữ liệu lớn.
+                        2. <strong>Giải thuật nâng cao (<em>O</em>(<em>N</em> log <em>N</em>))</strong>: Quick Sort (Sắp xếp phân chia nhanh), Merge Sort (Sắp xếp trộn), Heap Sort. Các thuật toán này tối ưu hóa tối đa số lần so sánh.
+                    </p>
+                    
+                    <div style="margin-bottom: 0.5rem; page-break-inside: avoid; break-inside: avoid;">
+                        <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 7.5pt; text-align: center;">
+                            <thead>
+                                <tr style="background-color: var(--neutral-dark); color: white;">
+                                    <th style="padding: 5px; border: 1px solid #cbd5e1;">Giải thuật</th>
+                                    <th style="padding: 5px; border: 1px solid #cbd5e1;">Độ phức tạp trung bình</th>
+                                    <th style="padding: 5px; border: 1px solid #cbd5e1;">Trường hợp xấu nhất</th>
+                                    <th style="padding: 5px; border: 1px solid #cbd5e1;">Bộ nhớ phụ trợ</th>
+                                    <th style="padding: 5px; border: 1px solid #cbd5e1;">Tính ổn định</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background-color: #f8fafc;">
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1; font-weight: bold;">Bubble Sort</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1;"><em>O</em>(<em>N</em><sup>2</sup>)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1;"><em>O</em>(<em>N</em><sup>2</sup>)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1;"><em>O</em>(1)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1; color: var(--accent); font-weight: bold;">Có</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1; font-weight: bold;">Selection Sort</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1;"><em>O</em>(<em>N</em><sup>2</sup>)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1;"><em>O</em>(<em>N</em><sup>2</sup>)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1;"><em>O</em>(1)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1; color: #e11d48; font-weight: bold;">Không</td>
+                                </tr>
+                                <tr style="background-color: #f8fafc;">
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1; font-weight: bold;">Quick Sort</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1; color: var(--primary); font-weight: bold;"><em>O</em>(<em>N</em> log <em>N</em>)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1;"><em>O</em>(<em>N</em><sup>2</sup>)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1;"><em>O</em>(log <em>N</em>)</td>
+                                    <td style="padding: 5px; border: 1px solid #cbd5e1; color: #e11d48; font-weight: bold;">Không</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <pre><code><span class="cm">// Code Bubble Sort: Đổi chỗ các cặp phần tử liền kề nếu sai thứ tự</span>
+<span class="ty">void</span> bubble_sort(<span class="ty">int</span> arr[], <span class="ty">int</span> n) {
+    <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; n - <span class="st">1</span>; i++) {
+        <span class="kw">for</span> (<span class="ty">int</span> j = <span class="st">0</span>; j &lt; n - i - <span class="st">1</span>; j++) {
+            <span class="kw">if</span> (arr[j] &gt; arr[j+<span class="st">1</span>]) {
+                <span class="ty">int</span> temp = arr[j];
+                arr[j] = arr[j+<span class="st">1</span>];
+                arr[j+<span class="st">1</span>] = temp; <span class="cm">// Hoán đổi (Swap)</span>
+            }
+        }
+    }
+}</code></pre>
+                </div>
+                <div class="a4-footer">
+                    <span>Chương 11: Sorting Algorithms</span>
+                    <span>Trang 13</span>
+                </div>
+            </div>
+
+            <!-- PAGE 14: CONCLUSION & REFERENCES -->
+            <div class="a4-page" id="page-14">
+                <div class="a4-header">
+                    <span>Tổng kết &amp; Tài liệu</span>
+                    <span>Tài liệu học tập bổ sung</span>
+                </div>
+                <div class="a4-content" style="justify-content: space-between;">
+                    <div>
+                        <h2>Tổng kết Giáo trình</h2>
+                        <p>
+                            Cuốn sách này đã khái quát những cấu trúc dữ liệu tuyến tính và phi tuyến tính căn bản nhất trong Khoa học Máy tính. Việc nắm vững các cấu trúc dữ liệu và giải thuật không chỉ giúp bạn giải quyết các bài toán lập trình hiệu quả hơn, tối ưu tài nguyên máy tính tốt hơn mà còn là nền tảng cốt lõi của các hệ quản trị cơ sở dữ liệu lớn (Database index, B-Trees), hệ điều hành (Memory Allocators, Schedulers), và hệ thống phân tán (Consistent Hashing, Graphs).
+                        </p>
+                        
+                        <h2>Tài liệu Tham khảo &amp; Đọc thêm</h2>
+                        <ul style="line-height: 1.8;">
+                            <li><strong>Introduction to Algorithms (CLRS)</strong> - Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein. Giáo trình kinh điển toàn cầu về giải thuật.</li>
+                            <li><strong>The C Programming Language</strong> - Brian W. Kernighan, Dennis M. Ritchie. Sách gối đầu giường về C.</li>
+                            <li><strong>Algorithms (4th Edition)</strong> - Robert Sedgewick, Kevin Wayne. Giải thích trực quan sinh động về cấu trúc dữ liệu.</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="text-align: center; border-top: 1px solid #cbd5e1; padding-top: 20px; font-family: 'Inter', sans-serif;">
+                        <p style="font-size: 8pt; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">Hết Giáo Trình</p>
+                        <p style="font-size: 9pt; font-weight: 600; color: var(--neutral-dark);">Cảm ơn bạn đã lựa chọn giáo trình của chúng tôi!</p>
+                    </div>
+                </div>
+                <div class="a4-footer">
+                    <span>Tổng kết &amp; Tài liệu</span>
+                    <span>Trang 14</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Interactive JS Controller -->
+    <script src="app.js"></script>
+</body>
+</html>
