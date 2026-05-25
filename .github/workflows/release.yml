@@ -78,7 +78,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: algo-explorer-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: dist/algo-explorer-*.{tar.gz,zip}
+          path: dist/algo-explorer-*
 
   release:
     needs: build
@@ -104,8 +104,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-      tag_name: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
-      name: Algorithms Explorer ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
+          name: Algorithms Explorer ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
           generate_release_notes: true
           files: dist/upload/*
         env:
