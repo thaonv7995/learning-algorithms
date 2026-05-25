@@ -1,0 +1,26 @@
+{
+  "id": 4,
+  "title": "Median of Two Sorted Arrays",
+  "difficulty": "Hard",
+  "category": "Binary Search",
+  "timeComplexity": "O(log(min(m,n)))",
+  "spaceComplexity": "O(1)",
+  "description": "Cho hai mảng đã sort nums1 (độ dài m) và nums2 (độ dài n). Trả median của mảng gộp. Yêu cầu O(log(m+n)).",
+  "examples": [
+    { "input": "nums1 = [1,3], nums2 = [2]", "output": "2.0" },
+    { "input": "nums1 = [1,2], nums2 = [3,4]", "output": "2.5" }
+  ],
+  "approach": "Binary search partition trên mảng ngắn hơn: cắt i sao cho maxLeftX ≤ minRightY và maxLeftY ≤ minRightX. Median từ 4 biên partition.",
+  "memoryTip": "Partition X + Y = (m+n+1)/2 — invariant hai nửa cân bằng.",
+  "solutions": {
+    "python": "class Solution:\n    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:\n        A, B = nums1, nums2\n        if len(B) < len(A): A, B = B, A\n        m, n = len(A), len(B)\n        lo, hi = 0, m\n        while lo <= hi:\n            i = (lo + hi) // 2\n            j = (m + n + 1) // 2 - i\n            maxLX = A[i-1] if i else float('-inf')\n            minRX = A[i] if i < m else float('inf')\n            maxLY = B[j-1] if j else float('-inf')\n            minRY = B[j] if j < n else float('inf')\n            if maxLX <= minRY and maxLY <= minRX:\n                if (m+n) % 2: return float(min(minRX, minRY))\n                return (max(maxLX, maxLY) + min(minRX, minRY)) / 2\n            elif maxLX > minRY: hi = i - 1\n            else: lo = i + 1\n        return 0.0",
+    "cpp": "class Solution {\npublic:\n    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {\n        if (nums1.size() > nums2.size()) return findMedianSortedArrays(nums2, nums1);\n        int m = nums1.size(), n = nums2.size();\n        int lo = 0, hi = m;\n        while (lo <= hi) {\n            int i = lo + (hi - lo) / 2, j = (m + n + 1) / 2 - i;\n            int maxLX = i ? nums1[i-1] : INT_MIN;\n            int minRX = i < m ? nums1[i] : INT_MAX;\n            int maxLY = j ? nums2[j-1] : INT_MIN;\n            int minRY = j < n ? nums2[j] : INT_MAX;\n            if (maxLX <= minRY && maxLY <= minRX) {\n                if ((m+n)%2) return max(maxLX, maxLY);\n                return (max(maxLX, maxLY) + min(minRX, minRY)) / 2.0;\n            } else if (maxLX > minRY) hi = i - 1;\n            else lo = i + 1;\n        }\n        return 0;\n    }\n};",
+    "c": "/* Partition binary search — xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Partition hợp lệ ⇔ nửa trái gộp ≤ nửa phải gộp tại mọi biên.",
+    "edgeCases": ["Một mảng rỗng", "Tổng lẻ vs chẵn", "m=0 hoặc n=0"],
+    "pitfalls": ["Binary search trên merge O(log(m+n)) sai hướng", "INT_MIN/MAX biên partition"]
+  },
+  "tier": "done"
+}

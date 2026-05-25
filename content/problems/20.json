@@ -1,0 +1,26 @@
+{
+  "id": 20,
+  "title": "Valid Parentheses",
+  "difficulty": "Easy",
+  "category": "Stack",
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi s chỉ gồm '(', ')', '{', '}', '[', ']'. Kiểm tra chuỗi hợp lệ: mở đúng loại và đóng đúng thứ tự LIFO.",
+  "examples": [
+    { "input": "s = \"()[]{}\"", "output": "true" },
+    { "input": "s = \"(]\"", "output": "false" }
+  ],
+  "approach": "Stack: mở → push; đóng → pop và khớp cặp. Cuối stack phải rỗng.",
+  "memoryTip": "Map đóng→mở hoặc so sánh trực tiếp khi pop.",
+  "solutions": {
+    "python": "class Solution:\n    def isValid(self, s: str) -> bool:\n        st = []\n        pair = {')':'(', '}':'{', ']':'['}\n        for c in s:\n            if c in '({[': st.append(c)\n            elif not st or st.pop() != pair[c]: return False\n        return not st",
+    "cpp": "class Solution {\npublic:\n    bool isValid(string s) {\n        stack<char> st;\n        for (char c : s) {\n            if (c=='('||c=='{'||c=='[') st.push(c);\n            else {\n                if (st.empty()) return false;\n                char t = st.top(); st.pop();\n                if ((c==')'&&t!='(')||(c=='}'&&t!='{')||(c==']'&&t!='[')) return false;\n            }\n        }\n        return st.empty();\n    }\n};",
+    "c": "/* Stack char — xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Stack đảm bảo LIFO khớp từng cặp ngoặc lồng nhau.",
+    "edgeCases": ["Chuỗi rỗng → true", "Chỉ mở hoặc chỉ đóng", "Sai loại ngoặc"],
+    "pitfalls": ["Quên kiểm tra stack rỗng khi đóng", "Không check stack empty cuối"]
+  },
+  "tier": "done"
+}

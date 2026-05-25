@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Remove Nth Node From End of List</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>51.6% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Xóa nút thứ n tính từ cuối danh sách liên kết đơn lên và trả về nút gốc của danh sách mới.</div>
+                        <div class="block-text">Cho head của linked list đơn và s integer n ≥ 1. Xóa nút thứ n tính từ cuối list (1-indexed từ cuối) và trả head mới.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>head = 1-&gt;2-&gt;3-&gt;4-&gt;5, n = 2</code></div>
-                <div class="ex-line"><span>Out</span><code>1-&gt;2-&gt;3-&gt;5</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,3,4,5], n = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2,3,5]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [1], n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Hai con trỏ cách khoảng (Two Pointers - Fast and Slow). Ta sử dụng nút giả `dummy` trỏ tới `head`. Thiết lập hai con trỏ `first` và `second` ở nút `dummy`. Dịch chuyển `first` đi trước n + 1 bước. Sau đó, dịch chuyển đồng thời cả hai con trỏ từng bước một cho đến khi `first` gặp NULL. Khi đó, `second` sẽ dừng ngay trước nút cần xóa. Ta thực hiện `second-&gt;next = second-&gt;next-&gt;next` để ngắt kết nối nút cần xóa.</div>
+                        <div class="block-text">Dummy head + two pointers: đưa fast trước slow n+1 bước, rồi cùng tiến đến khi fast=null. slow.next là nút cần xóa.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,44 +95,26 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Definition <span class="kw">for</span> singly-linked list.
- * <span class="ty">struct</span> ListNode {
- *     <span class="ty">int</span> val;
- *     <span class="ty">struct</span> ListNode *next;
- * };
- */
-<span class="ty">struct</span> ListNode* removeNthFromEnd(<span class="ty">struct</span> ListNode* head, <span class="ty">int</span> n) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Definition <span class="kw">for</span> singly-linked <span class="ty">list</span>.</span>
-<span class="cm"># <span class="kw">class</span> <span class="ty">ListNode</span>(object):</span>
-<span class="cm">#     <span class="kw">def</span> __init__(<span class="ty">self</span>, val=0, next=<span class="kw">None</span>):</span>
-<span class="cm">#         <span class="ty">self</span>.val = val</span>
-<span class="cm">#         <span class="ty">self</span>.next = next</span>
-<span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> removeNthFromEnd(<span class="ty">self</span>, head, n):
-        &quot;&quot;&quot;
-        :type head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        :type n: <span class="ty">int</span>
-        :rtype: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">ListNode</span>* <span class="fn">removeNthFromEnd</span>(<span class="ty">ListNode</span>* head, <span class="ty">int</span> n) {
-        <span class="ty">ListNode</span> dummy(<span class="st">0</span>);
-        dummy.next = head;
-        <span class="ty">ListNode</span>* first = &amp;dummy;
-        <span class="ty">ListNode</span>* second = &amp;dummy;
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt;= n; i++) first = first-&gt;next; <span class="cm">// Di truoc n+1 buoc</span>
-        <span class="kw">while</span> (first) {
-            first = first-&gt;next;
-            second = second-&gt;next;
-        }
-        <span class="ty">ListNode</span>* toDelete = second-&gt;next;
-        second-&gt;next = second-&gt;next-&gt;next; <span class="cm">// Ngat ket noi nut</span>
-        <span class="fn">delete</span> toDelete; <span class="cm">// Giai phong Heap RAM trong C++</span>
+                            <pre class="code-block" id="code-block-c">/* Dummy + two pointers — xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> removeNthFromEnd(<span class="ty">self</span>, head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>], n: <span class="ty">int</span>) -&gt; <span class="ty">Optional</span>[<span class="ty">ListNode</span>]:
+        dummy = <span class="ty">ListNode</span>(0, head)
+        fast = slow = dummy
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n + 1):
+            fast = fast.next
+        <span class="kw">while</span> fast:
+            fast = fast.next
+            slow = slow.next
+        slow.next = slow.next.next
+        <span class="kw">return</span> dummy.next</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    ListNode* removeNthFromEnd(ListNode* head, <span class="ty">int</span> n) {
+        ListNode dummy(0, head);
+        ListNode *fast = &amp;dummy, *slow = &amp;dummy;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt;= n; ++i) fast = fast-&gt;next;
+        <span class="kw">while</span> (fast) { fast = fast-&gt;next; slow = slow-&gt;next; }
+        slow-&gt;next = slow-&gt;next-&gt;next;
         <span class="kw">return</span> dummy.next;
     }
 };</pre>
@@ -139,18 +126,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Linked List</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Hai con trỏ cách khoảng .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — sử dụng nút giả `dummy` trỏ tới `head`.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Thiết lập hai con trỏ `first` và `second` ở nút `dummy`.</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Dịch chuyển `first` đi trước n + 1 bước. Sau đó, dịch…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dummy head + two pointers: đưa fast trước slow n+1 bước,…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — slow.next là nút cần xóa.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Một nút</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Khoảng cách fast-slow = n+1 ⇒ slow dừng trước nút xóa.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút n=1</span><span class="analysis-tag edge">Xóa head</span><span class="analysis-tag edge">n = length</span><span class="analysis-tag pit">Quên dummy</span><span class="analysis-tag pit">Off-by-one n vs n+1 bước fast</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Kỹ thuật một lượt duyệt giúp giải thuật đạt tốc độ lý tưởng. Luôn ghi nhớ giải phóng nút bị xóa để tránh rò…</p>
+                        <p>Dummy giúp xóa head .</p>
                     </details>
                 </div>
                 </div>

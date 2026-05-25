@@ -1,0 +1,26 @@
+{
+  "id": 19,
+  "title": "Remove Nth Node From End of List",
+  "difficulty": "Medium",
+  "category": "Linked List",
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho head của linked list đơn và s integer n ≥ 1. Xóa nút thứ n tính từ cuối list (1-indexed từ cuối) và trả head mới.",
+  "examples": [
+    { "input": "head = [1,2,3,4,5], n = 2", "output": "[1,2,3,5]" },
+    { "input": "head = [1], n = 1", "output": "[]" }
+  ],
+  "approach": "Dummy head + two pointers: đưa fast trước slow n+1 bước, rồi cùng tiến đến khi fast=null. slow.next là nút cần xóa.",
+  "memoryTip": "Dummy giúp xóa head (n = length).",
+  "solutions": {
+    "python": "class Solution:\n    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:\n        dummy = ListNode(0, head)\n        fast = slow = dummy\n        for _ in range(n + 1):\n            fast = fast.next\n        while fast:\n            fast = fast.next\n            slow = slow.next\n        slow.next = slow.next.next\n        return dummy.next",
+    "cpp": "class Solution {\npublic:\n    ListNode* removeNthFromEnd(ListNode* head, int n) {\n        ListNode dummy(0, head);\n        ListNode *fast = &dummy, *slow = &dummy;\n        for (int i = 0; i <= n; ++i) fast = fast->next;\n        while (fast) { fast = fast->next; slow = slow->next; }\n        slow->next = slow->next->next;\n        return dummy.next;\n    }\n};",
+    "c": "/* Dummy + two pointers — xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Khoảng cách fast-slow = n+1 ⇒ slow dừng trước nút xóa.",
+    "edgeCases": ["Một nút n=1", "Xóa head", "n = length"],
+    "pitfalls": ["Quên dummy", "Off-by-one n vs n+1 bước fast"]
+  },
+  "tier": "done"
+}

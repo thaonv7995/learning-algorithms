@@ -1,6 +1,6 @@
 # Master QA Checklist — 3175 LeetCode Problems
 
-> Tự sinh bởi `node scripts/generate-master-qa.js` — **đánh dấu `[x]` trực tiếp trong file này** khi review xong từng bài.
+> **Rà soát thủ công** — tick `[x]` trực tiếp trong file này khi review xong từng bài. **Không chạy `generate-master-qa.js` sau khi đã tick** (sẽ ghi đè tick của bạn trừ khi cần refresh cột auto).
 > Chuẩn chi tiết: [QA-STANDARD.md](./QA-STANDARD.md) · Template review: [reviews/_TEMPLATE.md](./reviews/_TEMPLATE.md)
 
 ## Cách dùng
@@ -62,17 +62,16 @@
 
 ### #1 · Two Sum
 
-**Easy** · Array · tier `premium` · content:⬜ output:✅ review:✅
+**Easy** · Array · tier `done` · content:✅ output:✅ review:✅
 Review file: [reviews/0001-two-sum.md](./reviews/0001-two-sum.md)
 Trang: [problems/1-two-sum.html](../problems/1-two-sum.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
-  - _Auto: content thiếu — Thiếu content/problems/{id}.json_
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #2 · Add Two Numbers
 
@@ -80,40 +79,38 @@ Trang: [problems/1-two-sum.html](../problems/1-two-sum.html)
 Review file: [reviews/0002-add-two-numbers.md](./reviews/0002-add-two-numbers.md)
 Trang: [problems/2-add-two-numbers.html](../problems/2-add-two-numbers.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #3 · Longest Substring Without Repeating Characters
 
-**Medium** · Sliding Window · tier `premium` · content:⬜ output:✅ review:✅
+**Medium** · Sliding Window · tier `done` · content:✅ output:✅ review:✅
 Review file: [reviews/0003-longest-substring-without-repeating-characters.md](./reviews/0003-longest-substring-without-repeating-characters.md)
 Trang: [problems/3-longest-substring-without-repeating-characters.html](../problems/3-longest-substring-without-repeating-characters.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
-  - _Auto: content thiếu — Thiếu content/problems/{id}.json_
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #4 · Median of Two Sorted Arrays
 
-**Hard** · Binary Search · tier `premium` · content:⬜ output:✅ review:✅
+**Hard** · Binary Search · tier `done` · content:✅ output:✅ review:✅
 Review file: [reviews/0004-median-of-two-sorted-arrays.md](./reviews/0004-median-of-two-sorted-arrays.md)
 Trang: [problems/4-median-of-two-sorted-arrays.html](../problems/4-median-of-two-sorted-arrays.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
-  - _Auto: content thiếu — Thiếu content/problems/{id}.json_
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #5 · Longest Palindromic Substring
 
@@ -121,12 +118,12 @@ Trang: [problems/4-median-of-two-sorted-arrays.html](../problems/4-median-of-two
 Review file: [reviews/0005-longest-palindromic-substring.md](./reviews/0005-longest-palindromic-substring.md)
 Trang: [problems/5-longest-palindromic-substring.html](../problems/5-longest-palindromic-substring.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #6 · Zigzag Conversion
 
@@ -134,12 +131,12 @@ Trang: [problems/5-longest-palindromic-substring.html](../problems/5-longest-pal
 Review file: [reviews/0006-zigzag-conversion.md](./reviews/0006-zigzag-conversion.md)
 Trang: [problems/6-zigzag-conversion.html](../problems/6-zigzag-conversion.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #7 · Reverse Integer
 
@@ -147,12 +144,12 @@ Trang: [problems/6-zigzag-conversion.html](../problems/6-zigzag-conversion.html)
 Review file: [reviews/0007-reverse-integer.md](./reviews/0007-reverse-integer.md)
 Trang: [problems/7-reverse-integer.html](../problems/7-reverse-integer.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #8 · String to Integer (atoi)
 
@@ -160,12 +157,12 @@ Trang: [problems/7-reverse-integer.html](../problems/7-reverse-integer.html)
 Review file: [reviews/0008-string-to-integer-atoi.md](./reviews/0008-string-to-integer-atoi.md)
 Trang: [problems/8-string-to-integer-atoi.html](../problems/8-string-to-integer-atoi.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #9 · Palindrome Number
 
@@ -173,12 +170,12 @@ Trang: [problems/8-string-to-integer-atoi.html](../problems/8-string-to-integer-
 Review file: [reviews/0009-palindrome-number.md](./reviews/0009-palindrome-number.md)
 Trang: [problems/9-palindrome-number.html](../problems/9-palindrome-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #10 · Regular Expression Matching
 
@@ -186,26 +183,25 @@ Trang: [problems/9-palindrome-number.html](../problems/9-palindrome-number.html)
 Review file: [reviews/0010-regular-expression-matching.md](./reviews/0010-regular-expression-matching.md)
 Trang: [problems/10-regular-expression-matching.html](../problems/10-regular-expression-matching.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #11 · Container With Most Water
 
-**Medium** · Two Pointers · tier `premium` · content:⬜ output:✅ review:✅
+**Medium** · Two Pointers · tier `done` · content:✅ output:✅ review:✅
 Review file: [reviews/0011-container-with-most-water.md](./reviews/0011-container-with-most-water.md)
 Trang: [problems/11-container-with-most-water.html](../problems/11-container-with-most-water.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
-  - _Auto: content thiếu — Thiếu content/problems/{id}.json_
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #12 · Integer to Roman
 
@@ -213,26 +209,25 @@ Trang: [problems/11-container-with-most-water.html](../problems/11-container-wit
 Review file: [reviews/0012-integer-to-roman.md](./reviews/0012-integer-to-roman.md)
 Trang: [problems/12-integer-to-roman.html](../problems/12-integer-to-roman.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #13 · Roman to Integer
 
-**Easy** · Hash Table · tier `done` · content:⬜ output:✅ review:✅
+**Easy** · Hash Table · tier `done` · content:✅ output:✅ review:✅
 Review file: [reviews/0013-roman-to-integer.md](./reviews/0013-roman-to-integer.md)
 Trang: [problems/13-roman-to-integer.html](../problems/13-roman-to-integer.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
-  - _Auto: content thiếu — A1_
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #14 · Longest Common Prefix
 
@@ -240,26 +235,25 @@ Trang: [problems/13-roman-to-integer.html](../problems/13-roman-to-integer.html)
 Review file: [reviews/0014-longest-common-prefix.md](./reviews/0014-longest-common-prefix.md)
 Trang: [problems/14-longest-common-prefix.html](../problems/14-longest-common-prefix.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #15 · 3Sum
 
-**Medium** · Two Pointers · tier `premium` · content:⬜ output:✅ review:✅
+**Medium** · Two Pointers · tier `done` · content:✅ output:✅ review:✅
 Review file: [reviews/0015-3sum.md](./reviews/0015-3sum.md)
 Trang: [problems/15-3sum.html](../problems/15-3sum.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
-  - _Auto: content thiếu — Thiếu content/problems/{id}.json_
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #16 · 3Sum Closest
 
@@ -267,12 +261,12 @@ Trang: [problems/15-3sum.html](../problems/15-3sum.html)
 Review file: [reviews/0016-3sum-closest.md](./reviews/0016-3sum-closest.md)
 Trang: [problems/16-3sum-closest.html](../problems/16-3sum-closest.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #17 · Letter Combinations of a Phone Number
 
@@ -280,12 +274,12 @@ Trang: [problems/16-3sum-closest.html](../problems/16-3sum-closest.html)
 Review file: [reviews/0017-letter-combinations-of-a-phone-number.md](./reviews/0017-letter-combinations-of-a-phone-number.md)
 Trang: [problems/17-letter-combinations-of-a-phone-number.html](../problems/17-letter-combinations-of-a-phone-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #18 · 4Sum
 
@@ -293,40 +287,38 @@ Trang: [problems/17-letter-combinations-of-a-phone-number.html](../problems/17-l
 Review file: [reviews/0018-4sum.md](./reviews/0018-4sum.md)
 Trang: [problems/18-4sum.html](../problems/18-4sum.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #19 · Remove Nth Node From End of List
 
-**Medium** · Linked List · tier `premium` · content:⬜ output:✅ review:✅
+**Medium** · Linked List · tier `done` · content:✅ output:✅ review:✅
 Review file: [reviews/0019-remove-nth-node-from-end-of-list.md](./reviews/0019-remove-nth-node-from-end-of-list.md)
 Trang: [problems/19-remove-nth-node-from-end-of-list.html](../problems/19-remove-nth-node-from-end-of-list.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
-  - _Auto: content thiếu — Thiếu content/problems/{id}.json_
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #20 · Valid Parentheses
 
-**Easy** · Stack · tier `premium` · content:⬜ output:✅ review:✅
+**Easy** · Stack · tier `done` · content:✅ output:✅ review:✅
 Review file: [reviews/0020-valid-parentheses.md](./reviews/0020-valid-parentheses.md)
 Trang: [problems/20-valid-parentheses.html](../problems/20-valid-parentheses.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
-  - _Auto: content thiếu — Thiếu content/problems/{id}.json_
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
 
 ### #21 · Merge Two Sorted Lists
 
@@ -44497,11 +44489,11 @@ Trang: [problems/3943-number-of-pairs-after-increment.html](../problems/3943-num
 | Chỉ số | Số lượng |
 |--------|----------|
 | Tổng bài | 3175 |
-| Content validate pass | 90 |
+| Content validate pass | 98 |
 | Có output resolver | 150 |
 | Có file review | 121 |
 | Review ghi PASS (file riêng) | 1 |
-| **QA PASS tick trong MASTER-QA** | **0** |
-| **Chưa QA PASS** | **3175** |
+| **QA PASS tick trong MASTER-QA** | **20** |
+| **Chưa QA PASS** | **3155** |
 
 _Cập nhật: 2026-05-25_

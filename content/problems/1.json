@@ -1,0 +1,26 @@
+{
+  "id": 1,
+  "title": "Two Sum",
+  "difficulty": "Easy",
+  "category": "Array",
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng số nguyên nums và số target. Tìm chỉ số của hai phần tử khác nhau sao cho tổng bằng target. Giả định có đúng một nghiệm và không dùng cùng phần tử hai lần.",
+  "examples": [
+    { "input": "nums = [2,7,11,15], target = 9", "output": "[0,1]" },
+    { "input": "nums = [3,2,4], target = 6", "output": "[1,2]" }
+  ],
+  "approach": "Hash map một lượt: tại i, complement = target - nums[i]. Nếu complement đã trong map → trả [map[complement], i]. Ngược lại ghi nums[i]→i vào map.",
+  "memoryTip": "O(n) thời gian nhờ tra cứu complement O(1).",
+  "solutions": {
+    "python": "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        seen = {}\n        for i, x in enumerate(nums):\n            c = target - x\n            if c in seen:\n                return [seen[c], i]\n            seen[x] = i\n        return []",
+    "cpp": "class Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        unordered_map<int,int> seen;\n        for (int i = 0; i < (int)nums.size(); ++i) {\n            int c = target - nums[i];\n            if (seen.count(c)) return {seen[c], i};\n            seen[nums[i]] = i;\n        }\n        return {};\n    }\n};",
+    "c": "/* Hash map / nested loop — xem Python */"
+  },
+  "analysis": {
+    "correctness": "Mỗi cặp được xét khi gặp phần tử thứ hai; map lưu chỉ số đầu tiên.",
+    "edgeCases": ["Hai phần tử", "Số âm", "target = 0 với cặp đối"],
+    "pitfalls": ["Dùng cùng index hai lần", "O(n²) brute force không cần thiết"]
+  },
+  "tier": "done"
+}

@@ -1,0 +1,26 @@
+{
+  "id": 15,
+  "title": "3Sum",
+  "difficulty": "Medium",
+  "category": "Two Pointers",
+  "timeComplexity": "O(n²)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho mảng nums. Tìm mọi bộ ba (a,b,c) phân biệt chỉ số sao cho a+b+c=0. Không trùng bộ ba.",
+  "examples": [
+    { "input": "nums = [-1,0,1,2,-1,-4]", "output": "[[-1,-1,2],[-1,0,1]]" },
+    { "input": "nums = [0,1,1]", "output": "[]" }
+  ],
+  "approach": "Sort. Với mỗi i, two-pointer l,r tìm cặp sum = -nums[i]. Skip duplicate ở i, l, r.",
+  "memoryTip": "Sort + skip dup = không trùng bộ ba.",
+  "solutions": {
+    "python": "class Solution:\n    def threeSum(self, nums: List[int]) -> List[List[int]]:\n        nums.sort()\n        res = []\n        for i in range(len(nums)):\n            if i and nums[i] == nums[i-1]: continue\n            l, r = i+1, len(nums)-1\n            while l < r:\n                s = nums[i]+nums[l]+nums[r]\n                if s == 0:\n                    res.append([nums[i],nums[l],nums[r]])\n                    l += 1; r -= 1\n                    while l < r and nums[l]==nums[l-1]: l += 1\n                    while l < r and nums[r]==nums[r+1]: r -= 1\n                elif s < 0: l += 1\n                else: r -= 1\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> threeSum(vector<int>& nums) {\n        sort(nums.begin(), nums.end());\n        vector<vector<int>> res;\n        for (int i = 0; i < (int)nums.size(); ++i) {\n            if (i && nums[i]==nums[i-1]) continue;\n            int l = i+1, r = nums.size()-1;\n            while (l < r) {\n                long s = (long)nums[i]+nums[l]+nums[r];\n                if (s == 0) {\n                    res.push_back({nums[i],nums[l],nums[r]});\n                    while (++l < r && nums[l]==nums[l-1]);\n                    while (l < --r && nums[r]==nums[r+1]);\n                } else if (s < 0) l++; else r--;\n            }\n        }\n        return res;\n    }\n};",
+    "c": "/* Sort + two pointers — xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Mọi bộ ba 0-sum có i nhỏ nhất được xét; skip dup đảm bảo unique.",
+    "edgeCases": ["Không có nghiệm", "Toàn 0", "duplicate nhiều"],
+    "pitfalls": ["Quên skip nums[i] trùng", "Overflow khi cộng 3 int"]
+  },
+  "tier": "done"
+}

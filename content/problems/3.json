@@ -1,0 +1,26 @@
+{
+  "id": 3,
+  "title": "Longest Substring Without Repeating Characters",
+  "difficulty": "Medium",
+  "category": "Sliding Window",
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho chuỗi s. Tìm độ dài chuỗi con liên tiếp dài nhất không chứa ký tự lặp lại.",
+  "examples": [
+    { "input": "s = \"abcabcbb\"", "output": "3" },
+    { "input": "s = \"bbbbb\"", "output": "1" }
+  ],
+  "approach": "Sliding window [left, right] + map vị trí ký tự gần nhất. Khi s[right] trùng trong window → left = last[s[right]] + 1. Cập nhật maxLen.",
+  "memoryTip": "Chỉ cần map 128 ASCII — O(1) space.",
+  "solutions": {
+    "python": "class Solution:\n    def lengthOfLongestSubstring(self, s: str) -> int:\n        last, left, best = {}, 0, 0\n        for right, c in enumerate(s):\n            if c in last and last[c] >= left:\n                left = last[c] + 1\n            last[c] = right\n            best = max(best, right - left + 1)\n        return best",
+    "cpp": "class Solution {\npublic:\n    int lengthOfLongestSubstring(string s) {\n        vector<int> last(128, -1);\n        int left = 0, best = 0;\n        for (int r = 0; r < (int)s.size(); ++r) {\n            if (last[s[r]] >= left) left = last[s[r]] + 1;\n            last[s[r]] = r;\n            best = max(best, r - left + 1);\n        }\n        return best;\n    }\n};",
+    "c": "/* Sliding window + charIndex[128] — xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Window luôn không trùng ký tự; mọi chuỗi con hợp lệ được xét qua right.",
+    "edgeCases": ["s rỗng → 0", "Một ký tự", "Toàn khác nhau"],
+    "pitfalls": ["Quên nhảy left khi trùng", "Dùng set xóa từng ký tự chậm hơn map"]
+  },
+  "tier": "done"
+}

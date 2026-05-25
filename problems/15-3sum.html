@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">3Sum</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N^2)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(log N) đến O(N) (Phụ thuộc bộ sắp xếp)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>39.1% AC</span>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng số nguyên nums, hãy tìm tất cả các bộ ba độc nhất [nums[i], nums[j], nums[k]] sao cho i != j, i != k, j != k và tổng của chúng bằng 0.</div>
+                        <div class="block-text">Cho mảng nums. Tìm mọi bộ ba (a,b,c) phân biệt chỉ số sao cho a+b+c=0. Không trùng bộ ba.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -66,6 +66,11 @@
                 <div class="ex-label">Ví dụ 1</div>
                 <div class="ex-line"><span>In</span><code>nums = [-1,0,1,2,-1,-4]</code></div>
                 <div class="ex-line"><span>Out</span><code>[[-1,-1,2],[-1,0,1]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [0,1,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sắp xếp mảng tăng dần trước. Duyệt qua mảng bằng một vòng lặp ngoài `i`. Đối với mỗi phần tử `nums[i]`, ta sử dụng kỹ thuật hai con trỏ `left = i + 1` và `right = n - 1` để tìm hai phần tử có tổng bằng `-nums[i]`. Đặc biệt lưu ý bỏ qua các phần tử trùng lặp ở cả vòng lặp ngoài và trong để tránh sinh ra các bộ ba giống nhau.</div>
+                        <div class="block-text">Sort. Với mỗi i, two-pointer l,r tìm cặp sum = -nums[i]. Skip duplicate ở i, l, r.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,38 +95,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Return an array of arrays of size *<span class="ty">returnSize</span>.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">int</span>** threeSum(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span>* <span class="ty">returnSize</span>, <span class="ty">int</span>** returnColumnSizes) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> threeSum(<span class="ty">self</span>, nums):
-        &quot;&quot;&quot;
-        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
-        :rtype: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">vector&lt;vector&lt;int&gt;&gt;</span> <span class="fn">threeSum</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums) {
-        <span class="ty">vector&lt;vector&lt;int&gt;&gt;</span> res;
-        <span class="fn">sort</span>(nums.<span class="fn">begin</span>(), nums.<span class="fn">end</span>()); <span class="cm">// Sap xep truoc</span>
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; nums.<span class="fn">size</span>(); i++) {
-            <span class="kw">if</span> (i &gt; <span class="st">0</span> &amp;&amp; nums[i] == nums[i - <span class="st">1</span>]) <span class="kw">continue</span>; <span class="cm">// Tranh trung lap</span>
-            <span class="ty">int</span> left = i + <span class="st">1</span>, right = nums.<span class="fn">size</span>() - <span class="st">1</span>;
-            <span class="kw">while</span> (left &lt; right) {
-                <span class="ty">int</span> sum = nums[i] + nums[left] + nums[right];
-                <span class="kw">if</span> (sum == <span class="st">0</span>) {
-                    res.<span class="fn">push_back</span>({nums[i], nums[left], nums[right]});
-                    <span class="kw">while</span> (left &lt; right &amp;&amp; nums[left] == nums[left + <span class="st">1</span>]) left++;
-                    <span class="kw">while</span> (left &lt; right &amp;&amp; nums[right] == nums[right - <span class="st">1</span>]) right--;
-                    left++; right--;
-                } <span class="kw">else</span> <span class="kw">if</span> (sum &lt; <span class="st">0</span>) left++;
-                <span class="kw">else</span> right--;
+                            <pre class="code-block" id="code-block-c">/* Sort + two pointers — xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> threeSum(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        nums.sort()
+        res = []
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(nums)):
+            <span class="kw">if</span> i <span class="kw">and</span> nums[i] == nums[i-1]: continue
+            l, r = i+1, <span class="ty">len</span>(nums)-1
+            <span class="kw">while</span> l &lt; r:
+                s = nums[i]+nums[l]+nums[r]
+                <span class="kw">if</span> s == 0:
+                    res.append([nums[i],nums[l],nums[r]])
+                    l += 1; r -= 1
+                    <span class="kw">while</span> l &lt; r <span class="kw">and</span> nums[l]==nums[l-1]: l += 1
+                    <span class="kw">while</span> l &lt; r <span class="kw">and</span> nums[r]==nums[r+1]: r -= 1
+                <span class="kw">elif</span> s &lt; 0: l += 1
+                <span class="kw">else</span>: r -= 1
+        <span class="kw">return</span> res</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; threeSum(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        sort(nums.begin(), nums.end());
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)nums.size(); ++i) {
+            <span class="kw">if</span> (i &amp;&amp; nums[i]==nums[i-1]) continue;
+            <span class="ty">int</span> l = i+1, r = nums.size()-1;
+            <span class="kw">while</span> (l &lt; r) {
+                <span class="ty">long</span> s = (<span class="ty">long</span>)nums[i]+nums[l]+nums[r];
+                <span class="kw">if</span> (s == 0) {
+                    res.push_back({nums[i],nums[l],nums[r]});
+                    <span class="kw">while</span> (++l &lt; r &amp;&amp; nums[l]==nums[l-1]);
+                    <span class="kw">while</span> (l &lt; --r &amp;&amp; nums[r]==nums[r+1]);
+                } <span class="kw">else</span> <span class="kw">if</span> (s &lt; 0) l++; <span class="kw">else</span> r--;
             }
         }
         <span class="kw">return</span> res;
@@ -135,18 +141,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Two Pointers</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N^2)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(log N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Sắp xếp mảng tăng dần trước.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Duyệt qua mảng bằng một vòng lặp ngoài `i`.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — mỗi phần tử `nums[i]`, ta sử dụng kỹ thuật hai con trỏ…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Đặc biệt lưu ý bỏ qua các phần tử trùng lặp ở cả vòng lặp…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Với mỗi i, two-pointer l,r tìm cặp sum = -nums[i].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Skip duplicate ở i, l, r.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Sort + anchor i + two-pointer đảm bảo mọi bộ ba được xét; skip duplicate tránh trùng kết quả.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Không có bộ ba → []</span><span class="analysis-tag edge">Toàn số 0</span><span class="analysis-tag edge">Nhiều bộ ba trùng giá trị</span><span class="analysis-tag pit">Quên skip duplicate ở vòng ngoài và trong</span><span class="analysis-tag pit">Không sort trước khi two-pointer</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi bộ ba 0-sum có i nhỏ nhất được xét; skip dup đảm bảo unique.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không có nghiệm</span><span class="analysis-tag edge">Toàn 0</span><span class="analysis-tag edge">duplicate nhiều</span><span class="analysis-tag pit">Quên skip nums[i] trùng</span><span class="analysis-tag pit">Overflow khi cộng 3 int</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>sắp xếp mảng in-place giúp loại bỏ sự cần thiết của Hash Set lưu trữ các bộ ba đã duyệt, giảm thiểu áp lực…</p>
+                        <p>Sort + skip dup = không trùng bộ ba.</p>
                     </details>
                 </div>
                 </div>

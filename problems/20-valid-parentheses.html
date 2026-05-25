@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Valid Parentheses</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>44.2% AC</span>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một chuỗi s chỉ chứa các ký tự mở/đóng ngoặc '(', ')', '{', '}', '[' và ']', hãy kiểm tra xem chuỗi đầu vào có hợp lệ hay không.<br><br>Chuỗi hợp lệ phải mở ngoặc đúng loại và đóng ngoặc theo đúng thứ tự LIFO.</div>
+                        <div class="block-text">Cho chuỗi s chỉ gồm '(', ')', '{', '}', '[', ']'. Kiểm tra chuỗi hợp lệ: mở đúng loại và đóng đúng thứ tự LIFO.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -78,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng cấu trúc dữ liệu Ngăn xếp (Stack) để quản lý thứ tự lồng nhau của các dấu ngoặc. Khi gặp một ký tự mở '(', '{', '[', ta đẩy (push) nó vào Stack. Khi gặp một ký tự đóng, ta kiểm tra xem Stack có rỗng hay không; nếu rỗng hoặc ký tự đầu Stack không khớp loại mở tương ứng, chuỗi không hợp lệ. Khi kết thúc chuỗi, Stack phải trống hoàn toàn.</div>
+                        <div class="block-text">Stack: mở → push; đóng → pop và khớp cặp. Cuối stack phải rỗng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -95,33 +95,28 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> isValid(<span class="ty">char</span>* s) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> isValid(<span class="ty">self</span>, s):
-        &quot;&quot;&quot;
-        :type s: <span class="ty">str</span>
-        :rtype: bool
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">bool</span> <span class="fn">isValid</span>(<span class="ty">string</span> s) {
-        <span class="ty">stack&lt;char&gt;</span> st;
+                            <pre class="code-block" id="code-block-c">/* Stack <span class="ty">char</span> — xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> isValid(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; bool:
+        st = []
+        pair = {')':'(', '}':'{', ']':'['}
+        <span class="kw">for</span> c <span class="kw">in</span> s:
+            <span class="kw">if</span> c <span class="kw">in</span> '({[': st.append(c)
+            <span class="kw">elif</span> <span class="kw">not</span> st <span class="kw">or</span> st.pop() != pair[c]: <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">return</span> <span class="kw">not</span> st</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">bool</span> isValid(<span class="ty">string</span> s) {
+        stack&lt;<span class="ty">char</span>&gt; st;
         <span class="kw">for</span> (<span class="ty">char</span> c : s) {
-            <span class="kw">if</span> (c == <span class="st">'('</span> || c == <span class="st">'{'</span> || c == <span class="st">'['</span>) {
-                st.<span class="fn">push</span>(c);
-            } <span class="kw">else</span> {
-                <span class="kw">if</span> (st.<span class="fn">empty</span>()) <span class="kw">return</span> <span class="kw">false</span>;
-                <span class="ty">char</span> top = st.<span class="fn">top</span>();
-                <span class="kw">if</span> ((c == <span class="st">')'</span> &amp;&amp; top != <span class="st">'('</span>) ||
-                    (c == <span class="st">'}'</span> &amp;&amp; top != <span class="st">'{'</span>) ||
-                    (c == <span class="st">']'</span> &amp;&amp; top != <span class="st">'['</span>)) <span class="kw">return</span> <span class="kw">false</span>;
-                st.<span class="fn">pop</span>();
+            <span class="kw">if</span> (c=='('||c=='{'||c=='[') st.push(c);
+            <span class="kw">else</span> {
+                <span class="kw">if</span> (st.empty()) <span class="kw">return</span> false;
+                <span class="ty">char</span> t = st.top(); st.pop();
+                <span class="kw">if</span> ((c==')'&amp;&amp;t!='(')||(c=='}'&amp;&amp;t!='{')||(c==']'&amp;&amp;t!='[')) <span class="kw">return</span> false;
             }
         }
-        <span class="kw">return</span> st.<span class="fn">empty</span>();
+        <span class="kw">return</span> st.empty();
     }
 };</pre>
                         </div>
@@ -132,18 +127,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Stack</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — cấu trúc dữ liệu Ngăn xếp để quản lý thứ tự lồng nhau của…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — gặp một ký tự mở ' nó vào Stack.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — gặp một ký tự đóng, ta kiểm tra xem Stack có rỗng hay…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — kết thúc chuỗi, Stack phải trống hoàn toàn.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Stack: mở → push; đóng → pop và khớp cặp.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Cuối stack phải rỗng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack khớp chính xác thứ tự LIFO của ngoặc; stack rỗng cuối cùng ⟺ mọi ngoặc đã đóng đúng.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng → true</span><span class="analysis-tag edge">Chỉ một ngoặc mở</span><span class="analysis-tag edge">Ngoặc đóng đứng trước mở</span><span class="analysis-tag pit">Quên kiểm tra stack empty khi gặp ngoặc đóng</span><span class="analysis-tag pit">Không kiểm tra stack rỗng cuối cùng</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack đảm bảo LIFO khớp từng cặp ngoặc lồng nhau.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng → true</span><span class="analysis-tag edge">Chỉ mở hoặc chỉ đóng</span><span class="analysis-tag edge">Sai loại ngoặc</span><span class="analysis-tag pit">Quên kiểm tra stack rỗng khi đóng</span><span class="analysis-tag pit">Không check stack empty cuối</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Kích thước tối đa của Stack trong trường hợp xấu nhất là O khi toàn bộ chuỗi chứa dấu mở ngoặc. Vùng nhớ…</p>
+                        <p>Map đóng→mở hoặc so sánh trực tiếp khi pop.</p>
                     </details>
                 </div>
                 </div>

@@ -1,0 +1,26 @@
+{
+  "id": 11,
+  "title": "Container With Most Water",
+  "difficulty": "Medium",
+  "category": "Two Pointers",
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho mảng height — chiều cao các cột tại index i. Chọn hai cột tạo thùng chứa (không nghiêng) có diện tích nước lớn nhất. Diện tích = min(h[l], h[r]) × (r − l).",
+  "examples": [
+    { "input": "height = [1,8,6,2,5,4,8,3,7]", "output": "49" },
+    { "input": "height = [1,1]", "output": "1" }
+  ],
+  "approach": "Two pointers left=0, right=n-1. Area = min(h[l],h[r])×(r-l). Di chuyển con trỏ ở cột thấp hơn vào trong (cột cao giữ lại).",
+  "memoryTip": "Thu hẹp width luôn giảm — chỉ có cơ hội tăng area khi tăng min height.",
+  "solutions": {
+    "python": "class Solution:\n    def maxArea(self, height: List[int]) -> int:\n        l, r, best = 0, len(height)-1, 0\n        while l < r:\n            best = max(best, min(height[l], height[r]) * (r - l))\n            if height[l] < height[r]: l += 1\n            else: r -= 1\n        return best",
+    "cpp": "class Solution {\npublic:\n    int maxArea(vector<int>& height) {\n        int l = 0, r = height.size()-1, best = 0;\n        while (l < r) {\n            best = max(best, min(height[l], height[r]) * (r - l));\n            if (height[l] < height[r]) l++; else r--;\n        }\n        return best;\n    }\n};",
+    "c": "/* Two pointers — xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Bỏ cặp (l,r) khi di cột thấp hơn không loại nghiệm tối ưu.",
+    "edgeCases": ["Hai cột", "height tăng dần", "toàn bằng nhau"],
+    "pitfalls": ["Di cột cao hơn (sai)", "Brute O(n²) không cần"]
+  },
+  "tier": "done"
+}

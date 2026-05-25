@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Median of Two Sorted Arrays</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log(min(M, N)))</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log(min(m,n)))</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46.6% AC</span>
                     </div>
@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho hai mảng số nguyên đã được sắp xếp nums1 và nums2 kích thước m và n, hãy tìm số trung vị (Median) của hai mảng gộp chung lại. Yêu cầu độ phức tạp thời gian phải là O(log(m + n)).</div>
+                        <div class="block-text">Cho hai mảng đã sort nums1 (độ dài m) và nums2 (độ dài n). Trả median của mảng gộp. Yêu cầu O(log(m+n)).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -66,6 +66,11 @@
                 <div class="ex-label">Ví dụ 1</div>
                 <div class="ex-line"><span>In</span><code>nums1 = [1,3], nums2 = [2]</code></div>
                 <div class="ex-line"><span>Out</span><code>2.0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums1 = [1,2], nums2 = [3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>2.5</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng Tìm kiếm nhị phân trên đường cắt phân hoạch. Giả sử ta thực hiện cắt mảng nhỏ hơn `nums1` tại chỉ số `i` và mảng lớn hơn `nums2` tại chỉ số `j = (m + n + 1) / 2 - i`. Ta tìm kiếm nhị phân chỉ số `i` trong khoảng `[0, m]` sao cho: phần tử bên trái đường cắt của nums1 nhỏ hơn hoặc bằng phần tử bên phải đường cắt của nums2 (`nums1[i-1] &lt;= nums2[j]`) và ngược lại. Khi tìm thấy đường cắt tối ưu, ta dễ dàng tính toán số trung vị từ các giá trị biên xung quanh đường cắt.</div>
+                        <div class="block-text">Binary search partition trên mảng ngắn hơn: cắt i sao cho maxLeftX ≤ minRightY và maxLeftY ≤ minRightX. Median từ 4 biên partition.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,43 +95,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">double</span> findMedianSortedArrays(<span class="ty">int</span>* nums1, <span class="ty">int</span> nums1Size, <span class="ty">int</span>* nums2, <span class="ty">int</span> nums2Size) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> findMedianSortedArrays(<span class="ty">self</span>, nums1, nums2):
-        &quot;&quot;&quot;
-        :type nums1: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type nums2: <span class="ty">List</span>[<span class="ty">int</span>]
-        :rtype: float
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">double</span> <span class="fn">findMedianSortedArrays</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums1, <span class="ty">vector&lt;int&gt;</span>&amp; nums2) {
-        <span class="kw">if</span> (nums1.<span class="fn">size</span>() &gt; nums2.<span class="fn">size</span>()) <span class="kw">return</span> <span class="fn">findMedianSortedArrays</span>(nums2, nums1);
-        <span class="ty">int</span> x = nums1.<span class="fn">size</span>(), y = nums2.<span class="fn">size</span>();
-        <span class="ty">int</span> low = <span class="st">0</span>, high = x;
-        <span class="kw">while</span> (low &lt;= high) {
-            <span class="ty">int</span> partitionX = low + (high - low) / <span class="st">2</span>;
-            <span class="ty">int</span> partitionY = (x + y + <span class="st">1</span>) / <span class="st">2</span> - partitionX;
-            
-            <span class="ty">int</span> maxLeftX = (partitionX == <span class="st">0</span>) ? INT_MIN : nums1[partitionX - <span class="st">1</span>];
-            <span class="ty">int</span> minRightX = (partitionX == x) ? INT_MAX : nums1[partitionX];
-            
-            <span class="ty">int</span> maxLeftY = (partitionY == <span class="st">0</span>) ? INT_MIN : nums2[partitionY - <span class="st">1</span>];
-            <span class="ty">int</span> minRightY = (partitionY == y) ? INT_MAX : nums2[partitionY];
-            
-            <span class="kw">if</span> (maxLeftX &lt;= minRightY &amp;&amp; maxLeftY &lt;= minRightX) {
-                <span class="kw">if</span> ((x + y) % <span class="st">2</span> == <span class="st">0</span>) {
-                    <span class="kw">return</span> (<span class="fn">max</span>(maxLeftX, maxLeftY) + <span class="fn">min</span>(minRightX, minRightY)) / <span class="st">2.0</span>;
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="fn">max</span>(maxLeftX, maxLeftY);
-                }
-            } <span class="kw">else</span> <span class="kw">if</span> (maxLeftX &gt; minRightY) high = partitionX - <span class="st">1</span>;
-            <span class="kw">else</span> low = partitionX + <span class="st">1</span>;
+                            <pre class="code-block" id="code-block-c">/* Partition binary search — xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> findMedianSortedArrays(<span class="ty">self</span>, nums1: <span class="ty">List</span>[<span class="ty">int</span>], nums2: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; float:
+        A, B = nums1, nums2
+        <span class="kw">if</span> <span class="ty">len</span>(B) &lt; <span class="ty">len</span>(A): A, B = B, A
+        m, n = <span class="ty">len</span>(A), <span class="ty">len</span>(B)
+        lo, hi = 0, m
+        <span class="kw">while</span> lo &lt;= hi:
+            i = (lo + hi) // 2
+            j = (m + n + 1) // 2 - i
+            maxLX = A[i-1] <span class="kw">if</span> i <span class="kw">else</span> float('-inf')
+            minRX = A[i] <span class="kw">if</span> i &lt; m <span class="kw">else</span> float('inf')
+            maxLY = B[j-1] <span class="kw">if</span> j <span class="kw">else</span> float('-inf')
+            minRY = B[j] <span class="kw">if</span> j &lt; n <span class="kw">else</span> float('inf')
+            <span class="kw">if</span> maxLX &lt;= minRY <span class="kw">and</span> maxLY &lt;= minRX:
+                <span class="kw">if</span> (m+n) % 2: <span class="kw">return</span> float(<span class="ty">min</span>(minRX, minRY))
+                <span class="kw">return</span> (<span class="ty">max</span>(maxLX, maxLY) + <span class="ty">min</span>(minRX, minRY)) / 2
+            <span class="kw">elif</span> maxLX &gt; minRY: hi = i - 1
+            <span class="kw">else</span>: lo = i + 1
+        <span class="kw">return</span> 0.0</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">double</span> findMedianSortedArrays(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums1, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums2) {
+        <span class="kw">if</span> (nums1.size() &gt; nums2.size()) <span class="kw">return</span> findMedianSortedArrays(nums2, nums1);
+        <span class="ty">int</span> m = nums1.size(), n = nums2.size();
+        <span class="ty">int</span> lo = 0, hi = m;
+        <span class="kw">while</span> (lo &lt;= hi) {
+            <span class="ty">int</span> i = lo + (hi - lo) / 2, j = (m + n + 1) / 2 - i;
+            <span class="ty">int</span> maxLX = i ? nums1[i-1] : INT_MIN;
+            <span class="ty">int</span> minRX = i &lt; m ? nums1[i] : INT_MAX;
+            <span class="ty">int</span> maxLY = j ? nums2[j-1] : INT_MIN;
+            <span class="ty">int</span> minRY = j &lt; n ? nums2[j] : INT_MAX;
+            <span class="kw">if</span> (maxLX &lt;= minRY &amp;&amp; maxLY &lt;= minRX) {
+                <span class="kw">if</span> ((m+n)%2) <span class="kw">return</span> max(maxLX, maxLY);
+                <span class="kw">return</span> (max(maxLX, maxLY) + min(minRX, minRY)) / 2.0;
+            } <span class="kw">else</span> <span class="kw">if</span> (maxLX &gt; minRY) hi = i - 1;
+            <span class="kw">else</span> lo = i + 1;
         }
-        <span class="kw">return</span> <span class="st">0.0</span>;
+        <span class="kw">return</span> 0;
     }
 };</pre>
                         </div>
@@ -137,18 +144,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Binary Search</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log(min(M, N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log(min(m,n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Tìm kiếm nhị phân trên đường cắt phân hoạch.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Giả sử ta thực hiện cắt mảng nhỏ hơn `nums1` tại chỉ số…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — tìm kiếm nhị phân chỉ số `i` trong khoảng `[0, m]` sao…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — tìm thấy đường cắt tối ưu, ta dễ dàng tính toán số trung…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Binary search partition trên mảng ngắn hơn: cắt i sao cho…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Median từ 4 biên partition.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Binary search trên partition i sao cho max(left) ≤ min(right) — đường cắt hợp lệ ⟺ median đúng.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Một mảng rỗng</span><span class="analysis-tag edge">Tổng số phần tử lẻ</span><span class="analysis-tag edge">Hai mảng không giao nhau</span><span class="analysis-tag pit">Merge hai mảng O(m+n) thay binary search partition</span><span class="analysis-tag pit">Quên swap nums1/nums2 khi len(nums1) &gt; len(nums2)</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Partition hợp lệ ⇔ nửa trái gộp ≤ nửa phải gộp tại mọi biên.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một mảng rỗng</span><span class="analysis-tag edge">Tổng lẻ vs chẵn</span><span class="analysis-tag edge">m=0 hoặc n=0</span><span class="analysis-tag pit">Binary search trên merge O(log(m+n)) sai hướng</span><span class="analysis-tag pit">INT_MIN/MAX biên partition</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán tìm kiếm nhị phân trên mảng kích thước nhỏ hơn giúp giới hạn số lần lặp ở mức cực thấp log), tối…</p>
+                        <p>Partition X + Y = /2 — invariant hai nửa cân bằng.</p>
                     </details>
                 </div>
                 </div>

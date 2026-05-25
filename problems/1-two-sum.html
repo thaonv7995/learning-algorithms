@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Two Sum</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>57.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng số nguyên nums và một số nguyên target, hãy tìm chỉ số của hai số sao cho tổng của chúng bằng target.<br><br>Giả định rằng mỗi đầu vào có duy nhất một giải pháp và bạn không được phép sử dụng cùng một phần tử hai lần.</div>
+                        <div class="block-text">Cho mảng số nguyên nums và số target. Tìm chỉ số của hai phần tử khác nhau sao cho tổng bằng target. Giả định có đúng một nghiệm và không dùng cùng phần tử hai lần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>nums = [2, 7, 11, 15], target = 9</code></div>
-                <div class="ex-line"><span>Out</span><code>[0, 1] (Vì nums[0] + nums[1] == 9)</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [2,7,11,15], target = 9</code></div>
+                <div class="ex-line"><span>Out</span><code>[0,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [3,2,4], target = 6</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng kỹ thuật Hash Map (Bảng băm) một lượt quét. Khi đi qua từng số, ta tính toán giá trị cần tìm (complement = target - nums[i]). Nếu complement đã tồn tại trong Hash Map, ta lập tức trả về chỉ số của complement và chỉ số hiện tại. Nếu chưa, ta ghi nhận giá trị hiện tại cùng chỉ số của nó vào Hash Map để các phần tử phía sau tra cứu.</div>
+                        <div class="block-text">Hash map một lượt: tại i, complement = target - nums[i]. Nếu complement đã trong map → trả [map[complement], i]. Ngược lại ghi nums[i]→i vào map.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,30 +95,24 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">int</span>* twoSum(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span> target, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> twoSum(<span class="ty">self</span>, nums, target):
-        &quot;&quot;&quot;
-        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type target: <span class="ty">int</span>
-        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">vector&lt;int&gt;</span> <span class="fn">twoSum</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums, <span class="ty">int</span> target) {
-        <span class="ty">unordered_map&lt;int, int&gt;</span> seen; <span class="cm">// key: gia tri, val: chi so</span>
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; nums.<span class="fn">size</span>(); i++) {
-            <span class="ty">int</span> complement = target - nums[i];
-            <span class="kw">if</span> (seen.<span class="fn">count</span>(complement)) {
-                <span class="kw">return</span> {seen[complement], i}; <span class="cm">// Tra ve cap index tim thay</span>
-            }
-            seen[nums[i]] = i; <span class="cm">// Ghi nhan vi tri phan tu</span>
+                            <pre class="code-block" id="code-block-c">/* Hash map / nested loop — xem Python */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> twoSum(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], target: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        seen = {}
+        <span class="kw">for</span> i, x <span class="kw">in</span> enumerate(nums):
+            c = target - x
+            <span class="kw">if</span> c <span class="kw">in</span> seen:
+                <span class="kw">return</span> [seen[c], i]
+            seen[x] = i
+        <span class="kw">return</span> []</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; twoSum(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> target) {
+        unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; seen;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)nums.size(); ++i) {
+            <span class="ty">int</span> c = target - nums[i];
+            <span class="kw">if</span> (seen.count(c)) <span class="kw">return</span> {seen[c], i};
+            seen[nums[i]] = i;
         }
         <span class="kw">return</span> {};
     }
@@ -126,18 +125,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Hash Map một lượt quét.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — đi qua từng số, ta tính toán giá trị cần tìm .</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Nếu complement đã tồn tại trong Hash Map, ta lập tức trả…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Nếu chưa, ta ghi nhận giá trị hiện tại cùng chỉ số của nó…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Hash map một lượt: tại i, complement = target - nums[i].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu complement đã trong map → trả [map[complement], i].</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Ngược lại ghi nums[i]→i vào map.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Hash map đảm bảo mỗi cặp (value → index) được tra cứu O(1); duyệt một lượt nên không bỏ sót cặp hợp lệ.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Mảng 2 phần tử</span><span class="analysis-tag edge">target = tổng hai phần tử cuối</span><span class="analysis-tag edge">Số âm và dương hỗn hợp</span><span class="analysis-tag pit">Dùng cùng phần tử hai lần</span><span class="analysis-tag pit">Quên lưu index trước khi ghi đè key trùng giá trị</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi cặp được xét khi gặp phần tử thứ hai; map lưu chỉ số đầu tiên.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Hai phần tử</span><span class="analysis-tag edge">Số âm</span><span class="analysis-tag edge">target = 0 với cặp đối</span><span class="analysis-tag pit">Dùng cùng index hai lần</span><span class="analysis-tag pit">O(n²) brute force không cần thiết</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>unordered_map trong C++ lưu trữ các bucket trên phân vùng Heap RAM. Việc sử dụng bảng băm tốn O bộ nhớ phụ…</p>
+                        <p>O thời gian nhờ tra cứu complement O.</p>
                     </details>
                 </div>
                 </div>
