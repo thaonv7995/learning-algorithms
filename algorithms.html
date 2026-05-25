@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode 50+ Thuật Toán & Cẩm Nang Giải Quyết - Thư Viện Tương Tác</title>
+    <!-- FontAwesome for modern visual cues -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Link the hybrid database -->
+    <script src="problems-data.js" defer></script>
+    
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151c2c;
+            --bg-nav: rgba(15, 23, 42, 0.8);
+            --border-color: #243249;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --accent: #10b981;
+            --easy: #10b981;
+            --medium: #f59e0b;
+            --hard: #ef4444;
+            --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* 1. TOP NAVBAR */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--bg-nav);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .btn-back {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+
+        /* CONTAINER MAIN */
+        .main-container {
+            max-width: 1400px;
+            margin: 100px auto 40px auto;
+            padding: 0 2rem;
+        }
+
+        /* 2. STATS DASHBOARD */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-premium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .stat-card.total::before { background: var(--primary); }
+        .stat-card.easy::before { background: var(--easy); }
+        .stat-card.medium::before { background: var(--medium); }
+        .stat-card.hard::before { background: var(--hard); }
+
+        .stat-info h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info p {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            opacity: 0.15;
+            color: white;
+        }
+
+        /* Progress card */
+        .progress-card {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 900px) {
+            .progress-card {
+                grid-column: span 1;
+            }
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: #1e293b;
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 999px;
+            width: 100%;
+        }
+
+        /* 3. FILTERING & SEARCH PANEL */
+        .filter-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px 10px 38px;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .difficulty-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-filter-difficulty {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-filter-difficulty:hover {
+            color: white;
+            border-color: var(--text-muted);
+        }
+
+        .btn-filter-difficulty.active {
+            color: white;
+        }
+        .btn-filter-difficulty.active[data-diff="all"] { background: #3b82f6; border-color: #60a5fa; }
+        .btn-filter-difficulty.active[data-diff="easy"] { background: var(--easy); border-color: #34d399; }
+        .btn-filter-difficulty.active[data-diff="medium"] { background: var(--medium); border-color: #fbbf24; }
+        .btn-filter-difficulty.active[data-diff="hard"] { background: var(--hard); border-color: #f87171; }
+
+        .category-select-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .category-select-wrapper span {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .category-select {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .category-select option {
+            background: var(--bg-card);
+            color: white;
+        }
+
+        /* 4. ALGORITHMS GRID */
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .problem-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-premium);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(56, 189, 248, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .problem-id-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .problem-id {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .problem-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.3;
+        }
+
+        .difficulty-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.05em;
+        }
+
+        .difficulty-badge.easy { background: rgba(16, 185, 129, 0.15); color: var(--easy); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .difficulty-badge.medium { background: rgba(245, 158, 11, 0.15); color: var(--medium); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .difficulty-badge.hard { background: rgba(239, 68, 68, 0.15); color: var(--hard); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .problem-teaser {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 2.25rem;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #1e293b;
+            padding-top: 0.75rem;
+        }
+
+        .complexity-summary {
+            display: flex;
+            gap: 4px;
+        }
+
+        .comp-tag {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--text-main);
+        }
+
+        .comp-tag span {
+            color: var(--primary);
+        }
+
+        .category-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: #1e293b;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-laptop-code"></i>
+            <span>LEETCODE ARCHIVE & EXPLORER</span>
+        </a>
+        <a href="index.html" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Quay Về Sách Giáo Khoa
+        </a>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- STATS DASHBOARD -->
+        <section class="stats-dashboard">
+            <div class="stat-card total">
+                <div class="stat-info">
+                    <h4>Tổng Bài Toán</h4>
+                    <p id="stats-total">50</p>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
+            </div>
+            <div class="stat-card easy">
+                <div class="stat-info">
+                    <h4>Dễ (Easy)</h4>
+                    <p id="stats-easy">15</p>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-face-smile"></i></div>
+            </div>
+            <div class="stat-card medium">
+                <div class="stat-info">
+                    <h4>Trung Bình (Medium)</h4>
+                    <p id="stats-medium">25</p>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-face-meh"></i></div>
+            </div>
+            <div class="stat-card hard">
+                <div class="stat-info">
+                    <h4>Khó (Hard)</h4>
+                    <p id="stats-hard">10</p>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-face-frown"></i></div>
+            </div>
+            <div class="stat-card progress-card">
+                <div class="progress-header">
+                    <span>Mức Độ Hoàn Thành Kho Lưu Trữ</span>
+                    <span id="progress-text">100% (50/50)</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEARCH & FILTERS -->
+        <section class="filter-panel">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-input" class="search-input" placeholder="Tìm kiếm theo ID, tiêu đề hoặc chủ đề (ví dụ: Sum, 3Sum, Array, dynamic)...">
+            </div>
+            
+            <div class="difficulty-filters">
+                <button class="btn-filter-difficulty active" data-diff="all">Tất Cả</button>
+                <button class="btn-filter-difficulty" data-diff="easy">Easy</button>
+                <button class="btn-filter-difficulty" data-diff="medium">Medium</button>
+                <button class="btn-filter-difficulty" data-diff="hard">Hard</button>
+            </div>
+            
+            <div class="category-select-wrapper">
+                <span>Chủ đề:</span>
+                <select id="category-select" class="category-select">
+                    <option value="all">Tất Cả Thể Loại</option>
+                    <option value="Array">Mảng (Array)</option>
+                    <option value="String">Chuỗi (String)</option>
+                    <option value="Linked List">Danh Sách Liên Kết</option>
+                    <option value="Tree">Cây & BST (Tree)</option>
+                    <option value="Graph">Đồ Thị (Graph)</option>
+                    <option value="Stack">Ngăn Xếp/Hàng Đợi</option>
+                    <option value="Dynamic Programming">Quy Hoạch Động</option>
+                    <option value="Binary Search">Tìm Kiếm Nhị Phân</option>
+                    <option value="Sliding Window">Cửa Sổ Trượt</option>
+                    <option value="Two Pointers">Con Trỏ Kép</option>
+                    <option value="Heap">Binary Heap (Ưu tiên)</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- PROBLEMS GRID -->
+        <section class="problems-grid" id="problems-grid">
+            <!-- Grid cards injected dynamically by JS -->
+        </section>
+
+    </div>
+
+    <script>
+        // DOM elements
+        const problemsGrid = document.getElementById("problems-grid");
+        const searchInput = document.getElementById("search-input");
+        const diffButtons = document.querySelectorAll(".btn-filter-difficulty");
+        const categorySelect = document.getElementById("category-select");
+
+        // Filter states
+        let searchFilter = "";
+        let difficultyFilter = "all";
+        let categoryFilter = "all";
+
+        // Helper to generate URL-friendly slug
+        function getSlug(title) {
+            return title.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .trim();
+        }
+
+        // Initialize dynamic statistics from PROBLEMS array
+        function initStats() {
+            if (typeof PROBLEMS === "undefined") return;
+            const total = PROBLEMS.length;
+            const easy = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "easy").length;
+            const medium = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "medium").length;
+            const hard = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "hard").length;
+            
+            document.getElementById("stats-total").innerText = total;
+            document.getElementById("stats-easy").innerText = easy;
+            document.getElementById("stats-medium").innerText = medium;
+            document.getElementById("stats-hard").innerText = hard;
+            
+            document.getElementById("progress-text").innerText = `100% (${total}/${total})`;
+        }
+
+        // Initialize grid rendering
+        function renderGrid() {
+            if (typeof PROBLEMS === "undefined") {
+                problemsGrid.innerHTML = `
+                    <div style="grid-column: span 3; text-align: center; color: var(--text-muted); font-style: italic; padding: 40px 0;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; margin-bottom: 12px; display: block; opacity: 0.5; color: var(--medium);"></i>
+                        Đang nạp cơ sở dữ liệu thuật toán...
+                    </div>
+                `;
+                return;
+            }
+
+            problemsGrid.innerHTML = "";
+            
+            const filtered = PROBLEMS.filter(p => {
+                const matchesSearch = p.title.toLowerCase().includes(searchFilter) || 
+                                      p.category.toLowerCase().includes(searchFilter) || 
+                                      p.id.toString().includes(searchFilter) ||
+                                      p.description.toLowerCase().includes(searchFilter);
+                                      
+                const matchesDiff = difficultyFilter === "all" || p.difficulty.toLowerCase() === difficultyFilter;
+                const matchesCat = categoryFilter === "all" || p.category === categoryFilter;
+                
+                return matchesSearch && matchesDiff && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                problemsGrid.innerHTML = `
+                    <div style="grid-column: span 3; text-align: center; color: var(--text-muted); font-style: italic; padding: 40px 0;">
+                        <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; margin-bottom: 12px; display: block; opacity: 0.5;"></i>
+                        Không tìm thấy bài toán nào khớp với bộ lọc hiện tại.
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement("a");
+                card.className = "problem-card";
+                const slug = getSlug(p.title);
+                card.href = `problems/${p.id}-${slug}.html`;
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="card-header">
+                            <div class="problem-id-title">
+                                <span class="problem-id">LC #${p.id}</span>
+                                <h3 class="problem-title">${p.title}</h3>
+                            </div>
+                            <span class="difficulty-badge ${p.difficulty.toLowerCase()}">${p.difficulty}</span>
+                        </div>
+                        <p class="problem-teaser">${p.description.substring(0, 100)}...</p>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="complexity-summary">
+                            <span class="comp-tag" title="Time Complexity"><i class="fa-regular fa-clock"></i> <span>${p.timeComplexity}</span></span>
+                            <span class="comp-tag" title="Space Complexity"><i class="fa-solid fa-microchip"></i> <span>${p.spaceComplexity}</span></span>
+                        </div>
+                        <span class="category-tag">${p.category}</span>
+                    </div>
+                `;
+                
+                problemsGrid.appendChild(card);
+            });
+        }
+
+        // Search Input listener
+        searchInput.addEventListener("input", (e) => {
+            searchFilter = e.target.value.toLowerCase().trim();
+            renderGrid();
+        });
+
+        // Difficulty filter buttons
+        diffButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                diffButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                difficultyFilter = btn.getAttribute("data-diff");
+                renderGrid();
+            });
+        });
+
+        // Category select filter
+        categorySelect.addEventListener("change", (e) => {
+            categoryFilter = e.target.value;
+            renderGrid();
+        });
+
+        // Initialize page components on DOM load
+        window.addEventListener("DOMContentLoaded", () => {
+            // Check if database is already parsed, if not wait a bit
+            const checkDataInterval = setInterval(() => {
+                if (typeof PROBLEMS !== "undefined") {
+                    clearInterval(checkDataInterval);
+                    initStats();
+                    renderGrid();
+                }
+            }, 50);
+        });
+    </script>
+</body>
+</html>

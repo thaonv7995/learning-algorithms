@@ -164,8 +164,22 @@ function startApp() {
         initSandbox(chapterNum);
     }
 
-    // Initialize the default view on startup
-    loadChapterContent(1);
+    // Initialize the default view on startup (checking URL search parameters)
+    const urlParams = new URLSearchParams(window.location.search);
+    const startChapterParam = urlParams.get("chapter");
+    const startChapter = startChapterParam ? parseInt(startChapterParam) : 1;
+    
+    if (startChapter >= 1 && startChapter <= 13) {
+        activeChapter = startChapter;
+        // Make sure the active class is set on the correct sidebar item
+        sidebarItems.forEach(i => i.classList.remove("active"));
+        const activeItem = document.querySelector(`.toc-item[data-chapter="${startChapter}"]`);
+        if (activeItem) activeItem.classList.add("active");
+        
+        loadChapterContent(startChapter);
+    } else {
+        loadChapterContent(1);
+    }
 
     // ==========================================================================
     // SPLIT PANE RESIZER LOGIC
@@ -396,6 +410,14 @@ function startApp() {
         sandboxCanvas.innerHTML = "";
         sandboxControls.innerHTML = "";
         
+        const urlParams = new URLSearchParams(window.location.search);
+        const problemParam = urlParams.get("problem");
+        const lcId = urlParams.get("lc_id");
+        if (problemParam && lcId) {
+            setupLeetCodeVisualizer(parseInt(lcId), decodeURIComponent(problemParam));
+            return;
+        }
+        
         switch(chapterNum) {
             case 1: // Pointer & Memory
                 setupPointerSandbox();
@@ -440,6 +462,239 @@ function startApp() {
                 setupPointerSandbox();
         }
     }
+
+    function loadVisualizerScript(lcId, callback) {
+        if (window.LeetCodeVisualizers && window.LeetCodeVisualizers[lcId]) {
+            callback();
+            return;
+        }
+        const script = document.createElement("script");
+        script.src = `visualizers/lc${lcId}.js`;
+        script.onload = () => {
+            callback();
+        };
+        script.onerror = () => {
+            console.warn(`Visualizer script for LC #${lcId} not found, using generic fallback.`);
+            callback();
+        };
+        document.head.appendChild(script);
+    }
+
+    function setupLeetCodeVisualizer(lcId, problemTitle) {
+        // Read custom input values if they already exist in DOM before clearing
+        let customValues = {};
+        const inputNums = document.getElementById("lc-input-nums");
+        const inputTarget = document.getElementById("lc-input-target");
+        const inputStr = document.getElementById("lc-input-str");
+        const inputBoardSize = document.getElementById("lc-input-boardsize");
+
+        if (inputNums) customValues.nums = inputNums.value;
+        if (inputTarget) customValues.target = inputTarget.value;
+        if (inputStr) customValues.str = inputStr.value;
+        if (inputBoardSize) customValues.boardSize = inputBoardSize.value;
+
+        clearLogs();
+        sandboxCanvas.innerHTML = "";
+        sandboxControls.innerHTML = "";
+        
+        sandboxTitle.innerHTML = `<i class="fa-solid fa-circle-nodes" style="color:var(--primary);"></i> Mô phỏng LC #${lcId}: ${problemTitle}`;
+        
+        let state = {
+            id: lcId,
+            title: problemTitle,
+            stepIndex: 0,
+            running: false,
+            interval: null,
+            done: false,
+            nums: [],
+            left: 0,
+            right: 0,
+            maxArea: 0,
+            currArea: 0,
+            target: 9,
+            seenMap: {},
+            str: "",
+            stack: [],
+            listNodes: [],
+            prevIdx: -1,
+            currIdx: 0,
+            nextIdx: 1,
+            water: 0,
+            leftMax: 0,
+            rightMax: 0,
+            waterLevels: [],
+            list1: [],
+            list2: [],
+            p1: 0,
+            p2: 0,
+            mergedList: [],
+            queens: [],
+            boardSize: 4,
+            row: 0,
+            conflictCells: []
+        };
+
+        sandboxControls.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; width: 100%;">
+                    <div class="control-group" style="gap: 8px; flex-wrap: wrap; display: flex; align-items: center;">
+                        <button class="btn-ctrl btn-primary" id="lc-btn-step" disabled><i class="fa-solid fa-forward-step"></i> Từng bước</button>
+                        <button class="btn-ctrl btn-success" id="lc-btn-auto" disabled><i class="fa-solid fa-play"></i> Tự động</button>
+                        <button class="btn-ctrl btn-danger" id="lc-btn-reset" disabled><i class="fa-solid fa-rotate-left"></i> Đặt lại</button>
+                    </div>
+                    <div id="lc-custom-inputs-container" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 0.8rem; font-weight: 500;">
+                        <!-- Custom settings form fields get injected here dynamically -->
+                    </div>
+                </div>
+                <div id="lc-stats-panel" style="font-size: 0.8rem; font-weight: 600; color: #f1f5f9; display: flex; gap: 15px; border-top: 1px solid #1e293b; padding-top: 8px; flex-wrap: wrap;">
+                    <div style="color:var(--text-muted); font-style:italic;"><i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ Sandbox...</div>
+                </div>
+            </div>
+        `;
+
+        const btnStep = document.getElementById("lc-btn-step");
+        const btnAuto = document.getElementById("lc-btn-auto");
+        const btnReset = document.getElementById("lc-btn-reset");
+        const statsPanel = document.getElementById("lc-stats-panel");
+        const customInputsContainer = document.getElementById("lc-custom-inputs-container");
+
+        function bindControls() {
+            btnStep.disabled = false;
+            btnAuto.disabled = false;
+            btnReset.disabled = false;
+
+            btnStep.addEventListener("click", () => {
+                stopAuto();
+                step();
+            });
+
+            btnAuto.addEventListener("click", () => {
+                if (state.running) {
+                    stopAuto();
+                } else {
+                    startAuto();
+                }
+            });
+
+            btnReset.addEventListener("click", () => {
+                stopAuto();
+                setupLeetCodeVisualizer(lcId, problemTitle);
+            });
+        }
+
+        function startAuto() {
+            state.running = true;
+            btnAuto.innerHTML = `<i class="fa-solid fa-pause"></i> Dừng lại`;
+            btnAuto.className = "btn-ctrl btn-danger";
+            state.interval = setInterval(step, 1000);
+        }
+
+        function stopAuto() {
+            state.running = false;
+            btnAuto.innerHTML = `<i class="fa-solid fa-play"></i> Tự động`;
+            btnAuto.className = "btn-ctrl btn-success";
+            if (state.interval) {
+                clearInterval(state.interval);
+                state.interval = null;
+            }
+        }
+
+        function render() {
+            sandboxCanvas.innerHTML = "";
+            const viz = window.LeetCodeVisualizers && window.LeetCodeVisualizers[state.id];
+            if (viz && viz.render) {
+                viz.render(state, sandboxCanvas, statsPanel);
+            } else {
+                renderGenericArray();
+            }
+        }
+
+        function step() {
+            if (state.done) {
+                log("[Đã hoàn tất] Nhấn 'Đặt lại' để bắt đầu mô phỏng lại.", "success");
+                stopAuto();
+                return;
+            }
+
+            state.stepIndex++;
+            const viz = window.LeetCodeVisualizers && window.LeetCodeVisualizers[state.id];
+            if (viz && viz.step) {
+                viz.step(state, log, stopAuto);
+            } else {
+                stepGeneric();
+            }
+
+            render();
+        }
+
+        function renderGenericArray() {
+            statsPanel.innerHTML = `
+                <div>KÍCH THƯỚC MẢNG: <span style="color:var(--primary);">${state.nums.length}</span></div>
+                <div>CHỈ SỐ L: <span style="color:var(--easy);">${state.left}</span></div>
+                <div>CHỈ SỐ R: <span style="color:var(--hard);">${state.right}</span></div>
+            `;
+
+            const row = document.createElement("div");
+            row.style.display = "flex";
+            row.style.gap = "8px";
+            row.style.justifyContent = "center";
+            row.style.width = "100%";
+
+            state.nums.forEach((val, idx) => {
+                const cell = document.createElement("div");
+                cell.style.width = "45px";
+                cell.style.height = "45px";
+                cell.style.border = "1px solid var(--border-color)";
+                cell.style.borderRadius = "6px";
+                cell.style.display = "flex";
+                cell.style.justifyContent = "center";
+                cell.style.alignItems = "center";
+                cell.style.fontWeight = "bold";
+                cell.innerText = val;
+
+                if (idx === state.left) {
+                    cell.style.borderColor = "var(--primary)";
+                    cell.style.background = "rgba(56, 189, 248, 0.15)";
+                }
+                row.appendChild(cell);
+            });
+            sandboxCanvas.appendChild(row);
+        }
+
+        // Fallback generic step algorithm when custom visualizer is absent
+        function stepGeneric() {
+            if (state.left >= state.nums.length - 1) {
+                state.done = true;
+                log(`[KẾT QUẢ] Duyệt mảng hoàn tất.`, "success");
+                return;
+            }
+            state.left++;
+            log(`Bước ${state.stepIndex}: Di chuyển sang vị trí ${state.left} (giá trị: ${state.nums[state.left]}).`, "info");
+        }
+
+        // Dynamically load visualizer script, initialize states, bind controls and render
+        loadVisualizerScript(lcId, () => {
+            const viz = window.LeetCodeVisualizers && window.LeetCodeVisualizers[lcId];
+            if (viz && viz.initialize) {
+                viz.initialize(state, log, customValues);
+            } else {
+                // Initialize generic fallback
+                state.nums = [12, 24, 36, 48, 60];
+                state.left = 0;
+                state.right = state.nums.length - 1;
+                log(`[Khởi tạo] Mô phỏng mảng generic.`, "info");
+            }
+
+            // Inject custom inputs if visualizer exposes renderControls
+            if (customInputsContainer && viz && viz.renderControls) {
+                viz.renderControls(state, customInputsContainer, customValues);
+            }
+
+            bindControls();
+            render();
+        });
+    }
+
 
     // --------------------------------------------------------------------------
     // 2.1 CHAPTER 1: POINTER & MEMORY MANAGEMENT SANDBOX

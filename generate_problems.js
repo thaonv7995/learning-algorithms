@@ -1,0 +1,740 @@
+const fs = require('fs');
+const path = require('path');
+
+const PROBLEMS = require('./problems-data.js');
+const SOLUTIONS = require('./problems-solutions.js');
+
+const problemsDir = path.join(__dirname, 'problems');
+if (!fs.existsSync(problemsDir)) {
+    fs.mkdirSync(problemsDir);
+}
+
+// Helper to generate URL-friendly slug
+function getSlug(title) {
+    return title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '') // remove special chars
+        .replace(/\s+/g, '-')         // replace spaces with -
+        .trim();
+}
+
+// Helper to map category/problem to a chapter number
+function getChapterForProblem(p) {
+    const titleLower = p.title.toLowerCase();
+    const catLower = p.category.toLowerCase();
+    
+    if (p.id === 1 || titleLower.includes("two sum") || titleLower.includes("anagram") || titleLower.includes("consecutive") || titleLower.includes("frequent")) {
+        return 7; // Hash Table
+    }
+    if (titleLower.includes("trie")) {
+        return 13; // Trie
+    }
+    if (titleLower.includes("binary search") || titleLower.includes("search in rotated") || titleLower.includes("koko eating")) {
+        return 2; // Array (Search)
+    }
+    if (catLower.includes("sort")) {
+        return 11; // Sorting
+    }
+    if (catLower.includes("tree")) {
+        return 9; // BST
+    }
+    if (catLower.includes("graph")) {
+        return 10; // Graph
+    }
+    if (catLower.includes("heap")) {
+        return 8; // Binary Heap
+    }
+    if (catLower.includes("dynamic programming") || titleLower.includes("climbing stairs") || titleLower.includes("house robber") || titleLower.includes("word break") || titleLower.includes("unique paths") || titleLower.includes("decode ways")) {
+        return 12; // DP
+    }
+    if (titleLower.includes("valid parentheses") || titleLower.includes("min stack") || titleLower.includes("daily temperatures") || titleLower.includes("sliding window maximum") || titleLower.includes("largest rectangle")) {
+        return 5; // Stack & Queue
+    }
+    if (catLower.includes("linked list")) {
+        if (titleLower.includes("doubly") || p.id === 146) {
+            return 4; // Doubly List
+        }
+        return 3; // Singly List
+    }
+    if (catLower.includes("array") || catLower.includes("two pointers") || catLower.includes("sliding window")) {
+        return 2; // Array
+    }
+    if (catLower.includes("stack") || catLower.includes("queue")) return 5;
+    if (catLower.includes("tree")) return 9;
+    if (catLower.includes("graph")) return 10;
+    if (catLower.includes("dynamic")) return 12;
+    
+    return 2; // Default to Array
+}
+
+// Custom simple syntax highlighter
+function highlightCode(code, lang) {
+    let escaped = code
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    
+    if (lang === 'c') {
+        escaped = escaped
+            .replace(/\b(int|char|double|float|void|struct|bool|unsigned|long|const)\b/g, '<span class="ty">$1</span>')
+            .replace(/\b(if|else|for|while|return|malloc|calloc|free|qsort|sizeof|strdup|strlen|strcmp|strncpy|abs)\b/g, '<span class="kw">$1</span>')
+            .replace(/(\/\/.*)/g, '<span class="cm">$1</span>');
+    } else if (lang === 'python') {
+        escaped = escaped
+            .replace(/\b(def|class|if|else|elif|for|in|return|while|and|or|not|import|nonlocal|from)\b/g, '<span class="kw">$1</span>')
+            .replace(/\b(self|List|Optional|ListNode|TreeNode|int|str|float|double|dict|set|list|len|min|max|math|heapq|collections|Counter|deque)\b/g, '<span class="ty">$1</span>')
+            .replace(/(#.*)/g, '<span class="cm">$1</span>');
+    }
+    return escaped;
+}
+
+// Generate separate HTML file for each problem
+PROBLEMS.forEach(p => {
+    const slug = getSlug(p.title);
+    const fileName = `${p.id}-${slug}.html`;
+    const filePath = path.join(problemsDir, fileName);
+    const chapNum = getChapterForProblem(p);
+    
+    // Get solutions
+    const pSolutions = SOLUTIONS[p.id] || {};
+    const rawC = pSolutions.c || `// Solution in C not available, displaying C++ solution instead\n${p.code.replace(/<[^>]*>/g, '')}`;
+    const rawPy = pSolutions.python || `# Solution in Python not available, displaying C++ solution instead\n${p.code.replace(/<[^>]*>/g, '')}`;
+    
+    const highlightedC = highlightCode(rawC, 'c');
+    const highlightedPython = highlightCode(rawPy, 'python');
+    const cppCode = p.code; // Already syntax colored in problems-data.js
+    
+    // Build examples list HTML
+    let examplesHtml = '';
+    p.examples.forEach((ex, idx) => {
+        examplesHtml += `
+        <div class="example-block">
+            <div><span class="label">Ví dụ ${idx + 1}:</span></div>
+            <div><span class="label">Đầu vào:</span> <code>${ex.input}</code></div>
+            <div><span class="label">Kết quả:</span> <code>${ex.output}</code></div>
+        </div>`;
+    });
+
+    const pageContent = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #${p.id} - ${p.title} | Chi tiết thuật toán</title>
+    <!-- FontAwesome for modern visual cues -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151c2c;
+            --bg-nav: rgba(15, 23, 42, 0.8);
+            --border-color: #243249;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --accent: #10b981;
+            --easy: #10b981;
+            --medium: #f59e0b;
+            --hard: #ef4444;
+            --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* TOP NAVBAR */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--bg-nav);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-back {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* MAIN SPLIT LAYOUT */
+        .main-container {
+            margin-top: 70px;
+            height: calc(100vh - 70px);
+            display: flex;
+            width: 100%;
+            background-color: var(--bg-main);
+        }
+
+        /* LEFT PANEL: Scrollable theory, code and analyses */
+        .info-pane {
+            width: 45%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .info-pane::-webkit-scrollbar {
+            width: 6px;
+        }
+        .info-pane::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        .info-pane::-webkit-scrollbar-thumb {
+            background: #243249;
+            border-radius: 3px;
+        }
+        .info-pane::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* RIGHT PANEL: High-fidelity visualizer simulator stretched vertically */
+        .sandbox-pane {
+            width: 55%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #090d16;
+            position: relative;
+        }
+
+        @media (max-width: 1024px) {
+            html, body {
+                overflow: auto;
+            }
+            .main-container {
+                flex-direction: column;
+                height: auto;
+                overflow: visible;
+            }
+            .info-pane, .sandbox-pane {
+                width: 100%;
+                height: auto;
+                border-right: none;
+            }
+            .sandbox-pane {
+                height: 700px;
+            }
+        }
+
+        .problem-header {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-premium);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .problem-title-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .problem-id {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .problem-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .meta-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .difficulty-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 999px;
+            letter-spacing: 0.05em;
+            display: inline-block;
+        }
+
+        .difficulty-badge.easy { background: rgba(16, 185, 129, 0.15); color: var(--easy); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .difficulty-badge.medium { background: rgba(245, 158, 11, 0.15); color: var(--medium); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .difficulty-badge.hard { background: rgba(239, 68, 68, 0.15); color: var(--hard); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .category-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: #1e293b;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .drawer-description {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            white-space: pre-line;
+            line-height: 1.65;
+        }
+
+        /* Complexity Cards */
+        .complexity-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .comp-card {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .comp-card span.label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .comp-card span.val {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .comp-card span.desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Examples */
+        .drawer-example {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .example-block {
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .example-block span.label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .drawer-approach {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            line-height: 1.7;
+        }
+
+        /* Sandbox wrapper and iframe */
+        .sandbox-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #090d16;
+        }
+
+        .sandbox-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .sandbox-tip {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-style: italic;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .sandbox-tip i {
+            color: var(--accent);
+        }
+
+        /* Code highlight */
+        .code-container {
+            position: relative;
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .code-header {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .btn-copy {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .btn-copy:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary);
+        }
+
+        .code-block {
+            padding: 1.25rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.78rem;
+            overflow-x: auto;
+            color: #cbd5e1;
+            white-space: pre;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Syntax coloring */
+        .kw { color: #f472b6; font-weight: 600; } /* keyword */
+        .ty { color: #38bdf8; } /* type */
+        .st { color: #34d399; } /* string */
+        .cm { color: #64748b; font-style: italic; } /* comment */
+        .fn { color: #fbbf24; } /* function */
+
+        .drawer-memory-tip {
+            background: rgba(245, 158, 11, 0.02);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            padding: 1.25rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <a href="../index.html" class="logo">
+            <i class="fa-solid fa-laptop-code"></i>
+            <span>LEETCODE ARCHIVE & EXPLORER</span>
+        </a>
+        <div class="nav-buttons">
+            <a href="../algorithms.html" class="btn-back">
+                <i class="fa-solid fa-grid-2"></i> Thư Viện Thuật Toán
+            </a>
+            <a href="../index.html" class="btn-back">
+                <i class="fa-solid fa-book-open"></i> Sách Giáo Khoa
+            </a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <!-- LEFT PANEL: All information, explanation and solution codes -->
+        <div class="info-pane">
+            
+            <!-- Problem header inside left column -->
+            <section class="problem-header">
+                <div class="problem-title-box">
+                    <span class="problem-id">LC #${p.id}</span>
+                    <h1 class="problem-title">${p.title}</h1>
+                    <div class="meta-row">
+                        <span class="difficulty-badge ${p.difficulty.toLowerCase()}">${p.difficulty}</span>
+                        <span class="category-tag">${p.category}</span>
+                    </div>
+                </div>
+                <span class="category-tag" style="background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.2); color: var(--primary); font-weight: 700; width: fit-content;">
+                    <i class="fa-solid fa-circle-nodes"></i> Đã đồng bộ Sandbox
+                </span>
+            </section>
+
+            <!-- Description -->
+            <div class="section-card">
+                <span class="section-title"><i class="fa-solid fa-circle-question"></i> Mô Tả Bài Toán</span>
+                <div class="drawer-description">${p.description}</div>
+            </div>
+
+            <!-- Examples -->
+            <div class="section-card">
+                <span class="section-title"><i class="fa-solid fa-code-compare"></i> Ví Dụ Minh Họa</span>
+                <div class="drawer-example">${examplesHtml}</div>
+            </div>
+
+            <!-- Approach -->
+            <div class="section-card">
+                <span class="section-title"><i class="fa-solid fa-lightbulb"></i> Ý Tưởng &amp; Tư Duy Giải Quyết</span>
+                <div class="drawer-approach">${p.approach}</div>
+            </div>
+
+            <!-- Interactive Multi-Language Code Block -->
+            <div class="section-card">
+                <div class="code-tabs-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:10px; margin-bottom:15px; width:100%;">
+                    <div class="tabs" style="display:flex; gap:10px;">
+                        <button class="code-tab-btn active" data-lang="c" style="background:#1e293b; border:1px solid var(--primary); color:var(--primary); padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:all 0.2s;"><i class="fa-solid fa-code"></i> Ngôn ngữ C</button>
+                        <button class="code-tab-btn" data-lang="python" style="background:#0f172a; border:1px solid var(--border-color); color:var(--text-muted); padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:all 0.2s;"><i class="fa-brands fa-python"></i> Python</button>
+                        <button class="code-tab-btn" data-lang="cpp" style="background:#0f172a; border:1px solid var(--border-color); color:var(--text-muted); padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.75rem; transition:all 0.2s;"><i class="fa-solid fa-microchip"></i> C++ (OOP)</button>
+                    </div>
+                    <button class="btn-copy" id="btn-copy-code" style="background:#1e293b; border:1px solid var(--border-color); color:white; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:0.75rem; font-weight:600;">Sao chép</button>
+                </div>
+                <div class="code-container">
+                    <div class="code-header" id="code-lang-label" style="text-transform:uppercase; font-size:0.7rem; letter-spacing:0.05em; font-weight:700;">
+                        <span>solution.c</span>
+                        <span>C99</span>
+                    </div>
+                    <pre class="code-block code-content" id="code-block-c" style="display:block;">${highlightedC}</pre>
+                    <pre class="code-block code-content" id="code-block-python" style="display:none;">${highlightedPython}</pre>
+                    <pre class="code-block code-content" id="code-block-cpp" style="display:none;">${cppCode}</pre>
+                </div>
+            </div>
+
+            <!-- Big O complexities -->
+            <div class="section-card">
+                <span class="section-title"><i class="fa-solid fa-chart-line"></i> Độ Phức Tạp Thuật Toán</span>
+                <div class="complexity-cards">
+                    <div class="comp-card">
+                        <span class="label">Time Complexity</span>
+                        <span class="val">${p.timeComplexity}</span>
+                        <span class="desc">Thời gian xử lý</span>
+                    </div>
+                    <div class="comp-card">
+                        <span class="label">Space Complexity</span>
+                        <span class="val">${p.spaceComplexity}</span>
+                        <span class="desc">Bộ nhớ phụ trợ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory analysis -->
+            <div class="section-card">
+                <span class="section-title"><i class="fa-solid fa-microchip"></i> Phân Tích Bộ Nhớ &amp; Pointer RAM</span>
+                <div class="drawer-memory-tip">${p.memoryTip}</div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT PANEL: Full-height Sandbox Visualizer Frame -->
+        <div class="sandbox-pane">
+            <div class="sandbox-wrapper">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=${chapNum}&problem=${encodeURIComponent(p.title)}&lc_id=${p.id}&embed=true"></iframe>
+            </div>
+            <div class="sandbox-tip">
+                <i class="fa-solid fa-circle-info"></i> Bảng mô phỏng Sandbox đã được tối ưu hóa nền tối hoàn chỉnh. Bấm "Từng bước" hoặc "Tự động" để chạy!
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const btnCopyCode = document.getElementById("btn-copy-code");
+        const codePython = document.getElementById("code-block-python");
+        const codeC = document.getElementById("code-block-c");
+        const codeCpp = document.getElementById("code-block-cpp");
+        const langLabel = document.getElementById("code-lang-label");
+        const tabBtns = document.querySelectorAll(".code-tab-btn");
+        
+        let activeLang = "c";
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                // Update active tab style
+                tabBtns.forEach(b => {
+                    b.style.background = "#0f172a";
+                    b.style.borderColor = "var(--border-color)";
+                    b.style.color = "var(--text-muted)";
+                    b.classList.remove("active");
+                });
+                btn.style.background = "#1e293b";
+                btn.style.borderColor = "var(--primary)";
+                btn.style.color = "var(--primary)";
+                btn.classList.add("active");
+                
+                activeLang = btn.getAttribute("data-lang");
+                
+                // Toggle display code block
+                if (activeLang === "c") {
+                    codeC.style.display = "block";
+                    codePython.style.display = "none";
+                    codeCpp.style.display = "none";
+                    langLabel.innerHTML = "<span>solution.c</span><span>C99</span>";
+                } else if (activeLang === "python") {
+                    codeC.style.display = "none";
+                    codePython.style.display = "block";
+                    codeCpp.style.display = "none";
+                    langLabel.innerHTML = "<span>solution.py</span><span>Python 3</span>";
+                } else {
+                    codeC.style.display = "none";
+                    codePython.style.display = "none";
+                    codeCpp.style.display = "block";
+                    langLabel.innerHTML = "<span>solution.cpp</span><span>C++17</span>";
+                }
+            });
+        });
+        
+        btnCopyCode.addEventListener("click", () => {
+            let activeCodeEl = codeC;
+            if (activeLang === "python") activeCodeEl = codePython;
+            else if (activeLang === "cpp") activeCodeEl = codeCpp;
+            
+            // Strip HTML tags and decode entities for copy action
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = activeCodeEl.innerHTML;
+            const rawCode = tempDiv.textContent || tempDiv.innerText || "";
+            
+            navigator.clipboard.writeText(rawCode).then(() => {
+                btnCopyCode.innerText = "Đã sao chép!";
+                btnCopyCode.style.background = "var(--accent)";
+                setTimeout(() => {
+                    btnCopyCode.innerText = "Sao chép";
+                    btnCopyCode.style.background = "#1e293b";
+                }, 2000);
+            }).catch(err => {
+                console.error("Lỗi sao chép code: ", err);
+            });
+        });
+    </script>
+</body>
+</html>`;
+
+    fs.writeFileSync(filePath, pageContent, 'utf8');
+});
+
+console.log(`Successfully generated ${PROBLEMS.length} standalone premium problem detail pages inside the 'problems' directory!`);
