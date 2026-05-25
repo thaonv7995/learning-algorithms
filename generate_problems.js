@@ -306,20 +306,15 @@ function main() {
     const onlyId = idArg ? parseInt(idArg.split('=')[1], 10) : 0;
 
     const catalog = JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
-    let entries = catalog.problems || [];
-    if (onlyId) entries = entries.filter(c => c.id === onlyId);
 
-    const merged = entries.map(c => {
+    const allMerged = (catalog.problems || []).map(c => {
         let p = mergeProblem(c, PREMIUM_BY_ID.get(c.id), loadDetail(c.id));
         return applyContentOverride(p, loadContentOverride(c.id));
     });
+
+    const merged = onlyId ? allMerged.filter(p => p.id === onlyId) : allMerged;
 
     let written = 0;
-    const allMerged = onlyId ? merged : (catalog.problems || []).map(c => {
-        let p = mergeProblem(c, PREMIUM_BY_ID.get(c.id), loadDetail(c.id));
-        return applyContentOverride(p, loadContentOverride(c.id));
-    });
-
     merged.forEach(p => {
         const idx = allMerged.findIndex(x => x.id === p.id);
         const prevP = idx > 0 ? allMerged[idx - 1] : null;

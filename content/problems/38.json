@@ -1,0 +1,38 @@
+{
+  "id": 38,
+  "title": "Count and Say",
+  "difficulty": "Medium",
+  "category": "String",
+  "timeComplexity": "O(N·L)",
+  "spaceComplexity": "O(L)",
+  "description": "Dãy count-and-say: base \"1\", mỗi bước mô tả bước trước (vd \"1211\" → \"111221\"). Trả về term thứ n.",
+  "examples": [
+    {
+      "input": "n = 4",
+      "output": "\"1211\""
+    },
+    {
+      "input": "n = 1",
+      "output": "\"1\""
+    }
+  ],
+  "approach": "cur = \"1\". Lặp n-1 lần: duyệt cur, đếm run cùng ký tự, append count+digit vào next.",
+  "memoryTip": "Hai string cur/next — độ dài term có thể tăng nhanh.",
+  "solutions": {
+    "python": "class Solution:\n    def countAndSay(self, n: int) -> str:\n        cur = '1'\n        for _ in range(n-1):\n            nxt, i = [], 0\n            while i < len(cur):\n                j = i\n                while j < len(cur) and cur[j] == cur[i]: j += 1\n                nxt.append(str(j-i)+cur[i]); i = j\n            cur = ''.join(nxt)\n        return cur",
+    "cpp": "class Solution {\npublic:\n    string countAndSay(int n) {\n        string cur = \"1\";\n        for (int k = 1; k < n; k++) {\n            string nxt;\n            for (int i = 0; i < (int)cur.size(); ) {\n                int j = i;\n                while (j < (int)cur.size() && cur[j] == cur[i]) j++;\n                nxt += to_string(j-i) + cur[i]; i = j;\n            }\n            cur = nxt;\n        }\n        return cur;\n    }\n};",
+    "c": "char* countAndSay(int n) {\n    char* cur = (char*)malloc(2);\n    strcpy(cur, \"1\");\n    for (int k = 1; k < n; k++) {\n        int len = (int)strlen(cur), cap = len * 2 + 16, pos = 0;\n        char* nxt = (char*)malloc(cap);\n        nxt[0] = '\\0';\n        for (int i = 0; cur[i]; ) {\n            int j = i;\n            while (cur[j] && cur[j] == cur[i]) j++;\n            pos += sprintf(nxt + pos, \"%d%c\", j - i, cur[i]);\n            i = j;\n        }\n        free(cur);\n        cur = nxt;\n    }\n    return cur;\n}"
+  },
+  "analysis": {
+    "correctness": "Run-length encoding từng bước tái tạo đúng dãy RLE.",
+    "edgeCases": [
+      "n=1",
+      "n lớn — string dài"
+    ],
+    "pitfalls": [
+      "Quên reset i sau run",
+      "Nhầm count vs digit"
+    ]
+  },
+  "tier": "done"
+}

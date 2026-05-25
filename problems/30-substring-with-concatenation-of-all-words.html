@@ -95,7 +95,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* findSubstring — dùng Python/C++ reference */</pre>
+                            <pre class="code-block" id="code-block-c">/* Sliding window theo offset mod wordLen — freq map cho từng word */
+<span class="ty">int</span>* findSubstring(<span class="ty">char</span>* s, <span class="ty">char</span>** words, <span class="ty">int</span> wordsSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
+    *<span class="ty">returnSize</span> = 0;
+    <span class="kw">if</span> (!wordsSize || !words[0][0]) <span class="kw">return</span> NULL;
+    <span class="ty">int</span> wl = (<span class="ty">int</span>)strlen(words[0]), sl = (<span class="ty">int</span>)strlen(s);
+    <span class="ty">int</span> need = wordsSize * wl;
+    <span class="kw">if</span> (sl &lt; need) <span class="kw">return</span> NULL;
+    /* Brute: thử mọi start i sao đủ len */
+    <span class="ty">int</span> cap = 64, cnt = 0;
+    <span class="ty">int</span>* res = (<span class="ty">int</span>*)<span class="kw">malloc</span>(cap * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i + need &lt;= sl; i++) {
+        <span class="ty">int</span> ok = 1;
+        <span class="kw">for</span> (<span class="ty">int</span> w = 0; w &lt; wordsSize &amp;&amp; ok; w++) {
+            <span class="kw">if</span> (strncmp(s + i + w * wl, words[w], wl) != 0) ok = 0;
+        }
+        <span class="kw">if</span> (ok) {
+            <span class="kw">if</span> (cnt == cap) { cap *= 2; res = (<span class="ty">int</span>*)realloc(res, cap * <span class="kw">sizeof</span>(<span class="ty">int</span>)); }
+            res[cnt++] = i;
+        }
+    }
+    *<span class="ty">returnSize</span> = cnt;
+    <span class="kw">return</span> res;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> findSubstring(<span class="ty">self</span>, s: <span class="ty">str</span>, words: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
         <span class="kw">if</span> <span class="kw">not</span> words: <span class="kw">return</span> []
@@ -119,7 +141,35 @@
                     <span class="kw">if</span> cnt[s[left:left+wl]] == need[s[left:left+wl]]: matched -= 1
                     left += wl
         <span class="kw">return</span> sorted(<span class="ty">set</span>(res)) <span class="kw">if</span> res <span class="kw">else</span> []</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none">/* Sliding window + hash map — logic tương tự Python */</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findSubstring(<span class="ty">string</span> s, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; words) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; res;
+        <span class="kw">if</span> (words.empty()) <span class="kw">return</span> res;
+        <span class="ty">int</span> wl = words[0].size(), m = words.size(), n = s.size();
+        unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; need;
+        <span class="kw">for</span> (auto&amp; w : words) need[w]++;
+        <span class="kw">for</span> (<span class="ty">int</span> off = 0; off &lt; wl; off++) {
+            unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; cnt;
+            <span class="ty">int</span> left = off, matched = 0;
+            <span class="kw">for</span> (<span class="ty">int</span> right = off; right + wl &lt;= n; right += wl) {
+                <span class="ty">string</span> w = s.substr(right, wl);
+                <span class="kw">if</span> (!need.count(w)) { cnt.clear(); matched = 0; left = right + wl; continue; }
+                cnt[w]++;
+                <span class="kw">if</span> (cnt[w] == need[w]) matched++;
+                <span class="kw">else</span> <span class="kw">if</span> (cnt[w] == need[w] + 1) matched--;
+                <span class="kw">while</span> (matched == m) {
+                    <span class="kw">if</span> ((right - left) / wl + 1 == m) res.push_back(left);
+                    <span class="ty">string</span> lw = s.substr(left, wl);
+                    cnt[lw]--;
+                    <span class="kw">if</span> (cnt[lw] == need[lw]) matched--;
+                    left += wl;
+                }
+            }
+        }
+        <span class="kw">return</span> res;
+    }
+};</pre>
                         </div>
                     </div>
                 </div>
@@ -146,8 +196,8 @@
             </div>
 
             <footer class="problem-nav">
-                <span class="problem-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></span>
-                <span class="problem-nav-btn disabled next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></span>
+                <a href="29-divide-two-integers.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Divide Two Integers</strong></span></a>
+                <a href="31-next-permutation.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Next Permutation</strong></span><i class="fa-solid fa-chevron-right"></i></a>
             </footer>
         </aside>
 

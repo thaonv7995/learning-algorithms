@@ -7,20 +7,33 @@
   "spaceComplexity": "O(1)",
   "description": "Tìm mọi bộ bốn (a,b,c,d) trong nums sao cho a+b+c+d = target, không trùng lặp.",
   "examples": [
-    { "input": "nums = [1,0,-1,0,-2,2], target = 0", "output": "[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]" },
-    { "input": "nums = [2,2,2,2,2], target = 8", "output": "[[2,2,2,2]]" }
+    {
+      "input": "nums = [1,0,-1,0,-2,2], target = 0",
+      "output": "[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]"
+    },
+    {
+      "input": "nums = [2,2,2,2,2], target = 8",
+      "output": "[[2,2,2,2]]"
+    }
   ],
   "approach": "Sort. Hai vòng i,j (i<j), rồi two-pointer l,r trên phần còn lại tìm sum = target - nums[i] - nums[j]. Skip duplicate ở mọi tầng.",
   "memoryTip": "Giống 3Sum thêm một vòng for — O(1) extra.",
   "solutions": {
     "python": "class Solution:\n    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:\n        nums.sort()\n        res, n = [], len(nums)\n        for i in range(n-3):\n            if i and nums[i] == nums[i-1]: continue\n            for j in range(i+1, n-2):\n                if j > i+1 and nums[j] == nums[j-1]: continue\n                l, r = j+1, n-1\n                while l < r:\n                    s = nums[i]+nums[j]+nums[l]+nums[r]\n                    if s == target:\n                        res.append([nums[i],nums[j],nums[l],nums[r]])\n                        l += 1; r -= 1\n                        while l < r and nums[l] == nums[l-1]: l += 1\n                        while l < r and nums[r] == nums[r+1]: r -= 1\n                    elif s < target: l += 1\n                    else: r -= 1\n        return res",
     "cpp": "class Solution {\npublic:\n    vector<vector<int>> fourSum(vector<int>& nums, int target) {\n        sort(nums.begin(), nums.end());\n        vector<vector<int>> res;\n        int n = nums.size();\n        for (int i = 0; i < n-3; i++) {\n            if (i && nums[i] == nums[i-1]) continue;\n            for (int j = i+1; j < n-2; j++) {\n                if (j > i+1 && nums[j] == nums[j-1]) continue;\n                int l = j+1, r = n-1;\n                while (l < r) {\n                    long s = (long)nums[i]+nums[j]+nums[l]+nums[r];\n                    if (s == target) {\n                        res.push_back({nums[i],nums[j],nums[l],nums[r]});\n                        l++; r--;\n                        while (l < r && nums[l] == nums[l-1]) l++;\n                        while (l < r && nums[r] == nums[r+1]) r--;\n                    } else if (s < target) l++; else r--;\n                }\n            }\n        }\n        return res;\n    }\n};",
-    "c": "/* fourSum — dùng Python/C++ cho độ rõ; logic tương tự 3Sum + vòng j */"
+    "c": "int cmp4(const void* a, const void* b) {\n    int x = *(const int*)a, y = *(const int*)b;\n    return x < y ? -1 : x > y ? 1 : 0;\n}\nint** fourSum(int* nums, int numsSize, int target, int* returnSize, int** returnColumnSizes) {\n    *returnSize = 0;\n    if (numsSize < 4) return NULL;\n    qsort(nums, numsSize, sizeof(int), cmp4);\n    int cap = 64, cnt = 0;\n    int** res = (int**)malloc(cap * sizeof(int*));\n    *returnColumnSizes = (int*)malloc(cap * sizeof(int));\n    for (int i = 0; i < numsSize - 3; i++) {\n        if (i > 0 && nums[i] == nums[i - 1]) continue;\n        for (int j = i + 1; j < numsSize - 2; j++) {\n            if (j > i + 1 && nums[j] == nums[j - 1]) continue;\n            int l = j + 1, r = numsSize - 1;\n            while (l < r) {\n                long s = (long)nums[i] + nums[j] + nums[l] + nums[r];\n                if (s == target) {\n                    if (cnt == cap) {\n                        cap *= 2;\n                        res = (int**)realloc(res, cap * sizeof(int*));\n                        *returnColumnSizes = (int*)realloc(*returnColumnSizes, cap * sizeof(int));\n                    }\n                    res[cnt] = (int*)malloc(4 * sizeof(int));\n                    res[cnt][0] = nums[i]; res[cnt][1] = nums[j];\n                    res[cnt][2] = nums[l]; res[cnt][3] = nums[r];\n                    (*returnColumnSizes)[cnt++] = 4;\n                    l++; r--;\n                    while (l < r && nums[l] == nums[l - 1]) l++;\n                    while (l < r && nums[r] == nums[r + 1]) r--;\n                } else if (s < target) l++;\n                else r--;\n            }\n        }\n    }\n    *returnSize = cnt;\n    return res;\n}"
   },
   "analysis": {
     "correctness": "Sort + skip dup đảm bảo mỗi bộ bốn unique được liệt kê đúng một lần.",
-    "edgeCases": ["Không có nghiệm", "target âm", "toàn số giống nhau"],
-    "pitfalls": ["Overflow int khi cộng 4 số — dùng long", "Quên skip duplicate j"]
+    "edgeCases": [
+      "Không có nghiệm",
+      "target âm",
+      "toàn số giống nhau"
+    ],
+    "pitfalls": [
+      "Overflow int khi cộng 4 số — dùng long",
+      "Quên skip duplicate j"
+    ]
   },
   "tier": "done"
 }

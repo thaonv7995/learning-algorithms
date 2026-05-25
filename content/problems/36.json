@@ -1,0 +1,39 @@
+{
+  "id": 36,
+  "title": "Valid Sudoku",
+  "difficulty": "Medium",
+  "category": "Array",
+  "timeComplexity": "O(1)",
+  "spaceComplexity": "O(1)",
+  "description": "Kiểm tra bảng Sudoku 9×9 có hợp lệ không (không trùng trong hàng, cột, ô 3×3).",
+  "examples": [
+    {
+      "input": "board 9×9 hợp lệ",
+      "output": "true"
+    },
+    {
+      "input": "board có trùng hàng",
+      "output": "false"
+    }
+  ],
+  "approach": "Ba mảng bool rows[9][9], cols[9][9], box[9][9]. Duyệt ô (r,c): digit d — nếu đã seen thì false, else đánh dấu box (r/3)*3+c/3.",
+  "memoryTip": "27×9 bool cố định — O(1).",
+  "solutions": {
+    "python": "class Solution:\n    def isValidSudoku(self, board: List[List[str]]) -> bool:\n        rows=cols=boxes=[set() for _ in range(9)]\n        for r in range(9):\n            for c in range(9):\n                v=board[r][c]\n                if v=='.': continue\n                b=(r//3)*3+c//3\n                if v in rows[r] or v in cols[c] or v in boxes[b]: return False\n                rows[r].add(v); cols[c].add(v); boxes[b].add(v)\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool isValidSudoku(vector<vector<char>>& b) {\n        bool row[9][9]={}, col[9][9]={}, box[9][9]={};\n        for(int r=0;r<9;r++) for(int c=0;c<9;c++){\n            if(b[r][c]=='.') continue;\n            int d=b[r][c]-'1', k=(r/3)*3+c/3;\n            if(row[r][d]||col[c][d]||box[k][d]) return false;\n            row[r][d]=col[c][d]=box[k][d]=true;\n        }\n        return true;\n    }\n};",
+    "c": "bool isValidSudoku(char** board, int boardSize, int* boardColSize) {\n    bool row[9][9] = {0}, col[9][9] = {0}, box[9][9] = {0};\n    (void)boardSize; (void)boardColSize;\n    for (int r = 0; r < 9; r++) {\n        for (int c = 0; c < 9; c++) {\n            char ch = board[r][c];\n            if (ch == '.') continue;\n            int d = ch - '1', b = (r / 3) * 3 + c / 3;\n            if (row[r][d] || col[c][d] || box[b][d]) return false;\n            row[r][d] = col[c][d] = box[b][d] = true;\n        }\n    }\n    return true;\n}"
+  },
+  "analysis": {
+    "correctness": "Mỗi digit kiểm tra đúng 3 ràng buộc trước khi ghi nhận.",
+    "edgeCases": [
+      "Board toàn '.'",
+      "Một ô sai",
+      "Trùng trong box"
+    ],
+    "pitfalls": [
+      "Quên box index",
+      "Dùng char thay int index"
+    ]
+  },
+  "tier": "done"
+}

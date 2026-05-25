@@ -1,0 +1,43 @@
+{
+  "id": 32,
+  "title": "Longest Valid Parentheses",
+  "difficulty": "Hard",
+  "category": "Stack",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(N)",
+  "description": "Tìm độ dài chuỗi ngoặc hợp lệ dài nhất trong s chỉ gồm '(' và ')'.",
+  "examples": [
+    {
+      "input": "s = \"(()\"",
+      "output": "2"
+    },
+    {
+      "input": "s = \")()())\"",
+      "output": "4"
+    },
+    {
+      "input": "s = \"\"",
+      "output": "0"
+    }
+  ],
+  "approach": "Stack lưu index. Push -1 làm base. '(' push i; ')' pop — nếu stack rỗng push i làm base mới, else cập nhật max = i - stack.top().",
+  "memoryTip": "Stack index O(N) trên heap.",
+  "solutions": {
+    "python": "class Solution:\n    def longestValidParentheses(self, s: str) -> int:\n        st, best = [-1], 0\n        for i, c in enumerate(s):\n            if c == '(': st.append(i)\n            else:\n                st.pop()\n                if not st: st.append(i)\n                else: best = max(best, i - st[-1])\n        return best",
+    "cpp": "class Solution {\npublic:\n    int longestValidParentheses(string s) {\n        stack<int> st; st.push(-1); int best = 0;\n        for (int i = 0; i < (int)s.size(); i++) {\n            if (s[i] == '(') st.push(i);\n            else {\n                st.pop();\n                if (st.empty()) st.push(i);\n                else best = max(best, i - st.top());\n            }\n        }\n        return best;\n    }\n};",
+    "c": "int longestValidParentheses(char* s) {\n    int n = (int)strlen(s);\n    int* st = (int*)malloc((n + 2) * sizeof(int));\n    int top = 0;\n    st[top++] = -1;\n    int best = 0;\n    for (int i = 0; s[i]; i++) {\n        if (s[i] == '(') st[top++] = i;\n        else {\n            top--;\n            if (top == 0) st[top++] = i;\n            else {\n                int len = i - st[top - 1];\n                if (len > best) best = len;\n            }\n        }\n    }\n    free(st);\n    return best;\n}"
+  },
+  "analysis": {
+    "correctness": "Base -1 / index sau ')' thừa chia chuỗi thành các đoạn hợp lệ độc lập.",
+    "edgeCases": [
+      "Chuỗi rỗng",
+      "Toàn '('",
+      "Toàn ')'"
+    ],
+    "pitfalls": [
+      "Không push base -1",
+      "Quên cập nhật max sau pop"
+    ]
+  },
+  "tier": "done"
+}

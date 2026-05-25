@@ -95,7 +95,21 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> divide(<span class="ty">int</span> dividend, <span class="ty">int</span> divisor) { /* bit-shift subtract — xem Python */ <span class="kw">return</span> 0; }</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> divide(<span class="ty">int</span> dividend, <span class="ty">int</span> divisor) {
+    <span class="kw">if</span> (dividend == INT_MIN &amp;&amp; divisor == -1) <span class="kw">return</span> INT_MAX;
+    <span class="ty">long</span> sign = ((dividend &lt; 0) ^ (divisor &lt; 0)) ? -1L : 1L;
+    <span class="ty">long</span> a = labs((<span class="ty">long</span>)dividend), b = labs((<span class="ty">long</span>)divisor), q = 0;
+    <span class="kw">while</span> (a &gt;= b) {
+        <span class="ty">long</span> k = 1;
+        <span class="kw">while</span> (a &gt;= (b &lt;&lt; (k + 1))) k &lt;&lt;= 1;
+        a -= b &lt;&lt; k;
+        q += 1L &lt;&lt; k;
+    }
+    q *= sign;
+    <span class="kw">if</span> (q &gt; INT_MAX) <span class="kw">return</span> INT_MAX;
+    <span class="kw">if</span> (q &lt; INT_MIN) <span class="kw">return</span> INT_MIN;
+    <span class="kw">return</span> (<span class="ty">int</span>)q;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> divide(<span class="ty">self</span>, dividend: <span class="ty">int</span>, divisor: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
         <span class="kw">if</span> dividend == -2**31 <span class="kw">and</span> divisor == -1: <span class="kw">return</span> 2**31 - 1
@@ -148,8 +162,8 @@
             </div>
 
             <footer class="problem-nav">
-                <span class="problem-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></span>
-                <span class="problem-nav-btn disabled next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></span>
+                <a href="28-find-the-index-of-the-first-occurrence-in-a-string.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Find the Index of the First Occurrence in a String</strong></span></a>
+                <a href="30-substring-with-concatenation-of-all-words.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Substring with Concatenation of All Words</strong></span><i class="fa-solid fa-chevron-right"></i></a>
             </footer>
         </aside>
 

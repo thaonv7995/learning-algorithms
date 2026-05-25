@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #39</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Backtracking</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Combination Sum</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(2^T)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(T)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>76.5% AC</span>
                     </div>
                 </div>
@@ -57,66 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given an array of <strong>distinct</strong> integers <code>candidates</code> and a target integer <code>target</code>, return <em>a list of all <strong>unique combinations</strong> of </em><code>candidates</code><em> where the chosen numbers sum to </em><code>target</code><em>.</em> You may return the combinations in <strong>any order</strong>.</p>
-
-<p>The <strong>same</strong> number may be chosen from <code>candidates</code> an <strong>unlimited number of times</strong>. Two combinations are unique if the <span data-keyword="frequency-array">frequency</span> of at least one of the chosen numbers is different.</p>
-
-<p>The test cases are generated such that the number of unique combinations that sum up to <code>target</code> is less than <code>150</code> combinations for the given input.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> candidates = [2,3,6,7], target = 7
-<strong>Output:</strong> [[2,2,3],[7]]
-<strong>Explanation:</strong>
-2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
-7 is a candidate, and 7 = 7.
-These are the only two combinations.
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> candidates = [2,3,5], target = 8
-<strong>Output:</strong> [[2,2,2,2],[2,3,3],[3,5]]
-</pre>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<pre>
-<strong>Input:</strong> candidates = [2], target = 1
-<strong>Output:</strong> []
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= candidates.length &lt;= 30</code></li>
-	<li><code>2 &lt;= candidates[i] &lt;= 40</code></li>
-	<li>All elements of <code>candidates</code> are <strong>distinct</strong>.</li>
-	<li><code>1 &lt;= target &lt;= 40</code></li>
-</ul>
-</div>
+                        <div class="block-text">Tìm mọi bộ candidates (có thể lặp) có tổng = target.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[2,3,6,7]</code></div>
-                <div class="ex-line"><span>Out</span><code>7</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[2,3,5]</code></div>
-                <div class="ex-line"><span>Out</span><code>8</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>[2]</code></div>
-                <div class="ex-line"><span>Out</span><code>1</code></div>
+                <div class="ex-line"><span>In</span><code>candidates = [2,3,6,7], target = 7</code></div>
+                <div class="ex-line"><span>Out</span><code>[[2,2,3],[7]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -124,7 +73,7 @@ These are the only two combinations.
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Array kết hợp Backtracking. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Sort candidates. DFS(start, path, remain): nếu remain=0 push path; nếu remain&lt;0 return; từ start chọn candidates[i] lặp lại (i, không i+1).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -141,26 +90,54 @@ These are the only two combinations.
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Return an array of arrays of size *<span class="ty">returnSize</span>.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">int</span>** combinationSum(<span class="ty">int</span>* candidates, <span class="ty">int</span> candidatesSize, <span class="ty">int</span> target, <span class="ty">int</span>* <span class="ty">returnSize</span>, <span class="ty">int</span>** returnColumnSizes) {
-    
+                            <pre class="code-block" id="code-block-c">static <span class="ty">void</span> cs39(<span class="ty">int</span>* c, <span class="ty">int</span> n, <span class="ty">int</span> i, <span class="ty">int</span>* path, <span class="ty">int</span> plen, <span class="ty">int</span> rem,
+                   <span class="ty">int</span>*** out, <span class="ty">int</span>** cols, <span class="ty">int</span>* rc, <span class="ty">int</span>* cap) {
+    <span class="kw">if</span> (rem == 0) {
+        <span class="kw">if</span> (*rc &gt;= *cap) { *cap *= 2; *out = (<span class="ty">int</span>**)realloc(*out, *cap * <span class="kw">sizeof</span>(<span class="ty">int</span>*)); *cols = (<span class="ty">int</span>*)realloc(*cols, *cap * <span class="kw">sizeof</span>(<span class="ty">int</span>)); }
+        (*out)[*rc] = (<span class="ty">int</span>*)<span class="kw">malloc</span>(plen * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+        memcpy((*out)[*rc], path, plen * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+        (*cols)[*rc] = plen;
+        (*rc)++;
+        <span class="kw">return</span>;
+    }
+    <span class="kw">if</span> (rem &lt; 0) <span class="kw">return</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> j = i; j &lt; n; j++) {
+        path[plen] = c[j];
+        cs39(c, n, j, path, plen + 1, rem - c[j], out, cols, rc, cap);
+    }
+}
+<span class="ty">int</span> cmp39(<span class="ty">const</span> <span class="ty">void</span>* a, <span class="ty">const</span> <span class="ty">void</span>* b) { <span class="kw">return</span> *(<span class="ty">int</span>*)a - *(<span class="ty">int</span>*)b; }
+<span class="ty">int</span>** combinationSum(<span class="ty">int</span>* candidates, <span class="ty">int</span> candidatesSize, <span class="ty">int</span> target,
+                     <span class="ty">int</span>* <span class="ty">returnSize</span>, <span class="ty">int</span>** returnColumnSizes) {
+    qsort(candidates, candidatesSize, <span class="kw">sizeof</span>(<span class="ty">int</span>), cmp39);
+    <span class="ty">int</span> cap = 32, rc = 0, path[32];
+    <span class="ty">int</span>** out = (<span class="ty">int</span>**)<span class="kw">malloc</span>(cap * <span class="kw">sizeof</span>(<span class="ty">int</span>*));
+    *returnColumnSizes = (<span class="ty">int</span>*)<span class="kw">malloc</span>(cap * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    cs39(candidates, candidatesSize, 0, path, 0, target, &amp;out, returnColumnSizes, &amp;rc, &amp;cap);
+    *<span class="ty">returnSize</span> = rc;
+    <span class="kw">return</span> out;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> combinationSum(<span class="ty">self</span>, candidates, target):
-        &quot;&quot;&quot;
-        :type candidates: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type target: <span class="ty">int</span>
-        :rtype: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> combinationSum(<span class="ty">self</span>, c: <span class="ty">List</span>[<span class="ty">int</span>], t: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        c.sort(); res=[]
+        <span class="kw">def</span> dfs(i, path, r):
+            <span class="kw">if</span> r==0: res.append(path[:]); <span class="kw">return</span>
+            <span class="kw">if</span> r&lt;0: <span class="kw">return</span>
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i, <span class="ty">len</span>(c)):
+                path.append(c[j]); dfs(j, path, r-c[j]); path.pop()
+        dfs(0,[],t); <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+    <span class="ty">void</span> dfs(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; c, <span class="ty">int</span> i, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; p, <span class="ty">int</span> r) {
+        <span class="kw">if</span> (!r) { res.push_back(p); <span class="kw">return</span>; }
+        <span class="kw">if</span> (r &lt; 0) <span class="kw">return</span>;
+        <span class="kw">for</span> (<span class="ty">int</span> j = i; j &lt; (<span class="ty">int</span>)c.size(); j++) {
+            p.push_back(c[j]); dfs(c, j, p, r - c[j]); p.pop_back();
+        }
+    }
 <span class="ty">public</span>:
-    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; combinationSum(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; candidates, <span class="ty">int</span> target) {
-        
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; combinationSum(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; c, <span class="ty">int</span> t) {
+        sort(c.begin(), c.end()); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; p; dfs(c, 0, p, t); <span class="kw">return</span> res;
     }
 };</pre>
                         </div>
@@ -170,19 +147,19 @@ These are the only two combinations.
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Backtracking</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(2^T)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(T)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Array kết hợp Backtracking.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Sort candidates.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — DFS: nếu remain=0 push path; nếu remain&lt;0 return; từ…</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Cho phép reuse → dfs(j) không j+1; sort giúp cắt sớm.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không có nghiệm</span><span class="analysis-tag edge">target = một candidate</span><span class="analysis-tag edge">candidate 1</span><span class="analysis-tag pit">Dùng dfs(j+1) — thành combination không lặp</span><span class="analysis-tag pit">Không sort</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Đệ quy depth ≤ target/min.</p>
                     </details>
                 </div>
                 </div>
@@ -199,7 +176,7 @@ These are the only two combinations.
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Combination%20Sum&lc_id=39&embed=true"></iframe>

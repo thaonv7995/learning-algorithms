@@ -95,7 +95,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* fourSum — dùng Python/C++ cho độ rõ; logic tương tự 3Sum + vòng j */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> cmp4(<span class="ty">const</span> <span class="ty">void</span>* a, <span class="ty">const</span> <span class="ty">void</span>* b) {
+    <span class="ty">int</span> x = *(<span class="ty">const</span> <span class="ty">int</span>*)a, y = *(<span class="ty">const</span> <span class="ty">int</span>*)b;
+    <span class="kw">return</span> x &lt; y ? -1 : x &gt; y ? 1 : 0;
+}
+<span class="ty">int</span>** fourSum(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span> target, <span class="ty">int</span>* <span class="ty">returnSize</span>, <span class="ty">int</span>** returnColumnSizes) {
+    *<span class="ty">returnSize</span> = 0;
+    <span class="kw">if</span> (numsSize &lt; 4) <span class="kw">return</span> NULL;
+    qsort(nums, numsSize, <span class="kw">sizeof</span>(<span class="ty">int</span>), cmp4);
+    <span class="ty">int</span> cap = 64, cnt = 0;
+    <span class="ty">int</span>** res = (<span class="ty">int</span>**)<span class="kw">malloc</span>(cap * <span class="kw">sizeof</span>(<span class="ty">int</span>*));
+    *returnColumnSizes = (<span class="ty">int</span>*)<span class="kw">malloc</span>(cap * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; numsSize - 3; i++) {
+        <span class="kw">if</span> (i &gt; 0 &amp;&amp; nums[i] == nums[i - 1]) continue;
+        <span class="kw">for</span> (<span class="ty">int</span> j = i + 1; j &lt; numsSize - 2; j++) {
+            <span class="kw">if</span> (j &gt; i + 1 &amp;&amp; nums[j] == nums[j - 1]) continue;
+            <span class="ty">int</span> l = j + 1, r = numsSize - 1;
+            <span class="kw">while</span> (l &lt; r) {
+                <span class="ty">long</span> s = (<span class="ty">long</span>)nums[i] + nums[j] + nums[l] + nums[r];
+                <span class="kw">if</span> (s == target) {
+                    <span class="kw">if</span> (cnt == cap) {
+                        cap *= 2;
+                        res = (<span class="ty">int</span>**)realloc(res, cap * <span class="kw">sizeof</span>(<span class="ty">int</span>*));
+                        *returnColumnSizes = (<span class="ty">int</span>*)realloc(*returnColumnSizes, cap * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+                    }
+                    res[cnt] = (<span class="ty">int</span>*)<span class="kw">malloc</span>(4 * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+                    res[cnt][0] = nums[i]; res[cnt][1] = nums[j];
+                    res[cnt][2] = nums[l]; res[cnt][3] = nums[r];
+                    (*returnColumnSizes)[cnt++] = 4;
+                    l++; r--;
+                    <span class="kw">while</span> (l &lt; r &amp;&amp; nums[l] == nums[l - 1]) l++;
+                    <span class="kw">while</span> (l &lt; r &amp;&amp; nums[r] == nums[r + 1]) r--;
+                } <span class="kw">else</span> <span class="kw">if</span> (s &lt; target) l++;
+                <span class="kw">else</span> r--;
+            }
+        }
+    }
+    *<span class="ty">returnSize</span> = cnt;
+    <span class="kw">return</span> res;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> fourSum(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], target: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
         nums.sort()
@@ -166,8 +204,8 @@
             </div>
 
             <footer class="problem-nav">
-                <span class="problem-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></span>
-                <span class="problem-nav-btn disabled next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></span>
+                <a href="17-letter-combinations-of-a-phone-number.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Letter Combinations of a Phone Number</strong></span></a>
+                <a href="19-remove-nth-node-from-end-of-list.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Remove Nth Node From End of List</strong></span><i class="fa-solid fa-chevron-right"></i></a>
             </footer>
         </aside>
 

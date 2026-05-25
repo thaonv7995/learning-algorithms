@@ -1,38 +1,188 @@
 window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
+
+function _lc6StripQuotes(s) {
+    s = String(s || "").trim();
+    if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+        s = s.slice(1, -1);
+    }
+    return s;
+}
+
+function _lc6Simulate(str, rows, count) {
+    const n = Math.min(count, str.length);
+    const buckets = Array.from({ length: rows }, () => []);
+    const cells = [];
+    if (rows < 1 || !str) return { buckets, cells, result: "" };
+    if (rows === 1) {
+        for (let i = 0; i < n; i++) {
+            buckets[0].push(str[i]);
+            cells.push({ row: 0, col: i, char: str[i], idx: i });
+        }
+        return { buckets, cells, result: str.slice(0, n) };
+    }
+    let r = 0, dir = 1;
+    for (let i = 0; i < n; i++) {
+        buckets[r].push(str[i]);
+        cells.push({ row: r, col: i, char: str[i], idx: i });
+        if (r === 0) dir = 1;
+        else if (r === rows - 1) dir = -1;
+        r += dir;
+    }
+    return { buckets, cells, result: buckets.map(b => b.join("")).join("") };
+}
+
+function _lc6RenderGrid(str, rows, cells, activeIdx, nextIdx) {
+    const wrap = document.createElement("div");
+    wrap.className = "viz-zigzag-grid";
+    wrap.style.cssText = "display:flex;flex-direction:column;gap:6px;margin:8px 0;padding:12px;background:var(--surface,#0f172a);border-radius:10px;border:1px solid var(--border,#1e293b);overflow-x:auto;";
+
+    const cols = str.length;
+    for (let row = 0; row < rows; row++) {
+        const line = document.createElement("div");
+        line.style.cssText = "display:flex;align-items:center;gap:0;min-height:36px;font-family:monospace;";
+        const label = document.createElement("span");
+        label.textContent = `R${row}`;
+        label.style.cssText = "width:28px;font-size:0.65rem;color:#64748b;flex-shrink:0;";
+        line.appendChild(label);
+
+        const track = document.createElement("div");
+        track.style.cssText = "display:flex;align-items:center;position:relative;min-width:" + (cols * 28) + "px;";
+
+        for (let c = 0; c < cols; c++) {
+            const slot = document.createElement("div");
+            slot.style.cssText = "width:26px;height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0;";
+            const placed = cells.find(x => x.row === row && x.col === c);
+            if (placed) {
+                const isLast = placed.idx === activeIdx;
+                const isNext = placed.idx === nextIdx;
+                slot.innerHTML = `<span class="viz-char-cell${isLast ? " found" : ""}${isNext ? " active" : ""}" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:700;font-size:0.85rem;background:${isLast ? "#22c55e33" : "#818cf833"};border:2px solid ${isLast ? "#22c55e" : isNext ? "#fbbf24" : "#818cf8"};color:#e2e8f0;">${placed.char}</span>`;
+            } else {
+                slot.innerHTML = `<span style="width:6px;height:6px;border-radius:50%;background:#334155;opacity:0.35;"></span>`;
+            }
+            track.appendChild(slot);
+        }
+        line.appendChild(track);
+        wrap.appendChild(line);
+    }
+    return wrap;
+}
+
+function _lc6BucketRow(buckets, activeRow) {
+    const row = document.createElement("div");
+    row.style.cssText = "display:flex;flex-direction:column;gap:6px;";
+    buckets.forEach((chars, idx) => {
+        const line = document.createElement("div");
+        line.style.cssText = "display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 10px;border-radius:8px;border:1px solid " + (idx === activeRow ? "#818cf8" : "var(--border,#1e293b)") + ";background:var(--surface,#0f172a);";
+        line.innerHTML = `<strong style="font-size:0.7rem;color:#94a3b8;min-width:24px;">R${idx}</strong>`;
+        const cells = document.createElement("div");
+        cells.style.cssText = "display:flex;gap:4px;flex-wrap:wrap;";
+        if (!chars.length) {
+            cells.innerHTML = `<span style="color:#475569;font-size:0.75rem;font-style:italic;">chưa có ký tự</span>`;
+        } else {
+            chars.forEach((ch, ci) => {
+                const sp = document.createElement("span");
+                sp.className = "viz-char-cell";
+                sp.style.cssText = "width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:700;font-size:0.85rem;background:#818cf822;border:1px solid #818cf8;color:#e2e8f0;";
+                sp.textContent = ch;
+                cells.appendChild(sp);
+            });
+        }
+        line.appendChild(cells);
+        row.appendChild(line);
+    });
+    return row;
+}
+
 window.LeetCodeVisualizers[6] = {
     initialize(s, log, cv) {
-        s.str = "PAYPALISHIRING"; s.rows = 3; s.i = 0; s.buckets = ["", "", ""];
-        s.r = 0; s.dir = 1;
-        if (cv && cv.str) s.str = VizCore.parseStr(cv.str);
-        if (cv && cv.target !== undefined && cv.target !== "") s.rows = parseInt(cv.target) || 3;
-        s.buckets = Array(s.rows).fill("");
-        log(`[Khởi tạo] Zigzag numRows=${s.rows}, s="${s.str}"`, "info");
+        s.str = "PAYPALISHIRING";
+        s.rows = 3;
+        if (cv && cv.str) s.str = _lc6StripQuotes(VizCore.parseStr(cv.str));
+        if (cv && cv.target !== undefined && cv.target !== "") s.rows = Math.max(1, parseInt(cv.target, 10) || 3);
+        s.i = 0;
+        s.r = 0;
+        s.dir = 1;
+        s.buckets = Array.from({ length: s.rows }, () => []);
+        s.placed = 0;
+        s.done = false;
+        log(`[Khởi tạo] Zigzag numRows=${s.rows}, s="${s.str}" — nhấn Từng bước để đặt từng ký tự`, "info");
     },
+
     step(s, log) {
-        if (s.i >= s.str.length) { s.done = true; log(`[KẾT QUẢ] ${s.buckets.join(" | ")}`, "success"); return; }
+        if (s.i >= s.str.length) {
+            s.done = true;
+            const { result } = _lc6Simulate(s.str, s.rows, s.str.length);
+            log(`[KẾT QUẢ] "${result}"`, "success");
+            return;
+        }
         const c = s.str[s.i];
-        s.buckets[s.r] += c;
-        log(`Bước ${s.stepIndex}: '${c}' → row ${s.r}`, "info");
-        if (s.r === 0) s.dir = 1; else if (s.r === s.rows - 1) s.dir = -1;
-        s.r += s.dir; s.i++;
+        s.buckets[s.r].push(c);
+        s.placed = s.i;
+        log(`Bước ${s.stepIndex}: '${c}' → hàng ${s.r} (i=${s.i})`, "info");
+        if (s.r === 0) s.dir = 1;
+        else if (s.r === s.rows - 1) s.dir = -1;
+        s.r += s.dir;
+        s.i++;
+        if (s.i >= s.str.length) {
+            s.done = true;
+            const { result } = _lc6Simulate(s.str, s.rows, s.str.length);
+            log(`[KẾT QUẢ] "${result}"`, "success");
+        }
     },
+
     render(s, canvas, stats) {
-        VizCore.statsBar(stats, [{ label: "row", value: s.r, cls: "accent" }, { label: "dir", value: s.dir > 0 ? "↓" : "↑", cls: "warn" }, { label: "i", value: s.i, cls: "" }]);
+        const placed = s.placed != null && s.placed >= 0 ? s.placed : -1;
+        const nextIdx = s.done ? -1 : s.i;
+        const { buckets, cells, result } = _lc6Simulate(s.str, s.rows, s.i);
+        const partial = buckets.map(b => b.join("")).join("");
+
+        VizCore.statsBar(stats, [
+            { label: "row", value: s.r, cls: "accent" },
+            { label: "dir", value: s.rows <= 1 ? "→" : (s.dir > 0 ? "↓" : "↑"), cls: "warn" },
+            { label: "i", value: `${s.i}/${s.str.length}`, cls: "" },
+            { label: "out", value: partial || "—", cls: s.done ? "success" : "" }
+        ]);
+
         const stage = VizCore.stage();
-        const sec = VizCore.section(stage, 1, "Buckets theo hàng");
-        s.buckets.forEach((b, idx) => {
-            const line = document.createElement("div");
-            line.style.cssText = "font-family:monospace;font-size:0.8rem;padding:6px 10px;margin:4px 0;background:var(--surface);border-radius:8px;border:1px solid var(--border);";
-            line.innerHTML = `<strong>R${idx}:</strong> ${b || "—"}`;
-            if (idx === s.r) line.style.borderColor = "#818cf8";
-            sec.appendChild(line);
-        });
+
+        const sec1 = VizCore.section(stage, 1, "Chuỗi đầu vào — ký tự tiếp theo sẽ đặt");
+        sec1.appendChild(VizCore.charRow(s.str, {
+            active: nextIdx >= 0 && nextIdx < s.str.length ? nextIdx : -1,
+            inWindow: placed >= 0,
+            windowL: 0,
+            windowR: placed,
+            skip: idx => !s.done && idx > placed,
+            pointers: nextIdx >= 0 && nextIdx < s.str.length ? [{ idx: nextIdx, label: "next▼" }] : []
+        }));
+
+        const sec2 = VizCore.section(stage, 2, "Lưới zigzag (cột = thứ tự duyệt chuỗi)");
+        sec2.appendChild(_lc6RenderGrid(s.str, s.rows, cells, placed, nextIdx));
+
+        const sec3 = VizCore.section(stage, 3, "Buckets theo hàng");
+        sec3.appendChild(_lc6BucketRow(buckets, s.r));
+
+        if (partial) {
+            const sec4 = VizCore.section(stage, 4, s.done ? "Kết quả đọc theo hàng" : "Kết quả tạm (đọc R0→R1→…)");
+            const res = document.createElement("div");
+            res.style.cssText = "font-family:monospace;font-size:1rem;padding:10px 14px;background:#22c55e18;border:1px solid #22c55e55;border-radius:8px;color:#86efac;letter-spacing:0.05em;";
+            res.textContent = s.done ? result : partial + "…";
+            sec4.appendChild(res);
+        }
+
+        if (!s.i && !s.done) {
+            const hint = document.createElement("p");
+            hint.style.cssText = "font-size:0.75rem;color:#64748b;margin:8px 0 0;font-style:italic;";
+            hint.textContent = "Nhấn « Từng bước » hoặc « Tự động » để bắt đầu mô phỏng.";
+            stage.appendChild(hint);
+        }
+
         canvas.appendChild(stage);
     },
+
     renderControls(s, c, cv) {
         VizCore.controls(c, [
-            { type: "string", id: "lc-input-str", label: "s", value: cv.str || s.str },
-            { type: "target", id: "lc-input-target", label: "rows", value: cv.target || s.rows }
+            { type: "string", id: "lc-input-str", label: "s", value: cv.str || s.str, placeholder: "PAYPALISHIRING" },
+            { type: "target", id: "lc-input-target", label: "rows", value: cv.target != null ? cv.target : s.rows }
         ], cv);
     }
 };

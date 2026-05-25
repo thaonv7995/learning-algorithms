@@ -113,9 +113,51 @@
         });
     }
 
+    function initProblemNav() {
+        const footer = document.querySelector('.problem-nav');
+        if (!footer) return;
+
+        const idMatch = document.querySelector('.lc-num')?.textContent?.match(/#(\d+)/);
+        if (!idMatch) return;
+        const currentId = parseInt(idMatch[1], 10);
+
+        fetch('../data/catalog.json')
+            .then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); })
+            .then(catalog => {
+                const probs = catalog.problems || [];
+                const idx = probs.findIndex(p => p.id === currentId);
+                if (idx < 0) return;
+
+                const prev = idx > 0 ? probs[idx - 1] : null;
+                const next = idx < probs.length - 1 ? probs[idx + 1] : null;
+
+                function navBtn(p, dir) {
+                    if (!p) {
+                        return '<span class="problem-nav-btn disabled' + (dir === 'next' ? ' next' : '') + '">' +
+                            (dir === 'prev' ? '<i class="fa-solid fa-chevron-left"></i>' : '') +
+                            '<span class="nav-label"><small>' + (dir === 'prev' ? 'Trước' : 'Sau') + '</small><strong>—</strong></span>' +
+                            (dir === 'next' ? '<i class="fa-solid fa-chevron-right"></i>' : '') +
+                            '</span>';
+                    }
+                    const href = p.id + '-' + p.slug + '.html';
+                    const label = '#' + p.id + ' · ' + p.title;
+                    if (dir === 'prev') {
+                        return '<a href="' + href + '" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i>' +
+                            '<span class="nav-label"><small>Trước</small><strong>' + label + '</strong></span></a>';
+                    }
+                    return '<a href="' + href + '" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>' +
+                        label + '</strong></span><i class="fa-solid fa-chevron-right"></i></a>';
+                }
+
+                footer.innerHTML = navBtn(prev, 'prev') + navBtn(next, 'next');
+            })
+            .catch(() => { /* static HTML nav — cần local server hoặc regenerate */ });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         initTabs();
         initCodeTabs();
         initResize();
+        initProblemNav();
     });
 })();

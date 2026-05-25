@@ -1,0 +1,26 @@
+{
+  "id": 35,
+  "title": "Search Insert Position",
+  "difficulty": "Easy",
+  "category": "Binary Search",
+  "timeComplexity": "O(log N)",
+  "spaceComplexity": "O(1)",
+  "description": "Tìm index chèn target vào mảng đã sort để vẫn sort (hoặc index nếu đã có).",
+  "examples": [
+    { "input": "nums = [1,3,5,6], target = 5", "output": "2" },
+    { "input": "nums = [1,3,5,6], target = 2", "output": "1" }
+  ],
+  "approach": "Binary search: nếu nums[mid] < target thì l = mid+1, ngược lại r = mid-1. Trả l.",
+  "memoryTip": "Biến l là vị trí chèn khi kết thúc.",
+  "solutions": {
+    "python": "class Solution:\n    def searchInsert(self, nums: List[int], target: int) -> int:\n        l, r = 0, len(nums)-1\n        while l <= r:\n            m = (l+r)//2\n            if nums[m] < target: l = m+1\n            else: r = m-1\n        return l",
+    "cpp": "class Solution {\npublic:\n    int searchInsert(vector<int>& nums, int target) {\n        int l=0,r=nums.size()-1;\n        while(l<=r){int m=l+(r-l)/2;\n            if(nums[m]<target)l=m+1; else r=m-1;}\n        return l;\n    }\n};",
+    "c": "int searchInsert(int* nums, int n, int target) {\n    int l=0,r=n-1;\n    while(l<=r){int m=l+(r-l)/2;\n        if(nums[m]<target)l=m+1; else r=m-1;}\n    return l;\n}"
+  },
+  "analysis": {
+    "correctness": "Invariant: target sẽ chèn tại l khi vòng lặp dừng.",
+    "edgeCases": ["Target lớn hơn max", "Target nhỏ hơn min", "Mảng rỗng"],
+    "pitfalls": ["Trả r thay vì l", "Dùng while l < r sai điều kiện"]
+  },
+  "tier": "done"
+}

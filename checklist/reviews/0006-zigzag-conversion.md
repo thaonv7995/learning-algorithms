@@ -8,7 +8,7 @@
 - [x] Mô tả tiếng Việt + 2 ví dụ
 - [x] Bucket rows + code C/Py/C++
 - [x] Phân tích đầy đủ
-- [x] Sandbox `lc6.js` — buckets theo hàng, dir ↑↓
+- [x] Sandbox `lc6.js` — lưới zigzag + buckets + kết quả
 - [x] UI premium (tier badge ★)
 
 ## Files

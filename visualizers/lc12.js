@@ -64,34 +64,143 @@ window.LeetCodeVisualizers[14] = {
             if (a.length) s.strs = a;
         }
         s.prefix = s.strs[0] || "";
-        s.idx = 1;
-        log(`[Khởi tạo] LCP strs=[${s.strs.join(", ")}]`, "info");
+        s.strIdx = 1;
+        s.removedChar = null;
+        s.done = false;
+        log(`[Khởi tạo] LCP — prefix ban đầu = "${s.prefix}" (từ strs[0])`, "info");
     },
+
     step(s, log) {
-        if (s.idx >= s.strs.length || !s.prefix) {
+        if (s.strIdx >= s.strs.length || !s.prefix) {
             s.done = true;
             log(`[KẾT QUẢ] "${s.prefix}"`, "success");
             return;
         }
-        const cur = s.strs[s.idx];
-        while (cur.indexOf(s.prefix) !== 0 && s.prefix) s.prefix = s.prefix.slice(0, -1);
-        log(`So với "${cur}" → prefix="${s.prefix}"`, "info");
-        s.idx++;
-        if (s.idx >= s.strs.length) { s.done = true; log(`[KẾT QUẢ] "${s.prefix}"`, "success"); }
+        const cur = s.strs[s.strIdx];
+        s.removedChar = null;
+        if (cur.indexOf(s.prefix) === 0) {
+            log(`Bước ${s.stepIndex}: strs[${s.strIdx}]="${cur}" ✓ khớp prefix "${s.prefix}"`, "success");
+            s.strIdx++;
+            if (s.strIdx >= s.strs.length) {
+                s.done = true;
+                log(`[KẾT QUẢ] "${s.prefix}"`, "success");
+            }
+            return;
+        }
+        s.removedChar = s.prefix[s.prefix.length - 1];
+        s.prefix = s.prefix.slice(0, -1);
+        log(`Bước ${s.stepIndex}: "${cur}" không khớp → bỏ '${s.removedChar}' → prefix="${s.prefix}"`, "warn");
+        if (!s.prefix) {
+            s.done = true;
+            log(`[KẾT QUẢ] ""`, "success");
+        }
     },
-    render(s, canvas, stats) {
-        VizCore.statsBar(stats, [{ label: "prefix", value: s.prefix || '""', cls: "success" }, { label: "i", value: s.idx, cls: "accent" }]);
-        const stage = VizCore.stage();
-        const sec = VizCore.section(stage, 1, "Các chuỗi");
-        s.strs.forEach((t, i) => {
+
+    _alignedGrid(strs, prefix, activeIdx, removedChar) {
+        const wrap = document.createElement("div");
+        wrap.style.cssText = "overflow-x:auto;padding:8px 0;";
+        const maxLen = Math.max(...strs.map(t => t.length), prefix.length, 1);
+
+        const prefixRow = document.createElement("div");
+        prefixRow.style.cssText = "display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 12px;background:#22c55e14;border:1px solid #22c55e44;border-radius:10px;";
+        prefixRow.innerHTML = `<span style="font-size:0.65rem;font-weight:700;color:#86efac;min-width:52px;">PREFIX</span>`;
+        const pCells = document.createElement("div");
+        pCells.style.cssText = "display:flex;gap:4px;flex-wrap:wrap;";
+        if (!prefix) {
+            pCells.innerHTML = `<span style="color:#64748b;font-style:italic;font-size:0.75rem;">(rỗng)</span>`;
+        } else {
+            prefix.split("").forEach((ch, ci) => {
+                const sp = document.createElement("span");
+                const isRemoved = removedChar && ci === prefix.length;
+                sp.style.cssText = `width:30px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:700;font-size:0.9rem;border:2px solid ${isRemoved ? "#ef4444" : "#22c55e"};background:${isRemoved ? "#ef444433" : "#22c55e33"};color:#e2e8f0;`;
+                sp.textContent = ch;
+                pCells.appendChild(sp);
+            });
+        }
+        prefixRow.appendChild(pCells);
+        wrap.appendChild(prefixRow);
+
+        strs.forEach((str, ri) => {
             const row = document.createElement("div");
-            row.style.cssText = "font-family:monospace;font-size:0.8rem;margin:4px 0;";
-            row.textContent = (i === s.idx ? "▶ " : "  ") + t;
-            sec.appendChild(row);
+            row.style.cssText = "display:flex;align-items:flex-start;gap:8px;margin:6px 0;padding:6px 8px;border-radius:8px;background:" + (ri === activeIdx ? "#818cf818" : "transparent") + ";border:1px solid " + (ri === activeIdx ? "#818cf8" : "transparent") + ";";
+            const label = document.createElement("span");
+            label.style.cssText = "font-size:0.65rem;color:#94a3b8;min-width:52px;padding-top:8px;font-weight:" + (ri === activeIdx ? "700" : "400") + ";";
+            label.textContent = ri === activeIdx ? `strs[${ri}] ▶` : `strs[${ri}]`;
+            row.appendChild(label);
+
+            const cells = document.createElement("div");
+            cells.style.cssText = "display:flex;gap:4px;flex-wrap:nowrap;";
+            for (let ci = 0; ci < maxLen; ci++) {
+                const ch = str[ci];
+                const inPrefix = ci < prefix.length;
+                const match = inPrefix && prefix[ci] === ch;
+                const mismatch = inPrefix && !match;
+                const isFirstMismatch = mismatch && (ci === 0 || prefix.slice(0, ci) === str.slice(0, ci));
+                const sp = document.createElement("span");
+                let bg = "#0f172a", border = "#334155", color = ch ? "#e2e8f0" : "#334155";
+                if (inPrefix && match) { bg = "#22c55e22"; border = "#22c55e"; }
+                else if (isFirstMismatch || (ri === activeIdx && ci === prefix.length && prefix && str.indexOf(prefix) !== 0)) {
+                    bg = "#ef444433"; border = "#ef4444"; color = "#fca5a5";
+                } else if (inPrefix && mismatch) { bg = "#78716c33"; border = "#57534e"; }
+                sp.style.cssText = `width:30px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-family:monospace;font-size:0.85rem;font-weight:600;border:2px solid ${border};background:${bg};color:${color};`;
+                sp.textContent = ch || "·";
+                if (ci === prefix.length && ri === activeIdx && prefix) {
+                    sp.style.boxShadow = "0 0 0 2px #fbbf2488";
+                }
+                cells.appendChild(sp);
+            }
+            row.appendChild(cells);
+            wrap.appendChild(row);
         });
+
+        if (activeIdx < strs.length && prefix) {
+            const hint = document.createElement("div");
+            hint.style.cssText = "font-size:0.7rem;color:#64748b;margin-top:8px;font-style:italic;";
+            const cur = strs[activeIdx];
+            hint.textContent = cur.indexOf(prefix) === 0
+                ? `✓ "${cur}" bắt đầu bằng "${prefix}"`
+                : `✗ "${cur}" không bắt đầu bằng "${prefix}" — sẽ rút ngắn prefix`;
+            wrap.appendChild(hint);
+        }
+        return wrap;
+    },
+
+    render(s, canvas, stats) {
+        const activeIdx = s.done ? -1 : Math.min(s.strIdx, s.strs.length - 1);
+        VizCore.statsBar(stats, [
+            { label: "prefix", value: `"${s.prefix}"`, cls: "success" },
+            { label: "len", value: s.prefix.length, cls: "accent" },
+            { label: "strIdx", value: s.strIdx, cls: "warn" }
+        ]);
+        const stage = VizCore.stage();
+
+        const sec1 = VizCore.section(stage, 1, "So sánh theo cột — xanh = khớp prefix, đỏ = lệch");
+        sec1.appendChild(this._alignedGrid(s.strs, s.prefix, s.strIdx < s.strs.length ? s.strIdx : -1, s.removedChar));
+
+        if (s.removedChar) {
+            const sec2 = VizCore.section(stage, 2, "Vừa rút prefix");
+            sec2.appendChild(VizCore.flowEquation([
+                { label: "bỏ", val: `'${s.removedChar}'`, cls: "warn" },
+                { op: "→" },
+                { label: "prefix", val: `"${s.prefix}"`, cls: "success" }
+            ]));
+        }
+
+        if (!s.done && s.strIdx === 1 && s.prefix === s.strs[0] && s.stepIndex === 0) {
+            const tip = document.createElement("p");
+            tip.style.cssText = "font-size:0.75rem;color:#64748b;margin-top:8px;font-style:italic;";
+            tip.textContent = "Prefix khởi tạo = strs[0]. Nhấn Từng bước để so với các chuỗi còn lại.";
+            stage.appendChild(tip);
+        }
+
         canvas.appendChild(stage);
     },
+
     renderControls(s, c, cv) {
-        VizCore.controls(c, [{ type: "string", id: "lc-input-nums", label: "strs (|)", value: cv.nums || s.strs.join("|") }], cv);
+        VizCore.controls(c, [{
+            type: "string", id: "lc-input-nums", label: "strs (|)",
+            value: cv.nums || s.strs.join("|"),
+            placeholder: "flower|flow|flight"
+        }], cv);
     }
 };

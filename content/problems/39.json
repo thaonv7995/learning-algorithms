@@ -1,0 +1,35 @@
+{
+  "id": 39,
+  "title": "Combination Sum",
+  "difficulty": "Medium",
+  "category": "Backtracking",
+  "timeComplexity": "O(2^T)",
+  "spaceComplexity": "O(T)",
+  "description": "Tìm mọi bộ candidates (có thể lặp) có tổng = target.",
+  "examples": [
+    {
+      "input": "candidates = [2,3,6,7], target = 7",
+      "output": "[[2,2,3],[7]]"
+    }
+  ],
+  "approach": "Sort candidates. DFS(start, path, remain): nếu remain=0 push path; nếu remain<0 return; từ start chọn candidates[i] lặp lại (i, không i+1).",
+  "memoryTip": "Đệ quy depth ≤ target/min(candidates).",
+  "solutions": {
+    "python": "class Solution:\n    def combinationSum(self, c: List[int], t: int) -> List[List[int]]:\n        c.sort(); res=[]\n        def dfs(i, path, r):\n            if r==0: res.append(path[:]); return\n            if r<0: return\n            for j in range(i, len(c)):\n                path.append(c[j]); dfs(j, path, r-c[j]); path.pop()\n        dfs(0,[],t); return res",
+    "cpp": "class Solution {\n    vector<vector<int>> res;\n    void dfs(vector<int>& c, int i, vector<int>& p, int r) {\n        if (!r) { res.push_back(p); return; }\n        if (r < 0) return;\n        for (int j = i; j < (int)c.size(); j++) {\n            p.push_back(c[j]); dfs(c, j, p, r - c[j]); p.pop_back();\n        }\n    }\npublic:\n    vector<vector<int>> combinationSum(vector<int>& c, int t) {\n        sort(c.begin(), c.end()); vector<int> p; dfs(c, 0, p, t); return res;\n    }\n};",
+    "c": "static void cs39(int* c, int n, int i, int* path, int plen, int rem,\n                   int*** out, int** cols, int* rc, int* cap) {\n    if (rem == 0) {\n        if (*rc >= *cap) { *cap *= 2; *out = (int**)realloc(*out, *cap * sizeof(int*)); *cols = (int*)realloc(*cols, *cap * sizeof(int)); }\n        (*out)[*rc] = (int*)malloc(plen * sizeof(int));\n        memcpy((*out)[*rc], path, plen * sizeof(int));\n        (*cols)[*rc] = plen;\n        (*rc)++;\n        return;\n    }\n    if (rem < 0) return;\n    for (int j = i; j < n; j++) {\n        path[plen] = c[j];\n        cs39(c, n, j, path, plen + 1, rem - c[j], out, cols, rc, cap);\n    }\n}\nint cmp39(const void* a, const void* b) { return *(int*)a - *(int*)b; }\nint** combinationSum(int* candidates, int candidatesSize, int target,\n                     int* returnSize, int** returnColumnSizes) {\n    qsort(candidates, candidatesSize, sizeof(int), cmp39);\n    int cap = 32, rc = 0, path[32];\n    int** out = (int**)malloc(cap * sizeof(int*));\n    *returnColumnSizes = (int*)malloc(cap * sizeof(int));\n    cs39(candidates, candidatesSize, 0, path, 0, target, &out, returnColumnSizes, &rc, &cap);\n    *returnSize = rc;\n    return out;\n}"
+  },
+  "analysis": {
+    "correctness": "Cho phép reuse → dfs(j) không j+1; sort giúp cắt sớm.",
+    "edgeCases": [
+      "Không có nghiệm",
+      "target = một candidate",
+      "candidate 1"
+    ],
+    "pitfalls": [
+      "Dùng dfs(j+1) — thành combination không lặp",
+      "Không sort"
+    ]
+  },
+  "tier": "done"
+}

@@ -1,0 +1,26 @@
+{
+  "id": 34,
+  "title": "Find First and Last Position of Element in Sorted Array",
+  "difficulty": "Medium",
+  "category": "Binary Search",
+  "timeComplexity": "O(log N)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho mảng đã sort và target, trả về [first, last] index của target hoặc [-1,-1].",
+  "examples": [
+    { "input": "nums = [5,7,7,8,8,10], target = 8", "output": "[3,4]" },
+    { "input": "nums = [5,7,7,8,8,10], target = 6", "output": "[-1,-1]" }
+  ],
+  "approach": "Hai lần binary search: tìm leftmost (bias trái khi nums[mid]==target) và rightmost (bias phải).",
+  "memoryTip": "O(1) extra — chỉ biến low/high/mid.",
+  "solutions": {
+    "python": "class Solution:\n    def searchRange(self, nums: List[int], target: int) -> List[int]:\n        def bs(left_bias):\n            l, r, ans = 0, len(nums)-1, -1\n            while l <= r:\n                m = (l+r)//2\n                if nums[m] == target:\n                    ans = m\n                    if left_bias: r = m-1\n                    else: l = m+1\n                elif nums[m] < target: l = m+1\n                else: r = m-1\n            return ans\n        return [bs(True), bs(False)]",
+    "cpp": "class Solution {\npublic:\n    vector<int> searchRange(vector<int>& nums, int target) {\n        auto bs = [&](bool left) {\n            int l=0,r=nums.size()-1,ans=-1;\n            while(l<=r){int m=l+(r-l)/2;\n                if(nums[m]==target){ans=m; if(left)r=m-1; else l=m+1;}\n                else if(nums[m]<target)l=m+1; else r=m-1;}\n            return ans;\n        };\n        return {bs(true), bs(false)};\n    }\n};",
+    "c": "int* searchRange(int* nums, int n, int target, int* rs) { *rs=2; /* two binary searches */ return rs; }"
+  },
+  "analysis": {
+    "correctness": "Leftmost/rightmost BS không bỏ sót vì mảng đã sort.",
+    "edgeCases": ["Target không có", "Một phần tử", "Toàn target"],
+    "pitfalls": ["Dùng một lần BS", "Overflow mid"]
+  },
+  "tier": "done"
+}

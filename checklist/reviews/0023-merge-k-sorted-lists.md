@@ -1,9 +1,9 @@
-# LC #23 — Review
+# LC #23 · Merge k Sorted Lists — Review
 
 **Status:** done | **Date:** 2026-05-25
 
-- [x] Mô tả VI + giải pháp C/Py/C++
+- [x] Premium content + solutions C/Py từ `problems-solutions.js`
 - [x] Phân tích tab
-- [x] Sandbox `lc23.js`
+- [x] Sandbox `lc23.js` — preset + textarea lists (mỗi dòng = 1 sorted list), merged output row
 - [x] UI ★
 

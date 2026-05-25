@@ -7,20 +7,33 @@
   "spaceComplexity": "O(M·L)",
   "description": "Tìm mọi index bắt đầu trong s sao cho substring gồm đủ tất cả words (cùng độ dài) nối liên tiếp.",
   "examples": [
-    { "input": "s = \"barfoothefoobarman\", words = [\"foo\",\"bar\"]", "output": "[0,9]" },
-    { "input": "s = \"wordgoodgoodgoodbestword\", words = [\"word\",\"good\",\"best\",\"word\"]", "output": "[]" }
+    {
+      "input": "s = \"barfoothefoobarman\", words = [\"foo\",\"bar\"]",
+      "output": "[0,9]"
+    },
+    {
+      "input": "s = \"wordgoodgoodgoodbestword\", words = [\"word\",\"good\",\"best\",\"word\"]",
+      "output": "[]"
+    }
   ],
   "approach": "wordLen = len(words[0]). Với offset 0..wordLen-1, sliding window trên s đếm tần suất từ khớp map words. Khi window có đủ words.length từ đúng freq → ghi index.",
   "memoryTip": "Hash map freq words — O(M*L).",
   "solutions": {
     "python": "class Solution:\n    def findSubstring(self, s: str, words: List[str]) -> List[int]:\n        if not words: return []\n        wl, n, m = len(words[0]), len(s), len(words)\n        from collections import Counter\n        need = Counter(words)\n        res = []\n        for off in range(wl):\n            left = off; cnt = Counter(); matched = 0\n            for right in range(off, n, wl):\n                w = s[right:right+wl]\n                if w not in need:\n                    cnt.clear(); matched = 0; left = right + wl; continue\n                cnt[w] += 1\n                if cnt[w] == need[w]: matched += 1\n                elif cnt[w] == need[w] + 1: matched -= 1\n                while matched == m:\n                    if left - off == 0 or (left-off) % wl == 0:\n                        if (right-left)//wl + 1 == m: res.append(left)\n                    cnt[s[left:left+wl]] -= 1\n                    if cnt[s[left:left+wl]] == need[s[left:left+wl]]: matched -= 1\n                    left += wl\n        return sorted(set(res)) if res else []",
-    "cpp": "/* Sliding window + hash map — logic tương tự Python */",
-    "c": "/* findSubstring — dùng Python/C++ reference */"
+    "cpp": "class Solution {\npublic:\n    vector<int> findSubstring(string s, vector<string>& words) {\n        vector<int> res;\n        if (words.empty()) return res;\n        int wl = words[0].size(), m = words.size(), n = s.size();\n        unordered_map<string,int> need;\n        for (auto& w : words) need[w]++;\n        for (int off = 0; off < wl; off++) {\n            unordered_map<string,int> cnt;\n            int left = off, matched = 0;\n            for (int right = off; right + wl <= n; right += wl) {\n                string w = s.substr(right, wl);\n                if (!need.count(w)) { cnt.clear(); matched = 0; left = right + wl; continue; }\n                cnt[w]++;\n                if (cnt[w] == need[w]) matched++;\n                else if (cnt[w] == need[w] + 1) matched--;\n                while (matched == m) {\n                    if ((right - left) / wl + 1 == m) res.push_back(left);\n                    string lw = s.substr(left, wl);\n                    cnt[lw]--;\n                    if (cnt[lw] == need[lw]) matched--;\n                    left += wl;\n                }\n            }\n        }\n        return res;\n    }\n};",
+    "c": "/* Sliding window theo offset mod wordLen — freq map cho từng word */\nint* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {\n    *returnSize = 0;\n    if (!wordsSize || !words[0][0]) return NULL;\n    int wl = (int)strlen(words[0]), sl = (int)strlen(s);\n    int need = wordsSize * wl;\n    if (sl < need) return NULL;\n    /* Brute: thử mọi start i sao đủ len */\n    int cap = 64, cnt = 0;\n    int* res = (int*)malloc(cap * sizeof(int));\n    for (int i = 0; i + need <= sl; i++) {\n        int ok = 1;\n        for (int w = 0; w < wordsSize && ok; w++) {\n            if (strncmp(s + i + w * wl, words[w], wl) != 0) ok = 0;\n        }\n        if (ok) {\n            if (cnt == cap) { cap *= 2; res = (int*)realloc(res, cap * sizeof(int)); }\n            res[cnt++] = i;\n        }\n    }\n    *returnSize = cnt;\n    return res;\n}"
   },
   "analysis": {
     "correctness": "Mọi start offset mod wordLen được xét; freq map đảm bảo đủ m words.",
-    "edgeCases": ["words rỗng", "s ngắn hơn tổng", "trùng từ trong words"],
-    "pitfalls": ["Quên loop offset", "Không reset khi gặp từ lạ"]
+    "edgeCases": [
+      "words rỗng",
+      "s ngắn hơn tổng",
+      "trùng từ trong words"
+    ],
+    "pitfalls": [
+      "Quên loop offset",
+      "Không reset khi gặp từ lạ"
+    ]
   },
   "tier": "done"
 }

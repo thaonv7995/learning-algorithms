@@ -59,6 +59,8 @@ window.VizCore = {
                 row.appendChild(this.buildStringField(f));
             } else if (f.type === "select") {
                 row.appendChild(this.buildSelectField(f));
+            } else if (f.type === "textarea") {
+                row.appendChild(this.buildTextareaField(f));
             } else {
                 const grp = document.createElement("div");
                 grp.className = "viz-input-group";
@@ -82,7 +84,7 @@ window.VizCore = {
         if (arrayEditor) {
             arrayEditor.appendChild(applyBtn);
         } else {
-            const editors = row.querySelectorAll(".viz-string-editor, .viz-target-editor, .viz-select-editor");
+            const editors = row.querySelectorAll(".viz-string-editor, .viz-target-editor, .viz-select-editor, .viz-textarea-editor");
             const inlineHost = editors.length ? editors[editors.length - 1] : null;
             if (inlineHost) {
                 inlineHost.appendChild(applyBtn);
@@ -271,12 +273,124 @@ window.VizCore = {
         return wrap;
     },
 
+    buildTextareaField(field) {
+        const wrap = document.createElement("div");
+        wrap.className = "viz-input-group viz-textarea-group";
+        wrap.style.flex = "1 1 180px";
+        wrap.style.minWidth = "140px";
+
+        const label = document.createElement("label");
+        label.textContent = field.label;
+        label.setAttribute("for", field.id);
+        wrap.appendChild(label);
+
+        const box = document.createElement("div");
+        box.className = "viz-textarea-editor";
+
+        const ta = document.createElement("textarea");
+        ta.id = field.id;
+        ta.rows = field.rows || 4;
+        ta.spellcheck = false;
+        ta.placeholder = field.placeholder || "";
+        ta.value = field.value != null ? field.value : "";
+        ta.style.cssText = "width:100%;min-width:120px;font-family:monospace;font-size:0.72rem;line-height:1.35;resize:vertical;background:var(--surface,#0f172a);color:#e2e8f0;border:1px solid var(--border,#334155);border-radius:8px;padding:8px;";
+        box.appendChild(ta);
+        wrap.appendChild(box);
+        return wrap;
+    },
+
+    /** Parse Sudoku board: 9 dòng × 9 ký tự hoặc 81 ký tự liên tiếp. */
+    parseSudokuBoard(text) {
+        const fallback = () => Array.from({ length: 9 }, () => Array(9).fill("."));
+        if (!text || !String(text).trim()) return fallback();
+        const raw = String(text).trim();
+        const lines = raw.split(/\r?\n/).map(l => l.replace(/\s/g, "")).filter(Boolean);
+        if (lines.length >= 9) {
+            return lines.slice(0, 9).map(line => {
+                const row = line.slice(0, 9).split("");
+                while (row.length < 9) row.push(".");
+                return row.map(ch => (/^[1-9]$/.test(ch) ? ch : "."));
+            });
+        }
+        const flat = raw.replace(/[^1-9.]/g, "");
+        if (flat.length >= 81) {
+            const board = [];
+            for (let r = 0; r < 9; r++) board.push(flat.slice(r * 9, r * 9 + 9).split("").map(ch => (/^[1-9]$/.test(ch) ? ch : ".")));
+            return board;
+        }
+        return fallback();
+    },
+
+    boardToSudokuText(board) {
+        return (board || []).map(row => row.join("")).join("\n");
+    },
+
+    /**
+     * Render 9×9 Sudoku grid.
+     * opts: { active:[r,c], conflict:[r,c], highlightRow, highlightCol, highlightBox, cellSize }
+     */
+    renderSudokuGrid(board, opts) {
+        opts = opts || {};
+        const size = opts.cellSize || 32;
+        const gap = 2;
+        const br = opts.active ? opts.active[0] : -1;
+        const bc = opts.active ? opts.active[1] : -1;
+        const cr = opts.conflict ? opts.conflict[0] : -1;
+        const cc = opts.conflict ? opts.conflict[1] : -1;
+        const hRow = opts.highlightRow;
+        const hCol = opts.highlightCol;
+        const hBox = opts.highlightBox;
+
+        const wrap = document.createElement("div");
+        wrap.style.cssText = "display:inline-block;padding:6px;background:#0f172a;border-radius:10px;border:2px solid #334155;";
+
+        const grid = document.createElement("div");
+        grid.style.cssText = `display:grid;grid-template-columns:repeat(9,${size}px);gap:${gap}px;font-family:monospace;font-size:0.85rem;`;
+
+        board.forEach((row, ri) => row.forEach((cell, ci) => {
+            const el = document.createElement("div");
+            const isActive = ri === br && ci === bc;
+            const isConflict = ri === cr && ci === cc;
+            const inRow = hRow === ri;
+            const inCol = hCol === ci;
+            const inBox = hBox != null && Math.floor(ri / 3) * 3 + Math.floor(ci / 3) === hBox;
+            const thickR = ci % 3 === 0 && ci > 0;
+            const thickB = ri % 3 === 0 && ri > 0;
+
+            let bg = "#1e293b";
+            if (isConflict) bg = "#ef444455";
+            else if (isActive) bg = "#818cf855";
+            else if (inRow || inCol || inBox) bg = "#6366f122";
+
+            let border = "#475569";
+            if (isConflict) border = "#ef4444";
+            else if (isActive) border = "#818cf8";
+            else if (inBox) border = "#6366f1";
+
+            el.style.cssText = [
+                `width:${size}px`, `height:${size}px`,
+                "display:flex", "align-items:center", "justify-content:center",
+                `border:1px solid ${border}`,
+                thickR ? "border-left:2px solid #64748b" : "",
+                thickB ? "border-top:2px solid #64748b" : "",
+                `border-radius:4px`, `background:${bg}`,
+                `color:${cell === "." ? "#475569" : "#f1f5f9"}`,
+                `font-weight:${cell === "." ? "400" : "700"}`
+            ].filter(Boolean).join(";");
+            el.textContent = cell;
+            grid.appendChild(el);
+        }));
+
+        wrap.appendChild(grid);
+        return wrap;
+    },
+
     bindApply(container, callback) {
         const btn = container.querySelector("#lc-btn-apply");
         if (btn) btn.addEventListener("click", callback);
-        container.querySelectorAll("input:not(.viz-array-edit-cell input), select").forEach(el => {
+        container.querySelectorAll("input:not(.viz-array-edit-cell input), select, textarea").forEach(el => {
             el.addEventListener("keydown", e => {
-                if (e.key === "Enter") { e.preventDefault(); callback(); }
+                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); callback(); }
             });
         });
     },

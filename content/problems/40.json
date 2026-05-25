@@ -1,0 +1,35 @@
+{
+  "id": 40,
+  "title": "Combination Sum II",
+  "difficulty": "Medium",
+  "category": "Backtracking",
+  "timeComplexity": "O(2^N)",
+  "spaceComplexity": "O(N)",
+  "description": "Mỗi candidate dùng tối đa một lần; candidates có thể trùng — không trùng bộ kết quả.",
+  "examples": [
+    {
+      "input": "candidates = [10,1,2,7,6,1,5], target = 8",
+      "output": "[[1,1,6],[1,2,5],[1,7],[2,6]]"
+    }
+  ],
+  "approach": "Sort. DFS(i, path, remain): skip duplicate candidates[i]==candidates[i-1] khi i>start. Chọn i → dfs(i+1, …).",
+  "memoryTip": "Sort + skip dup tránh bộ trùng.",
+  "solutions": {
+    "python": "class Solution:\n    def combinationSum2(self, c: List[int], t: int) -> List[List[int]]:\n        c.sort(); res=[]\n        def dfs(i, path, r):\n            if r==0: res.append(path[:]); return\n            if r<0: return\n            for j in range(i, len(c)):\n                if j>i and c[j]==c[j-1]: continue\n                path.append(c[j]); dfs(j+1, path, r-c[j]); path.pop()\n        dfs(0,[],t); return res",
+    "cpp": "class Solution {\n    vector<vector<int>> res;\n    void dfs(vector<int>& c, int i, vector<int>& p, int r) {\n        if (!r) { res.push_back(p); return; }\n        if (r < 0) return;\n        for (int j = i; j < (int)c.size(); j++) {\n            if (j > i && c[j] == c[j-1]) continue;\n            p.push_back(c[j]); dfs(c, j+1, p, r - c[j]); p.pop_back();\n        }\n    }\npublic:\n    vector<vector<int>> combinationSum2(vector<int>& c, int t) {\n        sort(c.begin(), c.end()); vector<int> p; dfs(c, 0, p, t); return res;\n    }\n};",
+    "c": "static void cs40(int* c, int n, int i, int* path, int plen, int rem,\n                   int*** out, int** cols, int* rc, int* cap) {\n    if (rem == 0) {\n        if (*rc >= *cap) { *cap *= 2; *out = (int**)realloc(*out, *cap * sizeof(int*)); *cols = (int*)realloc(*cols, *cap * sizeof(int)); }\n        (*out)[*rc] = (int*)malloc(plen * sizeof(int));\n        memcpy((*out)[*rc], path, plen * sizeof(int));\n        (*cols)[*rc] = plen;\n        (*rc)++;\n        return;\n    }\n    if (rem < 0) return;\n    for (int j = i; j < n; j++) {\n        if (j > i && c[j] == c[j - 1]) continue;\n        path[plen] = c[j];\n        cs40(c, n, j + 1, path, plen + 1, rem - c[j], out, cols, rc, cap);\n    }\n}\nint cmp40(const void* a, const void* b) { return *(int*)a - *(int*)b; }\nint** combinationSum2(int* candidates, int candidatesSize, int target,\n                      int* returnSize, int** returnColumnSizes) {\n    qsort(candidates, candidatesSize, sizeof(int), cmp40);\n    int cap = 32, rc = 0, path[32];\n    int** out = (int**)malloc(cap * sizeof(int*));\n    *returnColumnSizes = (int*)malloc(cap * sizeof(int));\n    cs40(candidates, candidatesSize, 0, path, 0, target, &out, returnColumnSizes, &rc, &cap);\n    *returnSize = rc;\n    return out;\n}"
+  },
+  "analysis": {
+    "correctness": "Mỗi index dùng một lần (i+1); skip dup đảm bảo unique combinations.",
+    "edgeCases": [
+      "Duplicate candidates",
+      "No solution",
+      "target = sum of all"
+    ],
+    "pitfalls": [
+      "Quên skip dup",
+      "Dùng dfs(j) thay dfs(j+1)"
+    ]
+  },
+  "tier": "done"
+}

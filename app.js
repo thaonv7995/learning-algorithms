@@ -502,6 +502,14 @@ function startApp() {
             if (inputStr && inputStr.type !== "hidden") cv.str = inputStr.value;
             else if (inputStr) cv.str = inputStr.value;
         }
+        const inputPattern = document.getElementById("lc-input-pattern");
+        if (inputPattern) cv.pattern = inputPattern.value;
+        const inputBoard = document.getElementById("lc-input-board");
+        if (inputBoard) cv.board = inputBoard.value;
+        const inputLists = document.getElementById("lc-input-lists");
+        if (inputLists) cv.lists = inputLists.value;
+        const inputPreset = document.getElementById("lc-input-preset");
+        if (inputPreset) cv.preset = inputPreset.value;
         const inputTarget = document.getElementById("lc-input-target");
         const inputBoardSize = document.getElementById("lc-input-boardsize");
         if (inputTarget) cv.target = inputTarget.value;
@@ -589,7 +597,8 @@ function startApp() {
             const viz = window.LeetCodeVisualizers && window.LeetCodeVisualizers[state.id];
             if (viz && viz.initialize) {
                 viz.initialize(state, log, cv);
-                log(`[Áp dụng] Đã tải dữ liệu mới — [${cv.nums || cv.str || "…"}]`, "success");
+                const summary = cv.board ? "board tùy chỉnh" : (cv.lists ? "lists tùy chỉnh" : (cv.preset ? `mẫu ${cv.preset}` : (cv.nums || cv.str || "…")));
+                log(`[Áp dụng] Đã tải dữ liệu mới — [${summary}]`, "success");
             }
             render();
         }

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #38</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Count and Say</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N·L)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(L)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>62.9% AC</span>
                     </div>
                 </div>
@@ -57,64 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>The <strong>count-and-say</strong> sequence is a sequence of digit strings defined by the recursive formula:</p>
-
-<ul>
-	<li><code>countAndSay(1) = &quot;1&quot;</code></li>
-	<li><code>countAndSay(n)</code> is the run-length encoding of <code>countAndSay(n - 1)</code>.</li>
-</ul>
-
-<p><a href="http://en.wikipedia.org/wiki/Run-length_encoding" target="_blank">Run-length encoding</a> (RLE) is a string compression method that works by replacing consecutive identical characters (repeated 2 or more times) with the concatenation of the character and the number marking the count of the characters (length of the run). For example, to compress the string <code>&quot;3322251&quot;</code> we replace <code>&quot;33&quot;</code> with <code>&quot;23&quot;</code>, replace <code>&quot;222&quot;</code> with <code>&quot;32&quot;</code>, replace <code>&quot;5&quot;</code> with <code>&quot;15&quot;</code> and replace <code>&quot;1&quot;</code> with <code>&quot;11&quot;</code>. Thus the compressed string becomes <code>&quot;23321511&quot;</code>.</p>
-
-<p>Given a positive integer <code>n</code>, return <em>the </em><code>n<sup>th</sup></code><em> element of the <strong>count-and-say</strong> sequence</em>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 4</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">&quot;1211&quot;</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<pre>
-countAndSay(1) = &quot;1&quot;
-countAndSay(2) = RLE of &quot;1&quot; = &quot;11&quot;
-countAndSay(3) = RLE of &quot;11&quot; = &quot;21&quot;
-countAndSay(4) = RLE of &quot;21&quot; = &quot;1211&quot;
-</pre>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 1</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">&quot;1&quot;</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>This is the base case.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= n &lt;= 30</code></li>
-</ul>
-
-<p>&nbsp;</p>
-<strong>Follow up:</strong> Could you solve it iteratively?</div>
+                        <div class="block-text">Dãy count-and-say: base &quot;1&quot;, mỗi bước mô tả bước trước (vd &quot;1211&quot; → &quot;111221&quot;). Trả về term thứ n.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>1</code></div>
-                <div class="ex-line"><span>Out</span><code>4</code></div>
+                <div class="ex-line"><span>In</span><code>n = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;1211&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;1&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -122,7 +78,7 @@ countAndSay(4) = RLE of &quot;21&quot; = &quot;1211&quot;
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Create a helper function that maps an integer to pairs of its digits and their frequencies. For example, if you call this function with &quot;223314444411&quot;, then it maps it to an array of pairs [[2,2], [3,2], [1,1], [4,5], [1, 2]]. Create another helper function that takes the array of pairs and creates a new integer. For example, if you call this function with [[2,2], [3,2], [1,1], [4,5], [1, 2]], it should create &quot;22&quot;+&quot;23&quot;+&quot;11&quot;+&quot;54&quot;+&quot;21&quot; = &quot;2223115421&quot;. Now, with the two helper functions, you can start with &quot;1&quot; and call the two functions alternatively n-1 times. The answer is the last integer you will obtain.</div>
+                        <div class="block-text">cur = &quot;1&quot;. Lặp n-1 lần: duyệt cur, đếm run cùng ký tự, append count+digit vào next.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -140,19 +96,48 @@ countAndSay(4) = RLE of &quot;21&quot; = &quot;1211&quot;
                                 <span class="ftype">C99</span>
                             </div>
                             <pre class="code-block" id="code-block-c"><span class="ty">char</span>* countAndSay(<span class="ty">int</span> n) {
-    
+    <span class="ty">char</span>* cur = (<span class="ty">char</span>*)<span class="kw">malloc</span>(2);
+    strcpy(cur, &quot;1&quot;);
+    <span class="kw">for</span> (<span class="ty">int</span> k = 1; k &lt; n; k++) {
+        <span class="ty">int</span> len = (<span class="ty">int</span>)strlen(cur), cap = len * 2 + 16, pos = 0;
+        <span class="ty">char</span>* nxt = (<span class="ty">char</span>*)<span class="kw">malloc</span>(cap);
+        nxt[0] = '\0';
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; cur[i]; ) {
+            <span class="ty">int</span> j = i;
+            <span class="kw">while</span> (cur[j] &amp;&amp; cur[j] == cur[i]) j++;
+            pos += sprintf(nxt + pos, &quot;%d%c&quot;, j - i, cur[i]);
+            i = j;
+        }
+        <span class="kw">free</span>(cur);
+        cur = nxt;
+    }
+    <span class="kw">return</span> cur;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> countAndSay(<span class="ty">self</span>, n):
-        &quot;&quot;&quot;
-        :type n: <span class="ty">int</span>
-        :rtype: <span class="ty">str</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> countAndSay(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">str</span>:
+        cur = '1'
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n-1):
+            nxt, i = [], 0
+            <span class="kw">while</span> i &lt; <span class="ty">len</span>(cur):
+                j = i
+                <span class="kw">while</span> j &lt; <span class="ty">len</span>(cur) <span class="kw">and</span> cur[j] == cur[i]: j += 1
+                nxt.append(<span class="ty">str</span>(j-i)+cur[i]); i = j
+            cur = ''.join(nxt)
+        <span class="kw">return</span> cur</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">string</span> countAndSay(<span class="ty">int</span> n) {
-        
+        <span class="ty">string</span> cur = &quot;1&quot;;
+        <span class="kw">for</span> (<span class="ty">int</span> k = 1; k &lt; n; k++) {
+            <span class="ty">string</span> nxt;
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)cur.size(); ) {
+                <span class="ty">int</span> j = i;
+                <span class="kw">while</span> (j &lt; (<span class="ty">int</span>)cur.size() &amp;&amp; cur[j] == cur[i]) j++;
+                nxt += to_string(j-i) + cur[i]; i = j;
+            }
+            cur = nxt;
+        }
+        <span class="kw">return</span> cur;
     }
 };</pre>
                         </div>
@@ -163,18 +148,18 @@ countAndSay(4) = RLE of &quot;21&quot; = &quot;1211&quot;
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N·L)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(L)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Create a helper function that maps an integer to pairs of…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — For example, if you call this function with…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Create another helper function that takes the array of…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — For example, if you call this function with [[2,2],…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — cur = &quot;1&quot;. Lặp n-1 lần: duyệt cur, đếm run cùng ký tự, append…</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng</span><span class="analysis-tag edge">Một ký tự</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Run-length encoding từng bước tái tạo đúng dãy RLE.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">n lớn — string dài</span><span class="analysis-tag pit">Quên reset i sau run</span><span class="analysis-tag pit">Nhầm count vs digit</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Hai string cur/next — độ dài term có thể tăng nhanh.</p>
                     </details>
                 </div>
                 </div>
@@ -191,7 +176,7 @@ countAndSay(4) = RLE of &quot;21&quot; = &quot;1211&quot;
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Count%20and%20Say&lc_id=38&embed=true"></iframe>
