@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Unique Binary Search Trees</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>63.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Unique Binary Search Trees (LC #96).</div>
+                        <div class="block-text">Cho số nguyên n ≥ 1. Trả về số cây BST khác nhau có thể tạo từ n nút có giá trị phân biệt 1..n. Hai cây khác nhau nếu cấu trúc liên kết khác (không chỉ khác giá trị nhãn).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Số Catalan G(n): chọn root i (1..n), cây con trái có i−1 nút, phải có n−i nút → G(n) = Σ G(i−1)·G(n−i), G(0)=1. DP bottom-up hoặc công thức trực tiếp.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,27 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DP Catalan G(n) — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> numTrees(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        dp = [0] * (n + 1)
+        dp[0] = 1
+        <span class="kw">for</span> nodes <span class="kw">in</span> <span class="ty">range</span>(1, n + 1):
+            <span class="kw">for</span> root <span class="kw">in</span> <span class="ty">range</span>(1, nodes + 1):
+                dp[nodes] += dp[root - 1] * dp[nodes - root]
+        <span class="kw">return</span> dp[n]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">int</span> numTrees(<span class="ty">int</span> n) {
+        <span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; dp(n + 1, 0);
+        dp[0] = 1;
+        <span class="kw">for</span> (<span class="ty">int</span> nodes = 1; nodes &lt;= n; ++nodes) {
+            <span class="kw">for</span> (<span class="ty">int</span> root = 1; root &lt;= nodes; ++root) {
+                dp[nodes] += dp[root - 1] * dp[nodes - root];
+            }
+        }
+        <span class="kw">return</span> (<span class="ty">int</span>)dp[n];
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,18 +125,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Số Catalan G: chọn root i , cây con trái có i−1 nút, phải…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — DP bottom-up hoặc công thức trực tiếp.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi BST hợp lệ ứng với đúng một root; tổng theo root bao phủ hết.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n = 1 → 1</span><span class="analysis-tag edge">n = 19 vẫn trong int (Catalan 19 = 1767263190)</span><span class="analysis-tag pit">Quên dp[0]=1</span><span class="analysis-tag pit">Dùng long long nếu n lớn</span><span class="analysis-tag pit">Nhầm với số cây nhị phân không phải BST</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>BST unique count = Catalan — tách tại root, nhân số cách trái × phải.</p>
                     </details>
                 </div>
                 </div>

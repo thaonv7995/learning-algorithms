@@ -1,0 +1,61 @@
+---
+description: Chuẩn chất lượng Algorithms Explorer — content, sandbox, output, review
+globs: content/problems/**,visualizers/**,checklist/**,problems/**
+alwaysApply: false
+---
+
+# Algorithms Explorer — QA bắt buộc
+
+Mỗi bài LeetCode chỉ được đánh dấu `tier: "done"` / checklist **done** khi pass **toàn bộ** mục trong `checklist/QA-STANDARD.md`.
+
+## Content (`content/problems/{id}.json`)
+
+**Cấm placeholder:**
+- `"Xem đề trên LeetCode"`, `"Xem đề gốc"`, output `"…"`
+- `description` chỉ 1 dòng `"Title (LC #N)."`
+- `python`: `pass`, `cpp`: rỗng / `// Bổ sung`
+- `approach` / `memoryTip` / `analysis` copy chung stub
+
+**Bắt buộc:**
+- `description` tiếng Việt — đủ ràng buộc, I/O, ý bài (≥2 câu)
+- `examples` ≥2 mục — `input`/`output` cụ thể như LeetCode
+- `approach` + `memoryTip` — pattern/invariant thực tế
+- `solutions.python` + `solutions.cpp` — code chạy được
+- `analysis.correctness` + `edgeCases` + `pitfalls` — cụ thể cho bài đó
+
+## Sandbox (`visualizers/lc*.js`)
+
+- **Không** dùng stub generic (`lc-patterns` STUBS / catalog-fallback) cho bài `tier: done`
+- `initialize` → log `[Khởi tạo]` với input mẫu
+- Mỗi `step` → log rõ biến trạng thái; bước cuối → log `[KẾT QUẢ] value=…`
+- `renderControls` — cho phép đổi input
+- Lỗi input → `state.vizError` + log `error`
+
+## Output panel
+
+- Mọi bài `tier: done` phải có `R[id]` trong `lc-outputs.js` **hoặc** `state.vizOutput` / field mà resolver đọc (`maxArea`, `ans`, …)
+- **Không** để user chỉ thấy "xem log bên dưới" khi đã có giá trị trong state
+- Bài không có scalar output (vd. backtracking liệt kê) → `comboItems` / `items` / ghi rõ trong review
+
+## Quy trình từng bài (thủ công, không batch script nội dung)
+
+1. Sửa `content/problems/{id}.json`
+2. Viết/override visualizer; thêm script vào `index.html` nếu file mới
+3. Thêm `R[id]` trong `lc-outputs.js`
+4. `node generate_problems.js --id={id}`
+5. `node scripts/validate-problem.js --id={id}` — phải PASS
+6. Copy `checklist/reviews/_TEMPLATE.md` → `checklist/reviews/{NNNN-slug}.md`, tick đủ mục
+7. Commit chỉ khi user yêu cầu
+
+## Ví dụ ❌ / ✅
+
+```json
+// ❌
+"examples": [{ "input": "Xem đề trên LeetCode", "output": "…" }]
+
+// ✅
+"examples": [
+  { "input": "n = 3", "output": "5" },
+  { "input": "n = 1", "output": "1" }
+]
+```

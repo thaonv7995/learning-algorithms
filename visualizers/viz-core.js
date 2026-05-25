@@ -822,12 +822,29 @@ window.VizCore = {
     },
 
     renderOutputSpec(sec, spec, state) {
+        state = state || {};
+
+        if (state.vizError) {
+            const err = document.createElement("div");
+            err.className = "viz-output-empty error";
+            err.textContent = `✗ Lỗi: ${state.vizError}`;
+            sec.appendChild(err);
+            return;
+        }
+
         if (!spec) {
             const empty = document.createElement("div");
             empty.className = "viz-output-empty" + (state.done ? " done" : "");
-            empty.textContent = state.done
-                ? "✓ Hoàn tất — xem log bên dưới để biết chi tiết"
-                : "Output sẽ hiện khi thu được kết quả…";
+            if (!state.done) {
+                empty.textContent = "Chưa có kết quả — nhấn Step hoặc Tự động để chạy tiếp…";
+            } else if (state.outputNote) {
+                empty.textContent = state.outputNote;
+            } else if (state._catalogFallback) {
+                empty.textContent = `✓ Hoàn tất (sandbox tạm) — LC #${state.id || "?"} cần visualizer riêng để hiện Output chính xác. Xem log [KẾT QUẢ] bên dưới.`;
+            } else {
+                const id = state.id != null ? ` #${state.id}` : "";
+                empty.textContent = `✓ Hoàn tất${id} — chưa map Output panel (thiếu resolver hoặc state.kết quả). Xem dòng log [KẾT QUẢ] phía dưới.`;
+            }
             sec.appendChild(empty);
             return;
         }

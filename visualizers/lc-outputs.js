@@ -320,9 +320,18 @@
 
     /* Generic fallback — catalog visualizer sets outputText */
     window.LC_OUTPUT_FALLBACK = function (s) {
-        if (!s || !s.done) return null;
+        if (!s) return null;
+        if (s.vizError) return { kind: "text", text: `✗ ${s.vizError}`, flash: true };
+        if (!s.done) return null;
         if (s.outputText) return { kind: "text", text: String(s.outputText), flash: true };
         if (s.outputResult != null) return { kind: "value", value: s.outputResult, flash: true };
-        return { kind: "text", text: "✓ Hoàn tất — xem log", flash: true };
+        if (s._catalogFallback) {
+            return {
+                kind: "text",
+                text: `Sandbox tạm — cần visualizer riêng cho LC #${s.id || "?"}`,
+                flash: true
+            };
+        }
+        return null;
     };
 })();
