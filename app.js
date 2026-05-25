@@ -480,18 +480,38 @@ function startApp() {
         document.head.appendChild(script);
     }
 
+    function readLcCustomValues() {
+        const cv = {};
+        if (window.VizCore) {
+            document.querySelectorAll(".viz-array-editor").forEach(ae => {
+                const hid = ae.dataset.hiddenId;
+                const vals = VizCore.getArrayEditorValues(ae);
+                if (!hid || !vals.length) return;
+                const joined = vals.join(",");
+                if (hid === "lc-input-nums") cv.nums = joined;
+                else if (hid === "lc-input-str") cv.str = joined;
+                else cv[hid.replace("lc-input-", "")] = joined;
+            });
+        }
+        if (!cv.nums) {
+            const inputNums = document.getElementById("lc-input-nums");
+            if (inputNums) cv.nums = inputNums.value;
+        }
+        if (!cv.str) {
+            const inputStr = document.getElementById("lc-input-str");
+            if (inputStr && inputStr.type !== "hidden") cv.str = inputStr.value;
+            else if (inputStr) cv.str = inputStr.value;
+        }
+        const inputTarget = document.getElementById("lc-input-target");
+        const inputBoardSize = document.getElementById("lc-input-boardsize");
+        if (inputTarget) cv.target = inputTarget.value;
+        if (inputBoardSize) cv.boardSize = inputBoardSize.value;
+        return cv;
+    }
+
     function setupLeetCodeVisualizer(lcId, problemTitle) {
         // Read custom input values if they already exist in DOM before clearing
-        let customValues = {};
-        const inputNums = document.getElementById("lc-input-nums");
-        const inputTarget = document.getElementById("lc-input-target");
-        const inputStr = document.getElementById("lc-input-str");
-        const inputBoardSize = document.getElementById("lc-input-boardsize");
-
-        if (inputNums) customValues.nums = inputNums.value;
-        if (inputTarget) customValues.target = inputTarget.value;
-        if (inputStr) customValues.str = inputStr.value;
-        if (inputBoardSize) customValues.boardSize = inputBoardSize.value;
+        let customValues = readLcCustomValues();
 
         clearLogs();
         sandboxCanvas.innerHTML = "";
@@ -536,18 +556,18 @@ function startApp() {
 
         sandboxControls.innerHTML = `
             <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; width: 100%;">
-                    <div class="control-group" style="gap: 8px; flex-wrap: wrap; display: flex; align-items: center;">
+                <div class="lc-controls-row">
+                    <div class="control-group lc-controls-btns">
                         <button class="btn-ctrl btn-primary" id="lc-btn-step" disabled><i class="fa-solid fa-forward-step"></i> Từng bước</button>
                         <button class="btn-ctrl btn-success" id="lc-btn-auto" disabled><i class="fa-solid fa-play"></i> Tự động</button>
                         <button class="btn-ctrl btn-danger" id="lc-btn-reset" disabled><i class="fa-solid fa-rotate-left"></i> Đặt lại</button>
                     </div>
-                    <div id="lc-custom-inputs-container" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 0.8rem; font-weight: 500;">
+                    <div id="lc-custom-inputs-container">
                         <!-- Custom settings form fields get injected here dynamically -->
                     </div>
                 </div>
-                <div id="lc-stats-panel" style="font-size: 0.8rem; font-weight: 600; color: #f1f5f9; display: flex; gap: 15px; border-top: 1px solid #1e293b; padding-top: 8px; flex-wrap: wrap;">
-                    <div style="color:var(--text-muted); font-style:italic;"><i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ Sandbox...</div>
+                <div id="lc-stats-panel">
+                    <div style="color:#64748b; font-size:0.75rem; font-style:italic; padding-top:8px; border-top:1px solid #1e2a42;"><i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ Sandbox...</div>
                 </div>
             </div>
         `;
@@ -557,6 +577,24 @@ function startApp() {
         const btnReset = document.getElementById("lc-btn-reset");
         const statsPanel = document.getElementById("lc-stats-panel");
         const customInputsContainer = document.getElementById("lc-custom-inputs-container");
+
+        function applyCustomInputs() {
+            stopAuto();
+            document.querySelectorAll(".viz-array-editor").forEach(ae => {
+                if (window.VizCore) VizCore.syncArrayEditorHidden(ae);
+            });
+            const cv = readLcCustomValues();
+            state.stepIndex = 0;
+            state.done = false;
+            const viz = window.LeetCodeVisualizers && window.LeetCodeVisualizers[state.id];
+            if (viz && viz.initialize) {
+                viz.initialize(state, log, cv);
+                log(`[Áp dụng] Đã tải dữ liệu mới — [${cv.nums || cv.str || "…"}]`, "success");
+            }
+            render();
+        }
+
+        window.__lcApplyInputs = applyCustomInputs;
 
         function bindControls() {
             btnStep.disabled = false;
@@ -605,7 +643,7 @@ function startApp() {
             if (viz && viz.render) {
                 viz.render(state, sandboxCanvas, statsPanel);
             } else {
-                renderGenericArray();
+                renderMissingVisualizer();
             }
         }
 
@@ -627,38 +665,13 @@ function startApp() {
             render();
         }
 
+        function renderMissingVisualizer() {
+            statsPanel.innerHTML = `<div style="color:#64748b;font-size:0.75rem;padding-top:8px;border-top:1px solid #1e2a42;font-style:italic;">Visualizer chưa khả dụng cho LC #${state.id}</div>`;
+            sandboxCanvas.innerHTML = `<div class="viz-stage"><span class="viz-ll-empty">Đang cập nhật mô phỏng cho bài toán này…</span></div>`;
+        }
+
         function renderGenericArray() {
-            statsPanel.innerHTML = `
-                <div>KÍCH THƯỚC MẢNG: <span style="color:var(--primary);">${state.nums.length}</span></div>
-                <div>CHỈ SỐ L: <span style="color:var(--easy);">${state.left}</span></div>
-                <div>CHỈ SỐ R: <span style="color:var(--hard);">${state.right}</span></div>
-            `;
-
-            const row = document.createElement("div");
-            row.style.display = "flex";
-            row.style.gap = "8px";
-            row.style.justifyContent = "center";
-            row.style.width = "100%";
-
-            state.nums.forEach((val, idx) => {
-                const cell = document.createElement("div");
-                cell.style.width = "45px";
-                cell.style.height = "45px";
-                cell.style.border = "1px solid var(--border-color)";
-                cell.style.borderRadius = "6px";
-                cell.style.display = "flex";
-                cell.style.justifyContent = "center";
-                cell.style.alignItems = "center";
-                cell.style.fontWeight = "bold";
-                cell.innerText = val;
-
-                if (idx === state.left) {
-                    cell.style.borderColor = "var(--primary)";
-                    cell.style.background = "rgba(56, 189, 248, 0.15)";
-                }
-                row.appendChild(cell);
-            });
-            sandboxCanvas.appendChild(row);
+            renderMissingVisualizer();
         }
 
         // Fallback generic step algorithm when custom visualizer is absent
@@ -678,16 +691,15 @@ function startApp() {
             if (viz && viz.initialize) {
                 viz.initialize(state, log, customValues);
             } else {
-                // Initialize generic fallback
-                state.nums = [12, 24, 36, 48, 60];
-                state.left = 0;
-                state.right = state.nums.length - 1;
-                log(`[Khởi tạo] Mô phỏng mảng generic.`, "info");
+                log(`[Cảnh báo] Chưa có visualizer tùy chỉnh cho LC #${lcId}.`, "warning");
             }
 
             // Inject custom inputs if visualizer exposes renderControls
             if (customInputsContainer && viz && viz.renderControls) {
                 viz.renderControls(state, customInputsContainer, customValues);
+                if (window.VizCore && VizCore.bindApply) {
+                    VizCore.bindApply(customInputsContainer, applyCustomInputs);
+                }
             }
 
             bindControls();

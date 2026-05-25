@@ -196,11 +196,13 @@ window.LeetCodeVisualizers[206] = {
         sandboxCanvas.appendChild(canvas);
     },
     renderControls: function(state, container, customValues) {
-        container.innerHTML = `
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <span style="color: var(--text-muted); font-size: 0.75rem;">Phần tử list:</span>
-                <input type="text" id="lc-input-nums" value="${customValues.nums || state.listNodes.join(',')}" placeholder="ví dụ: 1,2,3,4,5" style="width: 120px; background: #090d16; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; color: white; font-size: 0.75rem; font-family: monospace; outline:none;">
-            </div>
-        `;
+        const vals = VizCore.parseNums(customValues.nums || state.listNodes.join(","));
+        VizCore.controls(container, [{
+            type: "array",
+            id: "lc-input-nums",
+            label: "List",
+            values: vals.length ? vals : state.listNodes.slice(),
+            placeholder: 1
+        }], customValues);
     }
 };

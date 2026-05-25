@@ -3,539 +3,657 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeetCode 50+ Thuật Toán & Cẩm Nang Giải Quyết - Thư Viện Tương Tác</title>
-    <!-- FontAwesome for modern visual cues -->
+    <title>Algorithms Explorer · Thư viện LeetCode</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Link the hybrid database -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="problems-data.js" defer></script>
-    
+
     <style>
         :root {
-            --bg-main: #0b0f19;
-            --bg-card: #151c2c;
-            --bg-nav: rgba(15, 23, 42, 0.8);
-            --border-color: #243249;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --primary: #38bdf8;
-            --primary-dark: #0284c7;
-            --accent: #10b981;
-            --easy: #10b981;
-            --medium: #f59e0b;
-            --hard: #ef4444;
-            --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+            --bg: #07090f;
+            --surface: #0e1422;
+            --surface-2: #121a2b;
+            --surface-hover: #161f33;
+            --border: #1e2a42;
+            --border-hover: #2a3a58;
+
+            --text: #e2e8f0;
+            --text-strong: #f8fafc;
+            --muted: #94a3b8;
+            --faint: #64748b;
+
+            --brand: #6366f1;
+            --cyan: #38bdf8;
+
+            --easy: #34d399;
+            --easy-bg: rgba(16, 185, 129, 0.1);
+            --medium: #fbbf24;
+            --medium-bg: rgba(245, 158, 11, 0.1);
+            --hard: #f87171;
+            --hard-bg: rgba(239, 68, 68, 0.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
+            background: var(--bg);
+            color: var(--text);
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
             line-height: 1.5;
+            min-height: 100vh;
         }
 
-        /* 1. TOP NAVBAR */
+        /* NAV */
         .top-navbar {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: var(--bg-nav);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            height: 56px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0 2rem;
-            z-index: 1000;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: rgba(7, 9, 15, 0.88);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            color: var(--text-main);
+            gap: 10px;
             text-decoration: none;
+            color: var(--text-strong);
         }
-
-        .logo i {
-            color: var(--primary);
-            font-size: 1.3rem;
-        }
-
-        .btn-back {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #1e293b;
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 8px 16px;
+        .logo-mark {
+            width: 30px; height: 30px;
             border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
+            background: linear-gradient(135deg, #6366f1, #38bdf8);
+            display: grid; place-items: center;
+            color: #fff; font-size: 0.85rem;
         }
-
-        .btn-back:hover {
-            background: var(--primary-dark);
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-        }
-
-        /* CONTAINER MAIN */
-        .main-container {
-            max-width: 1400px;
-            margin: 100px auto 40px auto;
-            padding: 0 2rem;
-        }
-
-        /* 2. STATS DASHBOARD */
-        .stats-dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow-premium);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-        }
-
-        .stat-card.total::before { background: var(--primary); }
-        .stat-card.easy::before { background: var(--easy); }
-        .stat-card.medium::before { background: var(--medium); }
-        .stat-card.hard::before { background: var(--hard); }
-
-        .stat-info h4 {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-info p {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: white;
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-            opacity: 0.15;
-            color: white;
-        }
-
-        /* Progress card */
-        .progress-card {
-            grid-column: span 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        @media (max-width: 900px) {
-            .progress-card {
-                grid-column: span 1;
-            }
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            text-transform: uppercase;
+        .logo span {
+            font-family: 'Sora', sans-serif;
             font-weight: 700;
-            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
-        .progress-bar-bg {
-            width: 100%;
-            height: 10px;
-            background: #1e293b;
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.78rem;
+            font-weight: 600;
+            transition: 0.15s;
+        }
+        .nav-link:hover { color: var(--text-strong); border-color: var(--border-hover); background: var(--surface); }
+        .nav-link i { font-size: 0.72rem; color: var(--cyan); }
+
+        /* MAIN — compact header, grid-first */
+        .main-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 20px 20px 60px;
+        }
+
+        /* Compact page header: title + inline stats */
+        .page-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .page-head h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-strong);
+            letter-spacing: -0.02em;
+        }
+        .page-head h1 span { color: var(--muted); font-weight: 600; font-size: 0.95rem; }
+
+        .stat-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .stat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
             border-radius: 999px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
+            font-size: 0.72rem;
+            font-weight: 700;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+        }
+        .stat-pill .n {
+            font-family: 'Fira Code', monospace;
+            color: var(--text-strong);
+        }
+        .stat-pill.total .dot { background: var(--brand); }
+        .stat-pill.easy .dot { background: var(--easy); }
+        .stat-pill.medium .dot { background: var(--medium); }
+        .stat-pill.hard .dot { background: var(--hard); }
+        .stat-pill .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
         }
 
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 999px;
-            width: 100%;
-        }
-
-        /* 3. FILTERING & SEARCH PANEL */
-        .filter-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+        /* Compact sticky toolbar */
+        .toolbar {
+            position: sticky;
+            top: 56px;
+            z-index: 50;
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 8px;
             align-items: center;
-            justify-content: space-between;
-            box-shadow: var(--shadow-premium);
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
         }
 
         .search-box {
             position: relative;
-            flex: 1;
-            min-width: 280px;
+            flex: 1 1 200px;
+            min-width: 0;
         }
-
         .search-box i {
             position: absolute;
-            left: 14px;
-            top: 50%;
+            left: 11px; top: 50%;
             transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 0.9rem;
+            color: var(--faint);
+            font-size: 0.8rem;
+            pointer-events: none;
         }
-
         .search-input {
             width: 100%;
-            background: #0f172a;
-            border: 1px solid var(--border-color);
+            padding: 8px 12px 8px 34px;
+            background: var(--bg);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 10px 14px 10px 38px;
-            color: white;
-            font-size: 0.85rem;
+            color: var(--text-strong);
+            font-size: 0.84rem;
+            font-family: inherit;
             outline: none;
-            transition: all 0.2s;
+            transition: 0.15s;
         }
-
+        .search-input::placeholder { color: var(--faint); }
         .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
         .difficulty-filters {
             display: flex;
-            gap: 0.5rem;
+            gap: 2px;
+            padding: 3px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
         }
-
         .btn-filter-difficulty {
-            background: #1e293b;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            padding: 5px 11px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--faint);
+            font-size: 0.74rem;
             font-weight: 700;
+            font-family: inherit;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: 0.15s;
+            white-space: nowrap;
         }
-
-        .btn-filter-difficulty:hover {
-            color: white;
-            border-color: var(--text-muted);
-        }
-
-        .btn-filter-difficulty.active {
-            color: white;
-        }
-        .btn-filter-difficulty.active[data-diff="all"] { background: #3b82f6; border-color: #60a5fa; }
-        .btn-filter-difficulty.active[data-diff="easy"] { background: var(--easy); border-color: #34d399; }
-        .btn-filter-difficulty.active[data-diff="medium"] { background: var(--medium); border-color: #fbbf24; }
-        .btn-filter-difficulty.active[data-diff="hard"] { background: var(--hard); border-color: #f87171; }
-
-        .category-select-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #1e293b;
-            border: 1px solid var(--border-color);
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-
-        .category-select-wrapper span {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
+        .btn-filter-difficulty:hover { color: var(--text); }
+        .btn-filter-difficulty.active { color: #fff; background: var(--brand); }
+        .btn-filter-difficulty.active[data-diff="easy"] { background: #059669; }
+        .btn-filter-difficulty.active[data-diff="medium"] { background: #d97706; }
+        .btn-filter-difficulty.active[data-diff="hard"] { background: #dc2626; }
 
         .category-select {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 0.8rem;
-            font-weight: 700;
+            padding: 7px 28px 7px 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: inherit;
             outline: none;
             cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 6.646a.5.5 0 0 1 .708 0L8 9.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            max-width: 180px;
         }
+        .category-select option { background: var(--surface-2); }
 
-        .category-select option {
-            background: var(--bg-card);
-            color: white;
+        .results-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            padding: 0 2px;
+            font-size: 0.76rem;
+            color: var(--faint);
+            flex-wrap: wrap;
         }
+        .results-line strong {
+            color: var(--text-strong);
+            font-weight: 700;
+        }
+        .results-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .page-size-label {
+            font-size: 0.72rem;
+            color: var(--faint);
+            white-space: nowrap;
+        }
+        .page-size-select {
+            padding: 5px 24px 5px 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--text);
+            font-size: 0.74rem;
+            font-weight: 600;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 6.646a.5.5 0 0 1 .708 0L8 9.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+        }
+        .page-size-select option { background: var(--surface-2); }
 
-        /* 4. ALGORITHMS GRID */
+        /* GRID */
         .problems-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
         }
 
         .problem-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow-premium);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
+            gap: 10px;
+            padding: 14px 14px 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+            min-height: 148px;
         }
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+        .problem-card.easy::before { background: var(--easy); }
+        .problem-card.medium::before { background: var(--medium); }
+        .problem-card.hard::before { background: var(--hard); }
 
         .problem-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(56, 189, 248, 0.15);
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.6);
         }
 
-        .card-header {
+        .card-top {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
+            gap: 8px;
         }
 
-        .problem-id-title {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .problem-id {
+        .card-num {
             font-family: 'Fira Code', monospace;
             font-size: 0.7rem;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--cyan);
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            padding: 2px 8px;
+            border-radius: 6px;
         }
 
-        .problem-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: white;
-            line-height: 1.3;
-        }
-
-        .difficulty-badge {
-            font-size: 0.65rem;
+        .diff-badge {
+            font-size: 0.62rem;
             font-weight: 800;
             text-transform: uppercase;
+            letter-spacing: 0.04em;
             padding: 3px 8px;
             border-radius: 999px;
-            letter-spacing: 0.05em;
         }
+        .diff-badge.easy { background: var(--easy-bg); color: var(--easy); }
+        .diff-badge.medium { background: var(--medium-bg); color: var(--medium); }
+        .diff-badge.hard { background: var(--hard-bg); color: var(--hard); }
 
-        .difficulty-badge.easy { background: rgba(16, 185, 129, 0.15); color: var(--easy); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .difficulty-badge.medium { background: rgba(245, 158, 11, 0.15); color: var(--medium); border: 1px solid rgba(245, 158, 11, 0.3); }
-        .difficulty-badge.hard { background: rgba(239, 68, 68, 0.15); color: var(--hard); border: 1px solid rgba(239, 68, 68, 0.3); }
-
-        .problem-teaser {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 1.25rem;
+        .card-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-strong);
+            line-height: 1.35;
+            letter-spacing: -0.01em;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            height: 2.25rem;
+        }
+
+        .card-teaser {
+            font-size: 0.76rem;
+            color: var(--faint);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
         }
 
         .card-footer {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #1e293b;
-            padding-top: 0.75rem;
-        }
-
-        .complexity-summary {
-            display: flex;
-            gap: 4px;
-        }
-
-        .comp-tag {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.65rem;
-            font-weight: 600;
-            background: #0f172a;
-            border: 1px solid var(--border-color);
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: var(--text-main);
-        }
-
-        .comp-tag span {
-            color: var(--primary);
+            justify-content: space-between;
+            gap: 8px;
+            padding-top: 10px;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
         }
 
         .category-tag {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .comp-row {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .comp-chip {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.64rem;
+            font-weight: 600;
+            color: var(--muted);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 2px 6px;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+
+        /* Placeholder */
+        .placeholder-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--muted);
+            background: var(--surface);
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+        }
+        .placeholder-state i {
+            font-size: 1.5rem;
+            color: var(--faint);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .placeholder-state h3 {
+            font-size: 0.95rem;
+            color: var(--text-strong);
+            margin-bottom: 4px;
+        }
+        .placeholder-state p { font-size: 0.82rem; }
+
+        /* PAGINATION */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 12px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+        .pagination[hidden] { display: none; }
+
+        .pagination-info {
+            font-size: 0.76rem;
+            color: var(--faint);
+            white-space: nowrap;
+        }
+        .pagination-info strong {
+            color: var(--text-strong);
             font-weight: 700;
-            color: var(--text-muted);
-            background: #1e293b;
-            padding: 3px 8px;
-            border-radius: 6px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .page-btn {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .page-btn:hover:not(:disabled):not(.active) {
+            color: var(--text-strong);
+            border-color: var(--border-hover);
+            background: var(--surface-hover);
+        }
+        .page-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+        .page-btn.active {
+            background: var(--brand);
+            border-color: var(--brand);
+            color: #fff;
+            font-weight: 700;
+        }
+        .page-btn.nav-btn {
+            padding: 0 12px;
+            gap: 6px;
+        }
+        .page-btn.ellipsis {
+            border: none;
+            background: transparent;
+            cursor: default;
+            min-width: 24px;
+            color: var(--faint);
+        }
+        .page-btn.ellipsis:hover { background: transparent; color: var(--faint); }
+
+        .page-jump {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .page-jump label {
+            font-size: 0.72rem;
+            color: var(--faint);
+            white-space: nowrap;
+        }
+        .page-jump input {
+            width: 56px;
+            padding: 6px 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--text-strong);
+            font-size: 0.78rem;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+        }
+        .page-jump input:focus {
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        @media (max-width: 640px) {
+            .pagination { justify-content: center; }
+            .pagination-info { width: 100%; text-align: center; }
+            .page-jump { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- TOP NAVBAR -->
     <header class="top-navbar">
         <a href="index.html" class="logo">
-            <i class="fa-solid fa-laptop-code"></i>
-            <span>LEETCODE ARCHIVE & EXPLORER</span>
+            <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+            <span>Algorithms Explorer</span>
         </a>
-        <a href="index.html" class="btn-back">
-            <i class="fa-solid fa-arrow-left"></i> Quay Về Sách Giáo Khoa
+        <a href="index.html" class="nav-link">
+            <i class="fa-solid fa-arrow-left"></i> Sách giáo khoa
         </a>
     </header>
 
-    <div class="main-container">
-        
-        <!-- STATS DASHBOARD -->
-        <section class="stats-dashboard">
-            <div class="stat-card total">
-                <div class="stat-info">
-                    <h4>Tổng Bài Toán</h4>
-                    <p id="stats-total">50</p>
-                </div>
-                <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
-            </div>
-            <div class="stat-card easy">
-                <div class="stat-info">
-                    <h4>Dễ (Easy)</h4>
-                    <p id="stats-easy">15</p>
-                </div>
-                <div class="stat-icon"><i class="fa-solid fa-face-smile"></i></div>
-            </div>
-            <div class="stat-card medium">
-                <div class="stat-info">
-                    <h4>Trung Bình (Medium)</h4>
-                    <p id="stats-medium">25</p>
-                </div>
-                <div class="stat-icon"><i class="fa-solid fa-face-meh"></i></div>
-            </div>
-            <div class="stat-card hard">
-                <div class="stat-info">
-                    <h4>Khó (Hard)</h4>
-                    <p id="stats-hard">10</p>
-                </div>
-                <div class="stat-icon"><i class="fa-solid fa-face-frown"></i></div>
-            </div>
-            <div class="stat-card progress-card">
-                <div class="progress-header">
-                    <span>Mức Độ Hoàn Thành Kho Lưu Trữ</span>
-                    <span id="progress-text">100% (50/50)</span>
-                </div>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill"></div>
-                </div>
-            </div>
-        </section>
+    <main class="main-container">
 
-        <!-- SEARCH & FILTERS -->
-        <section class="filter-panel">
+        <div class="page-head">
+            <h1>Thư viện thuật toán <span id="head-total">· 50 bài</span></h1>
+            <div class="stat-pills">
+                <span class="stat-pill total"><span class="dot"></span> <span class="n" id="stats-total">50</span></span>
+                <span class="stat-pill easy"><span class="dot"></span> <span class="n" id="stats-easy">0</span> Easy</span>
+                <span class="stat-pill medium"><span class="dot"></span> <span class="n" id="stats-medium">0</span> Med</span>
+                <span class="stat-pill hard"><span class="dot"></span> <span class="n" id="stats-hard">0</span> Hard</span>
+            </div>
+        </div>
+
+        <div class="toolbar">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search-input" class="search-input" placeholder="Tìm kiếm theo ID, tiêu đề hoặc chủ đề (ví dụ: Sum, 3Sum, Array, dynamic)...">
+                <input type="text" id="search-input" class="search-input" placeholder="Tìm ID, tiêu đề, chủ đề...">
             </div>
-            
-            <div class="difficulty-filters">
-                <button class="btn-filter-difficulty active" data-diff="all">Tất Cả</button>
+            <div class="difficulty-filters" role="tablist">
+                <button class="btn-filter-difficulty active" data-diff="all">All</button>
                 <button class="btn-filter-difficulty" data-diff="easy">Easy</button>
-                <button class="btn-filter-difficulty" data-diff="medium">Medium</button>
+                <button class="btn-filter-difficulty" data-diff="medium">Med</button>
                 <button class="btn-filter-difficulty" data-diff="hard">Hard</button>
             </div>
-            
-            <div class="category-select-wrapper">
-                <span>Chủ đề:</span>
-                <select id="category-select" class="category-select">
-                    <option value="all">Tất Cả Thể Loại</option>
-                    <option value="Array">Mảng (Array)</option>
-                    <option value="String">Chuỗi (String)</option>
-                    <option value="Linked List">Danh Sách Liên Kết</option>
-                    <option value="Tree">Cây & BST (Tree)</option>
-                    <option value="Graph">Đồ Thị (Graph)</option>
-                    <option value="Stack">Ngăn Xếp/Hàng Đợi</option>
-                    <option value="Dynamic Programming">Quy Hoạch Động</option>
-                    <option value="Binary Search">Tìm Kiếm Nhị Phân</option>
-                    <option value="Sliding Window">Cửa Sổ Trượt</option>
-                    <option value="Two Pointers">Con Trỏ Kép</option>
-                    <option value="Heap">Binary Heap (Ưu tiên)</option>
+            <select id="category-select" class="category-select" title="Chủ đề">
+                <option value="all">Tất cả chủ đề</option>
+                <option value="Array">Array</option>
+                <option value="String">String</option>
+                <option value="Linked List">Linked List</option>
+                <option value="Tree">Tree</option>
+                <option value="Graph">Graph</option>
+                <option value="Stack">Stack / Queue</option>
+                <option value="Dynamic Programming">DP</option>
+                <option value="Binary Search">Binary Search</option>
+                <option value="Sliding Window">Sliding Window</option>
+                <option value="Two Pointers">Two Pointers</option>
+                <option value="Heap">Heap</option>
+            </select>
+        </div>
+
+        <div class="results-line">
+            <span id="results-range">Hiển thị <strong id="results-from">1</strong>–<strong id="results-to">24</strong> / <strong id="results-count">50</strong> bài</span>
+            <div class="results-right">
+                <label class="page-size-label" for="page-size-select">Mỗi trang</label>
+                <select id="page-size-select" class="page-size-select" title="Số bài mỗi trang">
+                    <option value="12">12</option>
+                    <option value="24" selected>24</option>
+                    <option value="48">48</option>
+                    <option value="96">96</option>
                 </select>
             </div>
-        </section>
+        </div>
 
-        <!-- PROBLEMS GRID -->
-        <section class="problems-grid" id="problems-grid">
-            <!-- Grid cards injected dynamically by JS -->
-        </section>
+        <section class="problems-grid" id="problems-grid"></section>
 
-    </div>
+        <nav class="pagination" id="pagination" aria-label="Phân trang" hidden>
+            <span class="pagination-info">Trang <strong id="page-current">1</strong> / <strong id="page-total">1</strong></span>
+            <div class="pagination-controls" id="pagination-controls"></div>
+            <div class="page-jump">
+                <label for="page-jump-input">Đến trang</label>
+                <input type="number" id="page-jump-input" min="1" value="1" aria-label="Nhập số trang">
+            </div>
+        </nav>
+
+    </main>
 
     <script>
-        // DOM elements
         const problemsGrid = document.getElementById("problems-grid");
         const searchInput = document.getElementById("search-input");
         const diffButtons = document.querySelectorAll(".btn-filter-difficulty");
         const categorySelect = document.getElementById("category-select");
+        const pageSizeSelect = document.getElementById("page-size-select");
+        const paginationEl = document.getElementById("pagination");
+        const paginationControls = document.getElementById("pagination-controls");
+        const pageCurrentEl = document.getElementById("page-current");
+        const pageTotalEl = document.getElementById("page-total");
+        const pageJumpInput = document.getElementById("page-jump-input");
+        const resultsFrom = document.getElementById("results-from");
+        const resultsTo = document.getElementById("results-to");
+        const resultsCount = document.getElementById("results-count");
 
-        // Filter states
         let searchFilter = "";
         let difficultyFilter = "all";
         let categoryFilter = "all";
+        let currentPage = 1;
+        let pageSize = 24;
+        let filteredCache = [];
 
-        // Helper to generate URL-friendly slug
         function getSlug(title) {
             return title.toLowerCase()
                 .replace(/[^a-z0-9\s-]/g, '')
@@ -543,117 +661,256 @@
                 .trim();
         }
 
-        // Initialize dynamic statistics from PROBLEMS array
         function initStats() {
             if (typeof PROBLEMS === "undefined") return;
             const total = PROBLEMS.length;
             const easy = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "easy").length;
             const medium = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "medium").length;
             const hard = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "hard").length;
-            
+
             document.getElementById("stats-total").innerText = total;
             document.getElementById("stats-easy").innerText = easy;
             document.getElementById("stats-medium").innerText = medium;
             document.getElementById("stats-hard").innerText = hard;
-            
-            document.getElementById("progress-text").innerText = `100% (${total}/${total})`;
+            document.getElementById("head-total").innerText = `· ${total} bài`;
         }
 
-        // Initialize grid rendering
-        function renderGrid() {
-            if (typeof PROBLEMS === "undefined") {
-                problemsGrid.innerHTML = `
-                    <div style="grid-column: span 3; text-align: center; color: var(--text-muted); font-style: italic; padding: 40px 0;">
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; margin-bottom: 12px; display: block; opacity: 0.5; color: var(--medium);"></i>
-                        Đang nạp cơ sở dữ liệu thuật toán...
-                    </div>
-                `;
-                return;
-            }
-
-            problemsGrid.innerHTML = "";
-            
-            const filtered = PROBLEMS.filter(p => {
-                const matchesSearch = p.title.toLowerCase().includes(searchFilter) || 
-                                      p.category.toLowerCase().includes(searchFilter) || 
-                                      p.id.toString().includes(searchFilter) ||
-                                      p.description.toLowerCase().includes(searchFilter);
-                                      
+        function getFilteredProblems() {
+            return PROBLEMS.filter(p => {
+                const matchesSearch = !searchFilter ||
+                    p.title.toLowerCase().includes(searchFilter) ||
+                    p.category.toLowerCase().includes(searchFilter) ||
+                    p.id.toString().includes(searchFilter) ||
+                    p.description.toLowerCase().includes(searchFilter);
                 const matchesDiff = difficultyFilter === "all" || p.difficulty.toLowerCase() === difficultyFilter;
                 const matchesCat = categoryFilter === "all" || p.category === categoryFilter;
-                
                 return matchesSearch && matchesDiff && matchesCat;
-            });
-
-            if (filtered.length === 0) {
-                problemsGrid.innerHTML = `
-                    <div style="grid-column: span 3; text-align: center; color: var(--text-muted); font-style: italic; padding: 40px 0;">
-                        <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; margin-bottom: 12px; display: block; opacity: 0.5;"></i>
-                        Không tìm thấy bài toán nào khớp với bộ lọc hiện tại.
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach(p => {
-                const card = document.createElement("a");
-                card.className = "problem-card";
-                const slug = getSlug(p.title);
-                card.href = `problems/${p.id}-${slug}.html`;
-                
-                card.innerHTML = `
-                    <div>
-                        <div class="card-header">
-                            <div class="problem-id-title">
-                                <span class="problem-id">LC #${p.id}</span>
-                                <h3 class="problem-title">${p.title}</h3>
-                            </div>
-                            <span class="difficulty-badge ${p.difficulty.toLowerCase()}">${p.difficulty}</span>
-                        </div>
-                        <p class="problem-teaser">${p.description.substring(0, 100)}...</p>
-                    </div>
-                    
-                    <div class="card-footer">
-                        <div class="complexity-summary">
-                            <span class="comp-tag" title="Time Complexity"><i class="fa-regular fa-clock"></i> <span>${p.timeComplexity}</span></span>
-                            <span class="comp-tag" title="Space Complexity"><i class="fa-solid fa-microchip"></i> <span>${p.spaceComplexity}</span></span>
-                        </div>
-                        <span class="category-tag">${p.category}</span>
-                    </div>
-                `;
-                
-                problemsGrid.appendChild(card);
             });
         }
 
-        // Search Input listener
-        searchInput.addEventListener("input", (e) => {
+        function getTotalPages(count) {
+            return Math.max(1, Math.ceil(count / pageSize));
+        }
+
+        function clampPage(page, totalPages) {
+            return Math.min(Math.max(1, page), totalPages);
+        }
+
+        function getPageItems(items, page) {
+            const start = (page - 1) * pageSize;
+            return items.slice(start, start + pageSize);
+        }
+
+        function buildPageNumbers(current, total) {
+            if (total <= 7) {
+                return Array.from({ length: total }, (_, i) => i + 1);
+            }
+
+            const pages = new Set([1, total, current]);
+            if (current > 1) pages.add(current - 1);
+            if (current < total) pages.add(current + 1);
+            if (current <= 3) { pages.add(2); pages.add(3); }
+            if (current >= total - 2) { pages.add(total - 1); pages.add(total - 2); }
+
+            const sorted = [...pages].sort((a, b) => a - b);
+            const result = [];
+
+            for (let i = 0; i < sorted.length; i++) {
+                if (i > 0 && sorted[i] - sorted[i - 1] > 1) {
+                    result.push("…");
+                }
+                result.push(sorted[i]);
+            }
+            return result;
+        }
+
+        function updateResultsMeta(total, page, pageItems) {
+            const totalPages = getTotalPages(total);
+            const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
+            const to = total === 0 ? 0 : from + pageItems.length - 1;
+
+            resultsFrom.innerText = from;
+            resultsTo.innerText = to;
+            resultsCount.innerText = total;
+            pageCurrentEl.innerText = page;
+            pageTotalEl.innerText = totalPages;
+            pageJumpInput.max = totalPages;
+            pageJumpInput.value = page;
+        }
+
+        function renderPagination(total, page) {
+            const totalPages = getTotalPages(total);
+
+            if (total === 0 || totalPages <= 1) {
+                paginationEl.hidden = true;
+                paginationControls.innerHTML = "";
+                return;
+            }
+
+            paginationEl.hidden = false;
+            paginationControls.innerHTML = "";
+
+            const addBtn = (label, pageNum, opts = {}) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "page-btn" + (opts.className ? " " + opts.className : "");
+                btn.innerHTML = label;
+                btn.disabled = !!opts.disabled;
+                if (opts.active) btn.classList.add("active");
+                if (opts.ellipsis) {
+                    btn.classList.add("ellipsis");
+                    btn.disabled = true;
+                } else {
+                    btn.addEventListener("click", () => goToPage(pageNum));
+                }
+                paginationControls.appendChild(btn);
+            };
+
+            addBtn('<i class="fa-solid fa-angles-left"></i>', 1, { disabled: page === 1, className: "nav-btn", title: "Trang đầu" });
+            addBtn('<i class="fa-solid fa-chevron-left"></i>', page - 1, { disabled: page === 1, className: "nav-btn", title: "Trang trước" });
+
+            buildPageNumbers(page, totalPages).forEach(item => {
+                if (item === "…") {
+                    addBtn("…", null, { ellipsis: true });
+                } else {
+                    addBtn(String(item), item, { active: item === page });
+                }
+            });
+
+            addBtn('<i class="fa-solid fa-chevron-right"></i>', page + 1, { disabled: page === totalPages, className: "nav-btn", title: "Trang sau" });
+            addBtn('<i class="fa-solid fa-angles-right"></i>', totalPages, { disabled: page === totalPages, className: "nav-btn", title: "Trang cuối" });
+        }
+
+        function goToPage(page, scroll = true) {
+            const totalPages = getTotalPages(filteredCache.length);
+            currentPage = clampPage(page, totalPages);
+            renderGrid(false);
+
+            if (scroll) {
+                problemsGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+
+        function resetPageAndRender() {
+            currentPage = 1;
+            renderGrid(true);
+        }
+
+        function renderPlaceholder(type) {
+            const presets = {
+                loading: { icon: 'fa-spinner fa-spin', title: 'Đang tải...', text: 'Chuẩn bị danh sách bài toán.' },
+                empty: { icon: 'fa-folder-open', title: 'Không có kết quả', text: 'Thử đổi từ khóa hoặc bộ lọc.' }
+            };
+            const p = presets[type];
+            problemsGrid.innerHTML = `
+                <div class="placeholder-state">
+                    <i class="fa-solid ${p.icon}"></i>
+                    <h3>${p.title}</h3>
+                    <p>${p.text}</p>
+                </div>`;
+        }
+
+        function renderGrid(resetScroll = false) {
+            if (typeof PROBLEMS === "undefined") {
+                renderPlaceholder('loading');
+                paginationEl.hidden = true;
+                return;
+            }
+
+            filteredCache = getFilteredProblems();
+            const total = filteredCache.length;
+            const totalPages = getTotalPages(total);
+            currentPage = clampPage(currentPage, totalPages);
+
+            if (total === 0) {
+                renderPlaceholder('empty');
+                updateResultsMeta(0, 1, []);
+                renderPagination(0, 1);
+                return;
+            }
+
+            const pageItems = getPageItems(filteredCache, currentPage);
+            updateResultsMeta(total, currentPage, pageItems);
+            renderPagination(total, currentPage);
+
+            problemsGrid.innerHTML = "";
+            const fragment = document.createDocumentFragment();
+            const diffClass = d => d.toLowerCase();
+
+            pageItems.forEach(p => {
+                const dc = diffClass(p.difficulty);
+                const card = document.createElement("a");
+                card.className = `problem-card ${dc}`;
+                card.href = `problems/${p.id}-${getSlug(p.title)}.html`;
+
+                const teaser = p.description.substring(0, 90) + (p.description.length > 90 ? '…' : '');
+
+                card.innerHTML = `
+                    <div class="card-top">
+                        <span class="card-num">#${p.id}</span>
+                        <span class="diff-badge ${dc}">${p.difficulty}</span>
+                    </div>
+                    <h3 class="card-title">${p.title}</h3>
+                    <p class="card-teaser">${teaser}</p>
+                    <div class="card-footer">
+                        <span class="category-tag">${p.category}</span>
+                        <div class="comp-row">
+                            <span class="comp-chip">${p.timeComplexity}</span>
+                            <span class="comp-chip">${p.spaceComplexity}</span>
+                        </div>
+                    </div>
+                `;
+
+                fragment.appendChild(card);
+            });
+
+            problemsGrid.appendChild(fragment);
+
+            if (resetScroll) {
+                problemsGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+
+        searchInput.addEventListener("input", e => {
             searchFilter = e.target.value.toLowerCase().trim();
-            renderGrid();
+            resetPageAndRender();
         });
 
-        // Difficulty filter buttons
         diffButtons.forEach(btn => {
             btn.addEventListener("click", () => {
                 diffButtons.forEach(b => b.classList.remove("active"));
                 btn.classList.add("active");
                 difficultyFilter = btn.getAttribute("data-diff");
-                renderGrid();
+                resetPageAndRender();
             });
         });
 
-        // Category select filter
-        categorySelect.addEventListener("change", (e) => {
+        categorySelect.addEventListener("change", e => {
             categoryFilter = e.target.value;
-            renderGrid();
+            resetPageAndRender();
         });
 
-        // Initialize page components on DOM load
+        pageSizeSelect.addEventListener("change", e => {
+            pageSize = parseInt(e.target.value, 10) || 24;
+            resetPageAndRender();
+        });
+
+        pageJumpInput.addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+                const val = parseInt(pageJumpInput.value, 10);
+                if (!Number.isNaN(val)) goToPage(val);
+            }
+        });
+
+        pageJumpInput.addEventListener("blur", () => {
+            pageJumpInput.value = currentPage;
+        });
+
         window.addEventListener("DOMContentLoaded", () => {
-            // Check if database is already parsed, if not wait a bit
-            const checkDataInterval = setInterval(() => {
+            renderPlaceholder('loading');
+            const check = setInterval(() => {
                 if (typeof PROBLEMS !== "undefined") {
-                    clearInterval(checkDataInterval);
+                    clearInterval(check);
                     initStats();
                     renderGrid();
                 }

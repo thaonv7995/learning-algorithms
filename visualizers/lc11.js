@@ -43,11 +43,11 @@ window.LeetCodeVisualizers[11] = {
         }
     },
     render: function(state, sandboxCanvas, statsPanel) {
-        statsPanel.innerHTML = `
-            <div>DIỆN TÍCH LỚN NHẤT: <span style="color:var(--accent); font-size:1.15rem; font-weight:bold;">${state.maxArea}</span></div>
-            <div>DIỆN TÍCH HIỆN TẠI: <span style="color:var(--primary); font-weight:bold;">${state.currArea}</span></div>
-            <div>VỊ TRÍ CON TRỎ: <span style="color:var(--easy); font-weight:bold;">L = ${state.left}</span>, <span style="color:var(--hard); font-weight:bold;">R = ${state.right}</span></div>
-        `;
+        VizCore.statsBar(statsPanel, [
+            { label: "Max area", value: state.maxArea, cls: "success" },
+            { label: "Current", value: state.currArea, cls: "accent" },
+            { label: "L / R", value: `${state.left} / ${state.right}`, cls: "warn" }
+        ]);
 
         const container = document.createElement("div");
         container.style.display = "flex";
@@ -177,11 +177,8 @@ window.LeetCodeVisualizers[11] = {
         sandboxCanvas.appendChild(container);
     },
     renderControls: function(state, container, customValues) {
-        container.innerHTML = `
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <span style="color: var(--text-muted); font-size: 0.75rem;">Chiều cao:</span>
-                <input type="text" id="lc-input-nums" value="${customValues.nums || state.nums.join(',')}" placeholder="ví dụ: 1,8,6,2,5" style="width: 140px; background: #090d16; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; color: white; font-size: 0.75rem; font-family: monospace; outline: none;">
-            </div>
-        `;
+        VizCore.controls(container, [
+            { type: "array", id: "lc-input-nums", label: "Chiều cao", values: VizCore.arrayValues(customValues, state, [1, 8, 6, 2, 5, 4, 8, 3, 7]), placeholder: 1 }
+        ], customValues);
     }
 };

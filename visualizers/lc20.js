@@ -183,11 +183,12 @@ window.LeetCodeVisualizers[20] = {
         sandboxCanvas.appendChild(container);
     },
     renderControls: function(state, container, customValues) {
-        container.innerHTML = `
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <span style="color: var(--text-muted); font-size: 0.75rem;">Chuỗi ngoặc:</span>
-                <input type="text" id="lc-input-str" value="${customValues.str || state.str}" placeholder="ví dụ: ()[]{}" style="width: 120px; background: #090d16; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; color: white; font-size: 0.75rem; font-family: monospace; outline: none;">
-            </div>
-        `;
+        VizCore.controls(container, [{
+            type: "string",
+            id: "lc-input-str",
+            label: "Ngoặc",
+            value: customValues.str || state.str,
+            placeholder: "()[]{}"
+        }], customValues);
     }
 };

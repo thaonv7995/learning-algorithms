@@ -182,11 +182,12 @@ window.LeetCodeVisualizers[42] = {
         sandboxCanvas.appendChild(container);
     },
     renderControls: function(state, container, customValues) {
-        container.innerHTML = `
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <span style="color: var(--text-muted); font-size: 0.75rem;">Cột độ cao:</span>
-                <input type="text" id="lc-input-nums" value="${customValues.nums || state.nums.join(',')}" placeholder="ví dụ: 0,1,0,2,1" style="width: 140px; background: #090d16; border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; color: white; font-size: 0.75rem; font-family: monospace; outline: none;">
-            </div>
-        `;
+        VizCore.controls(container, [{
+            type: "array",
+            id: "lc-input-nums",
+            label: "Độ cao",
+            values: VizCore.arrayValues(customValues, state, state.nums),
+            placeholder: 0
+        }], customValues);
     }
 };

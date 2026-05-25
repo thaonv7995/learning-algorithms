@@ -178,16 +178,17 @@ window.LeetCodeVisualizers[51] = {
         sandboxCanvas.appendChild(container);
     },
     renderControls: function(state, container, customValues) {
-        container.innerHTML = `
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <span style="color: var(--text-muted); font-size: 0.75rem;">Kích thước:</span>
-                <select id="lc-input-boardsize" style="background:#090d16; border:1px solid var(--border-color); border-radius:4px; padding:4px 8px; color:white; font-size:0.75rem; font-family:monospace; outline:none; cursor:pointer;">
-                    <option value="4" ${customValues.boardSize === '4' ? 'selected' : ''}>4 x 4 (Quay lui)</option>
-                    <option value="5" ${customValues.boardSize === '5' ? 'selected' : ''}>5 x 5 (Quay lui)</option>
-                    <option value="6" ${customValues.boardSize === '6' ? 'selected' : ''}>6 x 6 (Quay lui)</option>
-                    <option value="8" ${customValues.boardSize === '8' ? 'selected' : ''}>8 x 8 (Quay lui)</option>
-                </select>
-            </div>
-        `;
+        VizCore.controls(container, [{
+            type: "select",
+            id: "lc-input-boardsize",
+            label: "Board",
+            value: customValues.boardSize || state.boardSize || 4,
+            options: [
+                { value: "4", label: "4×4" },
+                { value: "5", label: "5×5" },
+                { value: "6", label: "6×6" },
+                { value: "8", label: "8×8" }
+            ]
+        }], customValues);
     }
 };

@@ -7,19 +7,15 @@
     <!-- FontAwesome for beautiful modern icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="visualizers/viz-embed.css">
     <style>
+        /* Embed mode — synced with Algorithms Explorer detail pages */
         html.embed-mode, body.embed-mode {
-            background-color: #0b0f19 !important;
+            background: #07090f !important;
         }
-        body.embed-mode .top-navbar {
-            display: none !important;
-        }
-        body.embed-mode .toc-sidebar {
-            display: none !important;
-        }
-        body.embed-mode .reading-pane {
-            display: none !important;
-        }
+        body.embed-mode .top-navbar,
+        body.embed-mode .toc-sidebar,
+        body.embed-mode .reading-pane,
         body.embed-mode .resize-divider {
             display: none !important;
         }
@@ -32,59 +28,112 @@
             width: 100% !important;
             border-left: none !important;
             height: 100vh !important;
-            background: #0b0f19 !important;
+            background: #07090f !important;
         }
         body.embed-mode .visualizer-header {
-            background: #0f172a !important;
-            border-bottom: 1px solid #1e293b !important;
-            color: #f1f5f9 !important;
-            padding: 1rem 1.5rem !important;
-        }
-        body.embed-mode .visualizer-header h3 {
-            color: #f1f5f9 !important;
+            display: none !important;
         }
         body.embed-mode .visualizer-canvas {
+            flex: 1 !important;
+            min-height: 0 !important;
             background: #090d16 !important;
-            border-bottom: 1px solid #1e293b !important;
+            border-bottom: 1px solid #1e2a42 !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            align-items: stretch !important;
+            justify-content: flex-start !important;
+        }
+        body.embed-mode .visualizer-canvas::-webkit-scrollbar { width: 6px; height: 6px; }
+        body.embed-mode .visualizer-canvas::-webkit-scrollbar-thumb { background: #1e2a42; border-radius: 999px; }
+        body.embed-mode .visualizer-canvas::-webkit-scrollbar-track { background: transparent; }
+        /* Visualizer tokens — used by lc*.js inside iframe */
+        body.embed-mode {
+            --primary: #6366f1;
+            --medium: #fbbf24;
+            --easy: #34d399;
+            --hard: #f87171;
+            --accent: #34d399;
+            --border-color: #1e2a42;
+            --text-muted: #64748b;
         }
         body.embed-mode .visualizer-controls {
-            background: #0f172a !important;
-            border-bottom: 1px solid #1e293b !important;
-            padding: 1rem 1.5rem !important;
+            background: #0e1422 !important;
+            border-bottom: 1px solid #1e2a42 !important;
+            padding: 10px 14px !important;
+            gap: 8px !important;
         }
-        body.embed-mode .visualizer-logs-container {
-            border-top: 1px solid #1e293b !important;
-            background: #0f172a !important;
+        body.embed-mode .visualizer-controls .control-group {
+            gap: 6px !important;
+            flex-wrap: wrap !important;
         }
-        body.embed-mode .logs-header {
-            background: #0f172a !important;
-            color: #94a3b8 !important;
-            border-bottom: 1px solid #1e293b !important;
+        body.embed-mode .control-input {
+            background: #07090f !important;
+            border-color: #1e2a42 !important;
+            color: #e2e8f0 !important;
+            padding: 7px 10px !important;
+            font-size: 0.78rem !important;
         }
-        body.embed-mode .visualizer-logs {
-            background: #090d16 !important;
-            color: #cbd5e1 !important;
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.5) !important;
+        body.embed-mode .control-input:focus {
+            border-color: rgba(99, 102, 241, 0.5) !important;
         }
         body.embed-mode .btn-ctrl {
-            border: 1px solid #1e293b !important;
+            border: 1px solid #1e2a42 !important;
+            padding: 7px 12px !important;
+            font-size: 0.76rem !important;
+            border-radius: 8px !important;
         }
         body.embed-mode .btn-ctrl.btn-primary {
-            background: #1d4ed8 !important;
-            color: white !important;
+            background: #6366f1 !important;
+            border-color: #6366f1 !important;
+            color: #fff !important;
         }
         body.embed-mode .btn-ctrl.btn-success {
-            background: #065f46 !important;
-            color: white !important;
+            background: #059669 !important;
+            border-color: #059669 !important;
+            color: #fff !important;
         }
         body.embed-mode .btn-ctrl.btn-danger {
-            background: #991b1b !important;
-            color: white !important;
+            background: #dc2626 !important;
+            border-color: #dc2626 !important;
+            color: #fff !important;
         }
         body.embed-mode .btn-ctrl:disabled {
-            background: #1e293b !important;
+            background: #121a2b !important;
             color: #64748b !important;
-            border-color: #0f172a !important;
+            border-color: #1e2a42 !important;
+        }
+        body.embed-mode .visualizer-logs-container {
+            border-top: 1px solid #1e2a42 !important;
+            background: #0e1422 !important;
+            flex-shrink: 0 !important;
+        }
+        body.embed-mode .logs-header {
+            background: #0e1422 !important;
+            color: #94a3b8 !important;
+            border-bottom: 1px solid #1e2a42 !important;
+            padding: 6px 14px !important;
+            font-size: 0.68rem !important;
+        }
+        body.embed-mode .logs-header:hover {
+            background: #121a2b !important;
+            color: #e2e8f0 !important;
+        }
+        body.embed-mode .visualizer-logs {
+            height: 120px !important;
+            background: #060912 !important;
+            color: #cbd5e1 !important;
+            font-size: 0.72rem !important;
+            padding: 10px 14px !important;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.embed-mode .visualizer-logs-container.collapsed .visualizer-logs {
+            height: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        body.embed-mode .speed-slider-container {
+            font-size: 0.72rem !important;
+            color: #64748b !important;
         }
 
         /* PREMIUM DYNAMIC KEYFRAMES AND SCENIC ANIMATIONS */
@@ -142,11 +191,15 @@
             document.documentElement.classList.add("embed-mode");
             document.addEventListener("DOMContentLoaded", () => {
                 document.body.classList.add("embed-mode");
+                const logsContainer = document.getElementById("logs-container");
+                if (logsContainer) logsContainer.classList.add("collapsed");
             });
         }
     </script>
     <script src="problems-data.js" defer></script>
     <!-- Pre-load LeetCode visualizers for local file:// cross-origin compatibility -->
+    <script src="visualizers/viz-core.js" defer></script>
+    <script src="visualizers/lc-patterns.js" defer></script>
     <script src="visualizers/lc1.js" defer></script>
     <script src="visualizers/lc11.js" defer></script>
     <script src="visualizers/lc20.js" defer></script>
