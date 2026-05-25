@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Combinations</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(C(n,k)·k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>74.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Combinations (LC #77).</div>
+                        <div class="block-text">Cho n và k. Trả về mọi tổ hợp gồm k số phân biệt chọn từ 1..n, mỗi tổ hợp tăng dần, thứ tự tổ hợp trong kết quả không quan trọng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 4, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1, k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Backtracking: bắt đầu từ start, thêm i vào path, đệ quy i+1; khi len(path)==k thì push. Cắt nhánh khi còn không đủ số.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,32 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* combine — backtracking; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> combine(<span class="ty">self</span>, n: <span class="ty">int</span>, k: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        res, path = [], []
+        <span class="kw">def</span> dfs(start):
+            <span class="kw">if</span> <span class="ty">len</span>(path) == k:
+                res.append(path[:]); <span class="kw">return</span>
+            need = k - <span class="ty">len</span>(path)
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(start, n - need + 2):
+                path.append(i); dfs(i + 1); path.pop()
+        dfs(1)
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; path;
+    <span class="ty">void</span> dfs(<span class="ty">int</span> n, <span class="ty">int</span> k, <span class="ty">int</span> start) {
+        <span class="kw">if</span> ((<span class="ty">int</span>)path.size()==k) { res.push_back(path); <span class="kw">return</span>; }
+        <span class="ty">int</span> need = k - (<span class="ty">int</span>)path.size();
+        <span class="kw">for</span> (<span class="ty">int</span> i=start; i&lt;=n-need+1; i++) {
+            path.push_back(i); dfs(n,k,i+1); path.pop_back();
+        }
+    }
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; combine(<span class="ty">int</span> n, <span class="ty">int</span> k) {
+        dfs(n,k,1); <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,18 +130,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Backtracking</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(C(n,k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Backtracking: bắt đầu từ start, thêm i vào path, đệ quy…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Cắt nhánh khi còn không đủ số.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi tổ hợp k phần tử tăng được sinh đúng một lần.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k = n → một tổ hợp</span><span class="analysis-tag edge">k = 1 → [1]..[n]</span><span class="analysis-tag pit">Không cắt nhánh n - i + 1 &lt; need</span><span class="analysis-tag pit">Push path tham chiếu thay vì copy</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>Chọn tăng dần — for i from start, không lặp hoán vị.</p>
                     </details>
                 </div>
                 </div>

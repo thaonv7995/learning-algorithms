@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #182</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Database</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Duplicate Emails</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>73.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Duplicate Emails (LeetCode #182) — Easy.</div>
+                        <div class="block-text">Bảng Person (id, email). Tìm mọi email xuất hiện nhiều hơn một lần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>emails a@b.com, a@b.com, c@d.com</code></div>
+                <div class="ex-line"><span>Out</span><code>a@b.com</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>emails a@b.com, c@d.com</code></div>
+                <div class="ex-line"><span>Out</span><code>(empty)</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">GROUP BY email HAVING COUNT(*) &gt; 1. Hoặc self-join p1.email = p2.email AND p1.id &lt; p2.id.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,21 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
-<span class="ty">public</span>:
-};</pre>
+                            <pre class="code-block" id="code-block-c">/* SQL */
+SELECT email
+FROM Person
+GROUP BY email
+HAVING COUNT(*) &gt; 1;</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># SQL</span>
+SELECT email
+FROM Person
+GROUP BY email
+HAVING COUNT(*) &gt; 1;</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// SQL</span>
+SELECT email
+FROM Person
+GROUP BY email
+HAVING COUNT(*) &gt; 1;</pre>
                         </div>
                     </div>
                 </div>
@@ -105,17 +119,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Database</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — GROUP BY email HAVING COUNT &gt; 1.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc self-join p1.email = p2.email AND p1.id &lt; p2.id.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>HAVING lọc nhóm có count &gt; 1 đúng định nghĩa duplicate.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không duplicate</span><span class="analysis-tag edge">Nhiều email trùng &gt;2 lần vẫn trả một dòng/email</span><span class="analysis-tag pit">SELECT * thay email</span><span class="analysis-tag pit">WHERE COUNT thay HAVING</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Duplicate emails = GROUP BY email HAVING COUNT &gt; 1.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +146,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Duplicate%20Emails&lc_id=182&embed=true"></iframe>

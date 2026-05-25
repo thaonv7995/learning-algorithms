@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #154</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Find Minimum in Rotated Sorted Array II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n) worst, O(log n) average</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46.6% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Find Minimum in Rotated Sorted Array II (LeetCode #154) — Hard.</div>
+                        <div class="block-text">Giống LC 153 nhưng mảng xoay có thể chứa phần tử trùng lặp. Tìm phần tử nhỏ nhất; với trùng lặp worst-case có thể O(n).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,3,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [2,2,2,0,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [3,3,1,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Binary search như 153; khi nums[mid]==nums[hi] không phân biệt được → hi-- để loại duplicate. Còn lại: mid&gt;hi thì lo=mid+1, else hi=mid.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findMin(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> lo = 0, hi = n - 1;
+    <span class="kw">while</span> (lo &lt; hi) {
+        <span class="ty">int</span> mid = lo + (hi - lo) / 2;
+        <span class="kw">if</span> (nums[mid] &gt; nums[hi]) lo = mid + 1;
+        <span class="kw">else</span> <span class="kw">if</span> (nums[mid] &lt; nums[hi]) hi = mid;
+        <span class="kw">else</span> hi--;
+    }
+    <span class="kw">return</span> nums[lo];
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findMin(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        lo, hi = 0, <span class="ty">len</span>(nums) - 1
+        <span class="kw">while</span> lo &lt; hi:
+            mid = (lo + hi) // 2
+            <span class="kw">if</span> nums[mid] &gt; nums[hi]:
+                lo = mid + 1
+            <span class="kw">elif</span> nums[mid] &lt; nums[hi]:
+                hi = mid
+            <span class="kw">else</span>:
+                hi -= 1
+        <span class="kw">return</span> nums[lo]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findMin(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> lo = 0, hi = (<span class="ty">int</span>)nums.size() - 1;
+        <span class="kw">while</span> (lo &lt; hi) {
+            <span class="ty">int</span> mid = lo + (hi - lo) / 2;
+            <span class="kw">if</span> (nums[mid] &gt; nums[hi]) lo = mid + 1;
+            <span class="kw">else</span> <span class="kw">if</span> (nums[mid] &lt; nums[hi]) hi = mid;
+            <span class="kw">else</span> hi--;
+        }
+        <span class="kw">return</span> nums[lo];
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +147,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Binary search như 153; khi nums[mid]==nums[hi] không phân…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Còn lại: mid&gt;hi thì lo=mid+1, else hi=mid.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Khi mid==hi, hi-- vẫn giữ min trong interval; các nhánh khác như 153.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Toàn phần tử giống nhau</span><span class="analysis-tag edge">Dup che pivot</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Bỏ qua nhánh equal → infinite loop</span><span class="analysis-tag pit">Linear scan khi cần vẫn chấp nhận worst O(n)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Dup ở biên phải → shrink hi--; không thì logic như LC153.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Find%20Minimum%20in%20Rotated%20Sorted%20Array%20II&lc_id=154&embed=true"></iframe>

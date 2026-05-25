@@ -3,34 +3,24 @@
   "title": "Set Matrix Zeroes",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(m·n)",
   "spaceComplexity": "O(1)",
-  "description": "Set Matrix Zeroes (LC #73).",
+  "description": "Cho ma trận m×n số nguyên. Nếu một ô bằng 0 thì toàn bộ hàng và cột chứa ô đó phải thành 0. Sửa in-place, không copy ma trận mới.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "matrix = [[1,1,1],[1,0,1],[1,1,1]]", "output": "[[1,0,1],[0,0,0],[1,0,1]]" },
+    { "input": "matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]", "output": "[[0,0,0,0],[0,4,5,0],[0,3,1,0]]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Dùng hàng 0 và cột 0 làm cờ: quét ma trận đánh dấu hàng/cột cần zero; xử lý (0,0) và cột0/hàng0 riêng; áp zero theo cờ.",
+  "memoryTip": "First row + first col = marker — O(1) extra.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def setZeroes(self, matrix: List[List[int]]) -> None:\n        m, n = len(matrix), len(matrix[0])\n        col0 = any(matrix[i][0] == 0 for i in range(m))\n        row0 = any(matrix[0][j] == 0 for j in range(n))\n        for i in range(1, m):\n            for j in range(1, n):\n                if matrix[i][j] == 0:\n                    matrix[i][0] = matrix[0][j] = 0\n        for i in range(1, m):\n            for j in range(1, n):\n                if matrix[i][0] == 0 or matrix[0][j] == 0:\n                    matrix[i][j] = 0\n        if row0:\n            for j in range(n): matrix[0][j] = 0\n        if col0:\n            for i in range(m): matrix[i][0] = 0",
+    "cpp": "class Solution {\npublic:\n    void setZeroes(vector<vector<int>>& m) {\n        int R=m.size(), C=m[0].size(); bool col0=false;\n        for(int i=0;i<R;i++) if(!m[i][0]) col0=true;\n        for(int j=0;j<C;j++) if(!m[0][j]) { for(int k=0;k<C;k++) m[0][k]=0; break; }\n        for(int i=1;i<R;i++) for(int j=1;j<C;j++)\n            if(!m[i][j]) m[i][0]=m[0][j]=0;\n        for(int i=1;i<R;i++) for(int j=1;j<C;j++)\n            if(!m[i][0]||!m[0][j]) m[i][j]=0;\n        if(col0) for(int i=0;i<R;i++) m[i][0]=0;\n    }\n};",
+    "c": "/* setZeroes — marker hàng/cột 0; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Cờ ghi nhận đủ mọi hàng/cột có ô 0 gốc trước khi ghi đè.",
+    "edgeCases": ["Ma trận 1×1", "Không có 0", "Toàn 0"],
+    "pitfalls": ["Zero hàng0/cột0 trước khi đọc marker", "Dùng O(m+n) set thay vì in-place"]
   },
   "tier": "done"
 }

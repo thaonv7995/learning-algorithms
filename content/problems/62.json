@@ -4,23 +4,24 @@
   "difficulty": "Medium",
   "category": "Dynamic Programming",
   "timeComplexity": "O(m×n)",
-  "spaceComplexity": "O(m×n)",
-  "description": "Robot ở góc trên-trái lưới m×n, chỉ đi xuống hoặc sang phải. Đếm số đường tới góc dưới-phải.",
+  "spaceComplexity": "O(n)",
+  "description": "Robot ở ô góc trên-trái lưới m×n. Mỗi bước chỉ đi xuống hoặc sang phải. Đếm số đường đi khác nhau tới ô góc dưới-phải.",
   "examples": [
     { "input": "m = 3, n = 7", "output": "28" },
-    { "input": "m = 3, n = 2", "output": "3" }
+    { "input": "m = 3, n = 2", "output": "3" },
+    { "input": "m = 1, n = 1", "output": "1" }
   ],
-  "approach": "DP: dp[i][j] = dp[i-1][j] + dp[i][j-1]. Hàng/cột đầu = 1.",
-  "memoryTip": "Comb(m+n-2, m-1) — công thức tổ hợp tương đương.",
+  "approach": "DP 1 hàng: dp[j] = số đường tới ô hàng hiện tại cột j. Khởi tạo dp[j]=1 (hàng đầu). Mỗi hàng mới: dp[j] += dp[j-1] với j≥1.",
+  "memoryTip": "Comb(m+n-2, m-1) — tổ hợp chọn bước xuống; DP 1D tiết kiệm bộ nhớ.",
   "solutions": {
-    "python": "class Solution:\n    def uniquePaths(self, m: int, n: int) -> int:\n        dp = [1]*n\n        for _ in range(1, m):\n            for j in range(1, n):\n                dp[j] += dp[j-1]\n        return dp[-1]",
-    "cpp": "class Solution {\npublic:\n    int uniquePaths(int m, int n) {\n        vector<int> dp(n, 1);\n        for (int i = 1; i < m; i++)\n            for (int j = 1; j < n; j++) dp[j] += dp[j-1];\n        return dp[n-1];\n    }\n};",
-    "c": "/* DP 1 hàng — xem C++ */"
+    "python": "class Solution:\n    def uniquePaths(self, m: int, n: int) -> int:\n        dp = [1] * n\n        for _ in range(1, m):\n            for j in range(1, n):\n                dp[j] += dp[j - 1]\n        return dp[-1]",
+    "cpp": "class Solution {\npublic:\n    int uniquePaths(int m, int n) {\n        vector<int> dp(n, 1);\n        for (int i = 1; i < m; i++)\n            for (int j = 1; j < n; j++) dp[j] += dp[j - 1];\n        return dp[n - 1];\n    }\n};",
+    "c": "int uniquePaths(int m, int n) {\n    int dp[n];\n    for (int j = 0; j < n; j++) dp[j] = 1;\n    for (int i = 1; i < m; i++)\n        for (int j = 1; j < n; j++) dp[j] += dp[j - 1];\n    return dp[n - 1];\n}"
   },
   "analysis": {
-    "correctness": "Chỉ đi phải/xuống → mọi đường đi qua dp recurrence.",
-    "edgeCases": ["m=1 hoặc n=1 → 1"],
-    "pitfalls": ["Overflow với m,n lớn (dùng long)"]
+    "correctness": "Mọi đường tới (i,j) chỉ đến từ trên hoặc trái → dp[i][j]=dp[i-1][j]+dp[i][j-1]; recurrence đúng.",
+    "edgeCases": ["m=1 hoặc n=1 → chỉ 1 đường", "m=n=1 → 1", "Lưới hẹp 2×n hoặc m×2"],
+    "pitfalls": ["Overflow khi m,n lớn (dùng long)", "Khởi tạo dp sai → đếm thiếu", "Nhầm công thức tổ hợp m+n-2 chọn m-1"]
   },
   "tier": "done"
 }

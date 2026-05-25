@@ -5,32 +5,22 @@
   "category": "Linked List",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Remove Duplicates from Sorted List II (LC #82).",
+  "description": "Linked list đã sort. Xóa mọi nút có giá trị trùng (chỉ giữ các giá trị xuất hiện đúng một lần). Trả về head mới.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [1,2,3,3,4,4,5]", "output": "[1,2,5]" },
+    { "input": "head = [1,1,1,2,3]", "output": "[2,3]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Dummy trước head; prev đứng trước nhóm trùng. Nếu prev.next == prev.next.next thì nhảy qua cả nhóm trùng; else prev = prev.next.",
+  "memoryTip": "prev giữ nút chắc chắn unique — skip cả block duplicate.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = ListNode(0, head); prev = dummy\n        while prev.next:\n            if prev.next.next and prev.next.val == prev.next.next.val:\n                v = prev.next.val\n                while prev.next and prev.next.val == v:\n                    prev.next = prev.next.next\n            else:\n                prev = prev.next\n        return dummy.next",
+    "cpp": "class Solution {\npublic:\n    ListNode* deleteDuplicates(ListNode* head) {\n        ListNode dummy(0, head), *prev = &dummy;\n        while (prev->next) {\n            if (prev->next->next && prev->next->val == prev->next->next->val) {\n                int v = prev->next->val;\n                while (prev->next && prev->next->val == v)\n                    prev->next = prev->next->next;\n            } else prev = prev->next;\n        }\n        return dummy.next;\n    }\n};",
+    "c": "/* deleteDuplicates II — dummy + skip block; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mọi nhóm trùng liên tiếp bị bỏ hoàn toàn; prev không vào nhóm trùng.",
+    "edgeCases": ["List rỗng", "Toàn trùng → null", "Không trùng → giữ nguyên"],
+    "pitfalls": ["Chỉ xóa một nút thay vì cả nhóm", "Không dùng dummy khi head bị xóa"]
   },
   "tier": "done"
 }

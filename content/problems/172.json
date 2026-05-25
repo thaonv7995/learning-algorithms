@@ -3,32 +3,25 @@
   "title": "Factorial Trailing Zeroes",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Factorial Trailing Zeroes (LeetCode #172) — Medium.",
+  "description": "Cho n, tính số chữ số 0 ở cuối của n! (trailing zeroes). Không tính trực tiếp factorial vì n lớn.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 3", "output": "0" },
+    { "input": "n = 5", "output": "1" },
+    { "input": "n = 0", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mỗi trailing zero = một cặp nhân tử 2×5; trong n! luôn thừa số 2 hơn 5. Đếm số lần 5 chia n: n/5 + n/25 + n/125 + …",
+  "memoryTip": "Trailing zeros of n! = count factors of 5 in 1..n.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def trailingZeroes(self, n: int) -> int:\n        cnt = 0\n        while n:\n            n //= 5\n            cnt += n\n        return cnt",
+    "cpp": "class Solution {\npublic:\n    int trailingZeroes(int n) {\n        int cnt = 0;\n        for (long long p = 5; p <= n; p *= 5) cnt += n / p;\n        return cnt;\n    }\n};",
+    "c": "int trailingZeroes(int n) {\n    int cnt = 0;\n    for (long long p = 5; p <= n; p *= 5) cnt += n / p;\n    return cnt;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Legendre formula đếm exponent của 5 trong n! quyết định số trailing zeros.",
+    "edgeCases": ["n=0 → 0", "n<5 → 0", "n chia hết cho lũy 25 → cộng thêm"],
+    "pitfalls": ["Tính n! trực tiếp overflow", "Chỉ n/5 bỏ n/25, n/125"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

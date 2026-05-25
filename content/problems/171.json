@@ -5,30 +5,23 @@
   "category": "Math",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Excel Sheet Column Number (LeetCode #171) — Easy.",
+  "description": "Cho tên cột Excel (A–Z, AA, AB, …). Trả số cột tương ứng (A=1, B=2, …, Z=26, AA=27).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "columnTitle = \"A\"", "output": "1" },
+    { "input": "columnTitle = \"AB\"", "output": "28" },
+    { "input": "columnTitle = \"ZY\"", "output": "701" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt trái sang phải: result = result*26 + (ch - 'A' + 1). Mỗi ký tự như một chữ số base-26 bijective.",
+  "memoryTip": "Column title → number: res = res*26 + (c-'A'+1).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def titleToNumber(self, s: str) -> int:\n        res = 0\n        for c in s:\n            res = res * 26 + (ord(c) - ord('A') + 1)\n        return res",
+    "cpp": "class Solution {\npublic:\n    int titleToNumber(string s) {\n        long long res = 0;\n        for (char c : s) res = res * 26 + (c - 'A' + 1);\n        return (int)res;\n    }\n};",
+    "c": "int titleToNumber(char* s) {\n    long long res = 0;\n    for (int i = 0; s[i]; i++) res = res * 26 + (s[i] - 'A' + 1);\n    return (int)res;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Horner base-26 với offset +1 khớp quy tắc Excel.",
+    "edgeCases": ["Một chữ cái", "Chuỗi dài", "Chỉ in hoa"],
+    "pitfalls": ["Quên +1 (A=0 thay A=1)", "int overflow với chuỗi rất dài"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -4,33 +4,23 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Validate Binary Search Tree (LC #98).",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root cây nhị phân. Kiểm tra cây có phải BST hợp lệ không: mọi nút trái < root < mọi nút phải, đệ quy trên toàn cây.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [2,1,3]", "output": "true" },
+    { "input": "root = [5,1,4,null,null,3,6]", "output": "false" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "DFS với khoảng (lo, hi): node.val phải trong (lo, hi); kiểm tra left (lo, val) và right (val, hi). Hoặc inorder tăng strict.",
+  "memoryTip": "Bound min/max — không chỉ so parent con trực tiếp.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isValidBST(self, root: Optional[TreeNode]) -> bool:\n        def dfs(node, lo, hi):\n            if not node: return True\n            if not (lo < node.val < hi): return False\n            return dfs(node.left, lo, node.val) and dfs(node.right, node.val, hi)\n        return dfs(root, float('-inf'), float('inf'))",
+    "cpp": "class Solution {\n    bool dfs(TreeNode* n, long lo, long hi) {\n        if (!n) return true;\n        if (n->val <= lo || n->val >= hi) return false;\n        return dfs(n->left, lo, n->val) && dfs(n->right, n->val, hi);\n    }\npublic:\n    bool isValidBST(TreeNode* root) {\n        return dfs(root, LONG_MIN, LONG_MAX);\n    }\n};",
+    "c": "/* isValidBST — DFS bounds; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Khoảng lan truyền đảm bảo mọi tổ tiên/cháu được ràng buộc.",
+    "edgeCases": ["INT_MIN/MAX ở lá", "Cây một nút", "Duplicate → false (strict)"],
+    "pitfalls": ["Chỉ so với parent", "Dùng int cho bound khi val = INT_MIN/MAX"]
   },
   "tier": "done"
 }

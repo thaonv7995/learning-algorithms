@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #85</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
+                        <span class="cat-chip">Stack</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Maximal Rectangle</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m·n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Maximal Rectangle (LC #85).</div>
+                        <div class="block-text">Ma trận nhị phân matrix ('0'/'1'). Tìm hình chữ nhật lớn nhất chỉ gồm '1'. Trả về diện tích (số ô).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>matrix = [[&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;],[&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;],[&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;],[&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>matrix = [[&quot;0&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Mỗi hàng: heights[j] += 1 nếu '1' else 0. Chạy largestRectangleInHistogram trên heights — O(n) mỗi hàng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,44 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* maximalRectangle — histogram từng hàng + stack; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> maximalRectangle(<span class="ty">self</span>, matrix: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> <span class="kw">not</span> matrix: <span class="kw">return</span> 0
+        n = <span class="ty">len</span>(matrix[0]); h = [0]*n; ans = 0
+        <span class="kw">for</span> row <span class="kw">in</span> matrix:
+            <span class="kw">for</span> j, c <span class="kw">in</span> enumerate(row):
+                h[j] = h[j] + 1 <span class="kw">if</span> c == '1' <span class="kw">else</span> 0
+            st = []
+            <span class="kw">for</span> i, x <span class="kw">in</span> enumerate(h + [-1]):
+                <span class="kw">while</span> st <span class="kw">and</span> h[st[-1]] &gt; x:
+                    H = h[st.pop()]
+                    w = i <span class="kw">if</span> <span class="kw">not</span> st <span class="kw">else</span> i - st[-1] - 1
+                    ans = <span class="ty">max</span>(ans, H * w)
+                st.append(i)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> hist(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; h) {
+        stack&lt;<span class="ty">int</span>&gt; st; <span class="ty">int</span> ans=0; h.push_back(-1);
+        <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)h.size();i++) {
+            <span class="kw">while</span> (!st.empty() &amp;&amp; h[st.top()]&gt;h[i]) {
+                <span class="ty">int</span> H=h[st.top()]; st.pop();
+                ans=max(ans, H*(st.empty()?i:i-st.top()-1));
+            }
+            st.push(i);
+        }
+        h.pop_back(); <span class="kw">return</span> ans;
+    }
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">int</span> maximalRectangle(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; m) {
+        <span class="kw">if</span> (m.empty()) <span class="kw">return</span> 0;
+        <span class="ty">int</span> n=m[0].size(), ans=0; <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; h(n);
+        <span class="kw">for</span> (auto&amp; row: m) {
+            <span class="kw">for</span> (<span class="ty">int</span> j=0;j&lt;n;j++) h[j]= row[j]=='1'? h[j]+1:0;
+            ans=max(ans, hist(h));
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,19 +141,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Stack</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m·n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Mỗi hàng: heights[j] += 1 nếu '1' else 0.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Chạy largestRectangleInHistogram trên heights — O mỗi…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi rectangle '1' có hàng dưới cùng r được tính qua histogram tại r.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Toàn '0'</span><span class="analysis-tag edge">Một hàng/cột</span><span class="analysis-tag edge">Rectangle 1×1</span><span class="analysis-tag pit">Reset heights sai khi gặp '0'</span><span class="analysis-tag pit">Quên cập nhật ans mỗi hàng</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>LC #84 trên từng hàng — biến 2D thành histogram tích lũy.</p>
                     </details>
                 </div>
                 </div>

@@ -1,0 +1,27 @@
+{
+  "id": 49,
+  "title": "Group Anagrams",
+  "difficulty": "Medium",
+  "category": "String",
+  "timeComplexity": "O(N·K log K)",
+  "spaceComplexity": "O(N·K)",
+  "description": "Cho mảng chuỗi strs. Nhóm các chuỗi là anagram của nhau. Trả về danh sách các nhóm (thứ tự nhóm tùy ý).",
+  "examples": [
+    { "input": "strs = [\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]", "output": "[[\"bat\"],[\"nat\",\"tan\"],[\"ate\",\"eat\",\"tea\"]]" },
+    { "input": "strs = [\"\"]", "output": "[[\"\"]]" },
+    { "input": "strs = [\"a\"]", "output": "[[\"a\"]]" }
+  ],
+  "approach": "Key = chuỗi đã sort (hoặc đếm 26 chữ cái). Hash map key → list các str cùng nhóm.",
+  "memoryTip": "Sort từng str làm key — O(k log k) mỗi chuỗi độ dài k.",
+  "solutions": {
+    "python": "from collections import defaultdict\nclass Solution:\n    def groupAnagrams(self, strs):\n        g = defaultdict(list)\n        for s in strs:\n            g[''.join(sorted(s))].append(s)\n        return list(g.values())",
+    "cpp": "class Solution {\npublic:\n    vector<vector<string>> groupAnagrams(vector<string>& strs) {\n        unordered_map<string, vector<string>> mp;\n        for (auto& s : strs) {\n            string k = s; sort(k.begin(), k.end());\n            mp[k].push_back(s);\n        }\n        vector<vector<string>> res;\n        for (auto& p : mp) res.push_back(move(p.second));\n        return res;\n    }\n};",
+    "c": "/* groupAnagrams — sort làm key + hash; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Anagram có cùng multiset ký tự → cùng key sau sort.",
+    "edgeCases": ["Một chuỗi", "Chuỗi rỗng", "Không có anagram chung"],
+    "pitfalls": ["Key bằng hash collision nếu không sort/count chuẩn", "Quên nhóm chuỗi rỗng"]
+  },
+  "tier": "done"
+}

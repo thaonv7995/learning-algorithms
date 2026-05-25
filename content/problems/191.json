@@ -3,32 +3,25 @@
   "title": "Number of 1 Bits",
   "difficulty": "Easy",
   "category": "Divide and Conquer",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Number of 1 Bits (LeetCode #191) — Easy.",
+  "description": "Đếm số bit 1 trong biểu diễn nhị phân 32-bit của số nguyên không dấu n (Hamming weight).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 11 (1011)", "output": "3" },
+    { "input": "n = 128 (10000000)", "output": "1" },
+    { "input": "n = 2147483645", "output": "30" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "n &= n-1 loại bit 1 thấp nhất mỗi lần, đếm đến khi n=0. Hoặc loop 32 bit check n&1.",
+  "memoryTip": "Count 1 bits: n &= n-1 in loop, or popcount built-in.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def hammingWeight(self, n: int) -> int:\n        cnt = 0\n        while n:\n            n &= n - 1\n            cnt += 1\n        return cnt",
+    "cpp": "class Solution {\npublic:\n    int hammingWeight(uint32_t n) {\n        int cnt = 0;\n        while (n) { n &= n - 1; cnt++; }\n        return cnt;\n    }\n};",
+    "c": "int hammingWeight(uint32_t n) {\n    int cnt = 0;\n    while (n) { n &= n - 1; cnt++; }\n    return cnt;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "n&(n-1) xóa đúng một bit 1; số lần lặp = popcount.",
+    "edgeCases": ["n=0 → 0", "n=UINT32_MAX → 32"],
+    "pitfalls": ["Shift âm với signed", "Loop 32 lần chậm hơn Brian Kernighan nhưng vẫn OK"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

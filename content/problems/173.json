@@ -3,32 +3,24 @@
   "title": "Binary Search Tree Iterator",
   "difficulty": "Medium",
   "category": "Stack",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Binary Search Tree Iterator (LeetCode #173) — Medium.",
+  "timeComplexity": "O(1) amortized next",
+  "spaceComplexity": "O(h)",
+  "description": "Thiết kế iterator inorder cho BST: next() trả phần tử kế tiếp theo thứ tự tăng dần, hasNext() kiểm tra còn phần tử. average O(1) cho next/hasNext.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "BST [7,3,15,null,null,9,20], next()×3", "output": "[3,7,9]" },
+    { "input": "next() tiếp, hasNext()", "output": "[15,true]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack: pushLeft(root) đẩy cả chuỗi trái. next() pop, nếu node.right thì pushLeft(right). hasNext() = stack không rỗng.",
+  "memoryTip": "BST iterator = stack + push all left children; next pop rồi push left của right.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class BSTIterator:\n    def __init__(self, root: Optional[TreeNode]):\n        self.st = []\n        self._left(root)\n    def _left(self, node):\n        while node:\n            self.st.append(node)\n            node = node.left\n    def next(self) -> int:\n        node = self.st.pop()\n        self._left(node.right)\n        return node.val\n    def hasNext(self) -> bool:\n        return bool(self.st)",
+    "cpp": "class BSTIterator {\n    stack<TreeNode*> st;\n    void pushLeft(TreeNode* n) {\n        while (n) { st.push(n); n = n->left; }\n    }\npublic:\n    BSTIterator(TreeNode* root) { pushLeft(root); }\n    int next() {\n        TreeNode* n = st.top(); st.pop();\n        pushLeft(n->right);\n        return n->val;\n    }\n    bool hasNext() { return !st.empty(); }\n};",
+    "c": "typedef struct { struct TreeNode** st; int top, cap; } BSTIter;\nstatic void pushLeft(BSTIter* it, struct TreeNode* n) {\n    while (n) {\n        if (++it->top >= it->cap) { it->cap*=2; it->st=realloc(it->st,it->cap*sizeof(*it->st)); }\n        it->st[it->top]=n; n=n->left;\n    }\n}\nBSTIter* bSTIteratorCreate(struct TreeNode* root) {\n    BSTIter* it=malloc(sizeof(BSTIter)); it->cap=16; it->top=-1;\n    it->st=malloc(it->cap*sizeof(*it->st)); pushLeft(it,root); return it;\n}\nint bSTIteratorNext(BSTIter* it) {\n    struct TreeNode* n=it->st[it->top--]; pushLeft(it,n->right); return n->val;\n}\nbool bSTIteratorHasNext(BSTIter* it) { return it->top>=0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Stack giữ đúng tiền tố inorder chưa xuất; mỗi node push/pop đúng một lần.",
+    "edgeCases": ["Cây một nút", "Chỉ nhánh phải (degenerate)", "next sau hasNext false"],
+    "pitfalls": ["Inorder traversal full O(n) mỗi next", "Quên pushLeft sau pop"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

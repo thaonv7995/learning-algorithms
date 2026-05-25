@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng các số nguyên không âm height đại diện cho bản đồ độ cao của các cột có chiều rộng là 1. Hãy tính lượng nước mưa có thể bị giữ lại giữa các cột sau khi mưa.</div>
+                        <div class="block-text">Cho mảng height không âm — mỗi phần tử là cột có bề rộng 1. Tính lượng nước mưa đọng giữa các cột sau khi mưa.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -66,6 +66,16 @@
                 <div class="ex-label">Ví dụ 1</div>
                 <div class="ex-line"><span>In</span><code>height = [0,1,0,2,1,0,1,3,2,1,2,1]</code></div>
                 <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>height = [4,2,0,3,2,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>9</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>height = [1,2,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng hai con trỏ trái và phải (`left = 0`, `right = n-1`) cùng hai biến lưu độ cao lớn nhất của cột ở biên trái (`leftMax`) và biên phải (`rightMax`). Ta liên tục so sánh `height[left]` và `height[right]`:<br>- Nếu cột trái thấp hơn cột phải: cột trái chịu giới hạn bởi `leftMax`. Ta tính lượng nước đọng bằng `leftMax - height[left]`, cộng dồn vào kết quả, cập nhật `leftMax` và dịch `left` sang phải.<br>- Ngược lại làm tương tự cho bên phải.</div>
+                        <div class="block-text">Two pointers left/right với leftMax, rightMax. Ở phía thấp hơn: nếu height[i] &gt;= max thì cập nhật max, else cộng max - height[i].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,34 +100,49 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> trap(<span class="ty">int</span>* height, <span class="ty">int</span> heightSize) {
-    
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> trap(<span class="ty">int</span>* height, <span class="ty">int</span> n) {
+    <span class="kw">if</span> (!n) <span class="kw">return</span> 0;
+    <span class="ty">int</span> l = 0, r = n - 1, lm = 0, rm = 0, w = 0;
+    <span class="kw">while</span> (l &lt; r) {
+        <span class="kw">if</span> (height[l] &lt; height[r]) {
+            <span class="kw">if</span> (height[l] &gt;= lm) lm = height[l]; <span class="kw">else</span> w += lm - height[l];
+            l++;
+        } <span class="kw">else</span> {
+            <span class="kw">if</span> (height[r] &gt;= rm) rm = height[r]; <span class="kw">else</span> w += rm - height[r];
+            r--;
+        }
+    }
+    <span class="kw">return</span> w;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> trap(<span class="ty">self</span>, height):
-        &quot;&quot;&quot;
-        :type height: <span class="ty">List</span>[<span class="ty">int</span>]
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">int</span> <span class="fn">trap</span>(<span class="ty">vector&lt;int&gt;</span>&amp; height) {
-        <span class="ty">int</span> left = <span class="st">0</span>, right = height.<span class="fn">size</span>() - <span class="st">1</span>;
-        <span class="ty">int</span> leftMax = <span class="st">0</span>, rightMax = <span class="st">0</span>;
-        <span class="ty">int</span> water = <span class="st">0</span>;
-        <span class="kw">while</span> (left &lt; right) {
-            <span class="kw">if</span> (height[left] &lt; height[right]) {
-                <span class="kw">if</span> (height[left] &gt;= leftMax) leftMax = height[left];
-                <span class="kw">else</span> water += leftMax - height[left];
-                left++;
+        <span class="kw">if</span> <span class="kw">not</span> height: <span class="kw">return</span> 0
+        l, r = 0, <span class="ty">len</span>(height) - 1
+        lm, rm, w = 0, 0, 0
+        <span class="kw">while</span> l &lt; r:
+            <span class="kw">if</span> height[l] &lt; height[r]:
+                <span class="kw">if</span> height[l] &gt;= lm: lm = height[l]
+                <span class="kw">else</span>: w += lm - height[l]
+                l += 1
+            <span class="kw">else</span>:
+                <span class="kw">if</span> height[r] &gt;= rm: rm = height[r]
+                <span class="kw">else</span>: w += rm - height[r]
+                r -= 1
+        <span class="kw">return</span> w</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> trap(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; h) {
+        <span class="ty">int</span> l = 0, r = h.size() - 1, lm = 0, rm = 0, w = 0;
+        <span class="kw">while</span> (l &lt; r) {
+            <span class="kw">if</span> (h[l] &lt; h[r]) {
+                <span class="kw">if</span> (h[l] &gt;= lm) lm = h[l]; <span class="kw">else</span> w += lm - h[l];
+                l++;
             } <span class="kw">else</span> {
-                <span class="kw">if</span> (height[right] &gt;= rightMax) rightMax = height[right];
-                <span class="kw">else</span> water += rightMax - height[right];
-                right--;
+                <span class="kw">if</span> (h[r] &gt;= rm) rm = h[r]; <span class="kw">else</span> w += rm - h[r];
+                r--;
             }
         }
-        <span class="kw">return</span> water;
+        <span class="kw">return</span> w;
     }
 };</pre>
                         </div>
@@ -132,14 +157,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — hai con trỏ trái và phải cùng hai biến lưu độ cao lớn…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — liên tục so sánh `height[left]` và `height[right]`: - Nếu…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — tính lượng nước đọng bằng `leftMax - height[left]`, cộng…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — - Ngược lại làm tương tự cho bên phải.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Two pointers left/right với leftMax, rightMax.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Ở phía thấp hơn: nếu height[i] &gt;= max thì cập nhật max,…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Prefix max trái/phải xác định mực nước tại mỗi cột; tổng = Σ min(leftMax,rightMax)-height.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Mảng tăng dần → 0 nước</span><span class="analysis-tag edge">Mảng giảm dần → 0</span><span class="analysis-tag edge">Đỉnh ở giữa</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Phía thấp hơn quyết định giới hạn nước — cộng dồn đúng từng cột.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Mảng rỗng</span><span class="analysis-tag edge">Đơn điệu tăng/giảm → 0</span><span class="analysis-tag edge">Hai cột</span><span class="analysis-tag pit">Prefix max O(n) space không cần thiết</span><span class="analysis-tag pit">So sánh sai phía thấp</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Phương pháp hai con trỏ giúp giải bài toán đọng nước kinh điển chỉ trong 1 lượt quét O và O bộ nhớ phụ trợ,…</p>
+                        <p>Nước tại i = min - height[i] — two pointers tránh mảng phụ.</p>
                     </details>
                 </div>
                 </div>

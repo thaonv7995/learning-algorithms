@@ -3,32 +3,24 @@
   "title": "Min Stack",
   "difficulty": "Medium",
   "category": "Stack",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Min Stack (LeetCode #155) — Medium.",
+  "timeComplexity": "O(1) per op",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế stack hỗ trợ push, pop, top và getMin — tất cả O(1). getMin trả giá trị nhỏ nhất hiện có trên stack tại mọi thời điểm.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "push(-2), push(0), push(-3), getMin() → -3, pop(), top() → 0, getMin() → -2", "output": "[null,null,null,-3,null,0,-2]" },
+    { "input": "push(2), push(0), push(3), getMin() → 0, pop(), getMin() → 0", "output": "[null,null,null,0,null,0]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hai stack: stack chính và minStack lưu min tại mỗi mức. Push: đẩy val và min(val, minStack.top). Pop: pop cả hai. getMin: minStack.top.",
+  "memoryTip": "Min stack = stack phụ lưu prefix-min song song mỗi push.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MinStack:\n    def __init__(self):\n        self.st, self.mn = [], []\n    def push(self, val: int) -> None:\n        self.st.append(val)\n        self.mn.append(val if not self.mn else min(self.mn[-1], val))\n    def pop(self) -> None:\n        self.st.pop(); self.mn.pop()\n    def top(self) -> int:\n        return self.st[-1]\n    def getMin(self) -> int:\n        return self.mn[-1]",
+    "cpp": "class MinStack {\n    stack<int> st, mn;\npublic:\n    MinStack() {}\n    void push(int val) {\n        st.push(val);\n        mn.push(mn.empty() ? val : min(mn.top(), val));\n    }\n    void pop() { st.pop(); mn.pop(); }\n    int top() { return st.top(); }\n    int getMin() { return mn.top(); }\n};",
+    "c": "typedef struct { int* data; int* mins; int top; int cap; } MinStack;\nstatic void msGrow(MinStack* s) {\n    s->cap *= 2;\n    s->data = realloc(s->data, s->cap * sizeof(int));\n    s->mins = realloc(s->mins, s->cap * sizeof(int));\n}\nMinStack* minStackCreate(void) {\n    MinStack* s = malloc(sizeof(MinStack));\n    s->cap = 8; s->top = -1;\n    s->data = malloc(s->cap * sizeof(int));\n    s->mins = malloc(s->cap * sizeof(int));\n    return s;\n}\nvoid minStackPush(MinStack* s, int val) {\n    if (++s->top >= s->cap) msGrow(s);\n    s->data[s->top] = val;\n    s->mins[s->top] = s->top ? (val < s->mins[s->top-1] ? val : s->mins[s->top-1]) : val;\n}\nvoid minStackPop(MinStack* s) { s->top--; }\nint minStackTop(MinStack* s) { return s->data[s->top]; }\nint minStackGetMin(MinStack* s) { return s->mins[s->top]; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "minStack[i] = min của mọi phần tử từ đáy đến i; pop đồng bộ giữ min đúng.",
+    "edgeCases": ["Pop hết stack (theo API không gọi khi rỗng)", "Push giá trị trùng min hiện tại"],
+    "pitfalls": ["Chỉ lưu một biến min global → sai sau pop", "Quên pop minStack khi pop"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

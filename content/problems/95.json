@@ -3,34 +3,24 @@
   "title": "Unique Binary Search Trees II",
   "difficulty": "Medium",
   "category": "Dynamic Programming",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Unique Binary Search Trees II (LC #95).",
+  "timeComplexity": "O(C_n·n)",
+  "spaceComplexity": "O(C_n·n)",
+  "description": "Cho n ≥ 1. Trả về mọi cây BST khác nhau có n nút nhãn 1..n (cấu trúc khác nhau). Mỗi cây là TreeNode root.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 3", "output": "[[1,null,2,null,3],[1,null,3,2],[2,1,3],[3,1,null,null,2],[3,2,null,1]]" },
+    { "input": "n = 1", "output": "[[1]]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Đệ quy generate(start,end): mọi root i ∈ [start,end]; left = gen(start,i-1), right = gen(i+1,end); ghép mọi cặp (L,R) thành TreeNode(i).",
+  "memoryTip": "Giống #96 nhưng materialize cây — split tại root.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def generateTrees(self, n: int) -> List[Optional[TreeNode]]:\n        if n == 0: return []\n        def build(lo, hi):\n            if lo > hi: return [None]\n            res = []\n            for r in range(lo, hi + 1):\n                for left in build(lo, r - 1):\n                    for right in build(r + 1, hi):\n                        res.append(TreeNode(r, left, right))\n            return res\n        return build(1, n)",
+    "cpp": "class Solution {\n    vector<TreeNode*> build(int lo, int hi) {\n        vector<TreeNode*> res;\n        if (lo>hi) { res.push_back(nullptr); return res; }\n        for (int r=lo;r<=hi;r++) {\n            auto L=build(lo,r-1), R=build(r+1,hi);\n            for (auto* a:L) for (auto* b:R)\n                res.push_back(new TreeNode(r,a,b));\n        }\n        return res;\n    }\npublic:\n    vector<TreeNode*> generateTrees(int n) {\n        if (!n) return {};\n        return build(1,n);\n    }\n};",
+    "c": "/* generateTrees — đệ quy split root; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mọi root và mọi cặp cây con hợp lệ được ghép — đủ Catalan(n) cây.",
+    "edgeCases": ["n=1 một cây", "n=0 theo đề thường không yêu cầu"],
+    "pitfalls": ["Quên case con rỗng [None]", "Nhầm với đếm số cây (#96)"]
   },
   "tier": "done"
 }

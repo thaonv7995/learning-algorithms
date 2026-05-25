@@ -5,30 +5,22 @@
   "category": "Database",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Consecutive Numbers (LeetCode #180) — Medium.",
+  "description": "Bảng Logs (id, num). Tìm mọi num xuất hiện liên tiếp ít nhất ba lần theo id tăng dần.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "Logs: (1,1),(2,1),(3,1),(4,2),(5,1)", "output": "1" },
+    { "input": "Logs: (1,1),(2,2),(3,2)", "output": "(empty)" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Self-join 3 lần: l1.id=l2.id-1=l3.id-2 AND l1.num=l2.num=l3.num. SELECT DISTINCT num.",
+  "memoryTip": "3 consecutive = join Logs l1,l2,l3 where ids +1 and nums equal.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT DISTINCT l1.num AS ConsecutiveNums\nFROM Logs l1\nJOIN Logs l2 ON l1.id = l2.id - 1 AND l1.num = l2.num\nJOIN Logs l3 ON l2.id = l3.id - 1 AND l2.num = l3.num;",
+    "cpp": "// SQL\nSELECT DISTINCT l1.num AS ConsecutiveNums\nFROM Logs l1\nJOIN Logs l2 ON l1.id = l2.id - 1 AND l1.num = l2.num\nJOIN Logs l3 ON l2.id = l3.id - 1 AND l2.num = l3.num;",
+    "c": "/* SQL */\nSELECT DISTINCT l1.num AS ConsecutiveNums\nFROM Logs l1\nJOIN Logs l2 ON l1.id = l2.id - 1 AND l1.num = l2.num\nJOIN Logs l3 ON l2.id = l3.id - 1 AND l2.num = l3.num;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Ba hàng id liên tiếp cùng num ⇔ xuất hiện ≥3 lần liên tiếp.",
+    "edgeCases": ["Chuỗi dài hơn 3 vẫn chỉ cần DISTINCT num", "Không có triple → rỗng"],
+    "pitfalls": ["Window LAG cần MySQL 8+; join 3 bảng portable hơn", "Quên DISTINCT → trùng output"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

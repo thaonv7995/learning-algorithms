@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Department Highest Salary (LeetCode #184) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Employee (id, name, salary, departmentId), Department (id, name). Trả department, employee, salary của người lương cao nhất mỗi phòng (có thể nhiều người tie).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "IT: Max 90000, Joe 85000; Sales: Henry 80000", "output": "IT Max 90000; Sales Henry 80000" },
+    { "input": "IT: two employees salary 90000", "output": "both listed" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Join Employee-Department, join subquery MAX(salary) GROUP BY departmentId, lọc e.salary = max_sal.",
+  "memoryTip": "Dept max salary = join MAX(salary) per departmentId.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT d.name AS Department, e.name AS Employee, e.salary AS Salary\nFROM Employee e\nJOIN Department d ON e.departmentId = d.id\nJOIN (\n  SELECT departmentId, MAX(salary) AS ms\n  FROM Employee GROUP BY departmentId\n) t ON e.departmentId = t.departmentId AND e.salary = t.ms;",
+    "cpp": "// SQL\nSELECT d.name AS Department, e.name AS Employee, e.salary AS Salary\nFROM Employee e\nJOIN Department d ON e.departmentId = d.id\nJOIN (\n  SELECT departmentId, MAX(salary) AS ms\n  FROM Employee GROUP BY departmentId\n) t ON e.departmentId = t.departmentId AND e.salary = t.ms;",
+    "c": "/* SQL */\nSELECT d.name AS Department, e.name AS Employee, e.salary AS Salary\nFROM Employee e\nJOIN Department d ON e.departmentId = d.id\nJOIN (\n  SELECT departmentId, MAX(salary) AS ms\n  FROM Employee GROUP BY departmentId\n) t ON e.departmentId = t.departmentId AND e.salary = t.ms;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Subquery max theo department; join equality giữ mọi employee tie max.",
+    "edgeCases": ["Một nhân viên/phòng", "Tie max trong cùng dept"],
+    "pitfalls": ["Window ROW_NUMBER bỏ tie", "Global MAX thay per-department"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

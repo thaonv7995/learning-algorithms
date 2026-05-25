@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Maximum Gap (LeetCode #164) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums số nguyên không âm, sort và tìm khoảng cách lớn nhất giữa hai phần tử liên tiếp trong mảng đã sort. Yêu cầu O(n) nếu có thể.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [3,6,9,1]", "output": "3" },
+    { "input": "nums = [10]", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Bucket sort / pigeonhole: gap max ≥ (max-min)/(n-1). Tạo n-1 bucket, mỗi bucket chỉ cần min/max. Max gap nằm giữa bucket liền kề hoặc trong bucket (chỉ cần biên).",
+  "memoryTip": "Max gap O(n) = bucket theo gap size; chỉ track min/max mỗi bucket.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maximumGap(self, nums: List[int]) -> int:\n        n = len(nums)\n        if n < 2: return 0\n        lo, hi = min(nums), max(nums)\n        if lo == hi: return 0\n        gap = (hi - lo) // (n - 1) or 1\n        buckets = [[float('inf'), float('-inf')] for _ in range(n - 1)]\n        for x in nums:\n            if x == lo or x == hi: continue\n            i = (x - lo) // gap\n            buckets[i][0] = min(buckets[i][0], x)\n            buckets[i][1] = max(buckets[i][1], x)\n        prev, ans = lo, 0\n        for b in buckets:\n            if b[0] == float('inf'): continue\n            ans = max(ans, b[0] - prev)\n            prev = b[1]\n        return max(ans, hi - prev)",
+    "cpp": "class Solution {\npublic:\n    int maximumGap(vector<int>& nums) {\n        int n = nums.size();\n        if (n < 2) return 0;\n        int lo = *min_element(nums.begin(), nums.end());\n        int hi = *max_element(nums.begin(), nums.end());\n        if (lo == hi) return 0;\n        int gap = max(1, (hi - lo) / (n - 1));\n        vector<pair<int,int>> b(n - 1, {INT_MAX, INT_MIN});\n        for (int x : nums) {\n            if (x == lo || x == hi) continue;\n            int i = (x - lo) / gap;\n            b[i].first = min(b[i].first, x);\n            b[i].second = max(b[i].second, x);\n        }\n        int prev = lo, ans = 0;\n        for (auto& p : b) {\n            if (p.first == INT_MAX) continue;\n            ans = max(ans, p.first - prev);\n            prev = p.second;\n        }\n        return max(ans, hi - prev);\n    }\n};",
+    "c": "int maximumGap(int* nums, int n) {\n    if (n < 2) return 0;\n    int lo = nums[0], hi = nums[0];\n    for (int i = 1; i < n; i++) { if (nums[i] < lo) lo = nums[i]; if (nums[i] > hi) hi = nums[i]; }\n    if (lo == hi) return 0;\n    int gap = (hi - lo) / (n - 1); if (gap < 1) gap = 1;\n    int* bmin = malloc((n-1)*sizeof(int)); int* bmax = malloc((n-1)*sizeof(int));\n    for (int i = 0; i < n-1; i++) { bmin[i] = 2147483647; bmax[i] = -2147483647; }\n    for (int i = 0; i < n; i++) {\n        if (nums[i]==lo||nums[i]==hi) continue;\n        int j = (nums[i]-lo)/gap;\n        if (nums[i]<bmin[j]) bmin[j]=nums[i]; if (nums[i]>bmax[j]) bmax[j]=nums[i];\n    }\n    int prev=lo, ans=0;\n    for (int i=0;i<n-1;i++) if (bmin[i]!=2147483647) { if (bmin[i]-prev>ans) ans=bmin[i]-prev; prev=bmax[i]; }\n    if (hi-prev>ans) ans=hi-prev;\n    free(bmin); free(bmax); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Gap lớn nhất không thể nằm trong bucket (nhỏ hơn bucket size); chỉ xét khe giữa bucket.",
+    "edgeCases": ["n<2 → 0", "Tất cả bằng nhau → 0", "Hai phần tử → hi-lo"],
+    "pitfalls": ["Sort O(n log n) không đạt yêu cầu đề", "Bucket size = 0 khi lo==hi"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

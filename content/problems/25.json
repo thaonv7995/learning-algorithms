@@ -1,0 +1,27 @@
+{
+  "id": 25,
+  "title": "Reverse Nodes in k-Group",
+  "difficulty": "Hard",
+  "category": "Linked List",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Đảo ngược từng nhóm k nút liên tiếp trong linked list. Nếu số nút còn lại < k thì giữ nguyên.",
+  "examples": [
+    { "input": "head = [1,2,3,4,5], k = 2", "output": "[2,1,4,3,5]" },
+    { "input": "head = [1,2,3,4,5], k = 3", "output": "[3,2,1,4,5]" },
+    { "input": "head = [1], k = 1", "output": "[1]" }
+  ],
+  "approach": "Đếm k nút từ head. Nếu đủ k: reverse đoạn [head..k] in-place, nối prev→newHead, tail→reverseKGroup(node k+1).",
+  "memoryTip": "Reverse in-place O(1) — lưu con trỏ trước nhóm (prev) để nối lại.",
+  "solutions": {
+    "python": "class Solution:\n    def reverseKGroup(self, head, k):\n        cur = head; count = 0\n        while cur and count < k:\n            cur = cur.next; count += 1\n        if count == k:\n            rev = self._rev(head, k)\n            head.next = self.reverseKGroup(cur, k)\n            return rev\n        return head\n    def _rev(self, head, k):\n        prev = None; cur = head\n        for _ in range(k):\n            nxt = cur.next; cur.next = prev; prev = cur; cur = nxt\n        return prev",
+    "cpp": "class Solution {\n    ListNode* rev(ListNode* a, ListNode* b) {\n        ListNode* prev = b;\n        while (a != b) { auto* n = a->next; a->next = prev; prev = a; a = n; }\n        return prev;\n    }\npublic:\n    ListNode* reverseKGroup(ListNode* head, int k) {\n        ListNode* cur = head;\n        for (int i = 0; i < k; i++) if (!cur) return head;\n        cur = cur->next;\n        head->next = reverseKGroup(cur, k);\n        return rev(head, cur);\n    }\n};",
+    "c": "/* reverseKGroup — reverse segment + đệ quy; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Mỗi nhóm đủ k nút được đảo độc lập; phần đuôi < k giữ nguyên.",
+    "edgeCases": ["k = 1", "len < k", "len chia hết k"],
+    "pitfalls": ["Mất liên kết giữa các nhóm", "Đảo khi chưa đủ k nút"]
+  },
+  "tier": "done"
+}

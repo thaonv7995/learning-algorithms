@@ -5,30 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Rotate Array (LeetCode #189) — Medium.",
+  "description": "Xoay mảng nums sang phải k bước (phần tử cuối về đầu). k có thể lớn hơn n; làm in-place với O(1) extra space.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3,4,5,6,7], k = 3", "output": "[5,6,7,1,2,3,4]" },
+    { "input": "nums = [-1,-100,3,99], k = 2", "output": "[3,99,-1,-100]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "k %= n. Reverse toàn mảng, reverse [0,k-1], reverse [k,n-1]. Ba lần reverse in-place O(n).",
+  "memoryTip": "Rotate array = reverse all, reverse first k, reverse rest.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def rotate(self, nums: List[int], k: int) -> None:\n        n = len(nums)\n        k %= n\n        def rev(a, lo, hi):\n            while lo < hi:\n                nums[lo], nums[hi] = nums[hi], nums[lo]\n                lo += 1; hi -= 1\n        rev(nums, 0, n - 1)\n        rev(nums, 0, k - 1)\n        rev(nums, k, n - 1)",
+    "cpp": "class Solution {\n    void rev(vector<int>& a, int lo, int hi) {\n        while (lo < hi) swap(a[lo++], a[hi--]);\n    }\npublic:\n    void rotate(vector<int>& nums, int k) {\n        int n = nums.size();\n        k %= n;\n        rev(nums, 0, n - 1);\n        rev(nums, 0, k - 1);\n        rev(nums, k, n - 1);\n    }\n};",
+    "c": "static void rev(int* a, int lo, int hi) {\n    while (lo < hi) { int t=a[lo]; a[lo]=a[hi]; a[hi]=t; lo++; hi--; }\n}\nvoid rotate(int* nums, int n, int k) {\n    k %= n;\n    rev(nums, 0, n-1);\n    rev(nums, 0, k-1);\n    rev(nums, k, n-1);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Triple reverse tương đương cyclic shift phải k bước.",
+    "edgeCases": ["k=0", "k=n (không đổi)", "n=1"],
+    "pitfalls": ["Quên k%=n", "Copy O(n) space khi đề yêu cầu O(1)"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

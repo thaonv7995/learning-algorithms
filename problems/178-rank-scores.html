@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #178</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Database</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Rank Scores</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>67.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Rank Scores (LeetCode #178) — Medium.</div>
+                        <div class="block-text">Bảng Scores (id, score). Trả score và rank: cùng điểm cùng rank, rank kế tiếp bỏ qua (dense rank không bỏ số — đề dùng 1,1,3 style).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>scores 3.5, 3.5, 3.85, 4, 4, 4.5</code></div>
+                <div class="ex-line"><span>Out</span><code>rank 1,1,2,3,3,4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>score 10</code></div>
+                <div class="ex-line"><span>Out</span><code>10 rank 1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DENSE_RANK() OVER (ORDER BY score DESC) hoặc correlated subquery đếm DISTINCT score lớn hơn +1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,18 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
-<span class="ty">public</span>:
-};</pre>
+                            <pre class="code-block" id="code-block-c">/* SQL */
+SELECT score,
+  DENSE_RANK() OVER (ORDER BY score DESC) AS `rank`
+FROM Scores;</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># SQL</span>
+SELECT score,
+  DENSE_RANK() OVER (ORDER BY score DESC) AS `rank`
+FROM Scores;</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// SQL</span>
+SELECT score,
+  DENSE_RANK() OVER (ORDER BY score DESC) AS `rank`
+FROM Scores;</pre>
                         </div>
                     </div>
                 </div>
@@ -104,18 +115,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Database</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DENSE_RANK OVER hoặc correlated subquery đếm DISTINCT score lớn hơn +1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DENSE_RANK gán cùng rank cho tie và tăng rank liên tiếp không nhảy số (1,1,2,3).</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một dòng</span><span class="analysis-tag edge">Tất cả score bằng nhau</span><span class="analysis-tag pit">RANK() nhảy 1,1,3 thay dense</span><span class="analysis-tag pit">ORDER BY ASC sai thứ hạng</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Rank scores = DENSE_RANK ORDER BY score DESC.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +143,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Rank%20Scores&lc_id=178&embed=true"></iframe>

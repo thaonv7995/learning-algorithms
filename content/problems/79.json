@@ -2,35 +2,25 @@
   "id": 79,
   "title": "Word Search",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Word Search (LC #79).",
+  "category": "Backtracking",
+  "timeComplexity": "O(m·n·4^L)",
+  "spaceComplexity": "O(L)",
+  "description": "Cho lưới ký tự board và chuỗi word. Kiểm tra word có xuất hiện liên tiếp theo ô kề (ngang/dọc, không lặp ô) hay không.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCCED\"", "output": "true" },
+    { "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"SEE\"", "output": "true" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "DFS từ mọi ô khớp word[0]: đánh dấu visited, thử 4 hướng với index+1; backtrack bỏ đánh dấu.",
+  "memoryTip": "In-place mark '#' rồi restore — không cần visited[][] riêng.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def exist(self, board: List[List[str]], word: str) -> bool:\n        m, n = len(board), len(board[0])\n        def dfs(i, j, k):\n            if k == len(word): return True\n            if i < 0 or j < 0 or i >= m or j >= n or board[i][j] != word[k]:\n                return False\n            ch = board[i][j]; board[i][j] = '#'\n            ok = any(dfs(i+di, j+dj, k+1) for di, dj in ((0,1),(0,-1),(1,0),(-1,0)))\n            board[i][j] = ch\n            return ok\n        return any(dfs(i, j, 0) for i in range(m) for j in range(n))",
+    "cpp": "class Solution {\n    int m,n;\n    bool dfs(vector<vector<char>>& b, string& w, int i, int j, int k) {\n        if (k==(int)w.size()) return true;\n        if (i<0||j<0||i>=m||j>=n||b[i][j]!=w[k]) return false;\n        char c=b[i][j]; b[i][j]='#';\n        bool ok = dfs(b,w,i+1,j,k+1)||dfs(b,w,i-1,j,k+1)||dfs(b,w,i,j+1,k+1)||dfs(b,w,i,j-1,k+1);\n        b[i][j]=c; return ok;\n    }\npublic:\n    bool exist(vector<vector<char>>& board, string word) {\n        m=board.size(); n=board[0].size();\n        for(int i=0;i<m;i++) for(int j=0;j<n;j++)\n            if (dfs(board,word,i,j,0)) return true;\n        return false;\n    }\n};",
+    "c": "/* exist — DFS backtrack trên board; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "DFS khám phá mọi đường hợp lệ; đánh dấu ô tránh dùng lại.",
+    "edgeCases": ["word 1 ký tự", "board 1×1", "Không khớp"],
+    "pitfalls": ["Quên restore ô sau backtrack", "Cho phép đi chéo"]
   },
   "tier": "done"
 }

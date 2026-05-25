@@ -3,32 +3,24 @@
   "title": "Second Highest Salary",
   "difficulty": "Medium",
   "category": "Database",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Second Highest Salary (LeetCode #176) — Medium.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Employee (id, salary). Trả mức lương cao thứ hai; nếu không tồn tại trả null (cột SecondHighestSalary).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "Employee: salaries 100, 200, 300", "output": "200" },
+    { "input": "Employee: salaries 100, 100", "output": "null" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "SELECT DISTINCT salary ORDER BY salary DESC LIMIT 1 OFFSET 1. Hoặc MAX(salary) WHERE salary < (SELECT MAX(salary)).",
+  "memoryTip": "2nd highest = ORDER DESC LIMIT 1 OFFSET 1 (DISTINCT).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT (\n  SELECT DISTINCT salary\n  FROM Employee\n  ORDER BY salary DESC\n  LIMIT 1 OFFSET 1\n) AS SecondHighestSalary;",
+    "cpp": "// SQL\nSELECT (\n  SELECT DISTINCT salary\n  FROM Employee\n  ORDER BY salary DESC\n  LIMIT 1 OFFSET 1\n) AS SecondHighestSalary;",
+    "c": "/* SQL */\nSELECT (\n  SELECT DISTINCT salary\n  FROM Employee\n  ORDER BY salary DESC\n  LIMIT 1 OFFSET 1\n) AS SecondHighestSalary;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "DISTINCT loại trùng; OFFSET 1 lấy hạng 2; subquery scalar trả NULL nếu thiếu.",
+    "edgeCases": ["<2 mức lương khác nhau", "Tất cả salary bằng nhau"],
+    "pitfalls": ["Không DISTINCT → OFFSET 1 có thể trùng max", "Dùng LIMIT 2 rồi MIN phức tạp hơn cần"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

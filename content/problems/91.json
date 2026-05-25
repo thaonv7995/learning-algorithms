@@ -5,32 +5,22 @@
   "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Decode Ways (LC #91).",
+  "description": "Chuỗi s chỉ gồm chữ số. Đếm số cách giải mã: '1'→'A', …, '26'→'Z'. Không có số 0 đứng đầu mã hợp lệ (vd. '06' không hợp lệ).",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"12\"", "output": "2" },
+    { "input": "s = \"226\"", "output": "3" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "DP: ways[i] = cách decode prefix i ký tự. ways[i] += ways[i-1] nếu s[i-1]≠'0'; += ways[i-2] nếu s[i-2:i] trong 10..26. Rolling prev2, prev1.",
+  "memoryTip": "Giống climb stairs nhưng cộng có điều kiện 1-digit và 2-digit hợp lệ.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numDecodings(self, s: str) -> int:\n        if not s or s[0] == '0': return 0\n        p2, p1 = 1, 1\n        for i in range(1, len(s)):\n            cur = 0\n            if s[i] != '0': cur += p1\n            two = int(s[i-1:i+1])\n            if 10 <= two <= 26: cur += p2\n            p2, p1 = p1, cur\n        return p1",
+    "cpp": "class Solution {\npublic:\n    int numDecodings(string s) {\n        if (s.empty()||s[0]=='0') return 0;\n        int p2=1,p1=1;\n        for (int i=1;i<(int)s.size();i++) {\n            int cur=0;\n            if (s[i]!='0') cur+=p1;\n            int two=(s[i-1]-'0')*10+(s[i]-'0');\n            if (two>=10&&two<=26) cur+=p2;\n            p2=p1; p1=cur;\n        }\n        return p1;\n    }\n};",
+    "c": "/* numDecodings — DP rolling; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mọi cách tách hợp lệ 1 hoặc 2 ký tự được cộng dồn đúng.",
+    "edgeCases": ["s='0' → 0", "s='10' → 1", "Liên tiếp '0' sau digit"],
+    "pitfalls": ["Cho phép mã '01'-'09'", "Quên s[0]=='0'"]
   },
   "tier": "done"
 }

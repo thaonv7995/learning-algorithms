@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng nums đã được sắp xếp tăng dần nhưng bị xoay vòng tại một chốt ẩn không biết trước (ví dụ: [0,1,2,4,5,6,7] trở thành [4,5,6,7,0,1,2]). Hãy tìm kiếm target trong mảng xoay vòng đó.</div>
+                        <div class="block-text">Mảng đã sort được xoay tại pivot (mọi phần tử khác nhau). Tìm target, trả index hoặc -1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -66,6 +66,16 @@
                 <div class="ex-label">Ví dụ 1</div>
                 <div class="ex-line"><span>In</span><code>nums = [4,5,6,7,0,1,2], target = 0</code></div>
                 <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [4,5,6,7,0,1,2], target = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>-1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [1], target = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>-1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng Tìm kiếm nhị phân cải tiến. Trong một mảng xoay vòng, chốt giữa `mid` luôn chia mảng thành 2 nửa: một nửa chắc chắn được sắp xếp tăng dần tuần tự, và một nửa bị xoay vòng. Ta xác định nửa nào được sắp xếp chuẩn: nếu nửa trái chuẩn (`nums[low] &lt;= nums[mid]`), ta kiểm tra xem target có nằm trong biên của nửa trái không để co hẹp tương ứng. Làm tương tự cho nửa phải nếu nửa phải chuẩn.</div>
+                        <div class="block-text">Binary search: xác định nửa [lo,mid] hay [mid,hi] còn sorted. Kiểm tra target nằm trong nửa sorted → thu hẹp, không thì nửa kia.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,33 +100,50 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> search(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span> target) {
-    
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> search(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span> target) {
+    <span class="ty">int</span> lo = 0, hi = n - 1;
+    <span class="kw">while</span> (lo &lt;= hi) {
+        <span class="ty">int</span> mid = lo + (hi - lo) / 2;
+        <span class="kw">if</span> (nums[mid] == target) <span class="kw">return</span> mid;
+        <span class="kw">if</span> (nums[lo] &lt;= nums[mid]) {
+            <span class="kw">if</span> (target &gt;= nums[lo] &amp;&amp; target &lt; nums[mid]) hi = mid - 1;
+            <span class="kw">else</span> lo = mid + 1;
+        } <span class="kw">else</span> {
+            <span class="kw">if</span> (target &gt; nums[mid] &amp;&amp; target &lt;= nums[hi]) lo = mid + 1;
+            <span class="kw">else</span> hi = mid - 1;
+        }
+    }
+    <span class="kw">return</span> -1;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> search(<span class="ty">self</span>, nums, target):
-        &quot;&quot;&quot;
-        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type target: <span class="ty">int</span>
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">int</span> <span class="fn">search</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums, <span class="ty">int</span> target) {
-        <span class="ty">int</span> low = <span class="st">0</span>, high = nums.<span class="fn">size</span>() - <span class="st">1</span>;
-        <span class="kw">while</span> (low &lt;= high) {
-            <span class="ty">int</span> mid = low + (high - low) / <span class="st">2</span>;
+        lo, hi = 0, <span class="ty">len</span>(nums) - 1
+        <span class="kw">while</span> lo &lt;= hi:
+            mid = (lo + hi) // 2
+            <span class="kw">if</span> nums[mid] == target: <span class="kw">return</span> mid
+            <span class="kw">if</span> nums[lo] &lt;= nums[mid]:
+                <span class="kw">if</span> nums[lo] &lt;= target &lt; nums[mid]: hi = mid - 1
+                <span class="kw">else</span>: lo = mid + 1
+            <span class="kw">else</span>:
+                <span class="kw">if</span> nums[mid] &lt; target &lt;= nums[hi]: lo = mid + 1
+                <span class="kw">else</span>: hi = mid - 1
+        <span class="kw">return</span> -1</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> search(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> target) {
+        <span class="ty">int</span> lo = 0, hi = (<span class="ty">int</span>)nums.size() - 1;
+        <span class="kw">while</span> (lo &lt;= hi) {
+            <span class="ty">int</span> mid = lo + (hi - lo) / 2;
             <span class="kw">if</span> (nums[mid] == target) <span class="kw">return</span> mid;
-            <span class="kw">if</span> (nums[low] &lt;= nums[mid]) { <span class="cm">// Nua trai sap xep chuan</span>
-                <span class="kw">if</span> (nums[low] &lt;= target &amp;&amp; target &lt; nums[mid]) high = mid - <span class="st">1</span>;
-                <span class="kw">else</span> low = mid + <span class="st">1</span>;
-            } <span class="kw">else</span> { <span class="cm">// Nua phai sap xep chuan</span>
-                <span class="kw">if</span> (nums[mid] &lt; target &amp;&amp; target &lt;= nums[high]) low = mid + <span class="st">1</span>;
-                <span class="kw">else</span> high = mid - <span class="st">1</span>;
+            <span class="kw">if</span> (nums[lo] &lt;= nums[mid]) {
+                <span class="kw">if</span> (target &gt;= nums[lo] &amp;&amp; target &lt; nums[mid]) hi = mid - 1;
+                <span class="kw">else</span> lo = mid + 1;
+            } <span class="kw">else</span> {
+                <span class="kw">if</span> (target &gt; nums[mid] &amp;&amp; target &lt;= nums[hi]) lo = mid + 1;
+                <span class="kw">else</span> hi = mid - 1;
             }
         }
-        <span class="kw">return</span> -<span class="st">1</span>;
+        <span class="kw">return</span> -1;
     }
 };</pre>
                         </div>
@@ -131,14 +158,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Tìm kiếm nhị phân cải tiến.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Trong một mảng xoay vòng, chốt giữa `mid` luôn chia mảng…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — xác định nửa nào được sắp xếp chuẩn: nếu nửa trái chuẩn ,…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Làm tương tự cho nửa phải nếu nửa phải chuẩn.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Binary search: xác định nửa [lo,mid] hay [mid,hi] còn…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Kiểm tra target nằm trong nửa sorted → thu hẹp, không thì…</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi bước loại bỏ một nửa không chứa target nhờ nhận diện nửa sorted.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Không xoay</span><span class="analysis-tag edge">Target ở pivot</span><span class="analysis-tag pit">Dùng &lt;= sai khi so nums[lo] với target</span><span class="analysis-tag pit">Quên unique assumption</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Kỹ thuật co ranh giới thông minh giúp giải thuật đạt hiệu năng O mà không cần phân tách hay sắp xếp lại mảng…</p>
+                        <p>Một nửa luôn sorted — so target với nums[lo] và nums[mid].</p>
                     </details>
                 </div>
                 </div>

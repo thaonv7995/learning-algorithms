@@ -3,32 +3,24 @@
   "title": "Find Peak Element",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Find Peak Element (LeetCode #162) — Medium.",
+  "description": "Cho mảng nums, nums[i] ≠ nums[i+1]. Peak là phần tử lớn hơn hàng xóm (nums[-1]=nums[n]=-∞). Trả index bất kỳ của một peak.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3,1]", "output": "2" },
+    { "input": "nums = [1,2,1,3,5,6,4]", "output": "5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search: nếu nums[mid] < nums[mid+1] thì peak ở bên phải (lo=mid+1), ngược lại peak ở trái hoặc tại mid (hi=mid).",
+  "memoryTip": "Đi lên slope phải → peak bên phải; đi xuống → peak ở mid hoặc trái.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findPeakElement(self, nums: List[int]) -> int:\n        lo, hi = 0, len(nums) - 1\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if nums[mid] < nums[mid + 1]:\n                lo = mid + 1\n            else:\n                hi = mid\n        return lo",
+    "cpp": "class Solution {\npublic:\n    int findPeakElement(vector<int>& nums) {\n        int lo = 0, hi = (int)nums.size() - 1;\n        while (lo < hi) {\n            int mid = lo + (hi - lo) / 2;\n            if (nums[mid] < nums[mid + 1]) lo = mid + 1;\n            else hi = mid;\n        }\n        return lo;\n    }\n};",
+    "c": "int findPeakElement(int* nums, int n) {\n    int lo = 0, hi = n - 1;\n    while (lo < hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (nums[mid] < nums[mid + 1]) lo = mid + 1;\n        else hi = mid;\n    }\n    return lo;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Luôn có peak; thu hẹp interval vẫn chứa ít nhất một peak.",
+    "edgeCases": ["Một phần tử → 0", "Peak ở đầu hoặc cuối mảng"],
+    "pitfalls": ["Linear scan O(n) khi BS đủ", "So sánh mid với mid-1 thay mid+1 dễ off-by-one"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

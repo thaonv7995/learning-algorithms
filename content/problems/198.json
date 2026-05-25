@@ -5,30 +5,23 @@
   "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "House Robber (LeetCode #198) — Medium.",
+  "description": "Dãy nhà nums[i] là tiền trong nhà i. Không được cướp hai nhà liền kề. Tìm số tiền tối đa có thể cướp.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3,1]", "output": "4" },
+    { "input": "nums = [2,7,9,3,1]", "output": "12" },
+    { "input": "nums = [2,1,1,2]", "output": "4" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP: rob(i) = max(rob(i-1), rob(i-2)+nums[i]). Cuộn 2 biến prev2, prev1 — không cướp nhà i-1 hoặc cướp i cộng best đến i-2.",
+  "memoryTip": "House robber = Fibonacci-style: take[i] = max(skip, nums[i]+take[i-2]).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def rob(self, nums: List[int]) -> int:\n        prev2 = prev1 = 0\n        for x in nums:\n            prev2, prev1 = prev1, max(prev1, prev2 + x)\n        return prev1",
+    "cpp": "class Solution {\npublic:\n    int rob(vector<int>& nums) {\n        int prev2 = 0, prev1 = 0;\n        for (int x : nums) {\n            int cur = max(prev1, prev2 + x);\n            prev2 = prev1;\n            prev1 = cur;\n        }\n        return prev1;\n    }\n};",
+    "c": "int rob(int* nums, int n) {\n    int prev2 = 0, prev1 = 0;\n    for (int i = 0; i < n; i++) {\n        int cur = prev1 > prev2 + nums[i] ? prev1 : prev2 + nums[i];\n        prev2 = prev1;\n        prev1 = cur;\n    }\n    return prev1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Tại mỗi nhà, optimal hoặc bỏ qua (prev1) hoặc cướp (+nums[i]+prev2).",
+    "edgeCases": ["Một nhà", "Hai nhà", "Toàn 0"],
+    "pitfalls": ["Greedy local max sai", "Recursion không memo TLE"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

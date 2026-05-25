@@ -4,33 +4,23 @@
   "difficulty": "Medium",
   "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Simplify Path (LC #71).",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi đường dẫn Unix tuyệt đối path. Chuẩn hóa path: bỏ thư mục hiện tại (.), lùi một cấp (..), gộp nhiều dấu / liên tiếp, trả về path tuyệt đối dạng /a/b/c.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "path = \"/home//foo/\"", "output": "\"/home/foo\"" },
+    { "input": "path = \"/../\"", "output": "\"/\"" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Tách path theo '/'. Dùng stack: token rỗng hoặc '.' bỏ qua; '..' pop nếu stack không rỗng; tên thư mục khác push. Nối stack bằng '/'.",
+  "memoryTip": "Stack + split — không cần regex.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def simplifyPath(self, path: str) -> str:\n        stack = []\n        for part in path.split('/'):\n            if part == '' or part == '.': continue\n            elif part == '..':\n                if stack: stack.pop()\n            else: stack.append(part)\n        return '/' + '/'.join(stack)",
+    "cpp": "class Solution {\npublic:\n    string simplifyPath(string path) {\n        vector<string> st;\n        string token;\n        stringstream ss(path);\n        while (getline(ss, token, '/')) {\n            if (token.empty() || token == \".\") continue;\n            if (token == \"..\") { if (!st.empty()) st.pop_back(); }\n            else st.push_back(token);\n        }\n        string res = \"\";\n        for (auto& t : st) res += \"/\" + t;\n        return res.empty() ? \"/\" : res;\n    }\n};",
+    "c": "/* simplifyPath — stack token sau split; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mỗi thành phần được xử lý đúng thứ tự; stack giữ path hợp lệ.",
+    "edgeCases": ["path = \"/\" → \"/\"", "Nhiều .. vượt gốc → vẫn \"/\"", "path = \"/a/../../b\" → \"/b\""],
+    "pitfalls": ["Quên trường hợp stack rỗng trả \"/\"", "Không bỏ token rỗng sau split"]
   },
   "tier": "done"
 }

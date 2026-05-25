@@ -4,31 +4,23 @@
   "difficulty": "Easy",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Duplicate Emails (LeetCode #182) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Person (id, email). Tìm mọi email xuất hiện nhiều hơn một lần.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "emails a@b.com, a@b.com, c@d.com", "output": "a@b.com" },
+    { "input": "emails a@b.com, c@d.com", "output": "(empty)" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "GROUP BY email HAVING COUNT(*) > 1. Hoặc self-join p1.email = p2.email AND p1.id < p2.id.",
+  "memoryTip": "Duplicate emails = GROUP BY email HAVING COUNT(*) > 1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT email\nFROM Person\nGROUP BY email\nHAVING COUNT(*) > 1;",
+    "cpp": "// SQL\nSELECT email\nFROM Person\nGROUP BY email\nHAVING COUNT(*) > 1;",
+    "c": "/* SQL */\nSELECT email\nFROM Person\nGROUP BY email\nHAVING COUNT(*) > 1;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "HAVING lọc nhóm có count > 1 đúng định nghĩa duplicate.",
+    "edgeCases": ["Không duplicate", "Nhiều email trùng >2 lần vẫn trả một dòng/email"],
+    "pitfalls": ["SELECT * thay email", "WHERE COUNT thay HAVING"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

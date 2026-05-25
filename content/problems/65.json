@@ -3,25 +3,25 @@
   "title": "Valid Number",
   "difficulty": "Hard",
   "category": "String",
-  "timeComplexity": "O(N)",
+  "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Kiểm tra chuỗi có phải số hợp lệ không: integer, decimal, có/không exponent (e/E), dấu +/-.",
+  "description": "Cho chuỗi s. Kiểm tra s có biểu diễn số hợp lệ không: số nguyên, số thập phân, có hoặc không có phần mũ (e/E), dấu +/- trước số hoặc sau e. Khoảng trắng đầu/cuối được bỏ qua.",
   "examples": [
     { "input": "s = \"0\"", "output": "true" },
     { "input": "s = \"2e10\"", "output": "true" },
     { "input": "s = \"1a\"", "output": "false" }
   ],
-  "approach": "Finite state machine: duyệt từng ký tự, chuyển trạng thái hợp lệ. Theo dõi seenDigit, seenDot, seenE.",
-  "memoryTip": "Hard nhưng O(n) — 3 flag: digit, dot, e.",
+  "approach": "Duyệt một pass với 3 cờ seenDigit, seenDot, seenE. Digit đặt seenDigit. e/E: bắt buộc đã có digit, reset digit/dot. Dấu chấm: tối đa một, không sau e. +/- chỉ sau e hoặc ở đầu.",
+  "memoryTip": "Hard nhưng O(n) — 3 flag: digit, dot, e; trim space hai đầu trước.",
   "solutions": {
-    "python": "class Solution:\n    def isNumber(self, s: str) -> bool:\n        s = s.strip()\n        if not s: return False\n        seen_d = seen_dot = seen_e = False\n        for i, c in enumerate(s):\n            if c.isdigit(): seen_d = True\n            elif c in '+-':\n                if i and s[i-1] not in 'eE': return False\n            elif c in 'eE':\n                if seen_e or not seen_d: return False\n                seen_e = seen_d = False; seen_dot = True\n            elif c == '.':\n                if seen_dot or seen_e: return False\n                seen_dot = True\n            else: return False\n        return seen_d",
-    "cpp": "class Solution {\npublic:\n    bool isNumber(string s) {\n        int i=0,n=s.size(); while(i<n&&s[i]==' ')i++; while(n>i&&s[n-1]==' ')n--;\n        if(i>=n) return false;\n        bool d=false, dot=false, e=false;\n        for(;i<n;i++){\n            if(isdigit(s[i])) d=true;\n            else if(s[i]=='+'||s[i]=='-'){ if(i&&s[i-1]!='e'&&s[i-1]!='E') return false; }\n            else if(s[i]=='e'||s[i]=='E'){ if(e||!d) return false; e=d=true; d=dot=false; }\n            else if(s[i]=='.'){ if(dot||e) return false; dot=true; }\n            else return false;\n        }\n        return d;\n    }\n};",
-    "c": "/* isNumber — FSM một pass; xem C++ */"
+    "python": "class Solution:\n    def isNumber(self, s: str) -> bool:\n        s = s.strip()\n        if not s:\n            return False\n        seen_d = seen_dot = seen_e = False\n        for i, c in enumerate(s):\n            if c.isdigit():\n                seen_d = True\n            elif c in '+-':\n                if i and s[i - 1] not in 'eE':\n                    return False\n            elif c in 'eE':\n                if seen_e or not seen_d:\n                    return False\n                seen_e = True\n                seen_d = False\n                seen_dot = False\n            elif c == '.':\n                if seen_dot or seen_e:\n                    return False\n                seen_dot = True\n            else:\n                return False\n        return seen_d",
+    "cpp": "class Solution {\npublic:\n    bool isNumber(string s) {\n        int i = 0, n = s.size();\n        while (i < n && s[i] == ' ') i++;\n        while (n > i && s[n - 1] == ' ') n--;\n        if (i >= n) return false;\n        bool d = false, dot = false, e = false;\n        for (; i < n; i++) {\n            if (isdigit(s[i])) d = true;\n            else if (s[i] == '+' || s[i] == '-') {\n                if (i && s[i - 1] != 'e' && s[i - 1] != 'E') return false;\n            } else if (s[i] == 'e' || s[i] == 'E') {\n                if (e || !d) return false;\n                e = true; d = false; dot = false;\n            } else if (s[i] == '.') {\n                if (dot || e) return false;\n                dot = true;\n            } else return false;\n        }\n        return d;\n    }\n};",
+    "c": "int isNumber(char* s) {\n    while (*s == ' ') s++;\n    char* end = s + strlen(s);\n    while (end > s && *(end - 1) == ' ') end--;\n    if (s >= end) return 0;\n    int d = 0, dot = 0, e = 0;\n    for (char* p = s; p < end; p++) {\n        if (*p >= '0' && *p <= '9') d = 1;\n        else if (*p == '+' || *p == '-') {\n            if (p > s && *(p - 1) != 'e' && *(p - 1) != 'E') return 0;\n        } else if (*p == 'e' || *p == 'E') {\n            if (e || !d) return 0;\n            e = 1; d = 0; dot = 0;\n        } else if (*p == '.') {\n            if (dot || e) return 0;\n            dot = 1;\n        } else return 0;\n    }\n    return d;\n}"
   },
   "analysis": {
-    "correctness": "Mọi trường hợp LC đều được FSM bao phủ.",
-    "edgeCases": [".1", "1.", "e", "+.", "  99  "],
-    "pitfalls": ["Quên trim space", "Cho phép nhiều dấu chấm hoặc e"]
+    "correctness": "FSM một pass bao phủ mọi dạng số LC: .1, 1., 2e+3, khoảng trắng; kết thúc phải có ít nhất một digit.",
+    "edgeCases": [".1 và 1. hợp lệ", "Chỉ \"e\" hoặc \"+.\" → false", "Khoảng trắng đầu/cuối \"  99  \""],
+    "pitfalls": ["Quên trim space", "Cho phép nhiều dấu chấm hoặc e", "Dấu +/- không sau e ở giữa chuỗi"]
   },
   "tier": "done"
 }

@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Number of Islands</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m×n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m×n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>64.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Number of Islands (LeetCode #200) — Medium.</div>
+                        <div class="block-text">Lưới grid m×n: '1' là đất, '0' là nước. Đảo là vùng '1' liên thông 4 hướng. Đếm số đảo.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>grid = [[&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;0&quot;],[&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;],[&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],[&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>grid = [[&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],[&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],[&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;],[&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;1&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt grid; gặp '1' thì DFS/BFS flood fill đánh dấu '0', tăng count. Mỗi lần flood fill = một đảo.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">void</span> dfs(<span class="ty">char</span>** g, <span class="ty">int</span> m, <span class="ty">int</span> n, <span class="ty">int</span> i, <span class="ty">int</span> j) {
+    <span class="kw">if</span> (i&lt;0||i&gt;=m||j&lt;0||j&gt;=n||g[i][j]!='1') <span class="kw">return</span>;
+    g[i][j]='0';
+    dfs(g,m,n,i+1,j); dfs(g,m,n,i-1,j); dfs(g,m,n,i,j+1); dfs(g,m,n,i,j-1);
+}
+<span class="ty">int</span> numIslands(<span class="ty">char</span>** grid, <span class="ty">int</span> m, <span class="ty">int</span>* cs) {
+    <span class="kw">if</span> (!m) <span class="kw">return</span> 0; <span class="ty">int</span> n=cs[0], cnt=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;m;i++) <span class="kw">for</span> (<span class="ty">int</span> j=0;j&lt;n;j++)
+        <span class="kw">if</span> (grid[i][j]=='1') { cnt++; dfs(grid,m,n,i,j); }
+    <span class="kw">return</span> cnt;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> numIslands(<span class="ty">self</span>, grid: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> <span class="kw">not</span> grid: <span class="kw">return</span> 0
+        m, n = <span class="ty">len</span>(grid), <span class="ty">len</span>(grid[0])
+        <span class="kw">def</span> dfs(i, j):
+            <span class="kw">if</span> i &lt; 0 <span class="kw">or</span> i &gt;= m <span class="kw">or</span> j &lt; 0 <span class="kw">or</span> j &gt;= n <span class="kw">or</span> grid[i][j] != '1': <span class="kw">return</span>
+            grid[i][j] = '0'
+            dfs(i+1,j); dfs(i-1,j); dfs(i,j+1); dfs(i,j-1)
+        cnt = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+                <span class="kw">if</span> grid[i][j] == '1':
+                    cnt += 1
+                    dfs(i, j)
+        <span class="kw">return</span> cnt</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> m, n;
+    <span class="ty">void</span> dfs(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; g, <span class="ty">int</span> i, <span class="ty">int</span> j) {
+        <span class="kw">if</span> (i &lt; 0 || i &gt;= m || j &lt; 0 || j &gt;= n || g[i][j] != '1') <span class="kw">return</span>;
+        g[i][j] = '0';
+        dfs(g, i+1, j); dfs(g, i-1, j); dfs(g, i, j+1); dfs(g, i, j-1);
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> numIslands(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; grid) {
+        m = grid.size(); <span class="kw">if</span> (!m) <span class="kw">return</span> 0;
+        n = grid[0].size(); <span class="ty">int</span> cnt = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++)
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; n; j++)
+                <span class="kw">if</span> (grid[i][j] == '1') { cnt++; dfs(grid, i, j); }
+        <span class="kw">return</span> cnt;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +146,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Graph</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m×n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m×n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Duyệt grid; gặp '1' thì DFS/BFS flood fill đánh dấu '0',…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Mỗi lần flood fill = một đảo.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi DFS/BFS thăm đúng một component; đánh dấu visited tránh đếm lại.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Grid rỗng</span><span class="analysis-tag edge">Toàn nước</span><span class="analysis-tag edge">Toàn đất một đảo</span><span class="analysis-tag pit">8 hướng thay 4</span><span class="analysis-tag pit">Không mutate grid → visited TLE/memory</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Number of islands = count connected components of '1' via DFS/BFS.</p>
                     </details>
                 </div>
                 </div>

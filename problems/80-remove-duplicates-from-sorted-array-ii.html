@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Remove Duplicates from Sorted Array II (LC #80).</div>
+                        <div class="block-text">Mảng nums đã sort không giảm. Sửa in-place sao cho mỗi phần tử xuất hiện tối đa 2 lần. Trả về k = số phần tử hợp lệ; phần tử nums[0..k-1] là kết quả.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,1,1,2,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>5, nums = [1,1,2,2,3]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [0,0,1,1,1,1,2,3,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>7, nums = [0,0,1,1,2,3,3]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Two pointers: k là vị trí ghi tiếp. Cho phép ghi nums[i] nếu k&lt;2 hoặc nums[i] &lt;= nums[k-2] (tức chưa quá 2 bản).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,27 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> removeDuplicates(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> k=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++)
+        <span class="kw">if</span> (k&lt;2 || nums[i]&lt;=nums[k-2]) nums[k++]=nums[i];
+    <span class="kw">return</span> k;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> removeDuplicates(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        k = 0
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">if</span> k &lt; 2 <span class="kw">or</span> x &lt;= nums[k - 2]:
+                nums[k] = x; k += 1
+        <span class="kw">return</span> k</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">int</span> removeDuplicates(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a) {
+        <span class="ty">int</span> k=0;
+        <span class="kw">for</span> (<span class="ty">int</span> x: a)
+            <span class="kw">if</span> (k&lt;2 || x&lt;=a[k-2]) a[k++]=x;
+        <span class="kw">return</span> k;
+    }
 };</pre>
                         </div>
                     </div>
@@ -109,14 +129,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Two pointers: k là vị trí ghi tiếp.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Cho phép ghi nums[i] nếu k&lt;2 hoặc nums[i] &lt;= nums[k-2] .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Invariant: prefix [0..k) thỏa ≤2 lần mỗi giá trị và sort.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n ≤ 2 giữ nguyên</span><span class="analysis-tag edge">Toàn cùng số</span><span class="analysis-tag pit">So sánh nums[k-1] thay vì k-2</span><span class="analysis-tag pit">Nhầm với bài chỉ giữ 1 bản (#26)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>So nums[i] với nums[k-2] — giữ tối đa 2 bản.</p>
                     </details>
                 </div>
                 </div>

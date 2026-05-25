@@ -3,32 +3,24 @@
   "title": "Best Time to Buy and Sell Stock IV",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Best Time to Buy and Sell Stock IV (LeetCode #188) — Hard.",
+  "timeComplexity": "O(nk)",
+  "spaceComplexity": "O(k)",
+  "description": "Cho mảng giá prices và số giao dịch tối đa k. Mỗi giao dịch = mua rồi bán một lần. Tìm lợi nhuận tối đa (k=0 thì 0).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "k = 2, prices = [2,4,1]", "output": "2" },
+    { "input": "k = 2, prices = [3,2,6,5,0,3]", "output": "7" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP: nếu k >= n/2 thì như unlimited (LC122). Ngược lại dp[t][i] max profit t transactions đến day i; tối ưu 2 mảng buy/sell cho mỗi transaction.",
+  "memoryTip": "Stock IV: k large → greedy; else DP buy[t], sell[t] rolling.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxProfit(self, k: int, prices: List[int]) -> int:\n        if not prices or k == 0: return 0\n        n = len(prices)\n        if k >= n // 2:\n            return sum(max(0, prices[i] - prices[i-1]) for i in range(1, n))\n        buy = [-10**18] * (k + 1)\n        sell = [0] * (k + 1)\n        for p in prices:\n            for t in range(1, k + 1):\n                buy[t] = max(buy[t], sell[t-1] - p)\n                sell[t] = max(sell[t], buy[t] + p)\n        return sell[k]",
+    "cpp": "class Solution {\npublic:\n    int maxProfit(int k, vector<int>& prices) {\n        if (prices.empty() || !k) return 0;\n        int n = prices.size();\n        if (k >= n / 2) {\n            int ans = 0;\n            for (int i = 1; i < n; i++) ans += max(0, prices[i] - prices[i-1]);\n            return ans;\n        }\n        vector<long long> buy(k+1, LLONG_MIN/2), sell(k+1, 0);\n        for (int p : prices)\n            for (int t = 1; t <= k; t++) {\n                buy[t] = max(buy[t], sell[t-1] - p);\n                sell[t] = max(sell[t], buy[t] + p);\n            }\n        return (int)sell[k];\n    }\n};",
+    "c": "int maxProfit(int k, int* prices, int n) {\n    if (!n || !k) return 0;\n    if (k >= n/2) {\n        int ans = 0;\n        for (int i = 1; i < n; i++) if (prices[i] > prices[i-1]) ans += prices[i]-prices[i-1];\n        return ans;\n    }\n    long long* buy = calloc(k+1, sizeof(long long));\n    long long* sell = calloc(k+1, sizeof(long long));\n    for (int i = 0; i <= k; i++) buy[i] = -(1LL<<60);\n    for (int i = 0; i < n; i++) for (int t = 1; t <= k; t++) {\n        long long nb = sell[t-1]-prices[i]; if (nb > buy[t]) buy[t]=nb;\n        long long ns = buy[t]+prices[i]; if (ns > sell[t]) sell[t]=ns;\n    }\n    int ans = (int)sell[k]; free(buy); free(sell); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "DP generalizes k transactions; k≥n/2 reduces to sum positive deltas.",
+    "edgeCases": ["k=0", "Giá giảm monotonic → 0", "k rất lớn"],
+    "pitfalls": ["O(n²k) naive TLE", "Quên case k unlimited optimization"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Minimum Window Substring</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(|s|+|t|)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(|Σ|)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>47.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Minimum Window Substring (LC #76).</div>
+                        <div class="block-text">Cho chuỗi s và t. Tìm substring nhỏ nhất của s chứa đủ mọi ký tự của t (kể cả trùng lặp). Trả về &quot;&quot; nếu không có.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;ADOBECODEBANC&quot;, t = &quot;ABC&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;BANC&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;a&quot;, t = &quot;a&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;a&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Sliding window: mở r bằng cách thêm ký tự, đếm need/have; khi have đủ thì thu l từ trái, cập nhật best, giảm have nếu mất ký tự cần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* minWindow — sliding window + count; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> minWindow(<span class="ty">self</span>, s: <span class="ty">str</span>, t: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">from</span> collections <span class="kw">import</span> Counter
+        need = Counter(t); have = 0; req = <span class="ty">len</span>(need)
+        l = 0; best = (10**9, 0, 0)
+        window = {}
+        <span class="kw">for</span> r, c <span class="kw">in</span> enumerate(s):
+            window[c] = window.get(c, 0) + 1
+            <span class="kw">if</span> c <span class="kw">in</span> need <span class="kw">and</span> window[c] == need[c]: have += 1
+            <span class="kw">while</span> have == req:
+                <span class="kw">if</span> r - l + 1 &lt; best[0]: best = (r - l + 1, l, r + 1)
+                lc = s[l]
+                window[lc] -= 1
+                <span class="kw">if</span> lc <span class="kw">in</span> need <span class="kw">and</span> window[lc] &lt; need[lc]: have -= 1
+                l += 1
+        <span class="kw">return</span> s[best[1]:best[2]] <span class="kw">if</span> best[0] &lt; 10**9 <span class="kw">else</span> &quot;&quot;</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">string</span> minWindow(<span class="ty">string</span> s, <span class="ty">string</span> t) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; need(128,0), win(128,0);
+        <span class="ty">int</span> req=0;
+        <span class="kw">for</span>(<span class="ty">char</span> c:t) <span class="kw">if</span>(!need[c]++) req++;
+        <span class="ty">int</span> have=0, l=0, bestLen=1e9, bestL=0;
+        <span class="kw">for</span>(<span class="ty">int</span> r=0;r&lt;(<span class="ty">int</span>)s.size();r++){
+            <span class="kw">if</span>(!win[s[r]]++ &amp;&amp; need[s[r]]) have++;
+            <span class="kw">while</span>(have==req){
+                <span class="kw">if</span>(r-l+1&lt;bestLen){bestLen=r-l+1;bestL=l;}
+                <span class="kw">if</span>(!--win[s[l]] &amp;&amp; need[s[l]]) have--;
+                l++;
+            }
+        }
+        <span class="kw">return</span> bestLen==1e9?&quot;&quot;:s.substr(bestL,bestLen);
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,18 +138,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Sliding Window</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(|s|+|t|)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(|Σ|)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sliding window: mở r bằng cách thêm ký tự, đếm need/have; khi have đủ…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi cửa sổ hợp lệ được thu tối đa từ trái trước khi mở r thêm.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">t dài hơn s</span><span class="analysis-tag edge">Không đủ ký tự</span><span class="analysis-tag edge">Nhiều đáp án cùng độ dài — lấy đầu tiên</span><span class="analysis-tag pit">Đếm trùng ký tự sai</span><span class="analysis-tag pit">Quên reset khi have &lt; req</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>need map + formed/required — thu l khi window hợp lệ.</p>
                     </details>
                 </div>
                 </div>

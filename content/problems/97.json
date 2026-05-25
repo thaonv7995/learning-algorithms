@@ -2,35 +2,25 @@
   "id": 97,
   "title": "Interleaving String",
   "difficulty": "Medium",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Interleaving String (LC #97).",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(m·n)",
+  "spaceComplexity": "O(m·n)",
+  "description": "Cho s1, s2, s3 cùng độ dài |s1|+|s2|=|s3|. Kiểm tra s3 có phải interleaving của s1 và s2 không (giữ thứ tự ký tự trong từng chuỗi gốc).",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbcbcac\"", "output": "true" },
+    { "input": "s1 = \"aabcc\", s2 = \"dbbca\", s3 = \"aadbbbaccc\"", "output": "false" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "DP[i][j] = s3[0..i+j) interleave được từ s1[:i] và s2[:j]. Chuyển từ (i-1,j) nếu s1[i-1]==s3[i+j-1] hoặc (i,j-1) nếu s2[j-1]==s3[i+j-1].",
+  "memoryTip": "Bảng (m+1)×(n+1); dp[0][0]=true.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:\n        m, n = len(s1), len(s2)\n        if m + n != len(s3): return False\n        dp = [[False]*(n+1) for _ in range(m+1)]\n        dp[0][0] = True\n        for i in range(m+1):\n            for j in range(n+1):\n                k = i + j\n                if i and s1[i-1]==s3[k-1]: dp[i][j] |= dp[i-1][j]\n                if j and s2[j-1]==s3[k-1]: dp[i][j] |= dp[i][j-1]\n        return dp[m][n]",
+    "cpp": "class Solution {\npublic:\n    bool isInterleave(string a, string b, string c) {\n        int m=a.size(), n=b.size();\n        if (m+n!=(int)c.size()) return false;\n        vector<vector<bool>> dp(m+1, vector<bool>(n+1));\n        dp[0][0]=true;\n        for (int i=0;i<=m;i++) for (int j=0;j<=n;j++) {\n            int k=i+j;\n            if (i&&a[i-1]==c[k-1]) dp[i][j]|=dp[i-1][j];\n            if (j&&b[j-1]==c[k-1]) dp[i][j]|=dp[i][j-1];\n        }\n        return dp[m][n];\n    }\n};",
+    "c": "/* isInterleave — DP 2D; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mọi prefix s3 tương ứng đúng prefix s1/s2 được đánh dấu.",
+    "edgeCases": ["Một chuỗi rỗng", "Độ dài không khớp → false"],
+    "pitfalls": ["Index k=i+j-1 sai", "Cho phép hoán vị tự do thay vì giữ thứ tự"]
   },
   "tier": "done"
 }

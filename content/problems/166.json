@@ -3,32 +3,25 @@
   "title": "Fraction to Recurring Decimal",
   "difficulty": "Medium",
   "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Fraction to Recurring Decimal (LeetCode #166) — Medium.",
+  "timeComplexity": "O(d)",
+  "spaceComplexity": "O(d)",
+  "description": "Cho hai số nguyên numerator và denominator. Trả chuỗi biểu diễn thập phân; phần lặp đặt trong ngoặc (). Trả \"0\" nếu bằng 0, \"Error\" nếu chia cho 0.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "numerator = 1, denominator = 2", "output": "\"0.5\"" },
+    { "input": "numerator = 4, denominator = 333", "output": "\"0.(012)\"" },
+    { "input": "numerator = 2, denominator = 1", "output": "\"2\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Long division: xử lý dấu, phần nguyên, rồi lặp remainder = (rem*10)%den. Hash map remainder→vị trí trong chuỗi thập phân để chèn '(' khi gặp lại.",
+  "memoryTip": "Repeating decimal = long div + map remainder → index for '('.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def fractionToDecimal(self, n: int, d: int) -> str:\n        if d == 0: return \"Error\"\n        sign = '-' if (n < 0) ^ (d < 0) else ''\n        n, d = abs(n), abs(d)\n        q, r = divmod(n, d)\n        res = sign + str(q)\n        if r == 0: return res\n        res += '.'\n        pos = {}\n        frac = []\n        while r:\n            if r in pos:\n                i = pos[r]\n                return res + ''.join(frac[:i]) + '(' + ''.join(frac[i:]) + ')'\n            pos[r] = len(frac)\n            frac.append(str(r * 10 // d))\n            r = r * 10 % d\n        return res + ''.join(frac)",
+    "cpp": "class Solution {\npublic:\n    string fractionToDecimal(int n, int d) {\n        if (d == 0) return \"Error\";\n        string res;\n        if ((long long)n * d < 0) res += '-';\n        long long a = abs((long long)n), b = abs((long long)d);\n        res += to_string(a / b);\n        long long r = a % b;\n        if (!r) return res;\n        res += '.';\n        unordered_map<long long,int> pos;\n        string frac;\n        while (r) {\n            if (pos.count(r)) {\n                return res + frac.substr(0, pos[r]) + \"(\" + frac.substr(pos[r]) + \")\";\n            }\n            pos[r] = frac.size();\n            frac += char('0' + r * 10 / b);\n            r = r * 10 % b;\n        }\n        return res + frac;\n    }\n};",
+    "c": "char* fractionToDecimal(int n, int d) {\n    if (d == 0) return strdup(\"Error\");\n    char buf[4096]; int k = 0;\n    if ((long long)n * d < 0) buf[k++] = '-';\n    long long a = llabs((long long)n), b = llabs((long long)d);\n    k += sprintf(buf + k, \"%lld\", a / b);\n    long long r = a % b;\n    if (!r) return strdup(buf);\n    buf[k++] = '.';\n    long long rem[4096]; int idx[4096], len = 0;\n    while (r) {\n        for (int i = 0; i < len; i++) if (rem[i] == r) {\n            buf[k] = 0;\n            char* out = malloc(strlen(buf) + 64);\n            sprintf(out, \"%.*s(%s)\", k - idx[i], buf, buf + idx[i]);\n            return out;\n        }\n        rem[len] = r; idx[len++] = k;\n        buf[k++] = '0' + (char)(r * 10 / b);\n        r = r * 10 % b;\n    }\n    buf[k] = 0; return strdup(buf);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Remainder lặp iff chu kỳ thập phân; map ghi vị trí bắt đầu chu kỳ.",
+    "edgeCases": ["denominator=0", "Kết quả nguyên", "INT_MIN overflow dấu"],
+    "pitfalls": ["int overflow khi abs(INT_MIN)", "Quên dấu khi cả hai âm"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

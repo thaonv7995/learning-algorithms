@@ -1,0 +1,27 @@
+{
+  "id": 22,
+  "title": "Generate Parentheses",
+  "difficulty": "Medium",
+  "category": "Backtracking",
+  "timeComplexity": "O(4^n / √n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho số nguyên n, sinh mọi chuỗi ngoặc hợp lệ gồm n cặp '(' và ')'.",
+  "examples": [
+    { "input": "n = 3", "output": "[\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]" },
+    { "input": "n = 1", "output": "[\"()\"]" },
+    { "input": "n = 2", "output": "[\"(())\",\"()()\"]" }
+  ],
+  "approach": "Backtracking: thêm '(' nếu open < n; thêm ')' nếu close < open. Khi len = 2n thì push vào kết quả.",
+  "memoryTip": "Invariant: close ≤ open ≤ n — đảm bảo prefix luôn hợp lệ.",
+  "solutions": {
+    "python": "class Solution:\n    def generateParenthesis(self, n: int) -> List[str]:\n        res = []\n        def bt(s, o, c):\n            if len(s) == 2 * n:\n                res.append(''.join(s)); return\n            if o < n:\n                s.append('('); bt(s, o + 1, c); s.pop()\n            if c < o:\n                s.append(')'); bt(s, o, c + 1); s.pop()\n        bt([], 0, 0)\n        return res",
+    "cpp": "class Solution {\n    vector<string> res;\n    void bt(string cur, int o, int c, int n) {\n        if ((int)cur.size() == 2 * n) { res.push_back(cur); return; }\n        if (o < n) bt(cur + '(', o + 1, c, n);\n        if (c < o) bt(cur + ')', o, c + 1, n);\n    }\npublic:\n    vector<string> generateParenthesis(int n) {\n        bt(\"\", 0, 0, n); return res;\n    }\n};",
+    "c": "static void gp22(char** res, int* cnt, char* cur, int pos, int o, int c, int n) {\n    if (pos == 2 * n) { res[(*cnt)++] = strdup(cur); return; }\n    if (o < n) { cur[pos] = '('; cur[pos + 1] = 0; gp22(res, cnt, cur, pos + 1, o + 1, c, n); }\n    if (c < o) { cur[pos] = ')'; cur[pos + 1] = 0; gp22(res, cnt, cur, pos + 1, o, c + 1, n); }\n}\nchar** generateParenthesis(int n, int* returnSize) {\n    char** res = (char**)malloc(5000 * sizeof(char*));\n    char* cur = (char*)calloc(2 * n + 1, 1);\n    *returnSize = 0;\n    gp22(res, returnSize, cur, 0, 0, 0, n);\n    free(cur);\n    return res;\n}"
+  },
+  "analysis": {
+    "correctness": "Chỉ thêm ')' khi close < open — mọi prefix đều cân bằng được.",
+    "edgeCases": ["n = 1", "n lớn — số chuỗi tăng nhanh"],
+    "pitfalls": ["Cho phép close > open", "Quên backtrack pop"]
+  },
+  "tier": "done"
+}

@@ -5,32 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Remove Duplicates from Sorted Array II (LC #80).",
+  "description": "Mảng nums đã sort không giảm. Sửa in-place sao cho mỗi phần tử xuất hiện tối đa 2 lần. Trả về k = số phần tử hợp lệ; phần tử nums[0..k-1] là kết quả.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,1,1,2,2,3]", "output": "5, nums = [1,1,2,2,3]" },
+    { "input": "nums = [0,0,1,1,1,1,2,3,3]", "output": "7, nums = [0,0,1,1,2,3,3]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Two pointers: k là vị trí ghi tiếp. Cho phép ghi nums[i] nếu k<2 hoặc nums[i] <= nums[k-2] (tức chưa quá 2 bản).",
+  "memoryTip": "So nums[i] với nums[k-2] — giữ tối đa 2 bản.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def removeDuplicates(self, nums: List[int]) -> int:\n        k = 0\n        for x in nums:\n            if k < 2 or x <= nums[k - 2]:\n                nums[k] = x; k += 1\n        return k",
+    "cpp": "class Solution {\npublic:\n    int removeDuplicates(vector<int>& a) {\n        int k=0;\n        for (int x: a)\n            if (k<2 || x<=a[k-2]) a[k++]=x;\n        return k;\n    }\n};",
+    "c": "int removeDuplicates(int* nums, int n) {\n    int k=0;\n    for (int i=0;i<n;i++)\n        if (k<2 || nums[i]<=nums[k-2]) nums[k++]=nums[i];\n    return k;\n}"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Invariant: prefix [0..k) thỏa ≤2 lần mỗi giá trị và sort.",
+    "edgeCases": ["n ≤ 2 giữ nguyên", "Toàn cùng số"],
+    "pitfalls": ["So sánh nums[k-1] thay vì k-2", "Nhầm với bài chỉ giữ 1 bản (#26)"]
   },
   "tier": "done"
 }

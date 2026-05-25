@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #167</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Two Sum II - Input Array Is Sorted</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Two Sum II - Input Array Is Sorted (LeetCode #167) — Medium.</div>
+                        <div class="block-text">Cho mảng numbers đã sort tăng dần (1-indexed) và target. Tìm hai chỉ số i &lt; j sao cho numbers[i] + numbers[j] = target. Đảm bảo có đúng một cặp.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>numbers = [2,7,11,15], target = 9</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>numbers = [2,3,4], target = 6</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,3]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>numbers = [-1,0], target = -1</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Two pointers lo=0, hi=n-1: nếu sum &gt; target thì hi--; sum &lt; target thì lo++; bằng target trả [lo+1, hi+1] (1-indexed).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,41 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* twoSum(<span class="ty">int</span>* numbers, <span class="ty">int</span> n, <span class="ty">int</span> target, <span class="ty">int</span>* retSize) {
+    <span class="ty">int</span> lo = 0, hi = n - 1;
+    <span class="kw">while</span> (lo &lt; hi) {
+        <span class="ty">int</span> s = numbers[lo] + numbers[hi];
+        <span class="kw">if</span> (s == target) {
+            <span class="ty">int</span>* ans = <span class="kw">malloc</span>(2 * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+            ans[0] = lo + 1; ans[1] = hi + 1; *retSize = 2; <span class="kw">return</span> ans;
+        }
+        <span class="kw">if</span> (s &lt; target) lo++; <span class="kw">else</span> hi--;
+    }
+    *retSize = 0; <span class="kw">return</span> NULL;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> twoSum(<span class="ty">self</span>, numbers: <span class="ty">List</span>[<span class="ty">int</span>], target: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        lo, hi = 0, <span class="ty">len</span>(numbers) - 1
+        <span class="kw">while</span> lo &lt; hi:
+            s = numbers[lo] + numbers[hi]
+            <span class="kw">if</span> s == target:
+                <span class="kw">return</span> [lo + 1, hi + 1]
+            <span class="kw">if</span> s &lt; target:
+                lo += 1
+            <span class="kw">else</span>:
+                hi -= 1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; twoSum(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; numbers, <span class="ty">int</span> target) {
+        <span class="ty">int</span> lo = 0, hi = (<span class="ty">int</span>)numbers.size() - 1;
+        <span class="kw">while</span> (lo &lt; hi) {
+            <span class="ty">int</span> s = numbers[lo] + numbers[hi];
+            <span class="kw">if</span> (s == target) <span class="kw">return</span> {lo + 1, hi + 1};
+            <span class="kw">if</span> (s &lt; target) lo++;
+            <span class="kw">else</span> hi--;
+        }
+        <span class="kw">return</span> {};
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +148,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Two pointers lo=0, hi=n-1: nếu sum &gt; target thì hi--; sum &lt; target thì…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Sort đảm bảo tăng sum khi lo++, giảm khi hi-- nên không bỏ sót cặp.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Hai phần tử</span><span class="analysis-tag edge">Số âm</span><span class="analysis-tag edge">Trả 1-indexed không phải 0-indexed</span><span class="analysis-tag pit">Hash map O(n) không tận dụng sorted</span><span class="analysis-tag pit">Trả 0-index thay 1-index</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Sorted two sum = two pointers từ hai đầu vào giữa.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +172,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Two%20Sum%20II%20-%20Input%20Array%20Is%20Sorted&lc_id=167&embed=true"></iframe>

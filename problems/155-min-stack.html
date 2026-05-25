@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Min Stack</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) per op</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Min Stack (LeetCode #155) — Medium.</div>
+                        <div class="block-text">Thiết kế stack hỗ trợ push, pop, top và getMin — tất cả O(1). getMin trả giá trị nhỏ nhất hiện có trên stack tại mọi thời điểm.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>push(-2), push(0), push(-3), getMin() → -3, pop(), top() → 0, getMin() → -2</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,-3,null,0,-2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>push(2), push(0), push(3), getMin() → 0, pop(), getMin() → 0</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,0,null,0]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hai stack: stack chính và minStack lưu min tại mỗi mức. Push: đẩy val và min(val, minStack.top). Pop: pop cả hai. getMin: minStack.top.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,50 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span>* data; <span class="ty">int</span>* mins; <span class="ty">int</span> top; <span class="ty">int</span> cap; } MinStack;
+static <span class="ty">void</span> msGrow(MinStack* s) {
+    s-&gt;cap *= 2;
+    s-&gt;data = realloc(s-&gt;data, s-&gt;cap * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    s-&gt;mins = realloc(s-&gt;mins, s-&gt;cap * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+}
+MinStack* minStackCreate(<span class="ty">void</span>) {
+    MinStack* s = <span class="kw">malloc</span>(<span class="kw">sizeof</span>(MinStack));
+    s-&gt;cap = 8; s-&gt;top = -1;
+    s-&gt;data = <span class="kw">malloc</span>(s-&gt;cap * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    s-&gt;mins = <span class="kw">malloc</span>(s-&gt;cap * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">return</span> s;
+}
+<span class="ty">void</span> minStackPush(MinStack* s, <span class="ty">int</span> val) {
+    <span class="kw">if</span> (++s-&gt;top &gt;= s-&gt;cap) msGrow(s);
+    s-&gt;data[s-&gt;top] = val;
+    s-&gt;mins[s-&gt;top] = s-&gt;top ? (val &lt; s-&gt;mins[s-&gt;top-1] ? val : s-&gt;mins[s-&gt;top-1]) : val;
+}
+<span class="ty">void</span> minStackPop(MinStack* s) { s-&gt;top--; }
+<span class="ty">int</span> minStackTop(MinStack* s) { <span class="kw">return</span> s-&gt;data[s-&gt;top]; }
+<span class="ty">int</span> minStackGetMin(MinStack* s) { <span class="kw">return</span> s-&gt;mins[s-&gt;top]; }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> MinStack:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.st, <span class="ty">self</span>.mn = [], []
+    <span class="kw">def</span> push(<span class="ty">self</span>, val: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        <span class="ty">self</span>.st.append(val)
+        <span class="ty">self</span>.mn.append(val <span class="kw">if</span> <span class="kw">not</span> <span class="ty">self</span>.mn <span class="kw">else</span> <span class="ty">min</span>(<span class="ty">self</span>.mn[-1], val))
+    <span class="kw">def</span> pop(<span class="ty">self</span>) -&gt; <span class="kw">None</span>:
+        <span class="ty">self</span>.st.pop(); <span class="ty">self</span>.mn.pop()
+    <span class="kw">def</span> top(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">return</span> <span class="ty">self</span>.st[-1]
+    <span class="kw">def</span> getMin(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">return</span> <span class="ty">self</span>.mn[-1]</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> MinStack {
+    stack&lt;<span class="ty">int</span>&gt; st, mn;
 <span class="ty">public</span>:
+    MinStack() {}
+    <span class="ty">void</span> push(<span class="ty">int</span> val) {
+        st.push(val);
+        mn.push(mn.empty() ? val : min(mn.top(), val));
+    }
+    <span class="ty">void</span> pop() { st.pop(); mn.pop(); }
+    <span class="ty">int</span> top() { <span class="kw">return</span> st.top(); }
+    <span class="ty">int</span> getMin() { <span class="kw">return</span> mn.top(); }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +148,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Stack</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Hai stack: stack chính và minStack lưu min tại mỗi mức.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Push: đẩy val và min.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Pop: pop cả hai.</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — getMin: minStack.top.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>minStack[i] = min của mọi phần tử từ đáy đến i; pop đồng bộ giữ min đúng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Pop hết stack (theo API không gọi khi rỗng)</span><span class="analysis-tag edge">Push giá trị trùng min hiện tại</span><span class="analysis-tag pit">Chỉ lưu một biến min global → sai sau pop</span><span class="analysis-tag pit">Quên pop minStack khi pop</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Min stack = stack phụ lưu prefix-min song song mỗi push.</p>
                     </details>
                 </div>
                 </div>

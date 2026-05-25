@@ -3,34 +3,24 @@
   "title": "Merge Sorted Array",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(m+n)",
   "spaceComplexity": "O(1)",
-  "description": "Merge Sorted Array (LC #88).",
+  "description": "Hai mảng sort nums1 (length m+n, m phần tử đầu hợp lệ) và nums2 (length n). Gộp nums2 vào nums1 in-place, kết quả sort tăng dần.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3", "output": "[1,2,2,3,5,6]" },
+    { "input": "nums1 = [1], m = 1, nums2 = [], n = 0", "output": "[1]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Merge từ cuối: con trỏ i=m-1, j=n-1, k=m+n-1; chọn lớn hơn ghi vào nums1[k], tránh ghi đè phần chưa merge của nums1.",
+  "memoryTip": "Three pointers từ tail — không cần buffer.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:\n        i, j, k = m - 1, n - 1, m + n - 1\n        while j >= 0:\n            if i >= 0 and nums1[i] > nums2[j]:\n                nums1[k] = nums1[i]; i -= 1\n            else:\n                nums1[k] = nums2[j]; j -= 1\n            k -= 1",
+    "cpp": "class Solution {\npublic:\n    void merge(vector<int>& a, int m, vector<int>& b, int n) {\n        int i=m-1, j=n-1, k=m+n-1;\n        while (j>=0) {\n            if (i>=0 && a[i]>b[j]) a[k--]=a[i--];\n            else a[k--]=b[j--];\n        }\n    }\n};",
+    "c": "void merge(int* nums1, int m, int* nums2, int n) {\n    int i=m-1, j=n-1, k=m+n-1;\n    while (j>=0) {\n        if (i>=0 && nums1[i]>nums2[j]) nums1[k--]=nums1[i--];\n        else nums1[k--]=nums2[j--];\n    }\n}"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Merge ngược không phá dữ liệu nums1 chưa xử lý ở đầu.",
+    "edgeCases": ["n=0", "m=0", "nums2 hết trước — nums1 phần còn đã đúng chỗ"],
+    "pitfalls": ["Merge từ đầu ghi đè nums1", "Quên j>=0 làm điều kiện chính"]
   },
   "tier": "done"
 }

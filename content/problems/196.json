@@ -5,30 +5,22 @@
   "category": "Database",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Delete Duplicate Emails (LeetCode #196) — Easy.",
+  "description": "Bảng Person (id, email). Xóa các bản ghi trùng email, giữ bản ghi có id nhỏ nhất.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "ids 1,2 a@b.com; id 3 c@d.com", "output": "keep id 1, delete id 2" },
+    { "input": "all unique emails", "output": "no delete" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DELETE p1 FROM Person p1 JOIN Person p2 ON p1.email=p2.email AND p1.id > p2.id.",
+  "memoryTip": "Delete dup emails = self-join keep MIN(id).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nDELETE p1 FROM Person p1\nJOIN Person p2 ON p1.email = p2.email AND p1.id > p2.id;",
+    "cpp": "// SQL\nDELETE p1 FROM Person p1\nJOIN Person p2 ON p1.email = p2.email AND p1.id > p2.id;",
+    "c": "/* SQL */\nDELETE p1 FROM Person p1\nJOIN Person p2 ON p1.email = p2.email AND p1.id > p2.id;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Xóa mọi hàng có cùng email với hàng id nhỏ hơn tồn tại.",
+    "edgeCases": ["Không duplicate", "Nhiều duplicate cùng email"],
+    "pitfalls": ["DELETE không alias → syntax error", "Giữ MAX(id) thay MIN"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,35 +2,25 @@
   "id": 81,
   "title": "Search in Rotated Sorted Array II",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Binary Search",
+  "timeComplexity": "O(log n) avg, O(n) worst",
   "spaceComplexity": "O(1)",
-  "description": "Search in Rotated Sorted Array II (LC #81).",
+  "description": "Mảng nums length n đã sort rồi rotate tại pivot không xác định; có thể trùng giá trị. Kiểm tra target có trong nums không.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [2,5,6,0,0,1,2], target = 0", "output": "true" },
+    { "input": "nums = [2,5,6,0,0,1,2], target = 3", "output": "false" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Binary search: nếu nums[lo]==nums[mid]==nums[hi] thì lo++, hi--; else xác định nửa sort (so nums[lo] vs nums[mid]) và thu hẹp như rotated I.",
+  "memoryTip": "Trùng ở hai đầu → shrink lo/hi; còn lại giống #33.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def search(self, nums: List[int], target: int) -> bool:\n        lo, hi = 0, len(nums) - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if nums[mid] == target: return True\n            if nums[lo] == nums[mid] == nums[hi]:\n                lo += 1; hi -= 1; continue\n            if nums[lo] <= nums[mid]:\n                if nums[lo] <= target < nums[mid]: hi = mid - 1\n                else: lo = mid + 1\n            else:\n                if nums[mid] < target <= nums[hi]: lo = mid + 1\n                else: hi = mid - 1\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool search(vector<int>& a, int t) {\n        int lo=0, hi=(int)a.size()-1;\n        while (lo<=hi) {\n            int mid=(lo+hi)/2;\n            if (a[mid]==t) return true;\n            if (a[lo]==a[mid]&&a[mid]==a[hi]) { lo++; hi--; continue; }\n            if (a[lo]<=a[mid]) {\n                if (a[lo]<=t&&t<a[mid]) hi=mid-1; else lo=mid+1;\n            } else {\n                if (a[mid]<t&&t<=a[hi]) lo=mid+1; else hi=mid-1;\n            }\n        }\n        return false;\n    }\n};",
+    "c": "/* search rotated II — BS + shrink dup; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Shrink duplicate không loại target; nửa sort vẫn quyết định được hướng.",
+    "edgeCases": ["Toàn cùng số", "Một phần tử", "target ở pivot"],
+    "pitfalls": ["Không xử lý nums[lo]==nums[hi]==nums[mid]", "Worst O(n) khi nhiều trùng"]
   },
   "tier": "done"
 }

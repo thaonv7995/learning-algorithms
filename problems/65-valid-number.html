@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Valid Number</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>23% AC</span>
                     </div>
@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Kiểm tra chuỗi có phải số hợp lệ không: integer, decimal, có/không exponent (e/E), dấu +/-.</div>
+                        <div class="block-text">Cho chuỗi s. Kiểm tra s có biểu diễn số hợp lệ không: số nguyên, số thập phân, có hoặc không có phần mũ (e/E), dấu +/- trước số hoặc sau e. Khoảng trắng đầu/cuối được bỏ qua.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -83,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Finite state machine: duyệt từng ký tự, chuyển trạng thái hợp lệ. Theo dõi seenDigit, seenDot, seenE.</div>
+                        <div class="block-text">Duyệt một pass với 3 cờ seenDigit, seenDot, seenE. Digit đặt seenDigit. e/E: bắt buộc đã có digit, reset digit/dot. Dấu chấm: tối đa một, không sau e. +/- chỉ sau e hoặc ở đầu.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -100,36 +100,70 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* isNumber — FSM một pass; xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> isNumber(<span class="ty">char</span>* s) {
+    <span class="kw">while</span> (*s == ' ') s++;
+    <span class="ty">char</span>* end = s + strlen(s);
+    <span class="kw">while</span> (end &gt; s &amp;&amp; *(end - 1) == ' ') end--;
+    <span class="kw">if</span> (s &gt;= end) <span class="kw">return</span> 0;
+    <span class="ty">int</span> d = 0, dot = 0, e = 0;
+    <span class="kw">for</span> (<span class="ty">char</span>* p = s; p &lt; end; p++) {
+        <span class="kw">if</span> (*p &gt;= '0' &amp;&amp; *p &lt;= '9') d = 1;
+        <span class="kw">else</span> <span class="kw">if</span> (*p == '+' || *p == '-') {
+            <span class="kw">if</span> (p &gt; s &amp;&amp; *(p - 1) != 'e' &amp;&amp; *(p - 1) != 'E') <span class="kw">return</span> 0;
+        } <span class="kw">else</span> <span class="kw">if</span> (*p == 'e' || *p == 'E') {
+            <span class="kw">if</span> (e || !d) <span class="kw">return</span> 0;
+            e = 1; d = 0; dot = 0;
+        } <span class="kw">else</span> <span class="kw">if</span> (*p == '.') {
+            <span class="kw">if</span> (dot || e) <span class="kw">return</span> 0;
+            dot = 1;
+        } <span class="kw">else</span> <span class="kw">return</span> 0;
+    }
+    <span class="kw">return</span> d;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> isNumber(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; bool:
         s = s.strip()
-        <span class="kw">if</span> <span class="kw">not</span> s: <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">if</span> <span class="kw">not</span> s:
+            <span class="kw">return</span> <span class="kw">False</span>
         seen_d = seen_dot = seen_e = <span class="kw">False</span>
         <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(s):
-            <span class="kw">if</span> c.isdigit(): seen_d = <span class="kw">True</span>
+            <span class="kw">if</span> c.isdigit():
+                seen_d = <span class="kw">True</span>
             <span class="kw">elif</span> c <span class="kw">in</span> '+-':
-                <span class="kw">if</span> i <span class="kw">and</span> s[i-1] <span class="kw">not</span> <span class="kw">in</span> 'eE': <span class="kw">return</span> <span class="kw">False</span>
+                <span class="kw">if</span> i <span class="kw">and</span> s[i - 1] <span class="kw">not</span> <span class="kw">in</span> 'eE':
+                    <span class="kw">return</span> <span class="kw">False</span>
             <span class="kw">elif</span> c <span class="kw">in</span> 'eE':
-                <span class="kw">if</span> seen_e <span class="kw">or</span> <span class="kw">not</span> seen_d: <span class="kw">return</span> <span class="kw">False</span>
-                seen_e = seen_d = <span class="kw">False</span>; seen_dot = <span class="kw">True</span>
+                <span class="kw">if</span> seen_e <span class="kw">or</span> <span class="kw">not</span> seen_d:
+                    <span class="kw">return</span> <span class="kw">False</span>
+                seen_e = <span class="kw">True</span>
+                seen_d = <span class="kw">False</span>
+                seen_dot = <span class="kw">False</span>
             <span class="kw">elif</span> c == '.':
-                <span class="kw">if</span> seen_dot <span class="kw">or</span> seen_e: <span class="kw">return</span> <span class="kw">False</span>
+                <span class="kw">if</span> seen_dot <span class="kw">or</span> seen_e:
+                    <span class="kw">return</span> <span class="kw">False</span>
                 seen_dot = <span class="kw">True</span>
-            <span class="kw">else</span>: <span class="kw">return</span> <span class="kw">False</span>
+            <span class="kw">else</span>:
+                <span class="kw">return</span> <span class="kw">False</span>
         <span class="kw">return</span> seen_d</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">bool</span> isNumber(<span class="ty">string</span> s) {
-        <span class="ty">int</span> i=0,n=s.size(); <span class="kw">while</span>(i&lt;n&amp;&amp;s[i]==' ')i++; <span class="kw">while</span>(n&gt;i&amp;&amp;s[n-1]==' ')n--;
-        <span class="kw">if</span>(i&gt;=n) <span class="kw">return</span> false;
-        <span class="ty">bool</span> d=false, dot=false, e=false;
-        <span class="kw">for</span>(;i&lt;n;i++){
-            <span class="kw">if</span>(isdigit(s[i])) d=true;
-            <span class="kw">else</span> <span class="kw">if</span>(s[i]=='+'||s[i]=='-'){ <span class="kw">if</span>(i&amp;&amp;s[i-1]!='e'&amp;&amp;s[i-1]!='E') <span class="kw">return</span> false; }
-            <span class="kw">else</span> <span class="kw">if</span>(s[i]=='e'||s[i]=='E'){ <span class="kw">if</span>(e||!d) <span class="kw">return</span> false; e=d=true; d=dot=false; }
-            <span class="kw">else</span> <span class="kw">if</span>(s[i]=='.'){ <span class="kw">if</span>(dot||e) <span class="kw">return</span> false; dot=true; }
-            <span class="kw">else</span> <span class="kw">return</span> false;
+        <span class="ty">int</span> i = 0, n = s.size();
+        <span class="kw">while</span> (i &lt; n &amp;&amp; s[i] == ' ') i++;
+        <span class="kw">while</span> (n &gt; i &amp;&amp; s[n - 1] == ' ') n--;
+        <span class="kw">if</span> (i &gt;= n) <span class="kw">return</span> false;
+        <span class="ty">bool</span> d = false, dot = false, e = false;
+        <span class="kw">for</span> (; i &lt; n; i++) {
+            <span class="kw">if</span> (isdigit(s[i])) d = true;
+            <span class="kw">else</span> <span class="kw">if</span> (s[i] == '+' || s[i] == '-') {
+                <span class="kw">if</span> (i &amp;&amp; s[i - 1] != 'e' &amp;&amp; s[i - 1] != 'E') <span class="kw">return</span> false;
+            } <span class="kw">else</span> <span class="kw">if</span> (s[i] == 'e' || s[i] == 'E') {
+                <span class="kw">if</span> (e || !d) <span class="kw">return</span> false;
+                e = true; d = false; dot = false;
+            } <span class="kw">else</span> <span class="kw">if</span> (s[i] == '.') {
+                <span class="kw">if</span> (dot || e) <span class="kw">return</span> false;
+                dot = true;
+            } <span class="kw">else</span> <span class="kw">return</span> false;
         }
         <span class="kw">return</span> d;
     }
@@ -142,18 +176,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Finite state machine: duyệt từng ký tự, chuyển trạng thái…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Theo dõi seenDigit, seenDot, seenE.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Duyệt một pass với 3 cờ seenDigit, seenDot, seenE.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Digit đặt seenDigit.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — e/E: bắt buộc đã có digit, reset digit/dot.</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Dấu chấm: tối đa một, không sau e. +/- chỉ sau e hoặc ở…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi trường hợp LC đều được FSM bao phủ.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">.1</span><span class="analysis-tag edge">1.</span><span class="analysis-tag edge">e</span><span class="analysis-tag edge">+.</span><span class="analysis-tag edge">  99  </span><span class="analysis-tag pit">Quên trim space</span><span class="analysis-tag pit">Cho phép nhiều dấu chấm hoặc e</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>FSM một pass bao phủ mọi dạng số LC: .1, 1., 2e+3, khoảng trắng; kết thúc phải có ít nhất một digit.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">.1 và 1. hợp lệ</span><span class="analysis-tag edge">Chỉ &quot;e&quot; hoặc &quot;+.&quot; → false</span><span class="analysis-tag edge">Khoảng trắng đầu/cuối &quot;  99  &quot;</span><span class="analysis-tag pit">Quên trim space</span><span class="analysis-tag pit">Cho phép nhiều dấu chấm hoặc e</span><span class="analysis-tag pit">Dấu +/- không sau e ở giữa chuỗi</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Hard nhưng O — 3 flag: digit, dot, e.</p>
+                        <p>Hard nhưng O — 3 flag: digit, dot, e; trim space hai đầu trước.</p>
                     </details>
                 </div>
                 </div>

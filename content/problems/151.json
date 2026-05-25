@@ -4,31 +4,24 @@
   "difficulty": "Medium",
   "category": "Two Pointers",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Reverse Words in a String (LeetCode #151) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi s chứa từ và khoảng trắng. Đảo thứ tự các từ trong chuỗi, loại bỏ khoảng trắng thừa ở đầu/cuối và giữa các từ chỉ còn một dấu cách. Trả về chuỗi kết quả.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"the sky is blue\"", "output": "\"blue is sky the\"" },
+    { "input": "s = \"  hello world  \"", "output": "\"world hello\"" },
+    { "input": "s = \"a good   example\"", "output": "\"example good a\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Trim, tách theo whitespace thành mảng từ, đảo mảng rồi join bằng một space. Hoặc reverse toàn chuỗi rồi reverse từng từ in-place O(1) extra nếu mutable char[].",
+  "memoryTip": "Reverse words = split + reverse list, hoặc reverse whole string rồi reverse từng word.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reverseWords(self, s: str) -> str:\n        return ' '.join(s.split()[::-1])",
+    "cpp": "class Solution {\npublic:\n    string reverseWords(string s) {\n        string word, res;\n        int i = 0, n = s.size();\n        while (i < n) {\n            while (i < n && s[i] == ' ') i++;\n            if (i >= n) break;\n            int j = i;\n            while (j < n && s[j] != ' ') j++;\n            word = s.substr(i, j - i);\n            res = res.empty() ? word : word + \" \" + res;\n            i = j;\n        }\n        return res;\n    }\n};",
+    "c": "static void reverseRange(char* a, int lo, int hi) {\n    while (lo < hi) { char t = a[lo]; a[lo] = a[hi]; a[hi] = t; lo++; hi--; }\n}\nstatic void reverseWordsInPlace(char* s) {\n    int n = (int)strlen(s), i = 0;\n    reverseRange(s, 0, n - 1);\n    while (i < n) {\n        while (i < n && s[i] == ' ') i++;\n        int j = i;\n        while (j < n && s[j] != ' ') j++;\n        if (i < j) reverseRange(s, i, j - 1);\n        i = j;\n    }\n}\nchar* reverseWords(char* s) { reverseWordsInPlace(s); return s; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "split/trim loại mọi khoảng trắng thừa; đảo thứ tự từ cho đúng output.",
+    "edgeCases": ["Chuỗi rỗng hoặc chỉ space", "Một từ duy nhất", "Nhiều space liên tiếp"],
+    "pitfalls": ["Không trim → space thừa", "In-place C cần reverse từng đoạn đúng biên"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

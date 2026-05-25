@@ -3,34 +3,24 @@
   "title": "Minimum Window Substring",
   "difficulty": "Hard",
   "category": "Sliding Window",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Minimum Window Substring (LC #76).",
+  "timeComplexity": "O(|s|+|t|)",
+  "spaceComplexity": "O(|Σ|)",
+  "description": "Cho chuỗi s và t. Tìm substring nhỏ nhất của s chứa đủ mọi ký tự của t (kể cả trùng lặp). Trả về \"\" nếu không có.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"ADOBECODEBANC\", t = \"ABC\"", "output": "\"BANC\"" },
+    { "input": "s = \"a\", t = \"a\"", "output": "\"a\"" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Sliding window: mở r bằng cách thêm ký tự, đếm need/have; khi have đủ thì thu l từ trái, cập nhật best, giảm have nếu mất ký tự cần.",
+  "memoryTip": "need map + formed/required — thu l khi window hợp lệ.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minWindow(self, s: str, t: str) -> str:\n        from collections import Counter\n        need = Counter(t); have = 0; req = len(need)\n        l = 0; best = (10**9, 0, 0)\n        window = {}\n        for r, c in enumerate(s):\n            window[c] = window.get(c, 0) + 1\n            if c in need and window[c] == need[c]: have += 1\n            while have == req:\n                if r - l + 1 < best[0]: best = (r - l + 1, l, r + 1)\n                lc = s[l]\n                window[lc] -= 1\n                if lc in need and window[lc] < need[lc]: have -= 1\n                l += 1\n        return s[best[1]:best[2]] if best[0] < 10**9 else \"\"",
+    "cpp": "class Solution {\npublic:\n    string minWindow(string s, string t) {\n        vector<int> need(128,0), win(128,0);\n        int req=0;\n        for(char c:t) if(!need[c]++) req++;\n        int have=0, l=0, bestLen=1e9, bestL=0;\n        for(int r=0;r<(int)s.size();r++){\n            if(!win[s[r]]++ && need[s[r]]) have++;\n            while(have==req){\n                if(r-l+1<bestLen){bestLen=r-l+1;bestL=l;}\n                if(!--win[s[l]] && need[s[l]]) have--;\n                l++;\n            }\n        }\n        return bestLen==1e9?\"\":s.substr(bestL,bestLen);\n    }\n};",
+    "c": "/* minWindow — sliding window + count; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mọi cửa sổ hợp lệ được thu tối đa từ trái trước khi mở r thêm.",
+    "edgeCases": ["t dài hơn s", "Không đủ ký tự", "Nhiều đáp án cùng độ dài — lấy đầu tiên"],
+    "pitfalls": ["Đếm trùng ký tự sai", "Quên reset khi have < req"]
   },
   "tier": "done"
 }

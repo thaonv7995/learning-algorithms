@@ -3,32 +3,25 @@
   "title": "Find Minimum in Rotated Sorted Array II",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(n) worst, O(log n) average",
   "spaceComplexity": "O(1)",
-  "description": "Find Minimum in Rotated Sorted Array II (LeetCode #154) — Hard.",
+  "description": "Giống LC 153 nhưng mảng xoay có thể chứa phần tử trùng lặp. Tìm phần tử nhỏ nhất; với trùng lặp worst-case có thể O(n).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,3,5]", "output": "1" },
+    { "input": "nums = [2,2,2,0,1]", "output": "0" },
+    { "input": "nums = [3,3,1,3]", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search như 153; khi nums[mid]==nums[hi] không phân biệt được → hi-- để loại duplicate. Còn lại: mid>hi thì lo=mid+1, else hi=mid.",
+  "memoryTip": "Dup ở biên phải → shrink hi--; không thì logic như LC153.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMin(self, nums: List[int]) -> int:\n        lo, hi = 0, len(nums) - 1\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if nums[mid] > nums[hi]:\n                lo = mid + 1\n            elif nums[mid] < nums[hi]:\n                hi = mid\n            else:\n                hi -= 1\n        return nums[lo]",
+    "cpp": "class Solution {\npublic:\n    int findMin(vector<int>& nums) {\n        int lo = 0, hi = (int)nums.size() - 1;\n        while (lo < hi) {\n            int mid = lo + (hi - lo) / 2;\n            if (nums[mid] > nums[hi]) lo = mid + 1;\n            else if (nums[mid] < nums[hi]) hi = mid;\n            else hi--;\n        }\n        return nums[lo];\n    }\n};",
+    "c": "int findMin(int* nums, int n) {\n    int lo = 0, hi = n - 1;\n    while (lo < hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (nums[mid] > nums[hi]) lo = mid + 1;\n        else if (nums[mid] < nums[hi]) hi = mid;\n        else hi--;\n    }\n    return nums[lo];\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Khi mid==hi, hi-- vẫn giữ min trong interval; các nhánh khác như 153.",
+    "edgeCases": ["Toàn phần tử giống nhau", "Dup che pivot", "Một phần tử"],
+    "pitfalls": ["Bỏ qua nhánh equal → infinite loop", "Linear scan khi cần vẫn chấp nhận worst O(n)"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

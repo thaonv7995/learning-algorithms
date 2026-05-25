@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #194</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Shell</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Transpose File</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(rc)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>31.8% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Transpose File (LeetCode #194) — Medium.</div>
+                        <div class="block-text">File có cột phân tách space (số cột cố định). In transpose: hàng thành cột và ngược lại, giữ space delimiter.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>name age\nAlice 21\nBob 30</code></div>
+                <div class="ex-line"><span>Out</span><code>name Alice Bob\nage 21 30</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>a b\nc d</code></div>
+                <div class="ex-line"><span>Out</span><code>a c\nb d</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">awk '{for(i=1;i&lt;=NF;i++) a[i]=a[i] $0 &quot; &quot;; ...}' hoặc paste &lt;(cut...) — LeetCode dùng awk lưu cột rồi in.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,10 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
-<span class="ty">public</span>:
-};</pre>
+                            <pre class="code-block" id="code-block-c">/* awk column transpose — see bash one-liner in editorial */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Bash awk transpose</span>
+<span class="cm"># awk '{<span class="kw">for</span>(i=1;i&lt;=NF;i++){<span class="kw">if</span>(NR==1){n=NF}; a[i,i]=a[i,i] $i &quot; &quot;}} END{<span class="kw">for</span>(i=1;i&lt;=n;i++){sub(/ $/,&quot;&quot;,a[i,i]); print a[i,i]}}' file.txt</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// awk '{<span class="kw">for</span>(i=1;i&lt;=NF;i++) a[i,i]=a[i,i] $i &quot; &quot;} END{<span class="kw">for</span>(i=1;i&lt;=NF;i++){sub(/ $/,&quot;&quot;,a[i,i]); print a[i,i]}}' file.txt</span></pre>
                         </div>
                     </div>
                 </div>
@@ -104,18 +107,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Shell</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(rc)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — awk '{for a[i]=a[i] $0 &quot; &quot;; ...}' hoặc paste &lt; — LeetCode dùng awk lưu…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Gom field thứ i mỗi dòng thành hàng i của output.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một cột</span><span class="analysis-tag edge">Một hàng</span><span class="analysis-tag edge">Cột rộng không đều (đề thường đều)</span><span class="analysis-tag pit">paste cần biết số cột</span><span class="analysis-tag pit">Trailing space format sai</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Transpose file = awk store fields by column index, print rows.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +135,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Transpose%20File&lc_id=194&embed=true"></iframe>

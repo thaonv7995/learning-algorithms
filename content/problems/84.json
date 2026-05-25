@@ -4,33 +4,23 @@
   "difficulty": "Hard",
   "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Largest Rectangle in Histogram (LC #84).",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng heights — chiều cao các cột histogram liên tiếp. Tìm diện tích hình chữ nhật lớn nhất nằm trong histogram.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "heights = [2,1,5,6,2,3]", "output": "10" },
+    { "input": "heights = [2,4]", "output": "4" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Monotonic stack tăng: khi heights[i] < top, pop và tính area = h * (i - stack.top - 1). Cuối vòng pop hết stack với right = n.",
+  "memoryTip": "Pop khi thấp hơn — width tới index hiện tại.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def largestRectangleArea(self, heights: List[int]) -> int:\n        st = []; ans = 0\n        for i, h in enumerate(heights + [0]):\n            while st and heights[st[-1]] > h:\n                H = heights[st.pop()]\n                w = i if not st else i - st[-1] - 1\n                ans = max(ans, H * w)\n            st.append(i)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int largestRectangleArea(vector<int>& h) {\n        stack<int> st; int ans=0; h.push_back(0);\n        for (int i=0;i<(int)h.size();i++) {\n            while (!st.empty() && h[st.top()]>h[i]) {\n                int H=h[st.top()]; st.pop();\n                int w = st.empty()? i : i-st.top()-1;\n                ans=max(ans, H*w);\n            }\n            st.push(i);\n        }\n        h.pop_back(); return ans;\n    }\n};",
+    "c": "/* largestRectangleArea — monotonic stack; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mỗi cột làm right boundary khi pop; left từ stack top.",
+    "edgeCases": ["heights tăng dần", "heights giảm dần", "Một cột"],
+    "pitfalls": ["Quên sentinel 0 cuối", "Width tính sai khi stack rỗng"]
   },
   "tier": "done"
 }

@@ -3,32 +3,24 @@
   "title": "Rank Scores",
   "difficulty": "Medium",
   "category": "Database",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Rank Scores (LeetCode #178) — Medium.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Scores (id, score). Trả score và rank: cùng điểm cùng rank, rank kế tiếp bỏ qua (dense rank không bỏ số — đề dùng 1,1,3 style).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "scores 3.5, 3.5, 3.85, 4, 4, 4.5", "output": "rank 1,1,2,3,3,4" },
+    { "input": "score 10", "output": "10 rank 1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DENSE_RANK() OVER (ORDER BY score DESC) hoặc correlated subquery đếm DISTINCT score lớn hơn +1.",
+  "memoryTip": "Rank scores = DENSE_RANK() ORDER BY score DESC.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT score,\n  DENSE_RANK() OVER (ORDER BY score DESC) AS `rank`\nFROM Scores;",
+    "cpp": "// SQL\nSELECT score,\n  DENSE_RANK() OVER (ORDER BY score DESC) AS `rank`\nFROM Scores;",
+    "c": "/* SQL */\nSELECT score,\n  DENSE_RANK() OVER (ORDER BY score DESC) AS `rank`\nFROM Scores;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "DENSE_RANK gán cùng rank cho tie và tăng rank liên tiếp không nhảy số (1,1,2,3).",
+    "edgeCases": ["Một dòng", "Tất cả score bằng nhau"],
+    "pitfalls": ["RANK() nhảy 1,1,3 thay dense", "ORDER BY ASC sai thứ hạng"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một danh sách liên kết đơn, hãy đảo ngược các nút của danh sách theo từng nhóm k nút một và trả về danh sách mới kết quả. Nếu số lượng nút còn lại ở cuối không đủ k nút, hãy giữ nguyên thứ tự của chúng.</div>
+                        <div class="block-text">Đảo ngược từng nhóm k nút liên tiếp trong linked list. Nếu số nút còn lại &lt; k thì giữ nguyên.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>head = 1-&gt;2-&gt;3-&gt;4-&gt;5, k = 2</code></div>
-                <div class="ex-line"><span>Out</span><code>2-&gt;1-&gt;4-&gt;3-&gt;5</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,3,4,5], k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,1,4,3,5]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,3,4,5], k = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>[3,2,1,4,5]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>head = [1], k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng hoán đổi liên kết In-place. Ta dùng một vòng lặp quét đếm xem danh sách phía trước có đủ k nút hay không. Nếu đủ, ta thực hiện đảo ngược k nút này bằng phương pháp lặp 3 con trỏ truyền thống. Điểm mấu chốt là kết nối đầu chốt của nhóm vừa đảo ngược vào nhóm phía trước và gọi đệ quy giải quyết tiếp các nhóm phía sau.</div>
+                        <div class="block-text">Đếm k nút từ head. Nếu đủ k: reverse đoạn [head..k] in-place, nối prev→newHead, tail→reverseKGroup(node k+1).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,49 +100,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Definition <span class="kw">for</span> singly-linked list.
- * <span class="ty">struct</span> ListNode {
- *     <span class="ty">int</span> val;
- *     <span class="ty">struct</span> ListNode *next;
- * };
- */
-<span class="ty">struct</span> ListNode* reverseKGroup(<span class="ty">struct</span> ListNode* head, <span class="ty">int</span> k) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Definition <span class="kw">for</span> singly-linked <span class="ty">list</span>.</span>
-<span class="cm"># <span class="kw">class</span> <span class="ty">ListNode</span>(object):</span>
-<span class="cm">#     <span class="kw">def</span> __init__(<span class="ty">self</span>, val=0, next=<span class="kw">None</span>):</span>
-<span class="cm">#         <span class="ty">self</span>.val = val</span>
-<span class="cm">#         <span class="ty">self</span>.next = next</span>
-<span class="kw">class</span> Solution(object):
+                            <pre class="code-block" id="code-block-c">/* reverseKGroup — reverse segment + đệ quy; xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> reverseKGroup(<span class="ty">self</span>, head, k):
-        &quot;&quot;&quot;
-        :type head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        :type k: <span class="ty">int</span>
-        :rtype: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">ListNode</span>* <span class="fn">reverseKGroup</span>(<span class="ty">ListNode</span>* head, <span class="ty">int</span> k) {
-        <span class="ty">ListNode</span>* curr = head;
-        <span class="ty">int</span> count = <span class="st">0</span>;
-        <span class="kw">while</span> (curr &amp;&amp; count != k) { <span class="cm">// Dem xem co du k nut khong</span>
-            curr = curr-&gt;next;
-            count++;
-        }
-        <span class="kw">if</span> (count == k) { <span class="cm">// Neu du k nut</span>
-            curr = <span class="fn">reverseKGroup</span>(curr, k); <span class="cm">// De quy xu ly duoi</span>
-            <span class="kw">while</span> (count-- &gt; <span class="st">0</span>) {
-                <span class="ty">ListNode</span>* temp = head-&gt;next;
-                head-&gt;next = curr;
-                curr = head;
-                head = temp;
-            }
-            head = curr;
-        }
-        <span class="kw">return</span> head;
+        cur = head; count = 0
+        <span class="kw">while</span> cur <span class="kw">and</span> count &lt; k:
+            cur = cur.next; count += 1
+        <span class="kw">if</span> count == k:
+            rev = <span class="ty">self</span>._rev(head, k)
+            head.next = <span class="ty">self</span>.reverseKGroup(cur, k)
+            <span class="kw">return</span> rev
+        <span class="kw">return</span> head
+    <span class="kw">def</span> _rev(<span class="ty">self</span>, head, k):
+        prev = <span class="kw">None</span>; cur = head
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(k):
+            nxt = cur.next; cur.next = prev; prev = cur; cur = nxt
+        <span class="kw">return</span> prev</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    ListNode* rev(ListNode* a, ListNode* b) {
+        ListNode* prev = b;
+        <span class="kw">while</span> (a != b) { auto* n = a-&gt;next; a-&gt;next = prev; prev = a; a = n; }
+        <span class="kw">return</span> prev;
+    }
+<span class="ty">public</span>:
+    ListNode* reverseKGroup(ListNode* head, <span class="ty">int</span> k) {
+        ListNode* cur = head;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; k; i++) <span class="kw">if</span> (!cur) <span class="kw">return</span> head;
+        cur = cur-&gt;next;
+        head-&gt;next = reverseKGroup(cur, k);
+        <span class="kw">return</span> rev(head, cur);
     }
 };</pre>
                         </div>
@@ -147,14 +143,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — hoán đổi liên kết In-place.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — dùng một vòng lặp quét đếm xem danh sách phía trước có đủ…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Nếu đủ, ta thực hiện đảo ngược k nút này bằng phương pháp…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Điểm mấu chốt là kết nối đầu chốt của nhóm vừa đảo ngược…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Đếm k nút từ head.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu đủ k: reverse đoạn [head..k] in-place, nối…</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Một nút</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi nhóm đủ k nút được đảo độc lập; phần đuôi &lt; k giữ nguyên.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k = 1</span><span class="analysis-tag edge">len &lt; k</span><span class="analysis-tag edge">len chia hết k</span><span class="analysis-tag pit">Mất liên kết giữa các nhóm</span><span class="analysis-tag pit">Đảo khi chưa đủ k nút</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Mặc dù cài đặt đệ quy tốn O Call Stack RAM, nhưng ta có thể chuyển đổi hoàn toàn sang lặp thuần túy để giải…</p>
+                        <p>Reverse in-place O — lưu con trỏ trước nhóm để nối lại.</p>
                     </details>
                 </div>
                 </div>

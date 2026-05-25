@@ -5,30 +5,22 @@
   "category": "Database",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Employees Earning More Than Their Managers (LeetCode #181) — Easy.",
+  "description": "Bảng Employee (id, name, salary, managerId). Liệt kê tên nhân viên có lương cao hơn quản lý trực tiếp của họ.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "Emp: Joe 70000 mgr=3; mgr Bill 100000", "output": "Joe" },
+    { "input": "Max 90000 mgr Bill 100000", "output": "(empty)" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Self-join Employee e JOIN Employee m ON e.managerId = m.id WHERE e.salary > m.salary.",
+  "memoryTip": "Employee > manager salary = self join on managerId, filter e.salary > m.salary.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT e.name AS Employee\nFROM Employee e\nJOIN Employee m ON e.managerId = m.id\nWHERE e.salary > m.salary;",
+    "cpp": "// SQL\nSELECT e.name AS Employee\nFROM Employee e\nJOIN Employee m ON e.managerId = m.id\nWHERE e.salary > m.salary;",
+    "c": "/* SQL */\nSELECT e.name AS Employee\nFROM Employee e\nJOIN Employee m ON e.managerId = m.id\nWHERE e.salary > m.salary;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Self-join nối nhân viên với manager; điều kiện salary so sánh trực tiếp.",
+    "edgeCases": ["Không ai lương cao hơn manager", "CEO managerId null không match"],
+    "pitfalls": ["Join sai chiều managerId", "Quên alias tên cột Employee"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

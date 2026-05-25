@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Decode Ways (LC #91).</div>
+                        <div class="block-text">Chuỗi s chỉ gồm chữ số. Đếm số cách giải mã: '1'→'A', …, '26'→'Z'. Không có số 0 đứng đầu mã hợp lệ (vd. '06' không hợp lệ).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;12&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;226&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">DP: ways[i] = cách decode prefix i ký tự. ways[i] += ways[i-1] nếu s[i-1]≠'0'; += ways[i-2] nếu s[i-2:i] trong 10..26. Rolling prev2, prev1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,32 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* numDecodings — DP rolling; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> numDecodings(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> <span class="kw">not</span> s <span class="kw">or</span> s[0] == '0': <span class="kw">return</span> 0
+        p2, p1 = 1, 1
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, <span class="ty">len</span>(s)):
+            cur = 0
+            <span class="kw">if</span> s[i] != '0': cur += p1
+            two = <span class="ty">int</span>(s[i-1:i+1])
+            <span class="kw">if</span> 10 &lt;= two &lt;= 26: cur += p2
+            p2, p1 = p1, cur
+        <span class="kw">return</span> p1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">int</span> numDecodings(<span class="ty">string</span> s) {
+        <span class="kw">if</span> (s.empty()||s[0]=='0') <span class="kw">return</span> 0;
+        <span class="ty">int</span> p2=1,p1=1;
+        <span class="kw">for</span> (<span class="ty">int</span> i=1;i&lt;(<span class="ty">int</span>)s.size();i++) {
+            <span class="ty">int</span> cur=0;
+            <span class="kw">if</span> (s[i]!='0') cur+=p1;
+            <span class="ty">int</span> two=(s[i-1]-'0')*10+(s[i]-'0');
+            <span class="kw">if</span> (two&gt;=10&amp;&amp;two&lt;=26) cur+=p2;
+            p2=p1; p1=cur;
+        }
+        <span class="kw">return</span> p1;
+    }
 };</pre>
                         </div>
                     </div>
@@ -109,14 +134,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP: ways[i] = cách decode prefix i ký tự.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — ways[i] += ways[i-1] nếu s[i-1]≠'0'; += ways[i-2] nếu…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Rolling prev2, prev1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi cách tách hợp lệ 1 hoặc 2 ký tự được cộng dồn đúng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">s='0' → 0</span><span class="analysis-tag edge">s='10' → 1</span><span class="analysis-tag edge">Liên tiếp '0' sau digit</span><span class="analysis-tag pit">Cho phép mã '01'-'09'</span><span class="analysis-tag pit">Quên s[0]=='0'</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>Giống climb stairs nhưng cộng có điều kiện 1-digit và 2-digit hợp lệ.</p>
                     </details>
                 </div>
                 </div>

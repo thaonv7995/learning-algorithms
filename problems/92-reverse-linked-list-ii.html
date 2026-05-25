@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Reverse Linked List II (LC #92).</div>
+                        <div class="block-text">Cho linked list và left, right (1-indexed). Đảo ngược các nút từ vị trí left đến right inclusive, trả về head.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,3,4,5], left = 2, right = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,4,3,2,5]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [5], left = 1, right = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[5]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Dummy; prev đến nút trước left. Đảo từng nút trong đoạn: cur=prev.next luôn; prev.next trỏ cur.next, cur.next nối sau prev.next cũ — giống reverse N nodes.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,30 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* reverseBetween — dummy + local reverse; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> reverseBetween(<span class="ty">self</span>, head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>], left: <span class="ty">int</span>, right: <span class="ty">int</span>) -&gt; <span class="ty">Optional</span>[<span class="ty">ListNode</span>]:
+        dummy = <span class="ty">ListNode</span>(0, head); prev = dummy
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(left - 1): prev = prev.next
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(right - left):
+            cur = prev.next
+            prev.next = cur.next
+            cur.next = prev.next.next
+            prev.next.next = cur
+        <span class="kw">return</span> dummy.next</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    ListNode* reverseBetween(ListNode* head, <span class="ty">int</span> left, <span class="ty">int</span> right) {
+        ListNode dummy(0, head), *prev = &amp;dummy;
+        <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;left-1;i++) prev = prev-&gt;next;
+        <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;right-left;i++) {
+            ListNode* cur = prev-&gt;next;
+            prev-&gt;next = cur-&gt;next;
+            cur-&gt;next = prev-&gt;next-&gt;next;
+            prev-&gt;next-&gt;next = cur;
+        }
+        <span class="kw">return</span> dummy.next;
+    }
 };</pre>
                         </div>
                     </div>
@@ -109,14 +132,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dummy; prev đến nút trước left.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Đảo từng nút trong đoạn: cur=prev.next luôn; prev.next…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi bước đưa nút kế tiếp lên ngay sau prev, đảo đủ đoạn.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">left == right</span><span class="analysis-tag edge">left=1</span><span class="analysis-tag edge">Đoạn đến tail</span><span class="analysis-tag pit">Đảo cả list thay vì đoạn</span><span class="analysis-tag pit">Mất liên kết tail đoạn</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>prev cố định trước left — lặp lần đưa nút lên đầu đoạn.</p>
                     </details>
                 </div>
                 </div>

@@ -5,30 +5,23 @@
   "category": "Two Pointers",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Compare Version Numbers (LeetCode #165) — Medium.",
+  "description": "So sánh hai chuỗi version dạng x.y.z (mỗi segment là số nguyên, có thể bỏ số 0 đầu). Trả 1 nếu version1 > version2, -1 nếu nhỏ hơn, 0 nếu bằng nhau.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "version1 = \"1.2\", version2 = \"1.10\"", "output": "-1" },
+    { "input": "version1 = \"1.01\", version2 = \"1.001\"", "output": "0" },
+    { "input": "version1 = \"0.1\", version2 = \"1.1\"", "output": "-1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers: tách từng segment bằng dấu chấm, parse int (bỏ leading zero), so sánh. Segment thiếu coi là 0.",
+  "memoryTip": "Version compare = split by '.', compare int từng block, thiếu block = 0.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def compareVersion(self, v1: str, v2: str) -> int:\n        a, b = v1.split('.'), v2.split('.')\n        n = max(len(a), len(b))\n        for i in range(n):\n            x = int(a[i]) if i < len(a) else 0\n            y = int(b[i]) if i < len(b) else 0\n            if x > y: return 1\n            if x < y: return -1\n        return 0",
+    "cpp": "class Solution {\npublic:\n    int compareVersion(string v1, string v2) {\n        int i = 0, j = 0, n1 = v1.size(), n2 = v2.size();\n        while (i < n1 || j < n2) {\n            long a = 0, b = 0;\n            while (i < n1 && v1[i] != '.') a = a * 10 + (v1[i++] - '0');\n            i++;\n            while (j < n2 && v2[j] != '.') b = b * 10 + (v2[j++] - '0');\n            j++;\n            if (a > b) return 1;\n            if (a < b) return -1;\n        }\n        return 0;\n    }\n};",
+    "c": "int compareVersion(char* v1, char* v2) {\n    char *p1 = v1, *p2 = v2;\n    while (*p1 || *p2) {\n        long a = 0, b = 0;\n        while (*p1 && *p1 != '.') a = a * 10 + (*p1++ - '0');\n        if (*p1) p1++;\n        while (*p2 && *p2 != '.') b = b * 10 + (*p2++ - '0');\n        if (*p2) p2++;\n        if (a > b) return 1;\n        if (a < b) return -1;\n    }\n    return 0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "So sánh lexicographic trên các segment số nguyên tương đương so version chuẩn.",
+    "edgeCases": ["Độ dài segment khác nhau", "Trailing zeros \"1.0\" vs \"1.0.0\"", "Một version rỗng segment"],
+    "pitfalls": ["So sánh chuỗi thay int → \"10\" < \"2\"", "Quên coi segment thiếu là 0"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

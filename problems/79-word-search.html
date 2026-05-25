@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #79</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
+                        <span class="cat-chip">Backtracking</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Word Search</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m·n·4^L)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(L)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>47.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Word Search (LC #79).</div>
+                        <div class="block-text">Cho lưới ký tự board và chuỗi word. Kiểm tra word có xuất hiện liên tiếp theo ô kề (ngang/dọc, không lặp ô) hay không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCCED&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;SEE&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">DFS từ mọi ô khớp word[0]: đánh dấu visited, thử 4 hướng với index+1; backtrack bỏ đánh dấu.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* exist — DFS backtrack trên board; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> exist(<span class="ty">self</span>, board: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]], word: <span class="ty">str</span>) -&gt; bool:
+        m, n = <span class="ty">len</span>(board), <span class="ty">len</span>(board[0])
+        <span class="kw">def</span> dfs(i, j, k):
+            <span class="kw">if</span> k == <span class="ty">len</span>(word): <span class="kw">return</span> <span class="kw">True</span>
+            <span class="kw">if</span> i &lt; 0 <span class="kw">or</span> j &lt; 0 <span class="kw">or</span> i &gt;= m <span class="kw">or</span> j &gt;= n <span class="kw">or</span> board[i][j] != word[k]:
+                <span class="kw">return</span> <span class="kw">False</span>
+            ch = board[i][j]; board[i][j] = '<span class="cm">#'</span>
+            ok = any(dfs(i+di, j+dj, k+1) <span class="kw">for</span> di, dj <span class="kw">in</span> ((0,1),(0,-1),(1,0),(-1,0)))
+            board[i][j] = ch
+            <span class="kw">return</span> ok
+        <span class="kw">return</span> any(dfs(i, j, 0) <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m) <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> m,n;
+    <span class="ty">bool</span> dfs(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; b, <span class="ty">string</span>&amp; w, <span class="ty">int</span> i, <span class="ty">int</span> j, <span class="ty">int</span> k) {
+        <span class="kw">if</span> (k==(<span class="ty">int</span>)w.size()) <span class="kw">return</span> true;
+        <span class="kw">if</span> (i&lt;0||j&lt;0||i&gt;=m||j&gt;=n||b[i][j]!=w[k]) <span class="kw">return</span> false;
+        <span class="ty">char</span> c=b[i][j]; b[i][j]='#';
+        <span class="ty">bool</span> ok = dfs(b,w,i+1,j,k+1)||dfs(b,w,i-1,j,k+1)||dfs(b,w,i,j+1,k+1)||dfs(b,w,i,j-1,k+1);
+        b[i][j]=c; <span class="kw">return</span> ok;
+    }
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">bool</span> exist(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; board, <span class="ty">string</span> word) {
+        m=board.size(); n=board[0].size();
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++)
+            <span class="kw">if</span> (dfs(board,word,i,j,0)) <span class="kw">return</span> true;
+        <span class="kw">return</span> false;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,19 +132,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Backtracking</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m·n·4^L)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(L)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DFS từ mọi ô khớp word[0]: đánh dấu visited, thử 4 hướng với index+1;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DFS khám phá mọi đường hợp lệ; đánh dấu ô tránh dùng lại.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">word 1 ký tự</span><span class="analysis-tag edge">board 1×1</span><span class="analysis-tag edge">Không khớp</span><span class="analysis-tag pit">Quên restore ô sau backtrack</span><span class="analysis-tag pit">Cho phép đi chéo</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>In-place mark '#' rồi restore — không cần visited[][] riêng.</p>
                     </details>
                 </div>
                 </div>

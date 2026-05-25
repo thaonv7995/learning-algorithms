@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #94</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Stack</span>
+                        <span class="cat-chip">Tree</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Binary Tree Inorder Traversal</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>80.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Binary Tree Inorder Traversal (LC #94).</div>
+                        <div class="block-text">Cho root cây nhị phân. Trả về thứ tự duyệt inorder (trái → gốc → phải) — danh sách giá trị các nút.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [1,null,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,3,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = []</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Đệ quy: inorder(left), append root.val, inorder(right). Hoặc iterative: stack — luôn đẩy left chain, pop visit, sang right.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,28 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* inorderTraversal — stack iterative; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> inorderTraversal(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        res, st = [], []
+        cur = root
+        <span class="kw">while</span> cur <span class="kw">or</span> st:
+            <span class="kw">while</span> cur:
+                st.append(cur); cur = cur.left
+            cur = st.pop(); res.append(cur.val); cur = cur.right
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; inorderTraversal(TreeNode* root) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; res; stack&lt;TreeNode*&gt; st;
+        TreeNode* cur = root;
+        <span class="kw">while</span> (cur || !st.empty()) {
+            <span class="kw">while</span> (cur) { st.push(cur); cur = cur-&gt;left; }
+            cur = st.top(); st.pop(); res.push_back(cur-&gt;val);
+            cur = cur-&gt;right;
+        }
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,19 +125,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Stack</span>
+                        <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Đệ quy: inorder, append root.val, inorder.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc iterative: stack — luôn đẩy left chain, pop visit,…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi nút push/pop đúng một lần theo thứ tự inorder.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">root null</span><span class="analysis-tag edge">Chỉ gốc</span><span class="analysis-tag edge">Cây lệch trái</span><span class="analysis-tag pit">Nhầm preorder/postorder</span><span class="analysis-tag pit">Quên xử lý right sau pop</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>Iterative: đi trái hết push stack; pop; r=right.</p>
                     </details>
                 </div>
                 </div>

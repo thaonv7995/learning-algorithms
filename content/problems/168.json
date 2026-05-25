@@ -3,32 +3,25 @@
   "title": "Excel Sheet Column Title",
   "difficulty": "Easy",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Excel Sheet Column Title (LeetCode #168) — Easy.",
+  "description": "Cho số cột columnNumber (1 → A, 2 → B, …, 26 → Z, 27 → AA). Trả tên cột Excel tương ứng.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "columnNumber = 1", "output": "\"A\"" },
+    { "input": "columnNumber = 28", "output": "\"AB\"" },
+    { "input": "columnNumber = 701", "output": "\"ZY\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Biến đổi số sang base-26 nhưng không phải hệ thập phân thuần: mỗi bước columnNumber-- rồi lấy columnNumber%26, append 'A'+rem, columnNumber/=26.",
+  "memoryTip": "Excel column = base-26 bijective: luôn -- trước khi mod (không có số 0).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def convertToTitle(self, n: int) -> str:\n        res = []\n        while n:\n            n -= 1\n            res.append(chr(ord('A') + n % 26))\n            n //= 26\n        return ''.join(reversed(res))",
+    "cpp": "class Solution {\npublic:\n    string convertToTitle(int n) {\n        string res;\n        while (n) {\n            n--;\n            res += char('A' + n % 26);\n            n /= 26;\n        }\n        reverse(res.begin(), res.end());\n        return res;\n    }\n};",
+    "c": "char* convertToTitle(int n) {\n    char tmp[32]; int k = 0;\n    while (n) {\n        n--;\n        tmp[k++] = 'A' + (n % 26);\n        n /= 26;\n    }\n    char* res = malloc(k + 1);\n    for (int i = 0; i < k; i++) res[i] = tmp[k - 1 - i];\n    res[k] = 0; return res;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Decrement trước mod ánh xạ 1..26 → A..Z không có chữ số 0.",
+    "edgeCases": ["n=1 → A", "n=26 → Z", "n lớn nhiều chữ cái"],
+    "pitfalls": ["Base-26 thuần (không --) → sai tại 26, 52", "Thứ tự ký tự ngược"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

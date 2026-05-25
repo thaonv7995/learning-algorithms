@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #164</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Maximum Gap</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>52.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Maximum Gap (LeetCode #164) — Medium.</div>
+                        <div class="block-text">Cho mảng nums số nguyên không âm, sort và tìm khoảng cách lớn nhất giữa hai phần tử liên tiếp trong mảng đã sort. Yêu cầu O(n) nếu có thể.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [3,6,9,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [10]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Bucket sort / pigeonhole: gap max ≥ (max-min)/(n-1). Tạo n-1 bucket, mỗi bucket chỉ cần min/max. Max gap nằm giữa bucket liền kề hoặc trong bucket (chỉ cần biên).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,67 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maximumGap(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="kw">if</span> (n &lt; 2) <span class="kw">return</span> 0;
+    <span class="ty">int</span> lo = nums[0], hi = nums[0];
+    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; n; i++) { <span class="kw">if</span> (nums[i] &lt; lo) lo = nums[i]; <span class="kw">if</span> (nums[i] &gt; hi) hi = nums[i]; }
+    <span class="kw">if</span> (lo == hi) <span class="kw">return</span> 0;
+    <span class="ty">int</span> gap = (hi - lo) / (n - 1); <span class="kw">if</span> (gap &lt; 1) gap = 1;
+    <span class="ty">int</span>* bmin = <span class="kw">malloc</span>((n-1)*<span class="kw">sizeof</span>(<span class="ty">int</span>)); <span class="ty">int</span>* bmax = <span class="kw">malloc</span>((n-1)*<span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n-1; i++) { bmin[i] = 2147483647; bmax[i] = -2147483647; }
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="kw">if</span> (nums[i]==lo||nums[i]==hi) continue;
+        <span class="ty">int</span> j = (nums[i]-lo)/gap;
+        <span class="kw">if</span> (nums[i]&lt;bmin[j]) bmin[j]=nums[i]; <span class="kw">if</span> (nums[i]&gt;bmax[j]) bmax[j]=nums[i];
+    }
+    <span class="ty">int</span> prev=lo, ans=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n-1;i++) <span class="kw">if</span> (bmin[i]!=2147483647) { <span class="kw">if</span> (bmin[i]-prev&gt;ans) ans=bmin[i]-prev; prev=bmax[i]; }
+    <span class="kw">if</span> (hi-prev&gt;ans) ans=hi-prev;
+    <span class="kw">free</span>(bmin); <span class="kw">free</span>(bmax); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maximumGap(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        n = <span class="ty">len</span>(nums)
+        <span class="kw">if</span> n &lt; 2: <span class="kw">return</span> 0
+        lo, hi = <span class="ty">min</span>(nums), <span class="ty">max</span>(nums)
+        <span class="kw">if</span> lo == hi: <span class="kw">return</span> 0
+        gap = (hi - lo) // (n - 1) <span class="kw">or</span> 1
+        buckets = [[float('inf'), float('-inf')] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n - 1)]
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">if</span> x == lo <span class="kw">or</span> x == hi: continue
+            i = (x - lo) // gap
+            buckets[i][0] = <span class="ty">min</span>(buckets[i][0], x)
+            buckets[i][1] = <span class="ty">max</span>(buckets[i][1], x)
+        prev, ans = lo, 0
+        <span class="kw">for</span> b <span class="kw">in</span> buckets:
+            <span class="kw">if</span> b[0] == float('inf'): continue
+            ans = <span class="ty">max</span>(ans, b[0] - prev)
+            prev = b[1]
+        <span class="kw">return</span> <span class="ty">max</span>(ans, hi - prev)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> maximumGap(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> n = nums.size();
+        <span class="kw">if</span> (n &lt; 2) <span class="kw">return</span> 0;
+        <span class="ty">int</span> lo = *min_element(nums.begin(), nums.end());
+        <span class="ty">int</span> hi = *max_element(nums.begin(), nums.end());
+        <span class="kw">if</span> (lo == hi) <span class="kw">return</span> 0;
+        <span class="ty">int</span> gap = max(1, (hi - lo) / (n - 1));
+        <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; b(n - 1, {INT_MAX, INT_MIN});
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums) {
+            <span class="kw">if</span> (x == lo || x == hi) continue;
+            <span class="ty">int</span> i = (x - lo) / gap;
+            b[i].first = min(b[i].first, x);
+            b[i].second = max(b[i].second, x);
+        }
+        <span class="ty">int</span> prev = lo, ans = 0;
+        <span class="kw">for</span> (auto&amp; p : b) {
+            <span class="kw">if</span> (p.first == INT_MAX) continue;
+            ans = max(ans, p.first - prev);
+            prev = p.second;
+        }
+        <span class="kw">return</span> max(ans, hi - prev);
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +166,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Bucket sort / pigeonhole: gap max ≥ /.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Tạo n-1 bucket, mỗi bucket chỉ cần min/max.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Max gap nằm giữa bucket liền kề hoặc trong bucket .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Gap lớn nhất không thể nằm trong bucket (nhỏ hơn bucket size); chỉ xét khe giữa bucket.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n&lt;2 → 0</span><span class="analysis-tag edge">Tất cả bằng nhau → 0</span><span class="analysis-tag edge">Hai phần tử → hi-lo</span><span class="analysis-tag pit">Sort O(n log n) không đạt yêu cầu đề</span><span class="analysis-tag pit">Bucket size = 0 khi lo==hi</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Max gap O = bucket theo gap size; chỉ track min/max mỗi bucket.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +193,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Maximum%20Gap&lc_id=164&embed=true"></iframe>

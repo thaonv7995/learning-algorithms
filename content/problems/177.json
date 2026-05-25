@@ -3,32 +3,24 @@
   "title": "Nth Highest Salary",
   "difficulty": "Medium",
   "category": "Database",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Nth Highest Salary (LeetCode #177) — Medium.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Viết function getNthHighestSalary(N INT) trả mức lương cao thứ N của bảng Employee; không có thì NULL.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "N=2, salaries [100,200,300]", "output": "200" },
+    { "input": "N=1, salaries [100]", "output": "100" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Function trả scalar subquery: SELECT DISTINCT salary ORDER BY salary DESC LIMIT 1 OFFSET N-1.",
+  "memoryTip": "Nth salary function = LIMIT 1 OFFSET N-1 on DISTINCT salaries.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nCREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT\nBEGIN\n  SET N = N - 1;\n  RETURN (\n    SELECT DISTINCT salary FROM Employee\n    ORDER BY salary DESC LIMIT 1 OFFSET N\n  );\nEND;",
+    "cpp": "// SQL\nCREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT\nBEGIN\n  SET N = N - 1;\n  RETURN (\n    SELECT DISTINCT salary FROM Employee\n    ORDER BY salary DESC LIMIT 1 OFFSET N\n  );\nEND;",
+    "c": "/* SQL */\nCREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT\nBEGIN\n  SET N = N - 1;\n  RETURN (\n    SELECT DISTINCT salary FROM Employee\n    ORDER BY salary DESC LIMIT 1 OFFSET N\n  );\nEND;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "OFFSET N-1 chọn hạng N sau khi sort DISTINCT desc; NULL khi không đủ hạng.",
+    "edgeCases": ["N lớn hơn số mức lương", "N=1 là max"],
+    "pitfalls": ["Quên SET N=N-1 trước OFFSET", "Không DISTINCT khi duplicate salary"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

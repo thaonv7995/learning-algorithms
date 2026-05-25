@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #22</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Stack</span>
+                        <span class="cat-chip">Backtracking</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Generate Parentheses</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(4^N / sqrt(N)) (Số Catalan)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N) (Không gian Call Stack đệ quy)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(4^n / √n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>78.7% AC</span>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho n cặp dấu ngoặc đơn, hãy viết hàm tạo ra tất cả các tổ hợp dấu ngoặc hợp lệ.</div>
+                        <div class="block-text">Cho số nguyên n, sinh mọi chuỗi ngoặc hợp lệ gồm n cặp '(' và ')'.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -66,6 +66,16 @@
                 <div class="ex-label">Ví dụ 1</div>
                 <div class="ex-line"><span>In</span><code>n = 3</code></div>
                 <div class="ex-line"><span>Out</span><code>[&quot;((()))&quot;,&quot;(()())&quot;,&quot;(())()&quot;,&quot;()(())&quot;,&quot;()()()&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;()&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>n = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;(())&quot;,&quot;()()&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Đệ quy Quay lui (Backtracking). Ta xây dựng chuỗi kết quả ký tự từng bước. Quy tắc nhánh rẽ hợp lệ: ta có thể thêm một dấu mở ngoặc '(' nếu số lượng dấu mở ngoặc đã dùng nhỏ hơn n; và ta có thể thêm một dấu đóng ngoặc ')' nếu số lượng dấu đóng ngoặc đã dùng nhỏ hơn số lượng dấu mở ngoặc đã dùng.</div>
+                        <div class="block-text">Backtracking: thêm '(' nếu open &lt; n; thêm ')' nếu close &lt; open. Khi len = 2n thì push vào kết quả.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,33 +100,41 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
- */
+                            <pre class="code-block" id="code-block-c">static <span class="ty">void</span> gp22(<span class="ty">char</span>** res, <span class="ty">int</span>* cnt, <span class="ty">char</span>* cur, <span class="ty">int</span> pos, <span class="ty">int</span> o, <span class="ty">int</span> c, <span class="ty">int</span> n) {
+    <span class="kw">if</span> (pos == 2 * n) { res[(*cnt)++] = strdup(cur); <span class="kw">return</span>; }
+    <span class="kw">if</span> (o &lt; n) { cur[pos] = '('; cur[pos + 1] = 0; gp22(res, cnt, cur, pos + 1, o + 1, c, n); }
+    <span class="kw">if</span> (c &lt; o) { cur[pos] = ')'; cur[pos + 1] = 0; gp22(res, cnt, cur, pos + 1, o, c + 1, n); }
+}
 <span class="ty">char</span>** generateParenthesis(<span class="ty">int</span> n, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    
+    <span class="ty">char</span>** res = (<span class="ty">char</span>**)<span class="kw">malloc</span>(5000 * <span class="kw">sizeof</span>(<span class="ty">char</span>*));
+    <span class="ty">char</span>* cur = (<span class="ty">char</span>*)<span class="kw">calloc</span>(2 * n + 1, 1);
+    *<span class="ty">returnSize</span> = 0;
+    gp22(res, <span class="ty">returnSize</span>, cur, 0, 0, 0, n);
+    <span class="kw">free</span>(cur);
+    <span class="kw">return</span> res;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> generateParenthesis(<span class="ty">self</span>, n):
-        &quot;&quot;&quot;
-        :type n: <span class="ty">int</span>
-        :rtype: <span class="ty">List</span>[<span class="ty">str</span>]
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-    <span class="ty">vector&lt;string&gt;</span> res;
-    <span class="ty">void</span> <span class="fn">backtrack</span>(<span class="ty">string</span> curr, <span class="ty">int</span> open, <span class="ty">int</span> close, <span class="ty">int</span> maxN) {
-        <span class="kw">if</span> (curr.<span class="fn">length</span>() == maxN * <span class="st">2</span>) {
-            res.<span class="fn">push_back</span>(curr);
-            <span class="kw">return</span>;
-        }
-        <span class="kw">if</span> (open &lt; maxN) backtrack(curr + <span class="st">'('</span>, open + <span class="st">1</span>, close, maxN);
-        <span class="kw">if</span> (close &lt; open) backtrack(curr + <span class="st">')'</span>, open, close + <span class="st">1</span>, maxN);
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> generateParenthesis(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        res = []
+        <span class="kw">def</span> bt(s, o, c):
+            <span class="kw">if</span> <span class="ty">len</span>(s) == 2 * n:
+                res.append(''.join(s)); <span class="kw">return</span>
+            <span class="kw">if</span> o &lt; n:
+                s.append('('); bt(s, o + 1, c); s.pop()
+            <span class="kw">if</span> c &lt; o:
+                s.append(')'); bt(s, o, c + 1); s.pop()
+        bt([], 0, 0)
+        <span class="kw">return</span> res</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; res;
+    <span class="ty">void</span> bt(<span class="ty">string</span> cur, <span class="ty">int</span> o, <span class="ty">int</span> c, <span class="ty">int</span> n) {
+        <span class="kw">if</span> ((<span class="ty">int</span>)cur.size() == 2 * n) { res.push_back(cur); <span class="kw">return</span>; }
+        <span class="kw">if</span> (o &lt; n) bt(cur + '(', o + 1, c, n);
+        <span class="kw">if</span> (c &lt; o) bt(cur + ')', o, c + 1, n);
     }
-<span class="kw">public</span>:
-    <span class="ty">vector&lt;string&gt;</span> <span class="fn">generateParenthesis</span>(<span class="ty">int</span> n) {
-        <span class="fn">backtrack</span>(<span class="st">""</span>, <span class="st">0</span>, <span class="st">0</span>, n);
-        <span class="kw">return</span> res;
+<span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; generateParenthesis(<span class="ty">int</span> n) {
+        bt(&quot;&quot;, 0, 0, n); <span class="kw">return</span> res;
     }
 };</pre>
                         </div>
@@ -126,19 +144,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Stack</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(4^N / sqrt(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="pattern-chip">Backtracking</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(4^n / √n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Đệ quy Quay lui .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — xây dựng chuỗi kết quả ký tự từng bước.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Quy tắc nhánh rẽ hợp lệ: ta có thể thêm một dấu mở ngoặc…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Backtracking: thêm '' nếu close &lt; open.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — len = 2n thì push vào kết quả.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Chỉ thêm ')' khi close &lt; open — mọi prefix đều cân bằng được.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n = 1</span><span class="analysis-tag edge">n lớn — số chuỗi tăng nhanh</span><span class="analysis-tag pit">Cho phép close &gt; open</span><span class="analysis-tag pit">Quên backtrack pop</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Không gian Call Stack hệ thống tỷ lệ thuận với 2N , phân bổ tối ưu trên vùng nhớ Stack cục bộ.</p>
+                        <p>Invariant: close ≤ open ≤ n — đảm bảo prefix luôn hợp lệ.</p>
                     </details>
                 </div>
                 </div>

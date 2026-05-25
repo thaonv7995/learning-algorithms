@@ -3,32 +3,25 @@
   "title": "Largest Number",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Largest Number (LeetCode #179) — Medium.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums số nguyên không âm. Sắp xếp các số thành chuỗi sao cho kết quả ghép là số lớn nhất (không leading zero).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [10,2]", "output": "\"210\"" },
+    { "input": "nums = [3,30,34,5,9]", "output": "\"9534330\"" },
+    { "input": "nums = [0,0]", "output": "\"0\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Custom sort: so sánh a,b bằng str(a)+str(b) vs str(b)+str(a). Nếu kết quả bắt đầu '0' (toàn 0) trả \"0\".",
+  "memoryTip": "Largest number = sort by concat(a,b) > concat(b,a).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def largestNumber(self, nums: List[int]) -> str:\n        from functools import cmp_to_key\n        def cmp(a, b):\n            x, y = str(a)+str(b), str(b)+str(a)\n            return (x > y) - (x < y)\n        nums.sort(key=cmp_to_key(cmp), reverse=True)\n        res = ''.join(map(str, nums))\n        return '0' if res[0] == '0' else res",
+    "cpp": "class Solution {\npublic:\n    string largestNumber(vector<int>& nums) {\n        vector<string> s;\n        for (int x : nums) s.push_back(to_string(x));\n        sort(s.begin(), s.end(), [](const string& a, const string& b) {\n            return a + b > b + a;\n        });\n        string res;\n        for (auto& t : s) res += t;\n        return res[0] == '0' ? \"0\" : res;\n    }\n};",
+    "c": "static int cmpStr(const void* a, const void* b) {\n    char ab[32], ba[32];\n    sprintf(ab, \"%d%d\", *(const int*)a, *(const int*)b);\n    sprintf(ba, \"%d%d\", *(const int*)b, *(const int*)a);\n    return strcmp(ab, ba) > 0 ? -1 : strcmp(ab, ba) < 0 ? 1 : 0;\n}\nchar* largestNumber(int* nums, int n) {\n    qsort(nums, n, sizeof(int), cmpStr);\n    char* res = malloc(n * 12);\n    res[0] = 0;\n    for (int i = 0; i < n; i++) { char t[16]; sprintf(t, \"%d\", nums[i]); strcat(res, t); }\n    if (res[0] == '0') { free(res); return strdup(\"0\"); }\n    return res;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Comparator transitive: ghép theo thứ tự tối ưu từng cặp cho toàn chuỗi max.",
+    "edgeCases": ["Toàn 0 → \"0\"", "Một phần tử", "9 và 90 → \"990\""],
+    "pitfalls": ["Sort số thay vì chuỗi ghép", "Không xử lý leading zero output"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

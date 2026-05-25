@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #169</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Majority Element</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Majority Element (LeetCode #169) — Easy.</div>
+                        <div class="block-text">Cho mảng nums kích thước n. Phần tử majority xuất hiện hơn ⌊n/2⌋ lần. Đề bảo đảm majority luôn tồn tại. Trả phần tử đó.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [3,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [2,2,1,1,1,2,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Boyer-Moore voting: candidate + count. Gặp x==candidate thì count++; khác thì count--, count=0 thì đổi candidate. Cuối cùng candidate là majority.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> majorityElement(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> cand = 0, cnt = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="kw">if</span> (cnt == 0) { cand = nums[i]; cnt = 1; }
+        <span class="kw">else</span> <span class="kw">if</span> (nums[i] == cand) cnt++;
+        <span class="kw">else</span> cnt--;
+    }
+    <span class="kw">return</span> cand;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> majorityElement(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        cand, cnt = <span class="kw">None</span>, 0
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">if</span> cnt == 0:
+                cand, cnt = x, 1
+            <span class="kw">elif</span> x == cand:
+                cnt += 1
+            <span class="kw">else</span>:
+                cnt -= 1
+        <span class="kw">return</span> cand</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> majorityElement(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> cand = 0, cnt = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums) {
+            <span class="kw">if</span> (cnt == 0) { cand = x; cnt = 1; }
+            <span class="kw">else</span> <span class="kw">if</span> (x == cand) cnt++;
+            <span class="kw">else</span> cnt--;
+        }
+        <span class="kw">return</span> cand;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +139,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Boyer-Moore voting: candidate + count.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Gặp x==candidate thì count++; khác thì count--, count=0…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Cuối cùng candidate là majority.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Majority tồn tại → sau cancel cặp khác nhau, phần tử còn lại là majority.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Majority chiếm &gt; half rõ ràng</span><span class="analysis-tag pit">Hash count O(n) space không cần</span><span class="analysis-tag pit">Sort O(n log n) chậm hơn</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Majority &gt; n/2 → Boyer-Moore: +1 cùng loại, -1 khác loại.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Majority%20Element&lc_id=169&embed=true"></iframe>

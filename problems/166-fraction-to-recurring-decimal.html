@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #166</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Fraction to Recurring Decimal</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(d)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(d)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>30.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Fraction to Recurring Decimal (LeetCode #166) — Medium.</div>
+                        <div class="block-text">Cho hai số nguyên numerator và denominator. Trả chuỗi biểu diễn thập phân; phần lặp đặt trong ngoặc (). Trả &quot;0&quot; nếu bằng 0, &quot;Error&quot; nếu chia cho 0.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>numerator = 1, denominator = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;0.5&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>numerator = 4, denominator = 333</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;0.(012)&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>numerator = 2, denominator = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;2&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Long division: xử lý dấu, phần nguyên, rồi lặp remainder = (rem*10)%den. Hash map remainder→vị trí trong chuỗi thập phân để chèn '(' khi gặp lại.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,71 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* fractionToDecimal(<span class="ty">int</span> n, <span class="ty">int</span> d) {
+    <span class="kw">if</span> (d == 0) <span class="kw">return</span> strdup(&quot;Error&quot;);
+    <span class="ty">char</span> buf[4096]; <span class="ty">int</span> k = 0;
+    <span class="kw">if</span> ((<span class="ty">long</span> <span class="ty">long</span>)n * d &lt; 0) buf[k++] = '-';
+    <span class="ty">long</span> <span class="ty">long</span> a = llabs((<span class="ty">long</span> <span class="ty">long</span>)n), b = llabs((<span class="ty">long</span> <span class="ty">long</span>)d);
+    k += sprintf(buf + k, &quot;%lld&quot;, a / b);
+    <span class="ty">long</span> <span class="ty">long</span> r = a % b;
+    <span class="kw">if</span> (!r) <span class="kw">return</span> strdup(buf);
+    buf[k++] = '.';
+    <span class="ty">long</span> <span class="ty">long</span> rem[4096]; <span class="ty">int</span> idx[4096], len = 0;
+    <span class="kw">while</span> (r) {
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; len; i++) <span class="kw">if</span> (rem[i] == r) {
+            buf[k] = 0;
+            <span class="ty">char</span>* out = <span class="kw">malloc</span>(strlen(buf) + 64);
+            sprintf(out, &quot;%.*s(%s)&quot;, k - idx[i], buf, buf + idx[i]);
+            <span class="kw">return</span> out;
+        }
+        rem[len] = r; idx[len++] = k;
+        buf[k++] = '0' + (<span class="ty">char</span>)(r * 10 / b);
+        r = r * 10 % b;
+    }
+    buf[k] = 0; <span class="kw">return</span> strdup(buf);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> fractionToDecimal(<span class="ty">self</span>, n: <span class="ty">int</span>, d: <span class="ty">int</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">if</span> d == 0: <span class="kw">return</span> &quot;Error&quot;
+        sign = '-' <span class="kw">if</span> (n &lt; 0) ^ (d &lt; 0) <span class="kw">else</span> ''
+        n, d = abs(n), abs(d)
+        q, r = divmod(n, d)
+        res = sign + <span class="ty">str</span>(q)
+        <span class="kw">if</span> r == 0: <span class="kw">return</span> res
+        res += '.'
+        pos = {}
+        frac = []
+        <span class="kw">while</span> r:
+            <span class="kw">if</span> r <span class="kw">in</span> pos:
+                i = pos[r]
+                <span class="kw">return</span> res + ''.join(frac[:i]) + '(' + ''.join(frac[i:]) + ')'
+            pos[r] = <span class="ty">len</span>(frac)
+            frac.append(<span class="ty">str</span>(r * 10 // d))
+            r = r * 10 % d
+        <span class="kw">return</span> res + ''.join(frac)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> fractionToDecimal(<span class="ty">int</span> n, <span class="ty">int</span> d) {
+        <span class="kw">if</span> (d == 0) <span class="kw">return</span> &quot;Error&quot;;
+        <span class="ty">string</span> res;
+        <span class="kw">if</span> ((<span class="ty">long</span> <span class="ty">long</span>)n * d &lt; 0) res += '-';
+        <span class="ty">long</span> <span class="ty">long</span> a = abs((<span class="ty">long</span> <span class="ty">long</span>)n), b = abs((<span class="ty">long</span> <span class="ty">long</span>)d);
+        res += to_string(a / b);
+        <span class="ty">long</span> <span class="ty">long</span> r = a % b;
+        <span class="kw">if</span> (!r) <span class="kw">return</span> res;
+        res += '.';
+        unordered_map&lt;<span class="ty">long</span> <span class="ty">long</span>,<span class="ty">int</span>&gt; pos;
+        <span class="ty">string</span> frac;
+        <span class="kw">while</span> (r) {
+            <span class="kw">if</span> (pos.count(r)) {
+                <span class="kw">return</span> res + frac.substr(0, pos[r]) + &quot;(&quot; + frac.substr(pos[r]) + &quot;)&quot;;
+            }
+            pos[r] = frac.size();
+            frac += <span class="ty">char</span>('0' + r * 10 / b);
+            r = r * 10 % b;
+        }
+        <span class="kw">return</span> res + frac;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +174,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(d)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(d)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Long division: xử lý dấu, phần nguyên, rồi lặp remainder…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hash map remainder→vị trí trong chuỗi thập phân để chèn…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Remainder lặp iff chu kỳ thập phân; map ghi vị trí bắt đầu chu kỳ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">denominator=0</span><span class="analysis-tag edge">Kết quả nguyên</span><span class="analysis-tag edge">INT_MIN overflow dấu</span><span class="analysis-tag pit">int overflow khi abs(INT_MIN)</span><span class="analysis-tag pit">Quên dấu khi cả hai âm</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Repeating decimal = long div + map remainder → index for '('.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +202,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Fraction%20to%20Recurring%20Decimal&lc_id=166&embed=true"></iframe>

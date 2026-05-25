@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #87</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">String</span>
+                        <span class="cat-chip">Dynamic Programming</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Scramble String</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n⁴)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n³)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>44.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Scramble String (LC #87).</div>
+                        <div class="block-text">Hai chuỗi s1, s2 cùng độ dài. Kiểm tra s2 có phải scrambled string của s1 không: có thể chia s1 thành hai phần không rỗng và hoán đổi hoặc scramble đệ quy hai phần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s1 = &quot;great&quot;, s2 = &quot;rgeat&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s1 = &quot;abcde&quot;, s2 = &quot;caebd&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">DP/lệnh ghi nhớ: isScramble(i1,i2,len) — thử mọi split k: scramble trái-trái phải-phải HOẶC trái-phải phải-trái. Base len=1 so ký tự.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* isScramble — DP 3D memo split; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> isScramble(<span class="ty">self</span>, s1: <span class="ty">str</span>, s2: <span class="ty">str</span>) -&gt; bool:
+        <span class="kw">from</span> functools <span class="kw">import</span> lru_cache
+        n = <span class="ty">len</span>(s1)
+        <span class="kw">if</span> sorted(s1) != sorted(s2): <span class="kw">return</span> <span class="kw">False</span>
+        @lru_cache(<span class="kw">None</span>)
+        <span class="kw">def</span> dfs(i, j, l):
+            <span class="kw">if</span> l == 1: <span class="kw">return</span> s1[i] == s2[j]
+            <span class="kw">for</span> k <span class="kw">in</span> <span class="ty">range</span>(1, l):
+                <span class="kw">if</span> (dfs(i, j, k) <span class="kw">and</span> dfs(i+k, j+k, l-k)) <span class="kw">or</span> \
+                   (dfs(i, j+k, l-k) <span class="kw">and</span> dfs(i+k, j, k)):
+                    <span class="kw">return</span> <span class="kw">True</span>
+            <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">return</span> dfs(0, 0, n)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">string</span> a,b;
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&gt; memo;
+    <span class="ty">bool</span> dp(<span class="ty">int</span> i,<span class="ty">int</span> j,<span class="ty">int</span> l) {
+        <span class="kw">if</span> (l==1) <span class="kw">return</span> a[i]==b[j];
+        <span class="kw">if</span> (memo[i][j][l]!=-1) <span class="kw">return</span> memo[i][j][l];
+        <span class="kw">for</span> (<span class="ty">int</span> k=1;k&lt;l;k++)
+            <span class="kw">if</span> ((dp(i,j,k)&amp;&amp;dp(i+k,j+k,l-k))||(dp(i,j+k,l-k)&amp;&amp;dp(i+k,j,k)))
+                <span class="kw">return</span> memo[i][j][l]=1;
+        <span class="kw">return</span> memo[i][j][l]=0;
+    }
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">bool</span> isScramble(<span class="ty">string</span> s1, <span class="ty">string</span> s2) {
+        <span class="kw">if</span> (s1.size()!=s2.size()) <span class="kw">return</span> false;
+        a=s1; b=s2; <span class="ty">int</span> n=a.size();
+        memo.assign(n, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;(n, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n+1,-1)));
+        <span class="kw">return</span> dp(0,0,n);
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,19 +136,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n⁴)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n³)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP/lệnh ghi nhớ: isScramble — thử mọi split k: scramble…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Base len=1 so ký tự.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi cách chia hợp lệ được thử; memo tránh trùng subproblem.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">s1 == s2</span><span class="analysis-tag edge">len=1</span><span class="analysis-tag edge">Anagram nhưng không scramble → false có thể</span><span class="analysis-tag pit">Quên kiểm tra cùng multiset ký tự</span><span class="analysis-tag pit">Nhầm hoán vị thường với scramble</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>Split tại k — hai cách ghép con .</p>
                     </details>
                 </div>
                 </div>

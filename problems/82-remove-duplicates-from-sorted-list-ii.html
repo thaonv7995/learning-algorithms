@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Remove Duplicates from Sorted List II (LC #82).</div>
+                        <div class="block-text">Linked list đã sort. Xóa mọi nút có giá trị trùng (chỉ giữ các giá trị xuất hiện đúng một lần). Trả về head mới.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,3,3,4,4,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2,5]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [1,1,1,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,3]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Dummy trước head; prev đứng trước nhóm trùng. Nếu prev.next == prev.next.next thì nhảy qua cả nhóm trùng; else prev = prev.next.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,31 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* deleteDuplicates II — dummy + skip block; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> deleteDuplicates(<span class="ty">self</span>, head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]) -&gt; <span class="ty">Optional</span>[<span class="ty">ListNode</span>]:
+        dummy = <span class="ty">ListNode</span>(0, head); prev = dummy
+        <span class="kw">while</span> prev.next:
+            <span class="kw">if</span> prev.next.next <span class="kw">and</span> prev.next.val == prev.next.next.val:
+                v = prev.next.val
+                <span class="kw">while</span> prev.next <span class="kw">and</span> prev.next.val == v:
+                    prev.next = prev.next.next
+            <span class="kw">else</span>:
+                prev = prev.next
+        <span class="kw">return</span> dummy.next</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode dummy(0, head), *prev = &amp;dummy;
+        <span class="kw">while</span> (prev-&gt;next) {
+            <span class="kw">if</span> (prev-&gt;next-&gt;next &amp;&amp; prev-&gt;next-&gt;val == prev-&gt;next-&gt;next-&gt;val) {
+                <span class="ty">int</span> v = prev-&gt;next-&gt;val;
+                <span class="kw">while</span> (prev-&gt;next &amp;&amp; prev-&gt;next-&gt;val == v)
+                    prev-&gt;next = prev-&gt;next-&gt;next;
+            } <span class="kw">else</span> prev = prev-&gt;next;
+        }
+        <span class="kw">return</span> dummy.next;
+    }
 };</pre>
                         </div>
                     </div>
@@ -109,14 +133,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dummy trước head; prev đứng trước nhóm trùng.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu prev.next == prev.next.next thì nhảy qua cả nhóm…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi nhóm trùng liên tiếp bị bỏ hoàn toàn; prev không vào nhóm trùng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Toàn trùng → null</span><span class="analysis-tag edge">Không trùng → giữ nguyên</span><span class="analysis-tag pit">Chỉ xóa một nút thay vì cả nhóm</span><span class="analysis-tag pit">Không dùng dummy khi head bị xóa</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>prev giữ nút chắc chắn unique — skip cả block duplicate.</p>
                     </details>
                 </div>
                 </div>

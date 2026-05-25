@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Hash Table",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Repeated DNA Sequences (LeetCode #187) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Chuỗi s gồm A,C,G,T. Tìm mọi substring dài 10 ký tự xuất hiện hơn một lần trong s. Trả danh sách (thứ tự bất kỳ).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT\"", "output": "[\"AAAAACCCCC\",\"CCCCCAAAAA\"]" },
+    { "input": "s = \"AAAAAAAAAAAAA\"", "output": "[\"AAAAAAAAAA\"]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sliding window 10: hash set seen và repeated. Duyệt mọi substr 10 ký tự; lần 2 gặp thì thêm vào kết quả (dùng set tránh trùng output).",
+  "memoryTip": "Repeated 10-mer = rolling hash or hash set on each 10-char window.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findRepeatedDnaSequences(self, s: str) -> List[str]:\n        seen, rep = set(), set()\n        for i in range(len(s) - 9):\n            sub = s[i:i+10]\n            if sub in seen:\n                rep.add(sub)\n            else:\n                seen.add(sub)\n        return list(rep)",
+    "cpp": "class Solution {\npublic:\n    vector<string> findRepeatedDnaSequences(string s) {\n        unordered_set<string> seen, rep;\n        vector<string> res;\n        for (int i = 0; i + 10 <= (int)s.size(); i++) {\n            string sub = s.substr(i, 10);\n            if (seen.count(sub)) rep.insert(sub);\n            else seen.insert(sub);\n        }\n        for (auto& x : rep) res.push_back(x);\n        return res;\n    }\n};",
+    "c": "char** findRepeatedDnaSequences(char* s, int* retSize) {\n    *retSize = 0;\n    int n = (int)strlen(s);\n    if (n < 11) return NULL;\n    char** out = NULL; int cap = 0;\n    /* simple O(n^2) check with fixed small alphabet */\n    for (int i = 0; i + 10 <= n; i++) {\n        int cnt = 0;\n        for (int j = 0; j + 10 <= n; j++) if (j != i && strncmp(s+i, s+j, 10) == 0) { cnt = 1; break; }\n        if (!cnt) continue;\n        int dup = 0;\n        for (int k = 0; k < *retSize; k++) if (strncmp(out[k], s+i, 10) == 0) { dup = 1; break; }\n        if (dup) continue;\n        if (*retSize >= cap) { cap = cap ? cap*2 : 4; out = realloc(out, cap*sizeof(char*)); }\n        out[(*retSize)++] = strndup(s+i, 10);\n    }\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi substr length 10 được kiểm tra; set repeated đảm bảo xuất hiện ≥2 lần.",
+    "edgeCases": ["len(s)<10 → []", "Nhiều lần lặp cùng substr output một lần"],
+    "pitfalls": ["Quên dedupe output", "Rolling hash collision không xử lý (hiếm)"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

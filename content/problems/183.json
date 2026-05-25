@@ -3,32 +3,24 @@
   "title": "Customers Who Never Order",
   "difficulty": "Easy",
   "category": "Database",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Customers Who Never Order (LeetCode #183) — Easy.",
+  "timeComplexity": "O(n+m)",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Customers và Orders (customerId). Trả tên khách hàng chưa từng đặt hàng nào.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "Customers Joe,Henry; Orders customerId=3", "output": "Joe, Henry" },
+    { "input": "Mọi customer đều có order", "output": "(empty)" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "LEFT JOIN Customers c LEFT JOIN Orders o ON c.id = o.customerId WHERE o.id IS NULL.",
+  "memoryTip": "Never ordered = LEFT JOIN Orders WHERE order id IS NULL.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT c.name AS Customers\nFROM Customers c\nLEFT JOIN Orders o ON c.id = o.customerId\nWHERE o.id IS NULL;",
+    "cpp": "// SQL\nSELECT c.name AS Customers\nFROM Customers c\nLEFT JOIN Orders o ON c.id = o.customerId\nWHERE o.id IS NULL;",
+    "c": "/* SQL */\nSELECT c.name AS Customers\nFROM Customers c\nLEFT JOIN Orders o ON c.id = o.customerId\nWHERE o.id IS NULL;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "LEFT JOIN giữ mọi customer; o.id IS NULL ⇔ không có order.",
+    "edgeCases": ["Khách không có trong Orders", "Bảng Orders rỗng → tất cả customers"],
+    "pitfalls": ["NOT IN (subquery) gặp NULL order", "INNER JOIN mất khách chưa order"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

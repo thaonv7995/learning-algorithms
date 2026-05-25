@@ -3,32 +3,24 @@
   "title": "Combine Two Tables",
   "difficulty": "Easy",
   "category": "Database",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Combine Two Tables (LeetCode #175) — Easy.",
+  "timeComplexity": "O(n+m)",
+  "spaceComplexity": "O(n+m)",
+  "description": "Bảng Person (personId, firstName, lastName) và Address (addressId, personId, city, state). Trả firstName, lastName, city, state của mọi người — kể cả chưa có địa chỉ (NULL).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "Person: (1,Allen,Wang); Address: (1,2,New York City,New York)", "output": "Allen Wang, null, null" },
+    { "input": "Person: (1,Allen,Wang),(2,Bob,Smith); Address: (2,1,Los Angeles,CA)", "output": "Allen+LA; Bob null null" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "LEFT JOIN Person với Address ON personId để giữ mọi người dù chưa có address.",
+  "memoryTip": "Combine two tables = LEFT JOIN Person ON personId.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT p.firstName, p.lastName, a.city, a.state\nFROM Person p\nLEFT JOIN Address a ON p.personId = a.personId;",
+    "cpp": "// SQL\nSELECT p.firstName, p.lastName, a.city, a.state\nFROM Person p\nLEFT JOIN Address a ON p.personId = a.personId;",
+    "c": "/* SQL */\nSELECT p.firstName, p.lastName, a.city, a.state\nFROM Person p\nLEFT JOIN Address a ON p.personId = a.personId;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "LEFT JOIN giữ mọi hàng Person; thiếu Address → city/state NULL.",
+    "edgeCases": ["Không ai có address", "Một người nhiều address (đề thường 1-1)"],
+    "pitfalls": ["INNER JOIN bỏ người không có địa chỉ", "JOIN sai khóa personId"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

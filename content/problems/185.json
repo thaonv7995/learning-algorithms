@@ -3,32 +3,24 @@
   "title": "Department Top Three Salaries",
   "difficulty": "Hard",
   "category": "Database",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Department Top Three Salaries (LeetCode #185) — Hard.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Giống LC184 nhưng trả mọi nhân viên thuộc top 3 mức lương cao nhất trong mỗi department (tie vẫn tính).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "IT salaries 85000,90000,90000,70000", "output": "IT: 90000×2, 85000" },
+    { "input": "Sales one employee", "output": "that employee" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC) AS rk WHERE rk <= 3.",
+  "memoryTip": "Top 3 salaries per dept = DENSE_RANK partition dept, filter rk<=3.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT d.name AS Department, e.name AS Employee, e.salary AS Salary\nFROM (\n  SELECT *, DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC) AS rk\n  FROM Employee\n) e\nJOIN Department d ON e.departmentId = d.id\nWHERE e.rk <= 3;",
+    "cpp": "// SQL\nSELECT d.name AS Department, e.name AS Employee, e.salary AS Salary\nFROM (\n  SELECT *, DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC) AS rk\n  FROM Employee\n) e\nJOIN Department d ON e.departmentId = d.id\nWHERE e.rk <= 3;",
+    "c": "/* SQL */\nSELECT d.name AS Department, e.name AS Employee, e.salary AS Salary\nFROM (\n  SELECT *, DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC) AS rk\n  FROM Employee\n) e\nJOIN Department d ON e.departmentId = d.id\nWHERE e.rk <= 3;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "DENSE_RANK theo dept đếm hạng lương; rk<=3 giữ top 3 mức kể cả tie.",
+    "edgeCases": ["Dept <3 người", "Nhiều người cùng hạng 3"],
+    "pitfalls": ["ROW_NUMBER() cắt tie", "RANK() có thể >3 hạng khi tie"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

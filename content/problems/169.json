@@ -5,30 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Majority Element (LeetCode #169) — Easy.",
+  "description": "Cho mảng nums kích thước n. Phần tử majority xuất hiện hơn ⌊n/2⌋ lần. Đề bảo đảm majority luôn tồn tại. Trả phần tử đó.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [3,2,3]", "output": "3" },
+    { "input": "nums = [2,2,1,1,1,2,2]", "output": "2" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Boyer-Moore voting: candidate + count. Gặp x==candidate thì count++; khác thì count--, count=0 thì đổi candidate. Cuối cùng candidate là majority.",
+  "memoryTip": "Majority > n/2 → Boyer-Moore: +1 cùng loại, -1 khác loại.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def majorityElement(self, nums: List[int]) -> int:\n        cand, cnt = None, 0\n        for x in nums:\n            if cnt == 0:\n                cand, cnt = x, 1\n            elif x == cand:\n                cnt += 1\n            else:\n                cnt -= 1\n        return cand",
+    "cpp": "class Solution {\npublic:\n    int majorityElement(vector<int>& nums) {\n        int cand = 0, cnt = 0;\n        for (int x : nums) {\n            if (cnt == 0) { cand = x; cnt = 1; }\n            else if (x == cand) cnt++;\n            else cnt--;\n        }\n        return cand;\n    }\n};",
+    "c": "int majorityElement(int* nums, int n) {\n    int cand = 0, cnt = 0;\n    for (int i = 0; i < n; i++) {\n        if (cnt == 0) { cand = nums[i]; cnt = 1; }\n        else if (nums[i] == cand) cnt++;\n        else cnt--;\n    }\n    return cand;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Majority tồn tại → sau cancel cặp khác nhau, phần tử còn lại là majority.",
+    "edgeCases": ["Một phần tử", "Majority chiếm > half rõ ràng"],
+    "pitfalls": ["Hash count O(n) space không cần", "Sort O(n log n) chậm hơn"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

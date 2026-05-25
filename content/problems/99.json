@@ -4,33 +4,23 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Recover Binary Search Tree (LC #99).",
+  "spaceComplexity": "O(h)",
+  "description": "BST với đúng hai nút bị hoán đổi nhầm giá trị. Sửa in-place (chỉ đổi giá trị hai nút), không thay cấu trúc.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,3,null,null,2]", "output": "[3,1,null,null,2]" },
+    { "input": "root = [3,1,4,null,null,2]", "output": "[2,1,4,null,null,3]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Inorder: tìm hai cặp prev>cur (first lần đầu, second cập nhật). Hoán đổi first và second.val. Morris hoặc stack O(1) space.",
+  "memoryTip": "Inorder BST — chỉ hai inversion → hai nút cần swap.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def recoverTree(self, root: Optional[TreeNode]) -> None:\n        first = second = prev = None\n        st, cur = [], root\n        while cur or st:\n            while cur:\n                st.append(cur); cur = cur.left\n            cur = st.pop()\n            if prev and prev.val > cur.val:\n                if not first: first = prev\n                second = cur\n            prev = cur; cur = cur.right\n        first.val, second.val = second.val, first.val",
+    "cpp": "class Solution {\npublic:\n    void recoverTree(TreeNode* root) {\n        TreeNode *first=nullptr, *second=nullptr, *prev=nullptr;\n        stack<TreeNode*> st; TreeNode* cur=root;\n        while (cur||!st.empty()) {\n            while (cur) { st.push(cur); cur=cur->left; }\n            cur=st.top(); st.pop();\n            if (prev && prev->val > cur->val) {\n                if (!first) first=prev;\n                second=cur;\n            }\n            prev=cur; cur=cur->right;\n        }\n        swap(first->val, second->val);\n    }\n};",
+    "c": "/* recoverTree — inorder tìm 2 nút; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Hai nút sai tạo tối đa hai đoạn giảm trong inorder; swap khôi phục BST.",
+    "edgeCases": ["Hai nút kề nhau hoán đổi", "Hoán đổi root"],
+    "pitfalls": ["Chỉ lưu first không cập nhật second", "Rebuild cây thay vì swap val"]
   },
   "tier": "done"
 }

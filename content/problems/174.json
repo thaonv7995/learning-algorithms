@@ -3,32 +3,24 @@
   "title": "Dungeon Game",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Dungeon Game (LeetCode #174) — Hard.",
+  "timeComplexity": "O(m×n)",
+  "spaceComplexity": "O(m×n)",
+  "description": "Lưới dungeon: mỗi ô có số (máu +/-). Từ góc trên-trái tới góc dưới-phải, HP luôn > 0. Tìm HP ban đầu tối thiểu (làm tròn lên) để sống sót.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "dungeon = [[-2,-3,3],[-5,-10,1],[10,30,-5]]", "output": "7" },
+    { "input": "dungeon = [[0]]", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP ngược từ (m-1,n-1): need[i][j] = min HP cần tại (i,j). need = max(1, min(need[i+1][j], need[i][j+1]) - dungeon[i][j]).",
+  "memoryTip": "Dungeon game = reverse DP from princess; need = max(1, min(next)-cell).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def calculateMinimumHP(self, d: List[List[int]]) -> int:\n        m, n = len(d), len(d[0])\n        need = [[0]*n for _ in range(m)]\n        need[-1][-1] = max(1, 1 - d[-1][-1])\n        for i in range(m-2, -1, -1):\n            need[i][-1] = max(1, need[i+1][-1] - d[i][-1])\n        for j in range(n-2, -1, -1):\n            need[-1][j] = max(1, need[-1][j+1] - d[-1][j])\n        for i in range(m-2, -1, -1):\n            for j in range(n-2, -1, -1):\n                need[i][j] = max(1, min(need[i+1][j], need[i][j+1]) - d[i][j])\n        return need[0][0]",
+    "cpp": "class Solution {\npublic:\n    int calculateMinimumHP(vector<vector<int>>& d) {\n        int m = d.size(), n = d[0].size();\n        vector<vector<int>> need(m, vector<int>(n));\n        need[m-1][n-1] = max(1, 1 - d[m-1][n-1]);\n        for (int i = m - 2; i >= 0; i--) need[i][n-1] = max(1, need[i+1][n-1] - d[i][n-1]);\n        for (int j = n - 2; j >= 0; j--) need[m-1][j] = max(1, need[m-1][j+1] - d[m-1][j]);\n        for (int i = m - 2; i >= 0; i--)\n            for (int j = n - 2; j >= 0; j--)\n                need[i][j] = max(1, min(need[i+1][j], need[i][j+1]) - d[i][j]);\n        return need[0][0];\n    }\n};",
+    "c": "int calculateMinimumHP(int** d, int m, int* cs, int n) {\n    int** need = malloc(m*sizeof(int*));\n    for (int i=0;i<m;i++) need[i]=malloc(n*sizeof(int));\n    need[m-1][n-1] = 1-d[m-1][n-1]>0?1-d[m-1][n-1]:1;\n    for (int i=m-2;i>=0;i--) { int v=need[i+1][n-1]-d[i][n-1]; need[i][n-1]=v>0?v:1; }\n    for (int j=n-2;j>=0;j--) { int v=need[m-1][j+1]-d[m-1][j]; need[m-1][j]=v>0?v:1; }\n    for (int i=m-2;i>=0;i--) for (int j=n-2;j>=0;j--) {\n        int v=(need[i+1][j]<need[i][j+1]?need[i+1][j]:need[i][j+1])-d[i][j];\n        need[i][j]=v>0?v:1;\n    }\n    int ans=need[0][0];\n    for (int i=0;i<m;i++) free(need[i]); free(need); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "need[i][j] = HP tối thiểu tại ô (i,j) trước khi vào; reverse DP đảm bảo luôn ≥1 khi rời ô.",
+    "edgeCases": ["1×1 ô", "Toàn số dương vẫn cần HP≥1", "Đường đi nhiều nhánh âm"],
+    "pitfalls": ["DP xuôi từ start khó ràng buộc HP>0", "Quên max(1, ...)"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Trộn hai danh sách liên kết đơn đã được sắp xếp tăng dần thành một danh sách liên kết mới duy nhất cũng được sắp xếp.</div>
+                        <div class="block-text">Trộn hai danh sách liên kết đơn đã sắp xếp tăng dần thành một danh sách mới cũng được sắp xếp. Không cần cấp phát nút mới — chỉ nối lại con trỏ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>l1 = 1-&gt;2-&gt;4, l2 = 1-&gt;3-&gt;4</code></div>
-                <div class="ex-line"><span>Out</span><code>1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4</code></div>
+                <div class="ex-line"><span>In</span><code>list1 = [1,2,4], list2 = [1,3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,1,2,3,4,4]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>list1 = [], list2 = []</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>list1 = [], list2 = [0]</code></div>
+                <div class="ex-line"><span>Out</span><code>[0]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng một nút giả (Dummy Node) để làm gốc neo cho danh sách kết quả. Ta dùng con trỏ chạy `tail` duyệt song song hai danh sách, liên tục so sánh giá trị nút hiện tại của l1 và l2 để nối nút nhỏ hơn vào `tail-&gt;next`, sau đó tịnh tiến con trỏ tương ứng. Khi một trong hai danh sách kết thúc, ta nối trực tiếp phần còn lại của danh sách chưa rỗng vào cuối.</div>
+                        <div class="block-text">Dummy node + con trỏ tail. So sánh head list1/list2, nối nút nhỏ hơn vào tail, tịnh tiến con trỏ tương ứng. Khi một list hết, nối phần còn lại.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,50 +100,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Definition <span class="kw">for</span> singly-linked list.
- * <span class="ty">struct</span> ListNode {
- *     <span class="ty">int</span> val;
- *     <span class="ty">struct</span> ListNode *next;
- * };
- */
-<span class="ty">struct</span> ListNode* mergeTwoLists(<span class="ty">struct</span> ListNode* list1, <span class="ty">struct</span> ListNode* list2) {
-    
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> ListNode* mergeTwoLists(<span class="ty">struct</span> ListNode* l1, <span class="ty">struct</span> ListNode* l2) {
+    <span class="ty">struct</span> ListNode dummy = {0, NULL}, *tail = &amp;dummy;
+    <span class="kw">while</span> (l1 &amp;&amp; l2) {
+        <span class="kw">if</span> (l1-&gt;val &lt;= l2-&gt;val) { tail-&gt;next = l1; l1 = l1-&gt;next; }
+        <span class="kw">else</span> { tail-&gt;next = l2; l2 = l2-&gt;next; }
+        tail = tail-&gt;next;
+    }
+    tail-&gt;next = l1 ? l1 : l2;
+    <span class="kw">return</span> dummy.next;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Definition <span class="kw">for</span> singly-linked <span class="ty">list</span>.</span>
-<span class="cm"># <span class="kw">class</span> <span class="ty">ListNode</span>(object):</span>
-<span class="cm">#     <span class="kw">def</span> __init__(<span class="ty">self</span>, val=0, next=<span class="kw">None</span>):</span>
-<span class="cm">#         <span class="ty">self</span>.val = val</span>
-<span class="cm">#         <span class="ty">self</span>.next = next</span>
-<span class="kw">class</span> Solution(object):
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> mergeTwoLists(<span class="ty">self</span>, list1, list2):
-        &quot;&quot;&quot;
-        :type list1: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        :type list2: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        :rtype: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">struct</span> <span class="ty">ListNode</span> {
-    <span class="ty">int</span> val;
-    <span class="ty">ListNode</span> *next;
-};
-
-<span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">ListNode</span>* <span class="fn">mergeTwoLists</span>(<span class="ty">ListNode</span>* list1, <span class="ty">ListNode</span>* list2) {
-        <span class="ty">ListNode</span> dummy(<span class="st">0</span>); <span class="cm">// Khoi tao Nut gia tren Stack RAM</span>
-        <span class="ty">ListNode</span>* tail = &amp;dummy;
-        <span class="kw">while</span> (list1 &amp;&amp; list2) {
-            <span class="kw">if</span> (list1-&gt;val &lt;= list2-&gt;val) {
-                tail-&gt;next = list1;
-                list1 = list1-&gt;next;
-            } <span class="kw">else</span> {
-                tail-&gt;next = list2;
-                list2 = list2-&gt;next;
-            }
+        dummy = <span class="ty">ListNode</span>(); tail = dummy
+        <span class="kw">while</span> list1 <span class="kw">and</span> list2:
+            <span class="kw">if</span> list1.val &lt;= list2.val:
+                tail.next = list1; list1 = list1.next
+            <span class="kw">else</span>:
+                tail.next = list2; list2 = list2.next
+            tail = tail.next
+        tail.next = list1 <span class="kw">or</span> list2
+        <span class="kw">return</span> dummy.next</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode dummy(0); ListNode* tail = &amp;dummy;
+        <span class="kw">while</span> (l1 &amp;&amp; l2) {
+            <span class="kw">if</span> (l1-&gt;val &lt;= l2-&gt;val) { tail-&gt;next = l1; l1 = l1-&gt;next; }
+            <span class="kw">else</span> { tail-&gt;next = l2; l2 = l2-&gt;next; }
             tail = tail-&gt;next;
         }
-        tail-&gt;next = list1 ? list1 : list2; <span class="cm">// Noi duoi phan con lai</span>
+        tail-&gt;next = l1 ? l1 : l2;
         <span class="kw">return</span> dummy.next;
     }
 };</pre>
@@ -149,14 +146,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — một nút giả để làm gốc neo cho danh sách kết quả.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — dùng con trỏ chạy `tail` duyệt song song hai danh sách,…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — một trong hai danh sách kết thúc, ta nối trực tiếp phần…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dummy node + con trỏ tail.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — So sánh head list1/list2, nối nút nhỏ hơn vào tail, tịnh…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — một list hết, nối phần còn lại.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Dummy node giữ đầu kết quả; mỗi bước nối nút nhỏ hơn nên danh sách kết quả luôn tăng dần.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Một nút</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi bước nối đúng phần tử nhỏ nhất còn lại — thứ tự tăng được bảo toàn.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Cả hai rỗng</span><span class="analysis-tag edge">Một list rỗng</span><span class="analysis-tag edge">Phần tử bằng nhau xen kẽ</span><span class="analysis-tag pit">Quên nối phần đuôi còn lại</span><span class="analysis-tag pit">Tạo nút mới không cần thiết</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>tái sử dụng trực tiếp các con trỏ liên kết có sẵn của l1 và l2 mà không tạo mới bất kỳ nút nào qua `new` hay…</p>
+                        <p>Dummy giữ head kết quả — O extra, không tạo nút mới.</p>
                     </details>
                 </div>
                 </div>

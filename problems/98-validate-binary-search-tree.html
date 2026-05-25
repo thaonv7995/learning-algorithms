@@ -42,7 +42,7 @@
                     <h1 class="problem-title">Validate Binary Search Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>35.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Validate Binary Search Tree (LC #98).</div>
+                        <div class="block-text">Cho root cây nhị phân. Kiểm tra cây có phải BST hợp lệ không: mọi nút trái &lt; root &lt; mọi nút phải, đệ quy trên toàn cây.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [2,1,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [5,1,4,null,null,3,6]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">DFS với khoảng (lo, hi): node.val phải trong (lo, hi); kiểm tra left (lo, val) và right (val, hi). Hoặc inorder tăng strict.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,24 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* isValidBST — DFS bounds; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> isValidBST(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; bool:
+        <span class="kw">def</span> dfs(node, lo, hi):
+            <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span> <span class="kw">True</span>
+            <span class="kw">if</span> <span class="kw">not</span> (lo &lt; node.val &lt; hi): <span class="kw">return</span> <span class="kw">False</span>
+            <span class="kw">return</span> dfs(node.left, lo, node.val) <span class="kw">and</span> dfs(node.right, node.val, hi)
+        <span class="kw">return</span> dfs(root, float('-inf'), float('inf'))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> dfs(TreeNode* n, <span class="ty">long</span> lo, <span class="ty">long</span> hi) {
+        <span class="kw">if</span> (!n) <span class="kw">return</span> true;
+        <span class="kw">if</span> (n-&gt;val &lt;= lo || n-&gt;val &gt;= hi) <span class="kw">return</span> false;
+        <span class="kw">return</span> dfs(n-&gt;left, lo, n-&gt;val) &amp;&amp; dfs(n-&gt;right, n-&gt;val, hi);
+    }
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">bool</span> isValidBST(TreeNode* root) {
+        <span class="kw">return</span> dfs(root, LONG_MIN, LONG_MAX);
+    }
 };</pre>
                         </div>
                     </div>
@@ -106,17 +123,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DFS với khoảng : node.val phải trong ; kiểm tra left và…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc inorder tăng strict.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Khoảng lan truyền đảm bảo mọi tổ tiên/cháu được ràng buộc.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">INT_MIN/MAX ở lá</span><span class="analysis-tag edge">Cây một nút</span><span class="analysis-tag edge">Duplicate → false (strict)</span><span class="analysis-tag pit">Chỉ so với parent</span><span class="analysis-tag pit">Dùng int cho bound khi val = INT_MIN/MAX</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>Bound min/max — không chỉ so parent con trực tiếp.</p>
                     </details>
                 </div>
                 </div>

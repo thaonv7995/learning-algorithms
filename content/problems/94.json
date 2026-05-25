@@ -2,35 +2,25 @@
   "id": 94,
   "title": "Binary Tree Inorder Traversal",
   "difficulty": "Easy",
-  "category": "Stack",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Binary Tree Inorder Traversal (LC #94).",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root cây nhị phân. Trả về thứ tự duyệt inorder (trái → gốc → phải) — danh sách giá trị các nút.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,null,2,3]", "output": "[1,3,2]" },
+    { "input": "root = []", "output": "[]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Đệ quy: inorder(left), append root.val, inorder(right). Hoặc iterative: stack — luôn đẩy left chain, pop visit, sang right.",
+  "memoryTip": "Iterative: đi trái hết push stack; pop; r=right.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:\n        res, st = [], []\n        cur = root\n        while cur or st:\n            while cur:\n                st.append(cur); cur = cur.left\n            cur = st.pop(); res.append(cur.val); cur = cur.right\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<int> inorderTraversal(TreeNode* root) {\n        vector<int> res; stack<TreeNode*> st;\n        TreeNode* cur = root;\n        while (cur || !st.empty()) {\n            while (cur) { st.push(cur); cur = cur->left; }\n            cur = st.top(); st.pop(); res.push_back(cur->val);\n            cur = cur->right;\n        }\n        return res;\n    }\n};",
+    "c": "/* inorderTraversal — stack iterative; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mỗi nút push/pop đúng một lần theo thứ tự inorder.",
+    "edgeCases": ["root null", "Chỉ gốc", "Cây lệch trái"],
+    "pitfalls": ["Nhầm preorder/postorder", "Quên xử lý right sau pop"]
   },
   "tier": "done"
 }

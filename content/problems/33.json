@@ -1,0 +1,27 @@
+{
+  "id": 33,
+  "title": "Search in Rotated Sorted Array",
+  "difficulty": "Medium",
+  "category": "Binary Search",
+  "timeComplexity": "O(log N)",
+  "spaceComplexity": "O(1)",
+  "description": "Mảng đã sort được xoay tại pivot (mọi phần tử khác nhau). Tìm target, trả index hoặc -1.",
+  "examples": [
+    { "input": "nums = [4,5,6,7,0,1,2], target = 0", "output": "4" },
+    { "input": "nums = [4,5,6,7,0,1,2], target = 3", "output": "-1" },
+    { "input": "nums = [1], target = 0", "output": "-1" }
+  ],
+  "approach": "Binary search: xác định nửa [lo,mid] hay [mid,hi] còn sorted. Kiểm tra target nằm trong nửa sorted → thu hẹp, không thì nửa kia.",
+  "memoryTip": "Một nửa luôn sorted — so target với nums[lo] và nums[mid].",
+  "solutions": {
+    "python": "class Solution:\n    def search(self, nums, target):\n        lo, hi = 0, len(nums) - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if nums[mid] == target: return mid\n            if nums[lo] <= nums[mid]:\n                if nums[lo] <= target < nums[mid]: hi = mid - 1\n                else: lo = mid + 1\n            else:\n                if nums[mid] < target <= nums[hi]: lo = mid + 1\n                else: hi = mid - 1\n        return -1",
+    "cpp": "class Solution {\npublic:\n    int search(vector<int>& nums, int target) {\n        int lo = 0, hi = (int)nums.size() - 1;\n        while (lo <= hi) {\n            int mid = lo + (hi - lo) / 2;\n            if (nums[mid] == target) return mid;\n            if (nums[lo] <= nums[mid]) {\n                if (target >= nums[lo] && target < nums[mid]) hi = mid - 1;\n                else lo = mid + 1;\n            } else {\n                if (target > nums[mid] && target <= nums[hi]) lo = mid + 1;\n                else hi = mid - 1;\n            }\n        }\n        return -1;\n    }\n};",
+    "c": "int search(int* nums, int n, int target) {\n    int lo = 0, hi = n - 1;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (nums[mid] == target) return mid;\n        if (nums[lo] <= nums[mid]) {\n            if (target >= nums[lo] && target < nums[mid]) hi = mid - 1;\n            else lo = mid + 1;\n        } else {\n            if (target > nums[mid] && target <= nums[hi]) lo = mid + 1;\n            else hi = mid - 1;\n        }\n    }\n    return -1;\n}"
+  },
+  "analysis": {
+    "correctness": "Mỗi bước loại bỏ một nửa không chứa target nhờ nhận diện nửa sorted.",
+    "edgeCases": ["Một phần tử", "Không xoay", "Target ở pivot"],
+    "pitfalls": ["Dùng <= sai khi so nums[lo] với target", "Quên unique assumption"]
+  },
+  "tier": "done"
+}

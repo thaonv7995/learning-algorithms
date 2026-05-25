@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Remove Duplicates from Sorted List (LC #83).</div>
+                        <div class="block-text">Linked list đã sort. Xóa nút trùng giá trị liên tiếp, mỗi giá trị chỉ giữ một nút. Trả về head.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,1,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [1,1,2,3,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2,3]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Con trỏ cur: nếu cur.val == cur.next.val thì cur.next = cur.next.next; else cur = cur.next.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,31 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> ListNode* deleteDuplicates(<span class="ty">struct</span> ListNode* head) {
+    <span class="ty">struct</span> ListNode* cur = head;
+    <span class="kw">while</span> (cur &amp;&amp; cur-&gt;next) {
+        <span class="kw">if</span> (cur-&gt;val == cur-&gt;next-&gt;val) cur-&gt;next = cur-&gt;next-&gt;next;
+        <span class="kw">else</span> cur = cur-&gt;next;
+    }
+    <span class="kw">return</span> head;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> deleteDuplicates(<span class="ty">self</span>, head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]) -&gt; <span class="ty">Optional</span>[<span class="ty">ListNode</span>]:
+        cur = head
+        <span class="kw">while</span> cur <span class="kw">and</span> cur.next:
+            <span class="kw">if</span> cur.val == cur.next.val:
+                cur.next = cur.next.next
+            <span class="kw">else</span>:
+                cur = cur.next
+        <span class="kw">return</span> head</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    ListNode* deleteDuplicates(ListNode* head) {
+        <span class="kw">for</span> (ListNode* cur=head; cur &amp;&amp; cur-&gt;next; )
+            <span class="kw">if</span> (cur-&gt;val == cur-&gt;next-&gt;val) cur-&gt;next = cur-&gt;next-&gt;next;
+            <span class="kw">else</span> cur = cur-&gt;next;
+        <span class="kw">return</span> head;
+    }
 };</pre>
                         </div>
                     </div>
@@ -109,14 +133,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Con trỏ cur: nếu cur.val == cur.next.val thì cur.next = cur.next.next;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi cặp trùng liên tiếp bị nối bỏ qua đến khi khác.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút</span><span class="analysis-tag edge">Toàn trùng</span><span class="analysis-tag edge">Không trùng</span><span class="analysis-tag pit">cur = cur.next ngay sau khi xóa (bỏ sót chuỗi trùng)</span><span class="analysis-tag pit">Nhầm với bài xóa hết duplicate (#82)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>Giữ cur khi xóa — chỉ tiến khi không trùng.</p>
                     </details>
                 </div>
                 </div>

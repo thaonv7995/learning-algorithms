@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Sort Colors (LC #75).</div>
+                        <div class="block-text">Mảng nums gồm 0, 1, 2 (đỏ, trắng, xanh). Sắp xếp in-place theo thứ tự 0→1→2, một lần duyệt, không dùng sort thư viện.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [2,0,2,1,1,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>[0,0,1,1,2,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [2,0,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[0,1,2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Dutch National Flag: con trỏ lo, mid, hi. nums[mid]==0 swap lo++; ==1 mid++; ==2 swap hi-- (không tăng mid).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,36 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">void</span> sortColors(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> lo=0, mid=0, hi=n-1, t;
+    <span class="kw">while</span> (mid&lt;=hi) {
+        <span class="kw">if</span> (nums[mid]==0) { t=nums[lo]; nums[lo]=nums[mid]; nums[mid]=t; lo++; mid++; }
+        <span class="kw">else</span> <span class="kw">if</span> (nums[mid]==1) mid++;
+        <span class="kw">else</span> { t=nums[mid]; nums[mid]=nums[hi]; nums[hi]=t; hi--; }
+    }
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> sortColors(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="kw">None</span>:
+        lo = mid = 0; hi = <span class="ty">len</span>(nums) - 1
+        <span class="kw">while</span> mid &lt;= hi:
+            <span class="kw">if</span> nums[mid] == 0:
+                nums[lo], nums[mid] = nums[mid], nums[lo]
+                lo += 1; mid += 1
+            <span class="kw">elif</span> nums[mid] == 1:
+                mid += 1
+            <span class="kw">else</span>:
+                nums[mid], nums[hi] = nums[hi], nums[mid]
+                hi -= 1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">void</span> sortColors(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a) {
+        <span class="ty">int</span> lo=0, mid=0, hi=(<span class="ty">int</span>)a.size()-1;
+        <span class="kw">while</span> (mid&lt;=hi) {
+            <span class="kw">if</span> (a[mid]==0) swap(a[lo++], a[mid++]);
+            <span class="kw">else</span> <span class="kw">if</span> (a[mid]==1) mid++;
+            <span class="kw">else</span> swap(a[mid], a[hi--]);
+        }
+    }
 };</pre>
                         </div>
                     </div>
@@ -109,14 +138,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dutch National Flag: con trỏ lo, mid, hi.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — nums[mid]==0 swap lo++; ==1 mid++; ==2 swap hi-- .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Invariant: [0..lo) toàn 0, (hi..n) toàn 2, [lo..mid) toàn 1.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Đã sort</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Toàn cùng màu</span><span class="analysis-tag pit">Tăng mid khi swap 2 với hi</span><span class="analysis-tag pit">Dùng counting sort O(n) nhưng bài yêu cầu one-pass</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>0 trái, 2 phải, 1 ở giữa — mid chỉ tiến khi gặp 1.</p>
                     </details>
                 </div>
                 </div>

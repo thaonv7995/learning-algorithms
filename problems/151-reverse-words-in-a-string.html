@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #151</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Two Pointers</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Reverse Words in a String</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>56.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Reverse Words in a String (LeetCode #151) — Medium.</div>
+                        <div class="block-text">Cho chuỗi s chứa từ và khoảng trắng. Đảo thứ tự các từ trong chuỗi, loại bỏ khoảng trắng thừa ở đầu/cuối và giữa các từ chỉ còn một dấu cách. Trả về chuỗi kết quả.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;the sky is blue&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;blue is sky the&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;  hello world  &quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;world hello&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;a good   example&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;example good a&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Trim, tách theo whitespace thành mảng từ, đảo mảng rồi join bằng một space. Hoặc reverse toàn chuỗi rồi reverse từng từ in-place O(1) extra nếu mutable char[].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">void</span> reverseRange(<span class="ty">char</span>* a, <span class="ty">int</span> lo, <span class="ty">int</span> hi) {
+    <span class="kw">while</span> (lo &lt; hi) { <span class="ty">char</span> t = a[lo]; a[lo] = a[hi]; a[hi] = t; lo++; hi--; }
+}
+static <span class="ty">void</span> reverseWordsInPlace(<span class="ty">char</span>* s) {
+    <span class="ty">int</span> n = (<span class="ty">int</span>)strlen(s), i = 0;
+    reverseRange(s, 0, n - 1);
+    <span class="kw">while</span> (i &lt; n) {
+        <span class="kw">while</span> (i &lt; n &amp;&amp; s[i] == ' ') i++;
+        <span class="ty">int</span> j = i;
+        <span class="kw">while</span> (j &lt; n &amp;&amp; s[j] != ' ') j++;
+        <span class="kw">if</span> (i &lt; j) reverseRange(s, i, j - 1);
+        i = j;
+    }
+}
+<span class="ty">char</span>* reverseWords(<span class="ty">char</span>* s) { reverseWordsInPlace(s); <span class="kw">return</span> s; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> reverseWords(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">return</span> ' '.join(s.split()[::-1])</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> reverseWords(<span class="ty">string</span> s) {
+        <span class="ty">string</span> word, res;
+        <span class="ty">int</span> i = 0, n = s.size();
+        <span class="kw">while</span> (i &lt; n) {
+            <span class="kw">while</span> (i &lt; n &amp;&amp; s[i] == ' ') i++;
+            <span class="kw">if</span> (i &gt;= n) break;
+            <span class="ty">int</span> j = i;
+            <span class="kw">while</span> (j &lt; n &amp;&amp; s[j] != ' ') j++;
+            word = s.substr(i, j - i);
+            res = res.empty() ? word : word + &quot; &quot; + res;
+            i = j;
+        }
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +144,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Two Pointers</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Trim, tách theo whitespace thành mảng từ, đảo mảng rồi…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc reverse toàn chuỗi rồi reverse từng từ in-place O…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>split/trim loại mọi khoảng trắng thừa; đảo thứ tự từ cho đúng output.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng hoặc chỉ space</span><span class="analysis-tag edge">Một từ duy nhất</span><span class="analysis-tag edge">Nhiều space liên tiếp</span><span class="analysis-tag pit">Không trim → space thừa</span><span class="analysis-tag pit">In-place C cần reverse từng đoạn đúng biên</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Reverse words = split + reverse list, hoặc reverse whole string rồi reverse từng word.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Reverse%20Words%20in%20a%20String&lc_id=151&embed=true"></iframe>

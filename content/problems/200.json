@@ -3,32 +3,24 @@
   "title": "Number of Islands",
   "difficulty": "Medium",
   "category": "Graph",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Number of Islands (LeetCode #200) — Medium.",
+  "timeComplexity": "O(m×n)",
+  "spaceComplexity": "O(m×n)",
+  "description": "Lưới grid m×n: '1' là đất, '0' là nước. Đảo là vùng '1' liên thông 4 hướng. Đếm số đảo.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "grid = [[\"1\",\"1\",\"1\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\"]]", "output": "1" },
+    { "input": "grid = [[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"1\"]]", "output": "3" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt grid; gặp '1' thì DFS/BFS flood fill đánh dấu '0', tăng count. Mỗi lần flood fill = một đảo.",
+  "memoryTip": "Number of islands = count connected components of '1' via DFS/BFS.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numIslands(self, grid: List[List[str]]) -> int:\n        if not grid: return 0\n        m, n = len(grid), len(grid[0])\n        def dfs(i, j):\n            if i < 0 or i >= m or j < 0 or j >= n or grid[i][j] != '1': return\n            grid[i][j] = '0'\n            dfs(i+1,j); dfs(i-1,j); dfs(i,j+1); dfs(i,j-1)\n        cnt = 0\n        for i in range(m):\n            for j in range(n):\n                if grid[i][j] == '1':\n                    cnt += 1\n                    dfs(i, j)\n        return cnt",
+    "cpp": "class Solution {\n    int m, n;\n    void dfs(vector<vector<char>>& g, int i, int j) {\n        if (i < 0 || i >= m || j < 0 || j >= n || g[i][j] != '1') return;\n        g[i][j] = '0';\n        dfs(g, i+1, j); dfs(g, i-1, j); dfs(g, i, j+1); dfs(g, i, j-1);\n    }\npublic:\n    int numIslands(vector<vector<char>>& grid) {\n        m = grid.size(); if (!m) return 0;\n        n = grid[0].size(); int cnt = 0;\n        for (int i = 0; i < m; i++)\n            for (int j = 0; j < n; j++)\n                if (grid[i][j] == '1') { cnt++; dfs(grid, i, j); }\n        return cnt;\n    }\n};",
+    "c": "static void dfs(char** g, int m, int n, int i, int j) {\n    if (i<0||i>=m||j<0||j>=n||g[i][j]!='1') return;\n    g[i][j]='0';\n    dfs(g,m,n,i+1,j); dfs(g,m,n,i-1,j); dfs(g,m,n,i,j+1); dfs(g,m,n,i,j-1);\n}\nint numIslands(char** grid, int m, int* cs) {\n    if (!m) return 0; int n=cs[0], cnt=0;\n    for (int i=0;i<m;i++) for (int j=0;j<n;j++)\n        if (grid[i][j]=='1') { cnt++; dfs(grid,m,n,i,j); }\n    return cnt;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi DFS/BFS thăm đúng một component; đánh dấu visited tránh đếm lại.",
+    "edgeCases": ["Grid rỗng", "Toàn nước", "Toàn đất một đảo"],
+    "pitfalls": ["8 hướng thay 4", "Không mutate grid → visited TLE/memory"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

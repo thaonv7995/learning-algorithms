@@ -5,32 +5,22 @@
   "category": "Linked List",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Partition List (LC #86).",
+  "description": "Cho linked list và số nguyên x. Sắp xếp lại list sao cho mọi nút có giá trị < x đứng trước các nút ≥ x, giữ thứ tự tương đối trong từng nhóm.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [1,4,3,2,5,2], x = 3", "output": "[1,2,2,4,3,5]" },
+    { "input": "head = [2,1], x = 2", "output": "[1,2]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Hai dummy list small/large; duyệt gốc, nối nút vào tail tương ứng; cuối nối small → large.",
+  "memoryTip": "Two lists + dummy — O(1), stable partition.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def partition(self, head: Optional[ListNode], x: int) -> Optional[ListNode]:\n        small = large = ListNode(0); s, l = small, large\n        while head:\n            if head.val < x:\n                s.next = head; s = s.next\n            else:\n                l.next = head; l = l.next\n            head = head.next\n        l.next = None; s.next = large.next\n        return small.next",
+    "cpp": "class Solution {\npublic:\n    ListNode* partition(ListNode* head, int x) {\n        ListNode sd(0), ld(0), *s=&sd, *l=&ld;\n        for (ListNode* p=head; p; p=p->next) {\n            if (p->val < x) { s->next=p; s=s->next; }\n            else { l->next=p; l=l->next; }\n        }\n        l->next=nullptr; s->next=ld.next;\n        return sd.next;\n    }\n};",
+    "c": "/* partition — hai list dummy; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Thứ tự trong small/large giữ nguyên thứ tự gốc; nối cuối đủ hai phần.",
+    "edgeCases": ["Tất cả < x", "Tất cả ≥ x", "List rỗng"],
+    "pitfalls": ["Quên large.next = null (cycle)", "Không tách list mà đổi giá trị"]
   },
   "tier": "done"
 }

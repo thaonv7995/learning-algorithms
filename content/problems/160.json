@@ -3,32 +3,24 @@
   "title": "Intersection of Two Linked Lists",
   "difficulty": "Easy",
   "category": "Hash Table",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(m+n)",
   "spaceComplexity": "O(1)",
-  "description": "Intersection of Two Linked Lists (LeetCode #160) — Easy.",
+  "description": "Cho đầu hai linked list có thể giao nhau tại một node (cùng reference, không copy giá trị). Trả node giao nhau hoặc null nếu không giao.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "listA = [4,1,8,4,5], listB = [5,6,1,8,4,5], intersect at 8", "output": "node 8" },
+    { "input": "listA = [2,6,4], listB = [1,5]", "output": "null" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers: a đi listA rồi chuyển listB, b đi listB rồi chuyển listA. Cùng quãng đường m+n → gặp nhau tại intersection hoặc null.",
+  "memoryTip": "A+B và B+A cùng độ dài → two pointers gặp tại merge point.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:\n        if not headA or not headB: return None\n        a, b = headA, headB\n        while a is not b:\n            a = a.next if a else headB\n            b = b.next if b else headA\n        return a",
+    "cpp": "class Solution {\npublic:\n    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {\n        if (!headA || !headB) return nullptr;\n        ListNode *a = headA, *b = headB;\n        while (a != b) {\n            a = a ? a->next : headB;\n            b = b ? b->next : headA;\n        }\n        return a;\n    }\n};",
+    "c": "struct ListNode* getIntersectionNode(struct ListNode* headA, struct ListNode* headB) {\n    if (!headA || !headB) return NULL;\n    struct ListNode *a = headA, *b = headB;\n    while (a != b) {\n        a = a ? a->next : headB;\n        b = b ? b->next : headA;\n    }\n    return a;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Sau tối đa m+n bước, hai con trỏ cùng offset từ intersection hoặc cùng null.",
+    "edgeCases": ["Không giao", "Giao tại head một list", "Một list rỗng"],
+    "pitfalls": ["Hash set O(n) space không cần thiết", "So sánh giá trị thay vì reference node"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

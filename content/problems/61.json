@@ -5,22 +5,23 @@
   "category": "Linked List",
   "timeComplexity": "O(N)",
   "spaceComplexity": "O(1)",
-  "description": "Xoay danh sách liên kết sang phải k bước. k có thể lớn hơn độ dài — dùng k % len.",
+  "description": "Cho head danh sách liên kết đơn và số nguyên k ≥ 0. Xoay danh sách sang phải k bước: phần đuôi k nút cuối chuyển lên đầu, thứ tự tương đối trong từng đoạn giữ nguyên. Trả về head mới. k có thể lớn hơn độ dài — dùng k % len.",
   "examples": [
     { "input": "head = [1,2,3,4,5], k = 2", "output": "[4,5,1,2,3]" },
-    { "input": "head = [0,1,2], k = 4", "output": "[2,0,1]" }
+    { "input": "head = [0,1,2], k = 4", "output": "[2,0,1]" },
+    { "input": "head = [1], k = 1", "output": "[1]" }
   ],
-  "approach": "Tìm độ dài len và tail. k = k % len. Tìm nút mới tại vị trí len-k-1 làm newTail; newHead = newTail.next; nối tail → head cũ.",
-  "memoryTip": "Hai con trỏ + modulo k — không cần xoay từng bước.",
+  "approach": "Một vòng tìm len và tail. k = k % len; nếu k=0 trả head. Di chuyển con trỏ tới nút thứ len-k-1 (newTail); newHead = newTail.next; cắt list tại newTail; nối tail cũ → head cũ.",
+  "memoryTip": "Xoay phải k bước = head mới ở index len-k — modulo k trước, không xoay từng bước.",
   "solutions": {
-    "python": "class Solution:\n    def rotateRight(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:\n        if not head or not head.next or k == 0: return head\n        n, tail = 1, head\n        while tail.next: tail, n = tail.next, n + 1\n        k %= n\n        if k == 0: return head\n        for _ in range(n - k - 1): head = head.next\n        new_head, head.next = head.next, new_head\n        tail.next = head\n        return new_head",
+    "python": "class Solution:\n    def rotateRight(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:\n        if not head or not head.next or k == 0:\n            return head\n        n, tail = 1, head\n        while tail.next:\n            tail = tail.next\n            n += 1\n        k %= n\n        if k == 0:\n            return head\n        cur = head\n        for _ in range(n - k - 1):\n            cur = cur.next\n        new_head = cur.next\n        cur.next = None\n        tail.next = head\n        return new_head",
     "cpp": "class Solution {\npublic:\n    ListNode* rotateRight(ListNode* head, int k) {\n        if (!head || !head->next || !k) return head;\n        int n = 1; ListNode* tail = head;\n        while (tail->next) { tail = tail->next; n++; }\n        k %= n; if (!k) return head;\n        ListNode* cur = head;\n        for (int i = 0; i < n - k - 1; i++) cur = cur->next;\n        ListNode* nh = cur->next;\n        cur->next = nullptr; tail->next = head;\n        return nh;\n    }\n};",
-    "c": "/* rotateRight — tìm len, k%=n, cắt tại n-k-1; xem C++ */"
+    "c": "struct ListNode* rotateRight(struct ListNode* head, int k) {\n    if (!head || !head->next || !k) return head;\n    int n = 1;\n    struct ListNode* tail = head;\n    while (tail->next) { tail = tail->next; n++; }\n    k %= n;\n    if (!k) return head;\n    struct ListNode* cur = head;\n    for (int i = 0; i < n - k - 1; i++) cur = cur->next;\n    struct ListNode* nh = cur->next;\n    cur->next = NULL;\n    tail->next = head;\n    return nh;\n}"
   },
   "analysis": {
-    "correctness": "Xoay phải k bước = head mới ở vị trí len-k.",
-    "edgeCases": ["k=0", "k > len", "List 1 node"],
-    "pitfalls": ["Quên k %= len", "Quên nối tail → head cũ"]
+    "correctness": "Sau k % len, cắt tại len-k-1 tách đúng đoạn đuôi k nút; nối tail→head cũ tạo vòng xoay một lần.",
+    "edgeCases": ["k=0 hoặc k % len = 0 → không đổi", "k > len → modulo", "List 1 node"],
+    "pitfalls": ["Quên k %= len", "Quên nối tail → head cũ", "Gán newHead trước khi cắt → mất con trỏ"]
   },
   "tier": "done"
 }

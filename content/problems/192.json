@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Shell",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Word Frequency (LeetCode #192) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Đọc file text qua stdin. In mỗi từ (chữ thường) kèm tần suất, sắp xếp giảm dần theo freq rồi tăng dần theo từ nếu freq bằng nhau.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "the day is sunny the the the sunny is is", "output": "the 4\\nis 3\\nsunny 2\\nday 1" },
+    { "input": "hello hello world", "output": "hello 2\\nworld 1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "tr -s ' ' '\\n' | sort | uniq -c | sort -nr | awk in chuẩn LeetCode (word trước count).",
+  "memoryTip": "Word freq shell = tr/sort/uniq -c/sort -nr/awk flip columns.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# Bash\n# cat words.txt | tr -s ' ' '\\n' | sort | uniq -c | sort -nr | awk '{print $2,$1}'",
+    "cpp": "// Bash one-liner:\n// cat words.txt | tr -s ' ' '\\n' | sort | uniq -c | sort -nr | awk '{print $2,$1}'",
+    "c": "/* Bash: cat words.txt | tr -s ' ' '\\n' | sort | uniq -c | sort -nr | awk '{print $2,$1}' */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Pipeline chuẩn Unix đếm và sort đúng tie-break lexical.",
+    "edgeCases": ["File rỗng", "Một từ", "Nhiều space liên tiếp"],
+    "pitfalls": ["Sort theo từ thay freq", "Quên tr -s tách từ"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

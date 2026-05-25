@@ -4,33 +4,23 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Same Tree (LC #100).",
+  "spaceComplexity": "O(h)",
+  "description": "Cho hai cây nhị phân p và q. Kiểm tra chúng giống hệt nhau (cùng cấu trúc và cùng giá trị tại mọi nút).",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "p = [1,2,3], q = [1,2,3]", "output": "true" },
+    { "input": "p = [1,2], q = [1,null,2]", "output": "false" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Đệ quy: cùng null → true; một null hoặc val khác → false; else sameTree(p.left,q.left) && sameTree(p.right,q.right).",
+  "memoryTip": "So val + cấu trúc con trái/phải cùng lúc.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:\n        if not p and not q: return True\n        if not p or not q or p.val != q.val: return False\n        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)",
+    "cpp": "class Solution {\npublic:\n    bool isSameTree(TreeNode* p, TreeNode* q) {\n        if (!p && !q) return true;\n        if (!p || !q || p->val != q->val) return false;\n        return isSameTree(p->left,q->left) && isSameTree(p->right,q->right);\n    }\n};",
+    "c": "int isSameTree(struct TreeNode* p, struct TreeNode* q) {\n    if (!p && !q) return 1;\n    if (!p || !q || p->val != q->val) return 0;\n    return isSameTree(p->left,q->left) && isSameTree(p->right,q->right);\n}"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "DFS so sánh đồng bộ mọi cặp nút tương ứng.",
+    "edgeCases": ["Cả hai null → true", "Một null → false", "Chỉ khác val một nút"],
+    "pitfalls": ["Chỉ so val không so null con", "Nhầm với isSymmetric (mirror)"]
   },
   "tier": "done"
 }

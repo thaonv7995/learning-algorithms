@@ -2,35 +2,25 @@
   "id": 87,
   "title": "Scramble String",
   "difficulty": "Hard",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Scramble String (LC #87).",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n⁴)",
+  "spaceComplexity": "O(n³)",
+  "description": "Hai chuỗi s1, s2 cùng độ dài. Kiểm tra s2 có phải scrambled string của s1 không: có thể chia s1 thành hai phần không rỗng và hoán đổi hoặc scramble đệ quy hai phần.",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s1 = \"great\", s2 = \"rgeat\"", "output": "true" },
+    { "input": "s1 = \"abcde\", s2 = \"caebd\"", "output": "false" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "DP/lệnh ghi nhớ: isScramble(i1,i2,len) — thử mọi split k: scramble trái-trái phải-phải HOẶC trái-phải phải-trái. Base len=1 so ký tự.",
+  "memoryTip": "Split tại k — hai cách ghép con (LL+RR hoặc LR+RL).",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isScramble(self, s1: str, s2: str) -> bool:\n        from functools import lru_cache\n        n = len(s1)\n        if sorted(s1) != sorted(s2): return False\n        @lru_cache(None)\n        def dfs(i, j, l):\n            if l == 1: return s1[i] == s2[j]\n            for k in range(1, l):\n                if (dfs(i, j, k) and dfs(i+k, j+k, l-k)) or \\\n                   (dfs(i, j+k, l-k) and dfs(i+k, j, k)):\n                    return True\n            return False\n        return dfs(0, 0, n)",
+    "cpp": "class Solution {\n    string a,b;\n    vector<vector<vector<int>>> memo;\n    bool dp(int i,int j,int l) {\n        if (l==1) return a[i]==b[j];\n        if (memo[i][j][l]!=-1) return memo[i][j][l];\n        for (int k=1;k<l;k++)\n            if ((dp(i,j,k)&&dp(i+k,j+k,l-k))||(dp(i,j+k,l-k)&&dp(i+k,j,k)))\n                return memo[i][j][l]=1;\n        return memo[i][j][l]=0;\n    }\npublic:\n    bool isScramble(string s1, string s2) {\n        if (s1.size()!=s2.size()) return false;\n        a=s1; b=s2; int n=a.size();\n        memo.assign(n, vector<vector<int>>(n, vector<int>(n+1,-1)));\n        return dp(0,0,n);\n    }\n};",
+    "c": "/* isScramble — DP 3D memo split; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mọi cách chia hợp lệ được thử; memo tránh trùng subproblem.",
+    "edgeCases": ["s1 == s2", "len=1", "Anagram nhưng không scramble → false có thể"],
+    "pitfalls": ["Quên kiểm tra cùng multiset ký tự", "Nhầm hoán vị thường với scramble"]
   },
   "tier": "done"
 }

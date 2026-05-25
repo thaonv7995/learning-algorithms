@@ -2,35 +2,25 @@
   "id": 89,
   "title": "Gray Code",
   "difficulty": "Medium",
-  "category": "Math",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Gray Code (LC #89).",
+  "category": "Bit Manipulation",
+  "timeComplexity": "O(2^n)",
+  "spaceComplexity": "O(2^n)",
+  "description": "Cho n ≥ 0. Trả về dãy Gray code gồm 2^n số nguyên từ 0..2^n-1 sao cho hai số liên tiếp chỉ khác đúng 1 bit (dãy có thể bắt đầu từ 0).",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 2", "output": "[0,1,3,2]" },
+    { "input": "n = 1", "output": "[0,1]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Công thức: G(i) = i ^ (i >> 1). Hoặc đệ quy: l(list n-1) rồi reverse(list)+ (1<<(n-1)).",
+  "memoryTip": "i XOR (i>>1) — một dòng sinh Gray.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def grayCode(self, n: int) -> List[int]:\n        return [i ^ (i >> 1) for i in range(1 << n)]",
+    "cpp": "class Solution {\npublic:\n    vector<int> grayCode(int n) {\n        int m=1<<n; vector<int> res(m);\n        for (int i=0;i<m;i++) res[i]=i^(i>>1);\n        return res;\n    }\n};",
+    "c": "/* grayCode — i ^ (i>>1); xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Công thức chuẩn sinh reflected Gray code liên tiếp 1-bit.",
+    "edgeCases": ["n = 0 → [0]", "n = 3 → 8 phần tử"],
+    "pitfalls": ["Trả về binary thay vì số nguyên", "Thứ tự không liên tiếp 1-bit nếu không dùng công thức đúng"]
   },
   "tier": "done"
 }

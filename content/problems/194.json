@@ -3,32 +3,24 @@
   "title": "Transpose File",
   "difficulty": "Medium",
   "category": "Shell",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(rc)",
   "spaceComplexity": "O(1)",
-  "description": "Transpose File (LeetCode #194) — Medium.",
+  "description": "File có cột phân tách space (số cột cố định). In transpose: hàng thành cột và ngược lại, giữ space delimiter.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "name age\\nAlice 21\\nBob 30", "output": "name Alice Bob\\nage 21 30" },
+    { "input": "a b\\nc d", "output": "a c\\nb d" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "awk '{for(i=1;i<=NF;i++) a[i]=a[i] $0 \" \"; ...}' hoặc paste <(cut...) — LeetCode dùng awk lưu cột rồi in.",
+  "memoryTip": "Transpose file = awk store fields by column index, print rows.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# Bash awk transpose\n# awk '{for(i=1;i<=NF;i++){if(NR==1){n=NF}; a[i,i]=a[i,i] $i \" \"}} END{for(i=1;i<=n;i++){sub(/ $/,\"\",a[i,i]); print a[i,i]}}' file.txt",
+    "cpp": "// awk '{for(i=1;i<=NF;i++) a[i,i]=a[i,i] $i \" \"} END{for(i=1;i<=NF;i++){sub(/ $/,\"\",a[i,i]); print a[i,i]}}' file.txt",
+    "c": "/* awk column transpose — see bash one-liner in editorial */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Gom field thứ i mỗi dòng thành hàng i của output.",
+    "edgeCases": ["Một cột", "Một hàng", "Cột rộng không đều (đề thường đều)"],
+    "pitfalls": ["paste cần biết số cột", "Trailing space format sai"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

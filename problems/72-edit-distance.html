@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #72</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">String</span>
+                        <span class="cat-chip">Dynamic Programming</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Edit Distance</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m·n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m·n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>60.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Edit Distance (LC #72).</div>
+                        <div class="block-text">Cho hai chuỗi word1 và word2. Trả về số thao tác tối thiểu (insert, delete, replace một ký tự) để biến word1 thành word2.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>word1 = &quot;horse&quot;, word2 = &quot;ros&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>word1 = &quot;intention&quot;, word2 = &quot;execution&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">DP[i][j] = edit distance giữa word1[:i] và word2[:j]. Khớp ký tự → dp[i-1][j-1]; else 1 + min(insert dp[i][j-1], delete dp[i-1][j], replace dp[i-1][j-1]).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* minDistance — DP 2D; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> minDistance(<span class="ty">self</span>, word1: <span class="ty">str</span>, word2: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        m, n = <span class="ty">len</span>(word1), <span class="ty">len</span>(word2)
+        dp = [[0]*(n+1) <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m+1)]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m+1): dp[i][0] = i
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n+1): dp[0][j] = j
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, m+1):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(1, n+1):
+                <span class="kw">if</span> word1[i-1] == word2[j-1]:
+                    dp[i][j] = dp[i-1][j-1]
+                <span class="kw">else</span>:
+                    dp[i][j] = 1 + <span class="ty">min</span>(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
+        <span class="kw">return</span> dp[m][n]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">int</span> minDistance(<span class="ty">string</span> a, <span class="ty">string</span> b) {
+        <span class="ty">int</span> m=a.size(), n=b.size();
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(m+1, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n+1));
+        <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;=m;i++) dp[i][0]=i;
+        <span class="kw">for</span> (<span class="ty">int</span> j=0;j&lt;=n;j++) dp[0][j]=j;
+        <span class="kw">for</span> (<span class="ty">int</span> i=1;i&lt;=m;i++)
+            <span class="kw">for</span> (<span class="ty">int</span> j=1;j&lt;=n;j++)
+                dp[i][j] = a[i-1]==b[j-1] ? dp[i-1][j-1]
+                    : 1 + min({dp[i-1][j], dp[i][j-1], dp[i-1][j-1]});
+        <span class="kw">return</span> dp[m][n];
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,19 +130,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m·n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m·n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP[i][j] = edit distance giữa word1[:i] và word2[:j].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Khớp ký tự → dp[i-1][j-1]; else 1 + min.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi thao tác tối ưu được mô hình hóa qua ba lựa chọn tại mỗi ô.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một chuỗi rỗng → len chuỗi kia</span><span class="analysis-tag edge">Hai chuỗi giống hệt → 0</span><span class="analysis-tag pit">Index 1-based trong DP</span><span class="analysis-tag pit">Nhầm insert/delete khi map hàng/cột</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>Bảng ×; hàng/cột 0 = index xóa/chèn.</p>
                     </details>
                 </div>
                 </div>

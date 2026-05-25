@@ -2,35 +2,25 @@
   "id": 90,
   "title": "Subsets II",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Subsets II (LC #90).",
+  "category": "Backtracking",
+  "timeComplexity": "O(n·2^n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums có thể trùng. Trả về mọi tập con duy nhất (mỗi giá trị trong subset xuất hiện không quá số lần trong nums).",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,2]", "output": "[[],[1],[1,2],[1,2,2],[2],[2,2]]" },
+    { "input": "nums = [0]", "output": "[[],[0]]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Sort nums. Backtracking: tại i, bỏ qua nums[i] nếu i>start và nums[i]==nums[i-1]; chọn nums[i] rồi dfs(i+1).",
+  "memoryTip": "Sort + skip duplicate cùng level — giống combinations II.",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:\n        nums.sort(); res, path = [], []\n        def dfs(start):\n            res.append(path[:])\n            for i in range(start, len(nums)):\n                if i > start and nums[i] == nums[i-1]: continue\n                path.append(nums[i]); dfs(i+1); path.pop()\n        dfs(0)\n        return res",
+    "cpp": "class Solution {\n    vector<vector<int>> res;\n    vector<int> path;\n    void dfs(vector<int>& a, int st) {\n        res.push_back(path);\n        for (int i=st;i<(int)a.size();i++) {\n            if (i>st && a[i]==a[i-1]) continue;\n            path.push_back(a[i]); dfs(a,i+1); path.pop_back();\n        }\n    }\npublic:\n    vector<vector<int>> subsetsWithDup(vector<int>& nums) {\n        sort(nums.begin(), nums.end()); dfs(nums,0); return res;\n    }\n};",
+    "c": "/* subsetsWithDup — sort + skip dup; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Sort đặt trùng liền kề; skip cùng level tránh subset trùng.",
+    "edgeCases": ["Toàn cùng số", "Một phần tử"],
+    "pitfalls": ["Skip sai điều kiện i>start", "Không sort trước backtrack"]
   },
   "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #78</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
+                        <span class="cat-chip">Backtracking</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Subsets</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n·2^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>82.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Subsets (LC #78).</div>
+                        <div class="block-text">Cho mảng nums các số phân biệt. Trả về mọi tập con (power set), mỗi subset là mảng con, thứ tự subset trong output không quan trọng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [0]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[],[0]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
+                        <div class="block-text">Backtracking: tại index i, chọn nums[i] hoặc bỏ qua; hoặc duyệt i, push path khi vào i rồi dfs(i+1).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* subsets — backtracking pick/skip; xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+    <span class="kw">def</span> subsets(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        res, path = [], []
+        <span class="kw">def</span> dfs(i):
+            <span class="kw">if</span> i == <span class="ty">len</span>(nums):
+                res.append(path[:]); <span class="kw">return</span>
+            dfs(i + 1)
+            path.append(nums[i]); dfs(i + 1); path.pop()
+        dfs(0)
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; path;
+    <span class="ty">void</span> dfs(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">int</span> i) {
+        <span class="kw">if</span> (i==(<span class="ty">int</span>)a.size()) { res.push_back(path); <span class="kw">return</span>; }
+        dfs(a,i+1);
+        path.push_back(a[i]); dfs(a,i+1); path.pop_back();
+    }
 <span class="ty">public</span>:
-    <span class="cm">// Bổ sung theo editorial</span>
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; subsets(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        dfs(nums,0); <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,19 +126,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Backtracking</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n·2^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Backtracking: tại index i, chọn nums[i] hoặc bỏ qua; hoặc duyệt i, push…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi phần tử có 2 trạng thái trong/out → đủ 2^n subset.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">nums rỗng → [[]]</span><span class="analysis-tag edge">Một phần tử → [], [x]</span><span class="analysis-tag pit">Quên subset rỗng</span><span class="analysis-tag pit">Trùng subset do không tăng index</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Ghi nhớ pattern và invariant chính.</p>
+                        <p>2^n tập con — dfs sau khi push path tại mọi nút.</p>
                     </details>
                 </div>
                 </div>

@@ -5,30 +5,23 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Maximum Product Subarray (LeetCode #152) — Medium.",
+  "description": "Cho mảng nums số nguyên. Tìm tích lớn nhất của một đoạn con liên tiếp (subarray) không rỗng. Mảng có thể chứa số âm và số 0.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [2,3,-2,4]", "output": "6" },
+    { "input": "nums = [-2,0,-1]", "output": "0" },
+    { "input": "nums = [-2]", "output": "-2" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Kadane biến thể: duy trì curMax và curMin vì số âm đảo dấu tích. Với mỗi x: curMax = max(x, curMax*x, curMin*x); curMin tương tự; cập nhật best.",
+  "memoryTip": "Max product subarray = track cả max và min (số âm flip min thành max).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxProduct(self, nums: List[int]) -> int:\n        best = cur_max = cur_min = nums[0]\n        for x in nums[1:]:\n            if x < 0:\n                cur_max, cur_min = cur_min, cur_max\n            cur_max = max(x, cur_max * x)\n            cur_min = min(x, cur_min * x)\n            best = max(best, cur_max)\n        return best",
+    "cpp": "class Solution {\npublic:\n    int maxProduct(vector<int>& nums) {\n        int best = nums[0], curMax = nums[0], curMin = nums[0];\n        for (int i = 1; i < (int)nums.size(); i++) {\n            int x = nums[i];\n            if (x < 0) swap(curMax, curMin);\n            curMax = max(x, curMax * x);\n            curMin = min(x, curMin * x);\n            best = max(best, curMax);\n        }\n        return best;\n    }\n};",
+    "c": "int maxProduct(int* nums, int n) {\n    int best = nums[0], curMax = nums[0], curMin = nums[0];\n    for (int i = 1; i < n; i++) {\n        int x = nums[i];\n        if (x < 0) { int t = curMax; curMax = curMin; curMin = t; }\n        int a = x * curMax, b = x * curMin;\n        curMax = x > a ? x : (a > b ? a : b);\n        curMin = x < a ? x : (a < b ? a : b);\n        if (curMax > best) best = curMax;\n    }\n    return best;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "curMin/curMax bao phủ mọi tích đoạn con kết thúc tại i; best giữ global max.",
+    "edgeCases": ["Một phần tử âm", "Chứa 0", "Hai số âm liên tiếp"],
+    "pitfalls": ["Chỉ track max → bỏ lỡ tích 2 số âm", "Không swap max/min khi gặp số âm"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

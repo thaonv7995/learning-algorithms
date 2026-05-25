@@ -2,35 +2,25 @@
   "id": 93,
   "title": "Restore IP Addresses",
   "difficulty": "Medium",
-  "category": "String",
-  "timeComplexity": "O(n)",
+  "category": "Backtracking",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Restore IP Addresses (LC #93).",
+  "description": "Cho chuỗi s chỉ gồm chữ số. Trả về mọi địa chỉ IPv4 hợp lệ dạng a.b.c.d ghép từ s (mỗi octet 0–255, không leading zero trừ \"0\").",
   "examples": [
-    {
-      "input": "Xem đề trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"25525511135\"", "output": "[\"255.255.11.135\",\"255.255.111.35\"]" },
+    { "input": "s = \"0000\"", "output": "[\"0.0.0.0\"]" }
   ],
-  "approach": "Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.",
-  "memoryTip": "Ghi nhớ pattern và invariant chính.",
+  "approach": "Backtracking: chọn đoạn 1–3 ký tự, hợp lệ nếu 0–255 và không leading zero (trừ \"0\"). Đủ 4 octet và hết chuỗi thì push.",
+  "memoryTip": "4 segment cố định — cắt s, độ dài s ∈ [4,12].",
   "solutions": {
-    "python": "class Solution:\n    pass  # Bổ sung theo editorial",
-    "cpp": "class Solution {\npublic:\n    // Bổ sung theo editorial\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def restoreIpAddresses(self, s: str) -> List[str]:\n        res = []\n        def ok(seg):\n            return len(seg) <= 3 and (seg[0] != '0' or len(seg) == 1) and int(seg) <= 255\n        def dfs(i, parts):\n            if len(parts) == 4:\n                if i == len(s): res.append('.'.join(parts))\n                return\n            for j in range(i + 1, min(i + 4, len(s) + 1)):\n                seg = s[i:j]\n                if ok(seg): dfs(j, parts + [seg])\n        dfs(0, [])\n        return res",
+    "cpp": "class Solution {\n    vector<string> res;\n    bool ok(const string& t) {\n        if (t.size()>3 || (t.size()>1 && t[0]=='0')) return false;\n        return stoi(t)<=255;\n    }\n    void dfs(string& s, int i, vector<string>& p) {\n        if ((int)p.size()==4) { if (i==(int)s.size()) res.push_back(p[0]+\".\"+p[1]+\".\"+p[2]+\".\"+p[3]); return; }\n        for (int j=i+1;j<=min(i+3,(int)s.size());j++) {\n            string seg=s.substr(i,j-i); if (!ok(seg)) continue;\n            p.push_back(seg); dfs(s,j,p); p.pop_back();\n        }\n    }\npublic:\n    vector<string> restoreIpAddresses(string s) {\n        vector<string> p; dfs(s,0,p); return res;\n    }\n};",
+    "c": "/* restoreIpAddresses — backtrack 4 octet; xem C++ */"
   },
   "analysis": {
-    "correctness": "Đúng theo logic chuẩn của bài toán.",
-    "edgeCases": [
-      "Input rỗng",
-      "Một phần tử",
-      "Giới hạn lớn"
-    ],
-    "pitfalls": [
-      "Off-by-one",
-      "Overflow",
-      "Quên edge case"
-    ]
+    "correctness": "Mọi cách chia 4 đoạn hợp lệ được thử; leading zero bị loại.",
+    "edgeCases": ["s quá ngắn/dài", "Toàn '0'", "255255255255"],
+    "pitfalls": ["Cho phép octet >255", "Quên hết chuỗi khi đủ 4 phần"]
   },
   "tier": "done"
 }

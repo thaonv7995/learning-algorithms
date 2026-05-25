@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Unique Paths II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(M × N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m×n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>44.5% AC</span>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Robot từ góc trên-trái đến dưới-phải, chỉ ↓ hoặc →. Ô chướng ngại (1) không đi được. Đếm số đường.</div>
+                        <div class="block-text">Robot từ góc trên-trái tới góc dưới-phải lưới m×n, chỉ đi xuống hoặc sang phải. Ô chướng ngại (1) không đi được. Đếm số đường đi hợp lệ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -71,6 +71,11 @@
                 <div class="ex-label">Ví dụ 2</div>
                 <div class="ex-line"><span>In</span><code>obstacleGrid = [[0,1],[0,0]]</code></div>
                 <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>obstacleGrid = [[1,0]]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -78,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">DP giống #62: dp[j] += dp[j-1]. Nếu ô là chướng ngại thì dp[j]=0. Hàng/cột đầu gặp 1 thì dừng.</div>
+                        <div class="block-text">DP 1 hàng giống #62: nếu obstacleGrid[i][j]=1 thì dp[j]=0; ngược lại dp[j]+=dp[j-1] (j&gt;0). Hàng/cột đầu: gặp 1 thì các ô sau = 0.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -95,30 +100,46 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* uniquePathsWithObstacles — DP 1D; xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> uniquePathsWithObstacles(<span class="ty">int</span>** g, <span class="ty">int</span> m, <span class="ty">int</span> n) {
+    <span class="kw">if</span> (g[0][0] || g[m - 1][n - 1]) <span class="kw">return</span> 0;
+    <span class="ty">int</span> dp[n];
+    <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; n; j++) dp[j] = 0;
+    dp[0] = 1;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++) {
+        <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; n; j++) {
+            <span class="kw">if</span> (g[i][j]) dp[j] = 0;
+            <span class="kw">else</span> <span class="kw">if</span> (j) dp[j] += dp[j - 1];
+        }
+    }
+    <span class="kw">return</span> dp[n - 1];
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> uniquePathsWithObstacles(<span class="ty">self</span>, g: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
         m, n = <span class="ty">len</span>(g), <span class="ty">len</span>(g[0])
-        <span class="kw">if</span> g[0][0] <span class="kw">or</span> g[m-1][n-1]: <span class="kw">return</span> 0
-        dp = [0]*n; dp[0] = 1
+        <span class="kw">if</span> g[0][0] <span class="kw">or</span> g[m - 1][n - 1]:
+            <span class="kw">return</span> 0
+        dp = [0] * n
+        dp[0] = 1
         <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
             <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
-                <span class="kw">if</span> g[i][j]: dp[j] = 0
-                <span class="kw">elif</span> j: dp[j] += dp[j-1]
+                <span class="kw">if</span> g[i][j]:
+                    dp[j] = 0
+                <span class="kw">elif</span> j:
+                    dp[j] += dp[j - 1]
         <span class="kw">return</span> dp[-1]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">int</span> uniquePathsWithObstacles(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; g) {
-        <span class="ty">int</span> m=g.size(), n=g[0].size();
-        <span class="kw">if</span>(g[0][0]||g[m-1][n-1]) <span class="kw">return</span> 0;
-        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dp(n); dp[0]=1;
-        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++){
-            <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++){
-                <span class="kw">if</span>(g[i][j]) dp[j]=0;
-                <span class="kw">else</span> <span class="kw">if</span>(j) dp[j]+=dp[j-1];
+        <span class="ty">int</span> m = g.size(), n = g[0].size();
+        <span class="kw">if</span> (g[0][0] || g[m - 1][n - 1]) <span class="kw">return</span> 0;
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dp(n); dp[0] = 1;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++) {
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; n; j++) {
+                <span class="kw">if</span> (g[i][j]) dp[j] = 0;
+                <span class="kw">else</span> <span class="kw">if</span> (j) dp[j] += dp[j - 1];
             }
         }
-        <span class="kw">return</span> dp[n-1];
+        <span class="kw">return</span> dp[n - 1];
     }
 };</pre>
                         </div>
@@ -129,18 +150,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(M × N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m×n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP giống #62: dp[j] += dp[j-1].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu ô là chướng ngại thì dp[j]=0.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Hàng/cột đầu gặp 1 thì dừng.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP 1 hàng giống #62: nếu obstacleGrid[i][j]=1 thì…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hàng/cột đầu: gặp 1 thì các ô sau = 0.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi đường đi qua obstacle đều bị loại bằng dp=0.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Start/end là obstacle</span><span class="analysis-tag edge">Một hàng/cột</span><span class="analysis-tag pit">Quên reset hàng đầu khi gặp 1</span><span class="analysis-tag pit">Cộng dp[j-1] khi j=0</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi đường qua ô chướng ngại bị loại bằng dp=0; recurrence giữ nguyên logic #62 trên ô trống.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Start hoặc end là obstacle → 0</span><span class="analysis-tag edge">Một hàng/cột toàn 0</span><span class="analysis-tag edge">Chướng ngại chặn hết hàng/cột đầu</span><span class="analysis-tag pit">Quên reset hàng đầu khi gặp 1</span><span class="analysis-tag pit">Cộng dp[j-1] khi j=0</span><span class="analysis-tag pit">Không kiểm tra g[0][0] trước vòng lặp</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Obstacle = reset dp về 0 tại ô đó.</p>
+                        <p>Obstacle = reset dp[j] về 0 tại ô đó; start/end là 1 → trả 0 ngay.</p>
                     </details>
                 </div>
                 </div>
