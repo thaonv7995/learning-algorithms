@@ -4,31 +4,36 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Maximum Width of Binary Tree (LeetCode #662) — Medium.",
+  "spaceComplexity": "O(w)",
+  "description": "Chiều rộng tối đa cây nhị phân (max nodes một level).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[1,3,2,5,3,null,9]",
+      "output": "4"
+    },
+    {
+      "input": "root=[1]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS level order max width; hoặc DFS index left=2*i right=2*i+1.",
+  "memoryTip": "Max width BT — BFS level size or indexed DFS.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def widthOfBinaryTree(self, root: Optional[TreeNode]) -> int:\n        if not root: return 0\n        q=[(root,0)]; ans=0\n        while q:\n            ans=max(ans,q[-1][1]-q[0][1]+1)\n            nxt=[]\n            for node,i in q:\n                if node.left: nxt.append((node.left,2*i))\n                if node.right: nxt.append((node.right,2*i+1))\n            q=nxt\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int widthOfBinaryTree(TreeNode* root) {\n        if(!root) return 0;\n        int ans=0; queue<pair<TreeNode*,unsigned long long>> q;\n        q.push({root,0});\n        while(!q.empty()){\n            int sz=q.size(); ans=max(ans,(int)(q.back().second-q.front().second+1));\n            for(int i=0;i<sz;i++){\n                auto [n,idx]=q.front(); q.pop();\n                if(n->left) q.push({n->left,2*idx});\n                if(n->right) q.push({n->right,2*idx+1});\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int widthOfBinaryTree662(struct TreeNode* r) {\n    if(!r) return 0;\n    struct TreeNode** q=malloc(10000*sizeof(*q)); unsigned long long* idx=malloc(10000*8);\n    int ql=0,qr=0,ans=0; q[qr]=r; idx[qr]=0; qr++;\n    while(ql<qr){\n        int sz=qr-ql;\n        unsigned long long w=idx[qr-1]-idx[ql]+1; if((int)w>ans) ans=(int)w;\n        for(int i=0;i<sz;i++){\n            struct TreeNode* n=q[ql]; unsigned long long id=idx[ql]; ql++;\n            if(n->left){ q[qr]=n->left; idx[qr]=id*2; qr++; }\n            if(n->right){ q[qr]=n->right; idx[qr]=id*2+1; qr++; }\n        }\n    }\n    free(q); free(idx); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Index BFS — width = last-first+1 per level.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Skew tree width 1",
+      "Only left children",
+      "ULL overflow rare"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Count null gaps wrong",
+      "BFS without index"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

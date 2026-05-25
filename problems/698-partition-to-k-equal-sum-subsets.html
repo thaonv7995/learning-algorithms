@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #698</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Partition to K Equal Sum Subsets</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n*2^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(2^n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>38.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Partition to K Equal Sum Subsets (LeetCode #698) — Medium.</div>
+                        <div class="block-text">Chia nums thành k nhóm cùng tổng (partition equal subset k ways).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums=[4,3,2,3,5,2,1], k=4</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums=[1,2,3,4], k=3</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">If sum%k!=0 false; else backtrack k buckets with pruning.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,54 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> cmp698(<span class="ty">const</span> <span class="ty">void</span>* x,<span class="ty">const</span> <span class="ty">void</span>* y){ <span class="kw">return</span> *(<span class="ty">int</span>*)y-*(<span class="ty">int</span>*)x; }
+static <span class="ty">int</span> dfs698(<span class="ty">int</span>* a,<span class="ty">int</span> n,<span class="ty">char</span>* used,<span class="ty">int</span> rem,<span class="ty">int</span> target,<span class="ty">int</span> cur,<span class="ty">int</span> start){
+    <span class="kw">if</span>(rem==1) <span class="kw">return</span> 1;
+    <span class="kw">if</span>(cur==target) <span class="kw">return</span> dfs698(a,n,used,rem-1,target,0,0);
+    <span class="kw">for</span>(<span class="ty">int</span> i=start;i&lt;n;i++){
+        <span class="kw">if</span>(used[i]||cur+a[i]&gt;target) continue;
+        used[i]=1; <span class="kw">if</span>(dfs698(a,n,used,rem,target,cur+a[i],i+1)) <span class="kw">return</span> 1; used[i]=0;
+    }
+    <span class="kw">return</span> 0;
+}
+<span class="ty">bool</span> canPartitionKSubsets698(<span class="ty">int</span>* a,<span class="ty">int</span> n,<span class="ty">int</span> k) {
+    <span class="ty">int</span> s=0; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) s+=a[i]; <span class="kw">if</span>(s%k) <span class="kw">return</span> 0;
+    <span class="ty">int</span> target=s/k; <span class="ty">char</span> used[16]={0};
+    qsort(a,n,4,cmp698);
+    <span class="kw">return</span> dfs698(a,n,used,k,target,0,0);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> canPartitionKSubsets(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; bool:
+        s=sum(nums)
+        <span class="kw">if</span> s%k: <span class="kw">return</span> <span class="kw">False</span>
+        target=s//k; nums.sort(reverse=<span class="kw">True</span>)
+        used=[<span class="kw">False</span>]*<span class="ty">len</span>(nums)
+        <span class="kw">def</span> dfs(start,k,cur):
+            <span class="kw">if</span> k==1: <span class="kw">return</span> <span class="kw">True</span>
+            <span class="kw">if</span> cur==target: <span class="kw">return</span> dfs(0,k-1,0)
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(start,<span class="ty">len</span>(nums)):
+                <span class="kw">if</span> used[i] <span class="kw">or</span> cur+nums[i]&gt;target: continue
+                used[i]=<span class="kw">True</span>
+                <span class="kw">if</span> dfs(i+1,k,cur+nums[i]): <span class="kw">return</span> <span class="kw">True</span>
+                used[i]=<span class="kw">False</span>
+            <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">return</span> dfs(0,k,0)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> dfs(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&amp; used, <span class="ty">int</span> k, <span class="ty">int</span> target, <span class="ty">int</span> cur, <span class="ty">int</span> start){
+        <span class="kw">if</span>(k==1) <span class="kw">return</span> true;
+        <span class="kw">if</span>(cur==target) <span class="kw">return</span> dfs(a,used,k-1,target,0,0);
+        <span class="kw">for</span>(<span class="ty">int</span> i=start;i&lt;(<span class="ty">int</span>)a.size();i++){
+            <span class="kw">if</span>(used[i]||cur+a[i]&gt;target) continue;
+            used[i]=1; <span class="kw">if</span>(dfs(a,used,k,target,cur+a[i],i+1)) <span class="kw">return</span> true; used[i]=0;
+        }
+        <span class="kw">return</span> false;
+    }
 <span class="ty">public</span>:
+    <span class="ty">bool</span> canPartitionKSubsets(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">int</span> k) {
+        <span class="ty">int</span> s=accumulate(a.begin(),a.end(),0); <span class="kw">if</span>(s%k) <span class="kw">return</span> false;
+        sort(a.rbegin(),a.rend()); <span class="ty">vector</span>&lt;<span class="ty">char</span>&gt; used(a.size());
+        <span class="kw">return</span> dfs(a,used,k,s/k,0,0);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +151,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n*2^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(2^n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — If sum%k!=0 false; else backtrack k buckets with pruning.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Backtrack fill k sets sum target — prune sorted desc.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1 true</span><span class="analysis-tag edge">Sum indivisible</span><span class="analysis-tag edge">Large nums prune</span><span class="analysis-tag pit">DP bitmask only k=2</span><span class="analysis-tag pit">Greedy fails</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Partition k equal sum — backtrack k subsets target sum/k.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +180,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Partition%20to%20K%20Equal%20Sum%20Subsets&lc_id=698&embed=true"></iframe>

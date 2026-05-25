@@ -2,33 +2,38 @@
   "id": 676,
   "title": "Implement Magic Dictionary",
   "difficulty": "Medium",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Implement Magic Dictionary (LeetCode #676) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(m)",
+  "spaceComplexity": "O(n)",
+  "description": "Magic Dictionary: buildDict(words); search(word) true nếu đổi đúng 1 ký tự có từ trong dict.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "buildDict([\"hello\",\"leetcode\"]); search(\"hello\")",
+      "output": "false"
+    },
+    {
+      "input": "search(\"hhllo\")",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Trie hoặc hash; search thử đổi từng vị trí 1 char.",
+  "memoryTip": "Magic Dictionary — trie with one-char mismatch search.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MagicDictionary:\n    def __init__(self):\n        self.words=set()\n    def buildDict(self, words):\n        self.words=set(words)\n    def search(self, word):\n        for i in range(len(word)):\n            for c in \"abcdefghijklmnopqrstuvwxyz\":\n                if c==word[i]: continue\n                if word[:i]+c+word[i+1:] in self.words: return True\n        return False",
+    "cpp": "class MagicDictionary {\n    unordered_set<string> st;\npublic:\n    void buildDict(vector<string> w){ st={w.begin(),w.end()}; }\n    bool search(string word){\n        for(int i=0;i<(int)word.size();i++)\n            for(char c='a';c<='z';c++){\n                if(c==word[i]) continue;\n                string t=word; t[i]=c;\n                if(st.count(t)) return true;\n            }\n        return false;\n    }\n};",
+    "c": "typedef struct{ char** w; int n; } MagicDictionary;\nMagicDictionary* magicDictionaryCreate(){ return calloc(1,sizeof(MagicDictionary)); }\nvoid magicDictionaryBuildDict(MagicDictionary* d,char** w,int n){ d->w=w; d->n=n; }\nbool magicDictionarySearch(MagicDictionary* d,char* word){ int i,j,k,wl=strlen(word); for(i=0;i<wl;i++) for(c='a';c<='z';c++){ if(c==word[i])continue; char t[256]; strcpy(t,word); t[i]=c; for(k=0;k<d->n;k++) if(strcmp(t,d->w[k])==0) return 1; } return 0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Exactly one char diff — brute 26*L check set.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Same word false",
+      "Length mismatch",
+      "Multiple matches"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Allow zero diff",
+      "Trie not required for small"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

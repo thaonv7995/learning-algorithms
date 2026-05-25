@@ -4,31 +4,40 @@
   "difficulty": "Easy",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Sales Person (LeetCode #607) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Salesperson(sales_id, name) và Orders(order_id, sale_id, order_date, customer_id, price). Trả tên salesperson chưa có bất kỳ order nào (sale_id không xuất hiện trong Orders).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "Sales A,B; Orders chỉ của A",
+      "output": "B"
+    },
+    {
+      "input": "Không order nào",
+      "output": "Tất cả salesperson"
+    },
+    {
+      "input": "Mọi người đều có order",
+      "output": "Rỗng"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "LEFT JOIN Orders ON sales_id=sale_id WHERE order_id IS NULL, hoặc NOT IN subquery sale_id.",
+  "memoryTip": "Sales person without sales = LEFT JOIN WHERE order_id IS NULL.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT s.name\nFROM Salesperson s\nLEFT JOIN Orders o ON s.sales_id = o.sale_id\nWHERE o.order_id IS NULL;",
+    "cpp": "// SQL\nSELECT s.name\nFROM Salesperson s\nLEFT JOIN Orders o ON s.sales_id = o.sale_id\nWHERE o.order_id IS NULL;",
+    "c": "const char query[] = \"SELECT s.name FROM Salesperson s LEFT JOIN Orders o ON s.sales_id = o.sale_id WHERE o.order_id IS NULL;\";"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "LEFT JOIN giữ mọi salesperson; NULL order_id nghĩa là chưa bán.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Bảng Orders rỗng",
+      "Nhiều salesperson không order",
+      "sale_id NULL trong Orders"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "INNER JOIN bỏ sót",
+      "NOT IN với NULL trong subquery"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

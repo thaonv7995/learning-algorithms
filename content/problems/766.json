@@ -2,33 +2,38 @@
   "id": 766,
   "title": "Toeplitz Matrix",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Matrix",
+  "timeComplexity": "O(mn)",
   "spaceComplexity": "O(1)",
-  "description": "Toeplitz Matrix (LeetCode #766) — Easy.",
+  "description": "Ma trận Toeplitz: mọi đường chéo từ trái-trên xuống phải-dưới có cùng giá trị. Kiểm tra matrix có Toeplitz không.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "matrix = [[1,2,3,4],[5,1,2,3],[9,5,1,2]]",
+      "output": "true"
+    },
+    {
+      "input": "matrix = [[1,2],[2,2]]",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "So sánh matrix[r][c] với matrix[r-1][c-1] cho mọi r,c >= 1.",
+  "memoryTip": "Toeplitz = each cell equals top-left neighbor.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isToeplitzMatrix(self, matrix: List[List[int]]) -> bool:\n        for r in range(1, len(matrix)):\n            for c in range(1, len(matrix[0])):\n                if matrix[r][c] != matrix[r-1][c-1]: return False\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool isToeplitzMatrix(vector<vector<int>>& m) {\n        int R=m.size(), C=m[0].size();\n        for(int r=1;r<R;r++) for(int c=1;c<C;c++)\n            if(m[r][c]!=m[r-1][c-1]) return false;\n        return true;\n    }\n};",
+    "c": "bool isToeplitzMatrix(int** matrix, int m, int* cs, int n) {\n    for(int r=1;r<m;r++) for(int c=1;c<n;c++) if(matrix[r][c]!=matrix[r-1][c-1]) return false;\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Điều kiện cần đủ trên mọi đường chéo nội bộ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "1 hàng hoặc 1 cột → true",
+      "1x1 → true",
+      "Sai một ô"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "So sánh horizontal/vertical",
+      "Off-by-one biên"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

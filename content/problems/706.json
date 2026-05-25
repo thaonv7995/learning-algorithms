@@ -2,33 +2,38 @@
   "id": 706,
   "title": "Design HashMap",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Design HashMap (LeetCode #706) — Easy.",
+  "category": "Design",
+  "timeComplexity": "O(1) avg",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế HashMap: put(key,value), get(key), remove(key). Key và value trong [0, 10^6].",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "[\"MyHashMap\",\"put\",\"put\",\"get\",\"get\",\"put\",\"get\",\"remove\",\"get\"], [[],[1,1],[2,2],[1],[3],[2,1],[2],[2],[2]]",
+      "output": "[null,null,null,1,-1,null,1,null,-1]"
+    },
+    {
+      "input": "[\"MyHashMap\",\"put\",\"get\",\"remove\",\"get\"], [[],[0,1],[0],[0],[0]]",
+      "output": "[null,null,1,null,-1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Chaining như HashSet nhưng mỗi bucket lưu pair (key,val). put upsert; get trả -1 nếu thiếu.",
+  "memoryTip": "HashMap design = buckets of (k,v) pairs; get default -1 theo đề.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyHashMap:\n    BASE = 769\n    def __init__(self):\n        self.data = [[] for _ in range(self.BASE)]\n    def _hash(self, key): return key % self.BASE\n    def put(self, key: int, value: int) -> None:\n        h = self._hash(key)\n        for i,(k,v) in enumerate(self.data[h]):\n            if k == key:\n                self.data[h][i] = (key, value); return\n        self.data[h].append((key, value))\n    def get(self, key: int) -> int:\n        for k,v in self.data[self._hash(key)]:\n            if k == key: return v\n        return -1\n    def remove(self, key: int) -> None:\n        h = self._hash(key)\n        self.data[h] = [(k,v) for k,v in self.data[h] if k != key]",
+    "cpp": "class MyHashMap {\n    static const int BASE = 769;\n    vector<vector<pair<int,int>>> data;\n    int hash(int k){ return k % BASE; }\npublic:\n    MyHashMap() : data(BASE) {}\n    void put(int key, int value) {\n        auto& b = data[hash(key)];\n        for (auto& p : b) if (p.first == key) { p.second = value; return; }\n        b.emplace_back(key, value);\n    }\n    int get(int key) {\n        for (auto& p : data[hash(key)]) if (p.first == key) return p.second;\n        return -1;\n    }\n    void remove(int key) {\n        auto& b = data[hash(key)];\n        b.erase(remove_if(b.begin(), b.end(), [&](auto& p){ return p.first == key; }), b.end());\n    }\n};",
+    "c": "#define MSZ 769\nstatic int mk[MSZ][128], mv[MSZ][128], mc[MSZ];\nstatic int mhash(int k){ return ((k%MSZ)+MSZ)%MSZ; }\nvoid myHashMapPut(int key,int val){ int b=mhash(key); for(int i=0;i<mc[b];i++) if(mk[b][i]==key){ mv[b][i]=val; return; } mk[b][mc[b]]=key; mv[b][mc[b]++]=val; }\nint myHashMapGet(int key){ int b=mhash(key); for(int i=0;i<mc[b];i++) if(mk[b][i]==key) return mv[b][i]; return -1; }\nvoid myHashMapRemove(int key){ int b=mhash(key); for(int i=0;i<mc[b];i++) if(mk[b][i]==key){ mk[b][i]=mk[b][mc[b]-1]; mv[b][i]=mv[b][mc[b]-1]; mc[b]--; return; } }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "put ghi đè value cũ; get/remove tìm đúng key trong bucket.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "get key chưa put → -1",
+      "put cùng key nhiều lần",
+      "remove rồi get"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm HashSet không lưu value",
+      "Không upsert khi put trùng key"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

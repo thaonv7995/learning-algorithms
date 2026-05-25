@@ -5,30 +5,35 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Longest Continuous Increasing Subsequence (LeetCode #674) — Easy.",
+  "description": "Độ dài dài nhất subarray strictly increasing liên tiếp.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums=[1,3,5,4,7]",
+      "output": "3"
+    },
+    {
+      "input": "nums=[2,2,2,2,2]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Scan: extend streak if nums[i]>nums[i-1] else reset 1.",
+  "memoryTip": "Longest continuous increasing — single pass streak.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findLengthOfLCIS(self, nums: List[int]) -> int:\n        ans=cur=1\n        for i in range(1,len(nums)):\n            cur=cur+1 if nums[i]>nums[i-1] else 1\n            ans=max(ans,cur)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findLengthOfLCIS(vector<int>& a) {\n        int ans=1, cur=1;\n        for(int i=1;i<(int)a.size();i++){\n            cur = a[i]>a[i-1]?cur+1:1;\n            ans=max(ans,cur);\n        }\n        return ans;\n    }\n};",
+    "c": "int findLengthOfLCIS674(int* a,int n){ int ans=1,cur=1,i; for(i=1;i<n;i++){ cur=a[i]>a[i-1]?cur+1:1; if(cur>ans)ans=cur; } return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Streak counter — O(n) optimal.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Length 1",
+      "Whole array increasing",
+      "Negative nums"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Use >= not strict",
+      "Subsequence not subarray"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

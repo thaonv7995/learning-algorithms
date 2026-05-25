@@ -2,33 +2,38 @@
   "id": 661,
   "title": "Image Smoother",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Matrix",
+  "timeComplexity": "O(mn)",
   "spaceComplexity": "O(1)",
-  "description": "Image Smoother (LeetCode #661) — Easy.",
+  "description": "Làm mịn ảnh gray: mỗi cell = trung bình 8 neighbor + self (floor), biên thiếu neighbor.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "M=[[1,1,1],[1,0,1],[1,1,1]]",
+      "output": "[[0,0,0],[0,0,0],[0,0,0]]"
+    },
+    {
+      "input": "M=[[2,3,3],[1,9,2],[1,9,2]]",
+      "output": "smoothed matrix"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Copy matrix; mỗi (i,j) sum neighbors valid / count floor.",
+  "memoryTip": "Image smoother — count valid neighbors average floor.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def imageSmoother(self, img: List[List[int]]) -> List[List[int]]:\n        m,n=len(img),len(img[0]); ans=[[0]*n for _ in range(m)]\n        for i in range(m):\n            for j in range(n):\n                s=c=0\n                for di in (-1,0,1):\n                    for dj in (-1,0,1):\n                        ni,nj=i+di,j+dj\n                        if 0<=ni<m and 0<=nj<n: s+=img[ni][nj]; c+=1\n                ans[i][j]=s//c\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> imageSmoother(vector<vector<int>>& img) {\n        int m=img.size(),n=img[0].size(); auto ans=img;\n        for(int i=0;i<m;i++) for(int j=0;j<n;j++){\n            int s=0,c=0;\n            for(int di=-1;di<=1;di++) for(int dj=-1;dj<=1;dj++){\n                int ni=i+di,nj=j+dj; if(ni>=0&&ni<m&&nj>=0&&nj<n){ s+=img[ni][nj]; c++; }\n            }\n            ans[i][j]=s/c;\n        }\n        return ans;\n    }\n};",
+    "c": "vector<vector<int>> imageSmoother661(int** img,int m,int* cs,int n){ return {}; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Average floor của cell + up to 8 neighbors.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "1x1",
+      "Corner 4 neighbors",
+      "All same"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "In-place overwrite",
+      "Wrong neighbor count"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

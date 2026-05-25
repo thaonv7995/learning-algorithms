@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #720</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Trie</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Longest Word in Dictionary</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * L^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n * L)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>54.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Longest Word in Dictionary (LeetCode #720) — Medium.</div>
+                        <div class="block-text">Cho mảng chuỗi words. Trả chuỗi dài nhất trong từ điển mà mọi tiền tố (prefix) của nó cũng nằm trong words. Nếu nhiều đáp án, trả chuỗi nhỏ nhất theo thứ tự từ điển.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>words = [&quot;w&quot;,&quot;wo&quot;,&quot;wor&quot;,&quot;worl&quot;,&quot;world&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;world&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>words = [&quot;a&quot;,&quot;banana&quot;,&quot;app&quot;,&quot;appl&quot;,&quot;ap&quot;,&quot;apply&quot;,&quot;apple&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;apple&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>words = [&quot;m&quot;,&quot;mo&quot;,&quot;moc&quot;,&quot;moch&quot;,&quot;mocha&quot;,&quot;l&quot;,&quot;la&quot;,&quot;lat&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;mocha&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sort words. Duyệt từng word: kiểm tra mọi prefix có trong set words; nếu đủ và dài hơn (hoặc bằng nhưng lex nhỏ hơn) thì cập nhật ans.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> cmpstr(<span class="ty">const</span> <span class="ty">void</span>* a,<span class="ty">const</span> <span class="ty">void</span>* b){ <span class="kw">return</span> strcmp(*(<span class="ty">char</span>**)a,*(<span class="ty">char</span>**)b); }
+<span class="ty">char</span>* longestWord(<span class="ty">char</span>** words, <span class="ty">int</span> n) {
+    qsort(words,n,<span class="kw">sizeof</span>(<span class="ty">char</span>*),cmpstr);
+    <span class="ty">char</span>* ans = &quot;&quot;;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){ <span class="ty">int</span> ok=1; <span class="ty">int</span> L=strlen(words[i]); <span class="kw">for</span>(<span class="ty">int</span> p=1;p&lt;L&amp;&amp;ok;p++){ <span class="ty">char</span> pref[128]; strncpy(pref,words[i],p); pref[p]=0; ok=0; <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) <span class="kw">if</span>(strcmp(words[j],pref)==0){ ok=1; break; } } <span class="kw">if</span>(ok &amp;&amp; (L&gt;(<span class="ty">int</span>)strlen(ans)||(L==(<span class="ty">int</span>)strlen(ans)&amp;&amp;strcmp(words[i],ans)&lt;0))) ans=words[i]; }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> longestWord(<span class="ty">self</span>, words: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">str</span>:
+        words.sort()
+        st = <span class="ty">set</span>(words)
+        ans = &quot;&quot;
+        <span class="kw">for</span> w <span class="kw">in</span> words:
+            ok = <span class="kw">True</span>
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, <span class="ty">len</span>(w)):
+                <span class="kw">if</span> w[:i] <span class="kw">not</span> <span class="kw">in</span> st:
+                    ok = <span class="kw">False</span>; break
+            <span class="kw">if</span> ok <span class="kw">and</span> (<span class="ty">len</span>(w) &gt; <span class="ty">len</span>(ans) <span class="kw">or</span> (<span class="ty">len</span>(w) == <span class="ty">len</span>(ans) <span class="kw">and</span> w &lt; ans)):
+                ans = w
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> longestWord(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; words) {
+        sort(words.begin(), words.end());
+        unordered_set&lt;<span class="ty">string</span>&gt; st(words.begin(), words.end());
+        <span class="ty">string</span> ans;
+        <span class="kw">for</span> (auto&amp; w : words) {
+            <span class="ty">bool</span> ok = true;
+            <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; (<span class="ty">int</span>)w.size(); i++)
+                <span class="kw">if</span> (!st.count(w.substr(0, i))) { ok = false; break; }
+            <span class="kw">if</span> (ok &amp;&amp; (w.size() &gt; ans.size() || (w.size() == ans.size() &amp;&amp; w &lt; ans))) ans = w;
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +142,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Trie</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * L^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n * L)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sort words. Duyệt từng word: kiểm tra mọi prefix có trong set words;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Sort đảm bảo tie-break lex; prefix check đảm bảo mọi bước build hợp lệ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một từ đơn</span><span class="analysis-tag edge">Không từ nào có prefix chain → từ 1 ký tự</span><span class="analysis-tag edge">Nhiều cùng độ dài</span><span class="analysis-tag pit">Quên sort trước tie-break</span><span class="analysis-tag pit">Chỉ check prefix trực tiếp một cấp</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Word dictionary = sort + HashSet words + check all prefixes exist.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Longest%20Word%20in%20Dictionary&lc_id=720&embed=true"></iframe>

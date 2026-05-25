@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #679</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Backtracking</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">24 Game</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.5% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">24 Game (LeetCode #679) — Hard.</div>
+                        <div class="block-text">Cards [1-9,J,Q,K] each 4 lá; dùng +,-,*,/ và () để target 24. Trả true nếu có cách.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>cards = [4,1,8,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>cards = [1,2,1,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Permute 4 nums; try all binary ops and paren patterns (fixed small).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">double</span> eval679(<span class="ty">double</span> a,<span class="ty">double</span> b,<span class="ty">char</span> op){ <span class="kw">if</span>(op=='+')<span class="kw">return</span> a+b; <span class="kw">if</span>(op=='-')<span class="kw">return</span> a-b; <span class="kw">if</span>(op=='*')<span class="kw">return</span> a*b; <span class="kw">return</span> b?a/b:0; }
+static <span class="ty">int</span> solve679(<span class="ty">double</span>* v,<span class="ty">int</span> n){
+    <span class="kw">if</span>(n==1) <span class="kw">return</span> fabs(v[0]-24.0)&lt;1e-6;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) <span class="kw">if</span>(i!=j){
+        <span class="ty">double</span> nv[4]; <span class="ty">int</span> nn=0;
+        <span class="kw">for</span>(<span class="ty">int</span> k=0;k&lt;n;k++) <span class="kw">if</span>(k!=i&amp;&amp;k!=j) nv[nn++]=v[k];
+        <span class="ty">char</span> ops[]=&quot;+-*/&quot;;
+        <span class="kw">for</span>(<span class="ty">int</span> o=0;o&lt;4;o++){
+            nv[nn]=eval679(v[i],v[j],ops[o]); <span class="kw">if</span>(solve679(nv,nn+1)) <span class="kw">return</span> 1;
+            <span class="kw">if</span>(o&lt;2){ nv[nn]=eval679(v[j],v[i],ops[o]); <span class="kw">if</span>(solve679(nv,nn+1)) <span class="kw">return</span> 1; }
+        }
+    }
+    <span class="kw">return</span> 0;
+}
+<span class="ty">bool</span> judgePoint24679(<span class="ty">int</span>* c,<span class="ty">int</span> n){ <span class="ty">double</span> v[4]; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;4;i++) v[i]=c[i]; <span class="kw">return</span> solve679(v,4); }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> judgePoint24(<span class="ty">self</span>, cards: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        <span class="kw">if</span> <span class="ty">len</span>(cards)==1: <span class="kw">return</span> abs(cards[0]-24)&lt;1e-6
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(cards)):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(cards)):
+                <span class="kw">if</span> i==j: continue
+                nxt=[cards[k] <span class="kw">for</span> k <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(cards)) <span class="kw">if</span> k!=i <span class="kw">and</span> k!=j]
+                <span class="kw">for</span> op <span class="kw">in</span> &quot;+-*/&quot;:
+                    <span class="kw">if</span> op <span class="kw">in</span> &quot;+-&quot; <span class="kw">or</span> cards[j]!=0:
+                        a=cards[i]; b=cards[j]
+                        v=a+b <span class="kw">if</span> op==&quot;+&quot; <span class="kw">else</span> a-b <span class="kw">if</span> op==&quot;-&quot; <span class="kw">else</span> a*b <span class="kw">if</span> op==&quot;*&quot; <span class="kw">else</span> a/b
+                        <span class="kw">if</span> <span class="ty">self</span>.judgePoint24(nxt+[v]): <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">return</span> <span class="kw">False</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> dfs(<span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;&amp; a){
+        <span class="kw">if</span>(a.size()==1) <span class="kw">return</span> abs(a[0]-24)&lt;1e-6;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)a.size();i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;(<span class="ty">int</span>)a.size();j++) <span class="kw">if</span>(i!=j){
+            <span class="ty">vector</span>&lt;<span class="ty">double</span>&gt; nxt;
+            <span class="kw">for</span>(<span class="ty">int</span> k=0;k&lt;(<span class="ty">int</span>)a.size();k++) <span class="kw">if</span>(k!=i&amp;&amp;k!=j) nxt.push_back(a[k]);
+            <span class="ty">double</span> x=a[i],y=a[j];
+            <span class="kw">if</span>(dfs(nxt,x+y)||dfs(nxt,x-y)||dfs(nxt,x*y)||(y&amp;&amp;dfs(nxt,x/y))) <span class="kw">return</span> true;
+        }
+        <span class="kw">return</span> false;
+    }
 <span class="ty">public</span>:
+    <span class="ty">bool</span> judgePoint24(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; c){ <span class="ty">vector</span>&lt;<span class="ty">double</span>&gt; a(c.begin(),c.end()); <span class="kw">return</span> dfs(a); }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +144,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">Backtracking</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Permute 4 nums; try all binary ops and paren patterns .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>4! permutations × ops — finite search.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Division by zero skip</span><span class="analysis-tag edge">Float precision</span><span class="analysis-tag edge">Duplicate cards</span><span class="analysis-tag pit">Only left-right no parens wrong</span><span class="analysis-tag pit">Missing permutations</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>24 Game — brute permutations and ops.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=24%20Game&lc_id=679&embed=true"></iframe>

@@ -2,33 +2,38 @@
   "id": 748,
   "title": "Shortest Completing Word",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "String",
+  "timeComplexity": "O(n * L)",
   "spaceComplexity": "O(1)",
-  "description": "Shortest Completing Word (LeetCode #748) — Easy.",
+  "description": "Cho licensePlate và mảng words. Tìm word ngắn nhất trong words có thể hoàn thành licensePlate (bỏ qua khoảng/số; không phân biệt hoa thường). Tie → word đầu tiên theo thứ tự mảng.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "licensePlate = \"1s3 PSt\", words = [\"step\",\"steps\",\"stripe\",\"stepple\"]",
+      "output": "\"steps\""
+    },
+    {
+      "input": "licensePlate = \"1s3 456\", words = [\"looks\",\"pest\",\"stew\",\"show\"]",
+      "output": "\"pest\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm chữ cái licensePlate. Word hợp lệ nếu count chữ trong word >= count license. Chọn ngắn nhất.",
+  "memoryTip": "Completing word = multiset cover — word freq >= plate freq.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def shortestCompletingWord(self, licensePlate: str, words: List[str]) -> str:\n        cnt = Counter(c.lower() for c in licensePlate if c.isalpha())\n        best = \"\"\n        for w in words:\n            wc = Counter(w.lower())\n            if all(wc[c] >= cnt[c] for c in cnt):\n                if not best or len(w) < len(best): best = w\n        return best",
+    "cpp": "class Solution {\npublic:\n    string shortestCompletingWord(string licensePlate, vector<string>& words) {\n        int need[26]={};\n        for(char c:licensePlate) if(isalpha(c)) need[tolower(c)-'a']++;\n        string best;\n        for(auto& w:words){\n            int have[26]={};\n            for(char c:w) have[tolower(c)-'a']++;\n            bool ok=true;\n            for(int i=0;i<26;i++) if(have[i]<need[i]){ ok=false; break; }\n            if(ok && (best.empty()||w.size()<best.size())) best=w;\n        }\n        return best;\n    }\n};",
+    "c": "char* shortestCompletingWord(char* licensePlate, char** words, int n) {\n    int need[26]={0};\n    for(char* p=licensePlate;*p;p++) if((*p>='A'&&*p<='Z')||(*p>='a'&&*p<='z')) need[tolower(*p)-'a']++;\n    char* best=NULL; int bl=1e9;\n    for(int i=0;i<n;i++){\n        int have[26]={0}; for(char* p=words[i];*p;p++) if(isalpha(*p)) have[tolower(*p)-'a']++;\n        int ok=1; for(int j=0;j<26;j++) if(have[j]<need[j]){ ok=0; break; }\n        if(ok){ int L=strlen(words[i]); if(L<bl){ bl=L; best=words[i]; } }\n    }\n    return best?best:\"\";\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Multiset cover đúng định nghĩa completing; chọn min length first occurrence.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Plate không chữ",
+      "Nhiều word cùng length",
+      "Case insensitive"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Đếm cả số/khoảng",
+      "Không tie-break theo thứ tự mảng"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

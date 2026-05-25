@@ -2,33 +2,38 @@
   "id": 698,
   "title": "Partition to K Equal Sum Subsets",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Partition to K Equal Sum Subsets (LeetCode #698) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n*2^n)",
+  "spaceComplexity": "O(2^n)",
+  "description": "Chia nums thành k nhóm cùng tổng (partition equal subset k ways).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums=[4,3,2,3,5,2,1], k=4",
+      "output": "true"
+    },
+    {
+      "input": "nums=[1,2,3,4], k=3",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "If sum%k!=0 false; else backtrack k buckets with pruning.",
+  "memoryTip": "Partition k equal sum — backtrack k subsets target sum/k.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canPartitionKSubsets(self, nums: List[int], k: int) -> bool:\n        s=sum(nums)\n        if s%k: return False\n        target=s//k; nums.sort(reverse=True)\n        used=[False]*len(nums)\n        def dfs(start,k,cur):\n            if k==1: return True\n            if cur==target: return dfs(0,k-1,0)\n            for i in range(start,len(nums)):\n                if used[i] or cur+nums[i]>target: continue\n                used[i]=True\n                if dfs(i+1,k,cur+nums[i]): return True\n                used[i]=False\n            return False\n        return dfs(0,k,0)",
+    "cpp": "class Solution {\n    bool dfs(vector<int>& a, vector<char>& used, int k, int target, int cur, int start){\n        if(k==1) return true;\n        if(cur==target) return dfs(a,used,k-1,target,0,0);\n        for(int i=start;i<(int)a.size();i++){\n            if(used[i]||cur+a[i]>target) continue;\n            used[i]=1; if(dfs(a,used,k,target,cur+a[i],i+1)) return true; used[i]=0;\n        }\n        return false;\n    }\npublic:\n    bool canPartitionKSubsets(vector<int>& a, int k) {\n        int s=accumulate(a.begin(),a.end(),0); if(s%k) return false;\n        sort(a.rbegin(),a.rend()); vector<char> used(a.size());\n        return dfs(a,used,k,s/k,0,0);\n    }\n};",
+    "c": "static int cmp698(const void* x,const void* y){ return *(int*)y-*(int*)x; }\nstatic int dfs698(int* a,int n,char* used,int rem,int target,int cur,int start){\n    if(rem==1) return 1;\n    if(cur==target) return dfs698(a,n,used,rem-1,target,0,0);\n    for(int i=start;i<n;i++){\n        if(used[i]||cur+a[i]>target) continue;\n        used[i]=1; if(dfs698(a,n,used,rem,target,cur+a[i],i+1)) return 1; used[i]=0;\n    }\n    return 0;\n}\nbool canPartitionKSubsets698(int* a,int n,int k) {\n    int s=0; for(int i=0;i<n;i++) s+=a[i]; if(s%k) return 0;\n    int target=s/k; char used[16]={0};\n    qsort(a,n,4,cmp698);\n    return dfs698(a,n,used,k,target,0,0);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Backtrack fill k sets sum target — prune sorted desc.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1 true",
+      "Sum indivisible",
+      "Large nums prune"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DP bitmask only k=2",
+      "Greedy fails"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

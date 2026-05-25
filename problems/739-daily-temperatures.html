@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #739</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Stack</span>
+                        <span class="cat-chip">Monotonic Stack</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Daily Temperatures</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Daily Temperatures (LeetCode #739) — Medium.</div>
+                        <div class="block-text">Cho mảng temperatures (°F). answer[i] = số ngày chờ đến ngày ấm hơn; không có thì 0.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>temperatures = [73,74,75,71,69,72,76,73]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,1,4,2,1,1,0,0]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>temperatures = [30,40,50,60]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,1,1,0]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>temperatures = [30,60,90]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,1,0]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Monotonic decreasing stack lưu index: pop khi current temp &gt; stack top temp; ans[popped]=i-popped.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,41 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* dailyTemperatures(<span class="ty">int</span>* T, <span class="ty">int</span> n, <span class="ty">int</span>* retSize) {
+    <span class="ty">int</span>* ans = <span class="kw">calloc</span>(n, 4); <span class="ty">int</span>* st = <span class="kw">malloc</span>(n * 4); <span class="ty">int</span> top = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="kw">while</span> (top &amp;&amp; T[st[top-1]] &lt; T[i]) {
+            <span class="ty">int</span> j = st[--top]; ans[j] = i - j;
+        }
+        st[top++] = i;
+    }
+    *retSize = n; <span class="kw">free</span>(st); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> dailyTemperatures(<span class="ty">self</span>, temperatures: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        n = <span class="ty">len</span>(temperatures)
+        ans = [0]*n
+        st = []
+        <span class="kw">for</span> i, t <span class="kw">in</span> enumerate(temperatures):
+            <span class="kw">while</span> st <span class="kw">and</span> temperatures[st[-1]] &lt; t:
+                j = st.pop()
+                ans[j] = i - j
+            st.append(i)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dailyTemperatures(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; T) {
+        <span class="ty">int</span> n=T.size(); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans(n);
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; st;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){
+            <span class="kw">while</span>(!st.empty() &amp;&amp; T[st.back()]&lt;T[i]){
+                <span class="ty">int</span> j=st.back(); st.pop_back();
+                ans[j]=i-j;
+            }
+            st.push_back(i);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +143,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Stack</span>
+                        <span class="pattern-chip">Monotonic Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Monotonic decreasing stack lưu index: pop khi current temp &gt; stack top…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi index pop đúng khi gặp ngày ấm hơn đầu tiên bên phải.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Giảm dần → toàn 0</span><span class="analysis-tag edge">Tăng dần → 1,1,...,0</span><span class="analysis-tag edge">Một ngày</span><span class="analysis-tag pit">Stack tăng thay giảm</span><span class="analysis-tag pit">Lưu temp thay index</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Next warmer day = monotonic stack pop when warmer found.</p>
                     </details>
                 </div>
                 </div>

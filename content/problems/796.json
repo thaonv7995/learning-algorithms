@@ -4,31 +4,40 @@
   "difficulty": "Easy",
   "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Rotate String (LeetCode #796) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Kiểm tra s có thể nhận được bằng cách xoay vòng goal (ghép goal+goal chứa s) không.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"abcde\", goal = \"cdeab\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"abcde\", goal = \"abced\"",
+      "output": "false"
+    },
+    {
+      "input": "s = \"aa\", goal = \"a\"",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Equal length và s in goal+goal (or goal in s+s).",
+  "memoryTip": "Rotate string = substring check on doubled string.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def rotateString(self, s: str, goal: str) -> bool:\n        return len(s) == len(goal) and s in goal + goal",
+    "cpp": "class Solution {\npublic:\n    bool rotateString(string s, string goal) {\n        return s.size()==goal.size() && (goal+goal).find(s)!=string::npos;\n    }\n};",
+    "c": "bool rotateString(char* s, char* goal) {\n    int n=strlen(s); if(n!=(int)strlen(goal)) return false;\n    char* d=malloc(2*n+1); strcpy(d,s); strcat(d,s);\n    int ok=strstr(d,goal)!=NULL; free(d); return ok;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Rotation iff s substring of goal doubled với cùng length.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Different length → false",
+      "Empty strings",
+      "Repeated chars"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Compare sorted chars only",
+      "Quên length check"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

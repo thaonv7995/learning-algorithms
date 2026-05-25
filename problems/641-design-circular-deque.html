@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #641</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Design Circular Deque</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>64.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Design Circular Deque (LeetCode #641) — Medium.</div>
+                        <div class="block-text">Thiết kế deque vòng k phần tử: insertFront/Back, deleteFront/Back, getFront/Rear, isEmpty/Full.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>MyCircularDeque(3); insertLast(1); insertLast(2); insertFront(3)</code></div>
+                <div class="ex-line"><span>Out</span><code>true,true,true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>getFront(); getRear()</code></div>
+                <div class="ex-line"><span>Out</span><code>3, 2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>insertLast(4) khi đầy</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Mảng vòng head/tail/count giống circular queue.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span>{<span class="ty">int</span>*q,h,n,k;}MyCircularDeque;
+MyCircularDeque* myCircularDequeCreate(<span class="ty">int</span> k){MyCircularDeque* o=<span class="kw">malloc</span>(<span class="kw">sizeof</span>(*o));o-&gt;q=<span class="kw">calloc</span>(k,4);o-&gt;k=k;<span class="kw">return</span> o;}
+<span class="ty">bool</span> myCircularDequeInsertFront(MyCircularDeque* o,<span class="ty">int</span> v){<span class="kw">if</span>(o-&gt;n==o-&gt;k)<span class="kw">return</span> 0;o-&gt;h=(o-&gt;h-1+o-&gt;k)%o-&gt;k;o-&gt;q[o-&gt;h]=v;o-&gt;n++;<span class="kw">return</span> 1;}
+<span class="ty">bool</span> myCircularDequeInsertLast(MyCircularDeque* o,<span class="ty">int</span> v){<span class="kw">if</span>(o-&gt;n==o-&gt;k)<span class="kw">return</span> 0;o-&gt;q[(o-&gt;h+o-&gt;n)%o-&gt;k]=v;o-&gt;n++;<span class="kw">return</span> 1;}
+<span class="ty">bool</span> myCircularDequeDeleteFront(MyCircularDeque* o){<span class="kw">if</span>(!o-&gt;n)<span class="kw">return</span> 0;o-&gt;h=(o-&gt;h+1)%o-&gt;k;o-&gt;n--;<span class="kw">return</span> 1;}
+<span class="ty">bool</span> myCircularDequeDeleteLast(MyCircularDeque* o){<span class="kw">if</span>(!o-&gt;n)<span class="kw">return</span> 0;o-&gt;n--;<span class="kw">return</span> 1;}
+<span class="ty">int</span> myCircularDequeGetFront(MyCircularDeque* o){<span class="kw">return</span> o-&gt;n?o-&gt;q[o-&gt;h]:-1;}
+<span class="ty">int</span> myCircularDequeGetRear(MyCircularDeque* o){<span class="kw">return</span> o-&gt;n?o-&gt;q[(o-&gt;h+o-&gt;n-1+o-&gt;k)%o-&gt;k]:-1;}
+<span class="ty">bool</span> myCircularDequeIsEmpty(MyCircularDeque* o){<span class="kw">return</span> o-&gt;n==0;}
+<span class="ty">bool</span> myCircularDequeIsFull(MyCircularDeque* o){<span class="kw">return</span> o-&gt;n==o-&gt;k;}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> MyCircularDeque:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, k: <span class="ty">int</span>):
+        <span class="ty">self</span>.q=[0]*k; <span class="ty">self</span>.k=k; <span class="ty">self</span>.h=0; <span class="ty">self</span>.n=0
+    <span class="kw">def</span> insertFront(<span class="ty">self</span>,v):
+        <span class="kw">if</span> <span class="ty">self</span>.isFull(): <span class="kw">return</span> <span class="kw">False</span>
+        <span class="ty">self</span>.h=(<span class="ty">self</span>.h-1)%<span class="ty">self</span>.k; <span class="ty">self</span>.q[<span class="ty">self</span>.h]=v; <span class="ty">self</span>.n+=1; <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">def</span> insertLast(<span class="ty">self</span>,v):
+        <span class="kw">if</span> <span class="ty">self</span>.isFull(): <span class="kw">return</span> <span class="kw">False</span>
+        <span class="ty">self</span>.q[(<span class="ty">self</span>.h+<span class="ty">self</span>.n)%<span class="ty">self</span>.k]=v; <span class="ty">self</span>.n+=1; <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">def</span> deleteFront(<span class="ty">self</span>):
+        <span class="kw">if</span> <span class="ty">self</span>.isEmpty(): <span class="kw">return</span> <span class="kw">False</span>
+        <span class="ty">self</span>.h=(<span class="ty">self</span>.h+1)%<span class="ty">self</span>.k; <span class="ty">self</span>.n-=1; <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">def</span> deleteLast(<span class="ty">self</span>):
+        <span class="kw">if</span> <span class="ty">self</span>.isEmpty(): <span class="kw">return</span> <span class="kw">False</span>
+        <span class="ty">self</span>.n-=1; <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">def</span> getFront(<span class="ty">self</span>): <span class="kw">return</span> -1 <span class="kw">if</span> <span class="ty">self</span>.isEmpty() <span class="kw">else</span> <span class="ty">self</span>.q[<span class="ty">self</span>.h]
+    <span class="kw">def</span> getRear(<span class="ty">self</span>): <span class="kw">return</span> -1 <span class="kw">if</span> <span class="ty">self</span>.isEmpty() <span class="kw">else</span> <span class="ty">self</span>.q[(<span class="ty">self</span>.h+<span class="ty">self</span>.n-1)%<span class="ty">self</span>.k]
+    <span class="kw">def</span> isEmpty(<span class="ty">self</span>): <span class="kw">return</span> <span class="ty">self</span>.n==0
+    <span class="kw">def</span> isFull(<span class="ty">self</span>): <span class="kw">return</span> <span class="ty">self</span>.n==<span class="ty">self</span>.k</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> MyCircularDeque {
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; q; <span class="ty">int</span> h,n,k;
 <span class="ty">public</span>:
+    MyCircularDeque(<span class="ty">int</span> k):q(k),h(0),n(0),k(k){}
+    <span class="ty">bool</span> insertFront(<span class="ty">int</span> v){ <span class="kw">if</span>(isFull())<span class="kw">return</span> false; h=(h-1+k)%k; q[h]=v; n++; <span class="kw">return</span> true;}
+    <span class="ty">bool</span> insertLast(<span class="ty">int</span> v){ <span class="kw">if</span>(isFull())<span class="kw">return</span> false; q[(h+n)%k]=v; n++; <span class="kw">return</span> true;}
+    <span class="ty">bool</span> deleteFront(){ <span class="kw">if</span>(isEmpty())<span class="kw">return</span> false; h=(h+1)%k; n--; <span class="kw">return</span> true;}
+    <span class="ty">bool</span> deleteLast(){ <span class="kw">if</span>(isEmpty())<span class="kw">return</span> false; n--; <span class="kw">return</span> true;}
+    <span class="ty">int</span> getFront(){ <span class="kw">return</span> isEmpty()?-1:q[h];}
+    <span class="ty">int</span> getRear(){ <span class="kw">return</span> isEmpty()?-1:q[(h+n-1+k)%k];}
+    <span class="ty">bool</span> isEmpty(){ <span class="kw">return</span> n==0;}
+    <span class="ty">bool</span> isFull(){ <span class="kw">return</span> n==k;}
 };</pre>
                         </div>
                     </div>
@@ -103,19 +149,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Mảng vòng head/tail/count giống circular queue.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Deque vòng O(1) với head/tail mod k.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1</span><span class="analysis-tag edge">Delete empty</span><span class="analysis-tag edge">Wrap around</span><span class="analysis-tag pit">Confuse front/rear indices</span><span class="analysis-tag pit">Off-by-one full</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Circular deque — array with head/tail mod k.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +178,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Design%20Circular%20Deque&lc_id=641&embed=true"></iframe>

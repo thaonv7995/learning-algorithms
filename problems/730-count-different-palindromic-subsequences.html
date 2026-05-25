@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #730</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Count Different Palindromic Subsequences</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>47.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Count Different Palindromic Subsequences (LeetCode #730) — Hard.</div>
+                        <div class="block-text">Cho chuỗi S. Đếm số palindromic subsequence khác nhau (mod 10^9+7). Subsequence không cần liên tiếp.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>S = &quot;bccb&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>S = &quot;abcdabcdabcdabcdabcdabcdabcdabcddcbadcbadcbadcbadcbadcbadcbadcba&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>104860361</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>S = &quot;a&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[l][r] = số palindrome subseq trong S[l..r]. Nếu S[l]==S[r]: dp[l][r]=dp[l+1][r-1]*2+2; else dp[l][r]=dp[l+1][r]+dp[l][r-1]-dp[l+1][r-1]. Trừ trùng khi S[l]==S[r].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,63 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> countPalindromicSubsequences(<span class="ty">char</span>* S) {
+    <span class="ty">const</span> <span class="ty">int</span> MOD=1000000007; <span class="ty">int</span> n=strlen(S);
+    <span class="ty">long</span> <span class="ty">long</span> dp[100][100]={0};
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) dp[i][i]=1;
+    <span class="kw">for</span>(<span class="ty">int</span> len=2;len&lt;=n;len++) <span class="kw">for</span>(<span class="ty">int</span> l=0;l+len-1&lt;n;l++){
+        <span class="ty">int</span> r=l+len-1;
+        <span class="kw">if</span>(S[l]==S[r]){ dp[l][r]=dp[l+1][r-1]*2+2; <span class="ty">int</span> i=l+1,j=r-1;
+            <span class="kw">while</span>(i&lt;=j&amp;&amp;S[i]!=S[l]) i++; <span class="kw">while</span>(i&lt;=j&amp;&amp;S[j]!=S[l]) j--;
+            <span class="kw">if</span>(i&gt;j) dp[l][r]--; <span class="kw">else</span> <span class="kw">if</span>(i==j) dp[l][r]--; <span class="kw">else</span> dp[l][r]-=2; }
+        <span class="kw">else</span> dp[l][r]=(dp[l+1][r]+dp[l][r-1]-dp[l+1][r-1]+MOD)%MOD;
+        dp[l][r]%=MOD;
+    }
+    <span class="kw">return</span> (<span class="ty">int</span>)dp[0][n-1];
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> countPalindromicSubsequences(<span class="ty">self</span>, S: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        MOD = 10**9 + 7
+        n = <span class="ty">len</span>(S)
+        dp = [[0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n)]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n): dp[i][i] = 1
+        <span class="kw">for</span> length <span class="kw">in</span> <span class="ty">range</span>(2, n+1):
+            <span class="kw">for</span> l <span class="kw">in</span> <span class="ty">range</span>(n-length+1):
+                r = l + length - 1
+                <span class="kw">if</span> S[l] == S[r]:
+                    dp[l][r] = dp[l+1][r-1] * 2 + 2
+                    i, j = l+1, r-1
+                    <span class="kw">while</span> i &lt;= j <span class="kw">and</span> S[i] != S[l]: i += 1
+                    <span class="kw">while</span> i &lt;= j <span class="kw">and</span> S[j] != S[l]: j -= 1
+                    <span class="kw">if</span> i &gt; j: dp[l][r] -= 1
+                    <span class="kw">elif</span> i == j: dp[l][r] -= 1
+                    <span class="kw">else</span>: dp[l][r] -= 2
+                <span class="kw">else</span>:
+                    dp[l][r] = dp[l+1][r] + dp[l][r-1] - dp[l+1][r-1]
+                dp[l][r] %= MOD
+        <span class="kw">return</span> dp[0][n-1]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> countPalindromicSubsequences(<span class="ty">string</span> S) {
+        <span class="ty">const</span> <span class="ty">int</span> MOD = 1e9+7;
+        <span class="ty">int</span> n=S.size();
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt;&gt; dp(n, <span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt;(n));
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) dp[i][i]=1;
+        <span class="kw">for</span>(<span class="ty">int</span> len=2;len&lt;=n;len++) <span class="kw">for</span>(<span class="ty">int</span> l=0;l+len-1&lt;n;l++){
+            <span class="ty">int</span> r=l+len-1;
+            <span class="kw">if</span>(S[l]==S[r]){
+                dp[l][r]=dp[l+1][r-1]*2+2;
+                <span class="ty">int</span> i=l+1,j=r-1;
+                <span class="kw">while</span>(i&lt;=j&amp;&amp;S[i]!=S[l]) i++;
+                <span class="kw">while</span>(i&lt;=j&amp;&amp;S[j]!=S[l]) j--;
+                <span class="kw">if</span>(i&gt;j) dp[l][r]--;
+                <span class="kw">else</span> <span class="kw">if</span>(i==j) dp[l][r]--;
+                <span class="kw">else</span> dp[l][r]-=2;
+            } <span class="kw">else</span> dp[l][r]=(dp[l+1][r]+dp[l][r-1]-dp[l+1][r-1]+MOD)%MOD;
+            dp[l][r]%=MOD;
+        }
+        <span class="kw">return</span> dp[0][n-1];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +165,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP[l][r] = số palindrome subseq trong S[l..r].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu S[l]==S[r]: dp[l][r]=dp[l+1][r-1]*2+2; else…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Trừ trùng khi S[l]==S[r].</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Interval DP đếm distinct subseq palindrome; trừ duplicate khi ký tự đầu cuối trùng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một ký tự → 1</span><span class="analysis-tag edge">Toàn cùng chữ</span><span class="analysis-tag edge">Mod overflow</span><span class="analysis-tag pit">Quên trừ duplicate inner same char</span><span class="analysis-tag pit">Nhầm subsequence với substring</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Count pal subseq = interval DP merge/split; mod 1e9+7.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +194,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Count%20Different%20Palindromic%20Subsequences&lc_id=730&embed=true"></iframe>

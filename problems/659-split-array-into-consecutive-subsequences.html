@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #659</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Greedy</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Split Array into Consecutive Subsequences</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>52.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Split Array into Consecutive Subsequences (LeetCode #659) — Medium.</div>
+                        <div class="block-text">Có thể chia nums thành một hoặc nhiều subsequence liên tiếp (mỗi seq +1)?</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums=[1,2,3,3,4,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums=[1,2,3,3,4,5,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Min-heap end values; freq map: extend seq ending x-1, start new, or fail.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> isPossible659(<span class="ty">int</span>* nums,<span class="ty">int</span> n){ <span class="ty">int</span> cnt[20001]={0},end[20001]={0},i; <span class="kw">for</span>(i=0;i&lt;n;i++) cnt[nums[i]+10000]++; <span class="kw">for</span>(i=0;i&lt;n;i++){ <span class="ty">int</span> x=nums[i]+10000; <span class="kw">if</span>(!cnt[x]) continue; cnt[x]--; <span class="kw">if</span>(end[x-1]){end[x-1]--;end[x]++;} <span class="kw">else</span> <span class="kw">if</span>(cnt[x+1]){cnt[x+1]--;end[x+2]++;} <span class="kw">else</span> <span class="kw">return</span> 0;} <span class="kw">return</span> 1; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isPossible(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        <span class="kw">from</span> collections <span class="kw">import</span> Counter
+        cnt=Counter(nums); ends=Counter()
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">if</span> cnt[x]==0: continue
+            cnt[x]-=1
+            <span class="kw">if</span> ends[x-1]:
+                ends[x-1]-=1; ends[x]+=1
+            <span class="kw">elif</span> cnt[x+1]:
+                cnt[x+1]-=1; ends[x+1]+=1
+            <span class="kw">else</span>: <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">return</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isPossible(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; cnt, end;
+        <span class="kw">for</span>(<span class="ty">int</span> x:nums) cnt[x]++;
+        <span class="kw">for</span>(<span class="ty">int</span> x:nums){
+            <span class="kw">if</span>(!cnt[x]) continue; cnt[x]--;
+            <span class="kw">if</span>(end[x-1]){ end[x-1]--; end[x]++; }
+            <span class="kw">else</span> <span class="kw">if</span>(cnt[x+1]){ cnt[x+1]--; end[x+1]++; }
+            <span class="kw">else</span> <span class="kw">return</span> false;
+        }
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +130,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Greedy</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Min-heap end values; freq map: extend seq ending x-1, start new, or…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Greedy ưu tiên extend seq — optimal for feasibility.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Length 3 min seq</span><span class="analysis-tag edge">Duplicate need parallel seq</span><span class="analysis-tag edge">Sorted input</span><span class="analysis-tag pit">Sort only not enough</span><span class="analysis-tag pit">Wrong end tracking</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Split consecutive subsequences — greedy heaps on tail values.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +159,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Split%20Array%20into%20Consecutive%20Subsequences&lc_id=659&embed=true"></iframe>

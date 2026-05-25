@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #688</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Dynamic Programming</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Knight Probability in Chessboard</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(k*n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>57% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Knight Probability in Chessboard (LeetCode #688) — Medium.</div>
+                        <div class="block-text">Knight trên n×n, k bước. Xác suất vẫn trên board sau k bước.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n=3,k=2,row=0,column=0</code></div>
+                <div class="ex-line"><span>Out</span><code>0.0625</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n=1,k=0</code></div>
+                <div class="ex-line"><span>Out</span><code>1.0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[k][r][c] prob; spread 8 moves normalize.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">double</span> knightProbability688(<span class="ty">int</span> n,<span class="ty">int</span> k,<span class="ty">int</span> r,<span class="ty">int</span> c) {
+    <span class="ty">double</span> dp[25][25]={0}, nd[25][25]={0};
+    dp[r][c]=1.0;
+    <span class="ty">int</span> mv[8][2]={{-2,-1},{-2,1},{-1,-2},{-1,2},{2,-1},{2,1},{1,-2},{1,2}};
+    <span class="kw">for</span>(<span class="ty">int</span> t=0;t&lt;k;t++){
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) nd[i][j]=0;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) <span class="kw">if</span>(dp[i][j])
+            <span class="kw">for</span>(<span class="ty">int</span> m=0;m&lt;8;m++){
+                <span class="ty">int</span> ni=i+mv[m][0], nj=j+mv[m][1];
+                <span class="kw">if</span>(ni&gt;=0&amp;&amp;ni&lt;n&amp;&amp;nj&gt;=0&amp;&amp;nj&lt;n) nd[ni][nj]+=dp[i][j]/8.0;
+            }
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) dp[i][j]=nd[i][j];
+    }
+    <span class="ty">double</span> s=0; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) s+=dp[i][j]; <span class="kw">return</span> s;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> knightProbability(<span class="ty">self</span>, n: <span class="ty">int</span>, k: <span class="ty">int</span>, row: <span class="ty">int</span>, column: <span class="ty">int</span>) -&gt; float:
+        dp=[[0.0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n)]; dp[row][column]=1.0
+        moves=[(-2,-1),(-2,1),(-1,-2),(-1,2),(2,-1),(2,1),(1,-2),(1,2)]
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(k):
+            nd=[[0.0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n)]
+            <span class="kw">for</span> r <span class="kw">in</span> <span class="ty">range</span>(n):
+                <span class="kw">for</span> c <span class="kw">in</span> <span class="ty">range</span>(n):
+                    <span class="kw">if</span> dp[r][c]:
+                        <span class="kw">for</span> dr,dc <span class="kw">in</span> moves:
+                            nr,nc=r+dr,c+dc
+                            <span class="kw">if</span> 0&lt;=nr&lt;n <span class="kw">and</span> 0&lt;=nc&lt;n: nd[nr][nc]+=dp[r][c]/8.0
+            dp=nd
+        <span class="kw">return</span> sum(sum(row) <span class="kw">for</span> row <span class="kw">in</span> dp)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">double</span> knightProbability(<span class="ty">int</span> n, <span class="ty">int</span> k, <span class="ty">int</span> r, <span class="ty">int</span> c) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;&gt; dp(n,<span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;(n)); dp[r][c]=1;
+        <span class="ty">int</span> mv[8][2]={{-2,-1},{-2,1},{-1,-2},{-1,2},{2,-1},{2,1},{1,-2},{1,2}};
+        <span class="kw">for</span>(<span class="ty">int</span> t=0;t&lt;k;t++){
+            <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;&gt; nd(n,<span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;(n));
+            <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) <span class="kw">if</span>(dp[i][j])
+                <span class="kw">for</span>(auto&amp; m:mv){ <span class="ty">int</span> ni=i+m[0],nj=j+m[1]; <span class="kw">if</span>(ni&gt;=0&amp;&amp;ni&lt;n&amp;&amp;nj&gt;=0&amp;&amp;nj&lt;n) nd[ni][nj]+=dp[i][j]/8.0; }
+            dp=nd;
+        }
+        <span class="ty">double</span> s=0; <span class="kw">for</span>(auto&amp; row:dp) s+=accumulate(row.begin(),row.end(),0.0); <span class="kw">return</span> s;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +146,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(k*n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP[k][r][c] prob; spread 8 moves normalize.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Markov chain DP — prob conserved split 8 ways.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=0 stay</span><span class="analysis-tag edge">n=1 always 1</span><span class="analysis-tag edge">Corner low prob</span><span class="analysis-tag pit">BFS not prob</span><span class="analysis-tag pit">Forget divide 8</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Knight probability — DP layers 8 moves.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +174,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Knight%20Probability%20in%20Chessboard&lc_id=688&embed=true"></iframe>

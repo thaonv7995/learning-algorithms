@@ -2,33 +2,37 @@
   "id": 703,
   "title": "Kth Largest Element in a Stream",
   "difficulty": "Easy",
-  "category": "Tree",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Kth Largest Element in a Stream (LeetCode #703) — Easy.",
+  "category": "Heap",
+  "timeComplexity": "O(log k) mỗi add",
+  "spaceComplexity": "O(k)",
+  "description": "Thiết kế lớp lưu dòng số và trả phần tử lớn thứ k sau mỗi lần thêm. KthLargest(k, nums) khởi tạo; add(val) thêm số và trả k-th largest hiện tại.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "[\"KthLargest\",\"add\",\"add\",\"add\",\"add\",\"add\",\"add\"], [[3,[4,5,8,2]],[3],[5],[10],[9],[4]]",
+      "output": "[null,4,5,5,8,8]"
+    },
+    {
+      "input": "[\"KthLargest\",\"add\",\"add\",\"add\",\"add\"], [[1,[1]],[1],[1],[2],[3]]",
+      "output": "[null,1,1,1,2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Min-heap size k: push val, nếu size>k pop min. Top heap là k-th largest (k phần tử lớn nhất, nhỏ nhất trong đó).",
+  "memoryTip": "Top-k lớn nhất → min-heap k phần tử, không max-heap toàn bộ stream.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class KthLargest:\n    def __init__(self, k: int, nums: List[int]):\n        self.k = k\n        self.h = nums\n        heapify(self.h)\n        while len(self.h) > k:\n            heappop(self.h)\n    def add(self, val: int) -> int:\n        heappush(self.h, val)\n        if len(self.h) > self.k:\n            heappop(self.h)\n        return self.h[0]",
+    "cpp": "class KthLargest {\n    int k;\n    priority_queue<int, vector<int>, greater<int>> pq;\npublic:\n    KthLargest(int k, vector<int>& nums) : k(k) {\n        for (int x : nums) { pq.push(x); if ((int)pq.size() > k) pq.pop(); }\n    }\n    int add(int val) {\n        pq.push(val);\n        if ((int)pq.size() > k) pq.pop();\n        return pq.top();\n    }\n};",
+    "c": "typedef struct { int k; int* a; int n, cap; } KthLargest;\nstatic void hpush(int* h, int* sz, int x){ h[(*sz)++]=x; int i=*sz-1; while(i>0){ int p=(i-1)/2; if(h[p]<=h[i]) break; int t=h[p]; h[p]=h[i]; h[i]=t; i=p; } }\nstatic void hpop(int* h, int* sz){ (*sz)--; h[0]=h[*sz]; int i=0; for(;;){ int l=2*i+1,r=l+1,m=i; if(l<*sz&&h[l]<h[m]) m=l; if(r<*sz&&h[r]<h[m]) m=r; if(m==i) break; int t=h[i]; h[i]=h[m]; h[m]=t; i=m; } }\nKthLargest* kthLargestCreate(int k, int* nums, int n){ KthLargest* o=malloc(sizeof(KthLargest)); o->k=k; o->cap=1024; o->a=malloc(o->cap*4); o->n=0; for(int i=0;i<n;i++){ hpush(o->a,&o->n,nums[i]); if(o->n>k) hpop(o->a,&o->n);} return o; }\nint kthLargestAdd(KthLargest* o, int val){ hpush(o->a,&o->n,val); if(o->n>o->k) hpop(o->a,&o->n); return o->a[0]; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Heap giữ đúng k phần tử lớn nhất stream; min của chúng là thứ k.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1 → max mới nhất",
+      "Stream ngắn hơn k ban đầu vẫn heapify đủ"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng max-heap toàn bộ O(n) memory",
+      "Sort mỗi add O(n log n)"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

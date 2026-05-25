@@ -2,33 +2,38 @@
   "id": 670,
   "title": "Maximum Swap",
   "difficulty": "Medium",
-  "category": "Math",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Maximum Swap (LeetCode #670) — Medium.",
+  "description": "Đổi chỗ tối đa một cặp chữ số trong num để được số lớn nhất.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num=2736",
+      "output": "7236"
+    },
+    {
+      "input": "num=9973",
+      "output": "9973"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tìm first drop a[i]<a[i+1]; swap a[i] với max digit phía sau; nếu không drop swap first max pair.",
+  "memoryTip": "Maximum swap — find first decrease, swap with max right.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maximumSwap(self, num: int) -> int:\n        s=list(str(num)); last={int(d):i for i,d in enumerate(s)}\n        for i,ch in enumerate(s):\n            for d in range(9,int(ch),-1):\n                if d in last and last[d]>i:\n                    j=last[d]; s[i],s[j]=s[j],s[i]; return int(\"\".join(s))\n        return num",
+    "cpp": "class Solution {\npublic:\n    int maximumSwap(int num) {\n        string s=to_string(num); int last[10]; memset(last,-1,sizeof last);\n        for(int i=0;i<(int)s.size();i++) last[s[i]-'0']=i;\n        for(int i=0;i<(int)s.size();i++)\n            for(int d=9;d>s[i]-'0';d--)\n                if(last[d]>i){ swap(s[i],s[last[d]]); return stoi(s); }\n        return num;\n    }\n};",
+    "c": "int maximumSwap670(int num){ char s[12]; sprintf(s,\"%d\",num); int last[10],i,j; for(i=0;i<10;i++)last[i]=-1; for(i=0;s[i];i++)last[s[i]-'0']=i; for(i=0;s[i];i++) for(j=9;j>s[i]-'0';j--) if(last[j]>i){ char t=s[i]; s[i]=s[last[j]]; s[last[j]]=t; return atoi(s);} return num; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Một swap tối ưu — tăng digit sớm nhất bằng max bên phải.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Already max",
+      "Duplicate digits",
+      "Single digit"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Swap leftmost max not first drop",
+      "Multiple swaps"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #648</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Trie</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Replace Words</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n*m)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Replace Words (LeetCode #648) — Medium.</div>
+                        <div class="block-text">Cho dict và câu. Thay mỗi từ bằng root prefix ngắn nhất trong dict (nếu có).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>dict=[&quot;cat&quot;,&quot;bat&quot;,&quot;rat&quot;], sentence=&quot;the cattle was rattled by the battery&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;the cat was rat by the bat&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>dict=[&quot;a&quot;,&quot;b&quot;], sentence=&quot;a a&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;a a&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Build trie dict; split sentence; mỗi từ walk trie lấy prefix ngắn nhất.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* replaceWords(<span class="ty">char</span>** dict,<span class="ty">int</span> dn,<span class="ty">char</span>* s){ <span class="kw">return</span> s; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> replaceWords(<span class="ty">self</span>, dictionary: <span class="ty">List</span>[<span class="ty">str</span>], sentence: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        trie={}
+        <span class="kw">for</span> w <span class="kw">in</span> dictionary:
+            node=trie
+            <span class="kw">for</span> ch <span class="kw">in</span> w: node=node.setdefault(ch,{})
+            node[&quot;<span class="cm">#&quot;]=w</span>
+        <span class="kw">def</span> prefix(w):
+            node=trie
+            <span class="kw">for</span> ch <span class="kw">in</span> w:
+                <span class="kw">if</span> ch <span class="kw">not</span> <span class="kw">in</span> node: <span class="kw">return</span> w
+                node=node[ch]
+                <span class="kw">if</span> &quot;<span class="cm">#&quot; <span class="kw">in</span> node: <span class="kw">return</span> node[&quot;#&quot;]</span>
+            <span class="kw">return</span> w
+        <span class="kw">return</span> &quot; &quot;.join(prefix(w) <span class="kw">for</span> w <span class="kw">in</span> sentence.split())</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> replaceWords(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; dict, <span class="ty">string</span> s) {
+        <span class="ty">struct</span> Node{ unordered_map&lt;<span class="ty">char</span>,Node*&gt; nxt; <span class="ty">string</span> root; };
+        Node* rt=<span class="kw">new</span> Node();
+        <span class="kw">for</span>(auto&amp; w:dict){ Node* cur=rt; <span class="kw">for</span>(<span class="ty">char</span> c:w){ <span class="kw">if</span>(!cur-&gt;nxt[c]) cur-&gt;nxt[c]=<span class="kw">new</span> Node(); cur=cur-&gt;nxt[c]; } cur-&gt;root=w; }
+        auto pref=[&amp;](<span class="ty">string</span> w){ Node* cur=rt; <span class="ty">string</span> ans;
+            <span class="kw">for</span>(<span class="ty">char</span> c:w){ <span class="kw">if</span>(!cur-&gt;nxt.count(c)) break; cur=cur-&gt;nxt[c]; <span class="kw">if</span>(!cur-&gt;root.empty()){ ans=cur-&gt;root; break; } }
+            <span class="kw">return</span> ans.empty()?w:ans; };
+        stringstream ss(s); <span class="ty">string</span> w,out; <span class="kw">while</span>(ss&gt;&gt;w){ <span class="kw">if</span>(!out.empty()) out+=&quot; &quot;; out+=pref(w);} <span class="kw">return</span> out;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +130,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Trie</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n*m)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Build trie dict; split sentence; mỗi từ walk trie lấy prefix ngắn nhất.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Trie dừng tại root đầu tiên — prefix ngắn nhất trong dict.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không match giữ nguyên</span><span class="analysis-tag edge">Root trùng prefix</span><span class="analysis-tag edge">Một từ</span><span class="analysis-tag pit">Sort dict thay trie</span><span class="analysis-tag pit">Thay partial không phải root</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Replace words — trie shortest root prefix.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +159,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Replace%20Words&lc_id=648&embed=true"></iframe>

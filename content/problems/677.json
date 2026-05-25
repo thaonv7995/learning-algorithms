@@ -2,33 +2,38 @@
   "id": 677,
   "title": "Map Sum Pairs",
   "difficulty": "Medium",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Map Sum Pairs (LeetCode #677) — Medium.",
+  "category": "Trie",
+  "timeComplexity": "O(m)",
+  "spaceComplexity": "O(n)",
+  "description": "MapSum: insert(key,val); sum(prefix) tổng val mọi key có prefix.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "insert(\"apple\",3); sum(\"ap\")",
+      "output": "3"
+    },
+    {
+      "input": "insert(\"app\",2); sum(\"ap\")",
+      "output": "5"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Trie node store val; insert update path; sum DFS subtree.",
+  "memoryTip": "Map Sum Pairs — trie prefix aggregate values.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MapSum:\n    def __init__(self):\n        self.t={}\n    def insert(self, key, val):\n        node=self.t; d=val-(self._get(key) if self._get(key) else 0)\n        for c in key:\n            node=node.setdefault(c,{\"v\":0,\"c\":{}})\n            node[\"v\"]+=d; node=node[\"c\"]\n        self._kv=key; self._vv=val\n    def _get(self,k):\n        return self._vv if getattr(self,\"_kv\",None)==k else 0\n    def sum(self, prefix):\n        node=self.t\n        for c in prefix:\n            if c not in node: return 0\n            node=node[c]\n        return node.get(\"v\",0)",
+    "cpp": "class MapSum {\n    struct Node{ int v=0; unordered_map<char,Node*> ch; };\n    Node* rt=new Node(); unordered_map<string,int> mp;\npublic:\n    void insert(string k,int val){ int d=val-(mp.count(k)?mp[k]:0); mp[k]=val; Node* cur=rt;\n        for(char c:k){ if(!cur->ch[c]) cur->ch[c]=new Node(); cur=cur->ch[c]; cur->v+=d; } }\n    int sum(string p){ Node* cur=rt; for(char c:p){ if(!cur->ch.count(c)) return 0; cur=cur->ch[c]; } return cur->v; }\n};",
+    "c": "typedef struct MSNode{ int v; struct MSNode* ch[26]; } MSNode;\ntypedef struct{ MSNode* rt; } MapSum;\nMapSum* mapSumCreate(){ MapSum* m=malloc(sizeof(MapSum)); m->rt=calloc(1,sizeof(MSNode)); return m; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Trie aggregate v along prefix path — sum at prefix node.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Update same key",
+      "Unknown prefix 0",
+      "Empty prefix"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Forget delta on update",
+      "Not sum all keys"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

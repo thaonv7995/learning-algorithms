@@ -3,32 +3,37 @@
   "title": "Global and Local Inversions",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Global and Local Inversions (LeetCode #775) — Medium.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Permutation A length n. Global inversion: cặp i<j, A[i]>A[j]. Local inversion: A[i]>A[i+1]. Kiểm tra số global = số local?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,0,2]",
+      "output": "true"
+    },
+    {
+      "input": "nums = [1,2,0]",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Local inversions chỉ giữa neighbors → global==local iff không tồn tại i,j cách >1 với A[i]>A[j]. Equivalent: nums[i]-i không tăng quá 1.",
+  "memoryTip": "Global==local inversions iff max displacement nums[i]-i <= 1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isIdealPermutation(self, nums: List[int]) -> bool:\n        n = len(nums)\n        for i in range(n):\n            if nums[i] - i > 1: return False\n            if i + 2 < n and nums[i] > nums[i + 2]: return False\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool isIdealPermutation(vector<int>& nums) {\n        int n=nums.size();\n        for(int i=0;i<n;i++){\n            if(nums[i]-i>1) return false;\n            if(i+2<n && nums[i]>nums[i+2]) return false;\n        }\n        return true;\n    }\n};",
+    "c": "bool isIdealPermutation(int* nums, int n) {\n    for(int i=0;i<n;i++){ if(nums[i]-i>1) return false; if(i+2<n && nums[i]>nums[i+2]) return false; }\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Global>local khi inversion span >1; check nums[i]>nums[i+2] hoặc nums[i]-i>1.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Sorted → true",
+      "Reverse small n",
+      "n=2"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Merge sort count inversions overkill",
+      "Chỉ đếm local"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

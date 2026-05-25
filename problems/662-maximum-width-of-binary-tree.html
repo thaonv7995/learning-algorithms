@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #662</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Maximum Width of Binary Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(w)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Maximum Width of Binary Tree (LeetCode #662) — Medium.</div>
+                        <div class="block-text">Chiều rộng tối đa cây nhị phân (max nodes một level).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root=[1,3,2,5,3,null,9]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root=[1]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS level order max width; hoặc DFS index left=2*i right=2*i+1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,49 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> widthOfBinaryTree662(<span class="ty">struct</span> TreeNode* r) {
+    <span class="kw">if</span>(!r) <span class="kw">return</span> 0;
+    <span class="ty">struct</span> TreeNode** q=<span class="kw">malloc</span>(10000*<span class="kw">sizeof</span>(*q)); <span class="ty">unsigned</span> <span class="ty">long</span> <span class="ty">long</span>* idx=<span class="kw">malloc</span>(10000*8);
+    <span class="ty">int</span> ql=0,qr=0,ans=0; q[qr]=r; idx[qr]=0; qr++;
+    <span class="kw">while</span>(ql&lt;qr){
+        <span class="ty">int</span> sz=qr-ql;
+        <span class="ty">unsigned</span> <span class="ty">long</span> <span class="ty">long</span> w=idx[qr-1]-idx[ql]+1; <span class="kw">if</span>((<span class="ty">int</span>)w&gt;ans) ans=(<span class="ty">int</span>)w;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;sz;i++){
+            <span class="ty">struct</span> TreeNode* n=q[ql]; <span class="ty">unsigned</span> <span class="ty">long</span> <span class="ty">long</span> id=idx[ql]; ql++;
+            <span class="kw">if</span>(n-&gt;left){ q[qr]=n-&gt;left; idx[qr]=id*2; qr++; }
+            <span class="kw">if</span>(n-&gt;right){ q[qr]=n-&gt;right; idx[qr]=id*2+1; qr++; }
+        }
+    }
+    <span class="kw">free</span>(q); <span class="kw">free</span>(idx); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> widthOfBinaryTree(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> 0
+        q=[(root,0)]; ans=0
+        <span class="kw">while</span> q:
+            ans=<span class="ty">max</span>(ans,q[-1][1]-q[0][1]+1)
+            nxt=[]
+            <span class="kw">for</span> node,i <span class="kw">in</span> q:
+                <span class="kw">if</span> node.left: nxt.append((node.left,2*i))
+                <span class="kw">if</span> node.right: nxt.append((node.right,2*i+1))
+            q=nxt
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> widthOfBinaryTree(TreeNode* root) {
+        <span class="kw">if</span>(!root) <span class="kw">return</span> 0;
+        <span class="ty">int</span> ans=0; queue&lt;pair&lt;TreeNode*,<span class="ty">unsigned</span> <span class="ty">long</span> <span class="ty">long</span>&gt;&gt; q;
+        q.push({root,0});
+        <span class="kw">while</span>(!q.empty()){
+            <span class="ty">int</span> sz=q.size(); ans=max(ans,(<span class="ty">int</span>)(q.back().second-q.front().second+1));
+            <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;sz;i++){
+                auto [n,idx]=q.front(); q.pop();
+                <span class="kw">if</span>(n-&gt;left) q.push({n-&gt;left,2*idx});
+                <span class="kw">if</span>(n-&gt;right) q.push({n-&gt;right,2*idx+1});
+            }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +148,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(w)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — BFS level order max width; hoặc DFS index left=2*i right=2*i+1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Index BFS — width = last-first+1 per level.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Skew tree width 1</span><span class="analysis-tag edge">Only left children</span><span class="analysis-tag edge">ULL overflow rare</span><span class="analysis-tag pit">Count null gaps wrong</span><span class="analysis-tag pit">BFS without index</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Max width BT — BFS level size or indexed DFS.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +175,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Maximum%20Width%20of%20Binary%20Tree&lc_id=662&embed=true"></iframe>

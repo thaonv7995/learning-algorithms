@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #672</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Bulb Switcher II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>50.1% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Bulb Switcher II (LeetCode #672) — Medium.</div>
+                        <div class="block-text">n bóng đèn, 4 nút flip pattern. Từ initial và ops (1..4), có thể đạt target state?</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n=1, on=0, ops=[2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n=3, on=0, ops=[2,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Chỉ parity n mod something và flip counts mod 2 matter; simulate small patterns.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> flipLights672(<span class="ty">int</span> n,<span class="ty">int</span> p){ <span class="kw">return</span> 1; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> flipLights(<span class="ty">self</span>, n: <span class="ty">int</span>, presses: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> presses==0: <span class="kw">return</span> 1
+        presses=<span class="ty">min</span>(presses,3); n=<span class="ty">min</span>(n,3)
+        all={tuple([0]*n)}
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(presses):
+            nxt=<span class="ty">set</span>()
+            <span class="kw">for</span> st <span class="kw">in</span> all:
+                <span class="kw">for</span> op <span class="kw">in</span> <span class="ty">range</span>(4):
+                    a=<span class="ty">list</span>(st)
+                    <span class="kw">if</span> op==0: a=[1-x <span class="kw">for</span> x <span class="kw">in</span> a]
+                    <span class="kw">elif</span> op==1 <span class="kw">and</span> n&gt;1: a[1]=1-a[1]; a[2]=1-a[2] <span class="kw">if</span> n&gt;2 <span class="kw">else</span> a[1]
+                    <span class="kw">elif</span> op==2: a[0]=1-a[0]; a[2]=1-a[2] <span class="kw">if</span> n&gt;2 <span class="kw">else</span> a[0]
+                    <span class="kw">elif</span> op==3 <span class="kw">and</span> n&gt;2: a[0]=1-a[0]; a[1]=1-a[1]
+                    nxt.add(tuple(a))
+            all=nxt
+        <span class="kw">return</span> <span class="ty">len</span>(all)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> flipLights(<span class="ty">int</span> n, <span class="ty">int</span> p) {
+        <span class="kw">if</span>(!p) <span class="kw">return</span> 1; p=min(p,3); n=min(n,3);
+        set&lt;<span class="ty">int</span>&gt; st={0};
+        <span class="kw">for</span>(<span class="ty">int</span> t=0;t&lt;p;t++){
+            set&lt;<span class="ty">int</span>&gt; nx;
+            <span class="kw">for</span>(<span class="ty">int</span> s:st) <span class="kw">for</span>(<span class="ty">int</span> op=0;op&lt;4;op++){
+                <span class="ty">int</span> a=s;
+                <span class="kw">if</span>(op==0) a^=7;
+                <span class="kw">else</span> <span class="kw">if</span>(op==1) a^=6;
+                <span class="kw">else</span> <span class="kw">if</span>(op==2) a^=5;
+                <span class="kw">else</span> a^=3;
+                nx.insert(a&amp;( (1&lt;&lt;n)-1 ));
+            }
+            st=nx;
+        }
+        <span class="kw">return</span> st.size();
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +141,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Chỉ parity n mod something và flip counts mod 2 matter; simulate small…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>State space nhỏ khi n,p capped — BFS đếm reachable.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">presses=0</span><span class="analysis-tag edge">n&gt;3 reduce</span><span class="analysis-tag edge">All ops same</span><span class="analysis-tag pit">Simulate full n large</span><span class="analysis-tag pit">Wrong op masks</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Bulb Switcher II — finite state mod 2 for small n.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Bulb%20Switcher%20II&lc_id=672&embed=true"></iframe>

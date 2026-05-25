@@ -2,33 +2,38 @@
   "id": 761,
   "title": "Special Binary String",
   "difficulty": "Hard",
-  "category": "String",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Special Binary String (LeetCode #761) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Chuỗi nhị phân special: 1...0 với số 1 = số 0 và mọi prefix có #0 >= #1. Cho special string s. Trả chuỗi special lớn nhất lex (cùng length).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"11011000\"",
+      "output": "\"11100100\""
+    },
+    {
+      "input": "s = \"10\"",
+      "output": "\"10\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Recursive divide: special = \"1\" + A + \"0\" + B với A,B special; sort các block con theo quy tắc đảo lex special.",
+  "memoryTip": "Special binary string = recursive 1+A+0+B structure, merge sort blocks.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def makeLargestSpecial(self, s: str) -> str:\n        if not s: return \"\"\n        cnt = 0; parts = []; i = 0\n        for j, ch in enumerate(s):\n            cnt += 1 if ch == \"1\" else -1\n            if cnt == 0:\n                parts.append(\"1\" + self.makeLargestSpecial(s[i+1:j]) + \"0\")\n                i = j + 1\n        parts.sort(reverse=True)\n        return \"\".join(parts)",
+    "cpp": "class Solution {\npublic:\n    string makeLargestSpecial(string s) {\n        if(s.empty()) return \"\";\n        vector<string> parts; int cnt=0, i=0;\n        for(int j=0;j<(int)s.size();j++){\n            cnt += s[j]=='1'?1:-1;\n            if(cnt==0){\n                parts.push_back(\"1\"+makeLargestSpecial(s.substr(i+1,j-i-1))+\"0\");\n                i=j+1;\n            }\n        }\n        sort(parts.begin(), parts.end(), greater<string>());\n        string ans;\n        for(auto& p: parts) ans+=p;\n        return ans;\n    }\n};",
+    "c": "static int cmp761(const void* a,const void* b){ return strcmp(*(char**)b,*(char**)a); }\nchar* makeLargestSpecial(char* s) {\n    if(!s[0]) return strdup(\"\");\n    int cnt=0, parts=0; char* seg[128];\n    for(int j=0,i=0;s[j];j++){ cnt+=s[j]=='1'?1:-1; if(cnt==0){ char* inner=strndup(s+i+1,j-i-1); seg[parts]=malloc(strlen(s)+1); sprintf(seg[parts++],\"1%s0\",makeLargestSpecial(inner)); free(inner); i=j+1; } }\n    qsort(seg,parts,sizeof(char*),cmp761);\n    char* out=malloc(1024); out[0]=0; for(int i=0;i<parts;i++) strcat(out,seg[i]);\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Phân rã special blocks; sort reverse lex cho chuỗi lớn nhất.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "s=\"10\" giữ nguyên",
+      "Nested specials",
+      "Empty inner"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort tăng dần",
+      "Không nhận diện block boundary cnt=0"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

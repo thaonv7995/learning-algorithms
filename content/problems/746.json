@@ -2,33 +2,42 @@
   "id": 746,
   "title": "Min Cost Climbing Stairs",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Min Cost Climbing Stairs (LeetCode #746) — Easy.",
+  "description": "cost[i] là chi phí đứng tại bậc i. Bắt đầu bậc 0 hoặc 1, mỗi bước nhảy 1 hoặc 2 bậc, đến trên cùng. Trả chi phí tối thiểu.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "cost = [10,15,20]",
+      "output": "15"
+    },
+    {
+      "input": "cost = [1,100,1,1,1,100,1,1,100,1]",
+      "output": "6"
+    },
+    {
+      "input": "cost = [0,0,0,0]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP: dp[i]=cost[i]+min(dp[i-1],dp[i-2]); hoặc rolling a,b cập nhật min cost tới bậc i.",
+  "memoryTip": "Min cost stairs = Fibonacci-style min of previous two.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minCostClimbingStairs(self, cost: List[int]) -> int:\n        a = b = 0\n        for c in cost:\n            a, b = b, c + min(a, b)\n        return b",
+    "cpp": "class Solution {\npublic:\n    int minCostClimbingStairs(vector<int>& cost) {\n        int a=0,b=0;\n        for(int c:cost){ int nxt=c+min(a,b); a=b; b=nxt; }\n        return b;\n    }\n};",
+    "c": "int minCostClimbingStairs(int* cost, int n) {\n    int a = 0, b = 0;\n    for (int i = 0; i < n; i++) {\n        int nxt = cost[i] + (a < b ? a : b);\n        a = b; b = nxt;\n    }\n    return b;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Optimal substructure: min tới bậc i phụ thuộc hai bậc trước.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Hai bậc",
+      "Cost 0",
+      "Start free at 0 or 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Cộng cost bậc đích sai",
+      "Không cho start free"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

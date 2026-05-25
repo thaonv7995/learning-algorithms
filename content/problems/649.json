@@ -2,33 +2,38 @@
   "id": 649,
   "title": "Dota2 Senate",
   "difficulty": "Medium",
-  "category": "String",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Dota2 Senate (LeetCode #649) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Senate R và D bầu cử: mỗi người ban điều tiên đối phương tiếp theo vòng. Ai thắng?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "senate = \"RD\"",
+      "output": "\"Radiant\""
+    },
+    {
+      "input": "senate = \"RDD\"",
+      "output": "\"Dire\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Queue R và D; so sánh index, ai nhỏ hơn loại đối phương sau.",
+  "memoryTip": "Dota2 Senate — two queues ban next opponent.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def predictPartyVictory(self, senate: str) -> str:\n        from collections import deque\n        r,d=deque(),deque()\n        for i,ch in enumerate(senate):\n            (r if ch==\"R\" else d).append(i)\n        n=len(senate)\n        while r and d:\n            if r[0]<d[0]: d.popleft()\n            else: r.popleft()\n            (r if r and (not d or r[0]<d[0]) else d)[0]  # fix\n        return \"Radiant\" if r else \"Dire\"",
+    "cpp": "class Solution {\npublic:\n    string predictPartyVictory(string s) {\n        queue<int> r,d;\n        for(int i=0;i<(int)s.size();i++) (s[i]=='R'?r:d).push(i);\n        while(!r.empty()&&!d.empty()){\n            int ri=r.front(); r.pop(); int di=d.front(); d.pop();\n            if(ri<di) r.push(ri+s.size()); else d.push(di+s.size());\n        }\n        return r.empty()?\"Dire\":\"Radiant\";\n    }\n};",
+    "c": "char* predictPartyVictory(char* s){ int n=strlen(s),*rq=malloc(n*4),*dq=malloc(n*4),rh=0,rt=0,dh=0,dt=0,i; for(i=0;i<n;i++) if(s[i]=='R') rq[rt++]=i; else dq[dt++]=i; while(rh<rt&&dh<dt){ int ri=rq[rh++],di=dq[dh++]; if(ri<di) rq[rt++]=ri+n; else dq[dt++]=di+n; } static char ans[8]; strcpy(ans,rh<rt?\"Radiant\":\"Dire\"); free(rq); free(dq); return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Ai ban trước trong vòng loại đối phương — queue index + n vòng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một party",
+      "Xen kẽ RD",
+      "n=1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Greedy count không đúng",
+      "Quên +n re-queue"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

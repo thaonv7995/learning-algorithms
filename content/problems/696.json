@@ -5,30 +5,35 @@
   "category": "Two Pointers",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Count Binary Substrings (LeetCode #696) — Easy.",
+  "description": "Đếm substring có số bit 0 và 1 bằng nhau (chỉ 0/1).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s=\"00110011\"",
+      "output": "6"
+    },
+    {
+      "input": "s=\"10101\"",
+      "output": "4"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Convert to +/-1; prefix sum + hash count equal zeros/ones.",
+  "memoryTip": "Count binary substrings — prefix sum on transformed string.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countBinarySubstrings(self, s: str) -> int:\n        groups=[]; i=0\n        while i<len(s):\n            j=i\n            while j<len(s) and s[j]==s[i]: j+=1\n            groups.append(j-i); i=j\n        ans=0\n        for i in range(1,len(groups)): ans+=min(groups[i-1],groups[i])\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int countBinarySubstrings(string s) {\n        vector<int> g; int i=0;\n        while(i<(int)s.size()){\n            int j=i; while(j<(int)s.size()&&s[j]==s[i]) j++;\n            g.push_back(j-i); i=j;\n        }\n        int ans=0; for(int k=1;k<(int)g.size();k++) ans+=min(g[k-1],g[k]);\n        return ans;\n    }\n};",
+    "c": "int countBinarySubstrings696(char* s){ int g[50000],ng=0,i=0,n=strlen(s),ans=0,j; while(i<n){ j=i; while(j<n&&s[j]==s[i])j++; g[ng++]=j-i; i=j; } for(i=1;i<ng;i++) ans+=g[i-1]<g[i]?g[i-1]:g[i]; return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Run-length groups — adjacent min gives valid substrings.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "All same char 0",
+      "Alternating max",
+      "Length 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n²) expand",
+      "Wrong group merge"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #729</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">My Calendar I</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n) per op</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">My Calendar I (LeetCode #729) — Medium.</div>
+                        <div class="block-text">Thiết kế lịch: book(start,end) thêm [start,end); nếu không trùng interval đã book thì true, ngược lại false. Half-open interval.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>[&quot;MyCalendar&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;], [[],[10,20],[15,25],[20,30]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,true,false,true]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[&quot;MyCalendar&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;], [[],[47,48],[24,43],[36,39],[46,49],[33,42],[12,35],[27,38]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,true,true,false,true,false,false]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Giữ list intervals đã book. book kiểm tra không overlap: start &lt; other.end &amp;&amp; end &gt; other.start.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,31 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span> s, e; } Book;
+static Book cal[1000]; static <span class="ty">int</span> cn;
+<span class="ty">bool</span> myCalendarBook(<span class="ty">int</span> start, <span class="ty">int</span> end) {
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; cn; i++)
+        <span class="kw">if</span> (start &lt; cal[i].e &amp;&amp; end &gt; cal[i].s) <span class="kw">return</span> false;
+    cal[cn].s = start; cal[cn++].e = end;
+    <span class="kw">return</span> true;
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> MyCalendar:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.bookings = []
+    <span class="kw">def</span> book(<span class="ty">self</span>, start: <span class="ty">int</span>, end: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">for</span> s, e <span class="kw">in</span> <span class="ty">self</span>.bookings:
+            <span class="kw">if</span> start &lt; e <span class="kw">and</span> end &gt; s: <span class="kw">return</span> <span class="kw">False</span>
+        <span class="ty">self</span>.bookings.append((start, end))
+        <span class="kw">return</span> <span class="kw">True</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> MyCalendar {
+    <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; b;
 <span class="ty">public</span>:
+    <span class="ty">bool</span> book(<span class="ty">int</span> start, <span class="ty">int</span> end) {
+        <span class="kw">for</span> (auto [s,e] : b)
+            <span class="kw">if</span> (start &lt; e &amp;&amp; end &gt; s) <span class="kw">return</span> false;
+        b.push_back({start,end});
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +128,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Design</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Giữ list intervals đã book.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — book kiểm tra không overlap: start &lt; other.end &amp;&amp; end &gt;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Overlap half-open: giao khi start&lt;e2 &amp;&amp; end&gt;s1.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Book liền kề [10,20) và [20,30) ok</span><span class="analysis-tag edge">Book trùng hoàn toàn fail</span><span class="analysis-tag edge">Book đầu tiên luôn ok</span><span class="analysis-tag pit">Dùng inclusive end</span><span class="analysis-tag pit">Chỉ check start nằm trong interval</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Calendar I = overlap check [s,e) với mọi booking cũ.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +157,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=My%20Calendar%20I&lc_id=729&embed=true"></iframe>

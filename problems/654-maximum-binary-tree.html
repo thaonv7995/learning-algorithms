@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #654</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Tree</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Maximum Binary Tree</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>86.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Maximum Binary Tree (LeetCode #654) — Medium.</div>
+                        <div class="block-text">Từ nums, xây max binary tree: root là max, trái/phải là max tree của hai nửa.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums=[3,2,1,6,0,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>[6,3,5,null,2,0,null,null,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums=[1,3,2,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[3,1,2,null,1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Recursive: max index là root; left=build(l..max-1), right=build(max+1..r).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,21 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> TreeNode* constructMaximumBinaryTree(<span class="ty">int</span>* a,<span class="ty">int</span> n){ <span class="kw">if</span>(!n)<span class="kw">return</span> NULL; <span class="ty">int</span> mx=0,i; <span class="kw">for</span>(i=1;i&lt;n;i++) <span class="kw">if</span>(a[i]&gt;a[mx]) mx=i; <span class="ty">struct</span> TreeNode* r=<span class="kw">malloc</span>(<span class="kw">sizeof</span>(*r)); r-&gt;val=a[mx]; r-&gt;left=constructMaximumBinaryTree(a,mx); r-&gt;right=constructMaximumBinaryTree(a+mx+1,n-mx-1); <span class="kw">return</span> r; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> constructMaximumBinaryTree(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]:
+        <span class="kw">if</span> <span class="kw">not</span> nums: <span class="kw">return</span> <span class="kw">None</span>
+        i=<span class="ty">max</span>(<span class="ty">range</span>(<span class="ty">len</span>(nums)), key=lambda x: nums[x])
+        <span class="kw">return</span> <span class="ty">TreeNode</span>(nums[i], <span class="ty">self</span>.constructMaximumBinaryTree(nums[:i]), <span class="ty">self</span>.constructMaximumBinaryTree(nums[i+1:]))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    TreeNode* build(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a,<span class="ty">int</span> l,<span class="ty">int</span> r){
+        <span class="kw">if</span>(l&gt;r) <span class="kw">return</span> <span class="kw">nullptr</span>;
+        <span class="ty">int</span> mx=l; <span class="kw">for</span>(<span class="ty">int</span> i=l+1;i&lt;=r;i++) <span class="kw">if</span>(a[i]&gt;a[mx]) mx=i;
+        TreeNode* n=<span class="kw">new</span> TreeNode(a[mx]);
+        n-&gt;left=build(a,l,mx-1); n-&gt;right=build(a,mx+1,r); <span class="kw">return</span> n;
+    }
 <span class="ty">public</span>:
+    TreeNode* constructMaximumBinaryTree(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums){ <span class="kw">return</span> build(nums,0,nums.size()-1); }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +118,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Tree</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Recursive: max index là root; left=build, right=build.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Max là root — cấu trúc unique theo đề.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giảm dần</span><span class="analysis-tag edge">Tăng dần</span><span class="analysis-tag pit">O(n²) không cần stack monotone</span><span class="analysis-tag pit">Index out of range</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Maximum binary tree — divide at max element.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +147,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Maximum%20Binary%20Tree&lc_id=654&embed=true"></iframe>

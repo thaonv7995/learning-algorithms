@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #601</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Database</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Human Traffic of Stadium</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>51.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Human Traffic of Stadium (LeetCode #601) — Hard.</div>
+                        <div class="block-text">Bảng Stadium(id, visit_date, people) ghi lượng khách theo ngày. Trả mọi bản ghi thuộc chuỗi ≥3 ngày liên tiếp (id liên tiếp) mà mỗi ngày có people ≥100. Sắp xếp tăng theo visit_date.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>id 1–3: people 100,109,99 → chỉ id 1,2 đủ ≥100 nhưng thiếu ngày thứ 3</code></div>
+                <div class="ex-line"><span>Out</span><code>Rỗng</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>id 4–6: people 100,100,100 (3 ngày liên tiếp)</code></div>
+                <div class="ex-line"><span>Out</span><code>Ba dòng id 4,5,6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>id 7–9: people 100,120,130</code></div>
+                <div class="ex-line"><span>Out</span><code>Ba dòng id 7,8,9</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Self join 3 bản ghi a,b,c với a.id=b.id-1 và b.id=c.id-1; lọc a.people,b.people,c.people đều ≥100; DISTINCT tránh trùng khi chuỗi dài hơn 3.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +100,19 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
-<span class="ty">public</span>:
-};</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">const</span> <span class="ty">char</span> query[] = &quot;SELECT DISTINCT a.*\nFROM Stadium a, Stadium b, Stadium c\nWHERE a.id = b.id - 1 AND b.id = c.id - 1\n  AND a.people &gt;= 100 AND b.people &gt;= 100 AND c.people &gt;= 100\nORDER BY a.id;&quot;;</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># SQL</span>
+SELECT DISTINCT a.*
+FROM Stadium a, Stadium b, Stadium c
+WHERE a.id = b.id - 1 AND b.id = c.id - 1
+  AND a.people &gt;= 100 AND b.people &gt;= 100 AND c.people &gt;= 100
+ORDER BY a.id;</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// SQL</span>
+SELECT DISTINCT a.*
+FROM Stadium a, Stadium b, Stadium c
+WHERE a.id = b.id - 1 AND b.id = c.id - 1
+  AND a.people &gt;= 100 AND b.people &gt;= 100 AND c.people &gt;= 100
+ORDER BY a.id;</pre>
                         </div>
                     </div>
                 </div>
@@ -105,17 +122,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Database</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Self join 3 bản ghi a,b,c với a.id=b.id-1 và b.id=c.id-1; lọc…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Triple join đảm bảo 3 id liên tiếp; điều kiện people≥100 từng ngày khớp đề gốc LC.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi 4 ngày → mỗi cửa sổ 3 ngày xuất hiện</span><span class="analysis-tag edge">Một ngày people&lt;100 phá chuỗi</span><span class="analysis-tag pit">Nhầm tổng 2 ngày ≥100</span><span class="analysis-tag pit">Thiếu DISTINCT khi chuỗi dài</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Human traffic = triple self join id±1 + mọi people ≥100 .</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +149,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Human%20Traffic%20of%20Stadium&lc_id=601&embed=true"></iframe>

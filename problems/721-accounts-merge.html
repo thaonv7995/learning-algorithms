@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #721</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Union Find</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Accounts Merge</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>61.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Accounts Merge (LeetCode #721) — Medium.</div>
+                        <div class="block-text">Cho danh sách accounts, mỗi phần tử [name, email1, email2, ...]. Gộp các account có email chung (transitive). Trả danh sách đã gộp: mỗi account sort email, danh sách sort theo name.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>accounts = [[&quot;John&quot;,&quot;johnsmith@mail.com&quot;,&quot;john_newyork@mail.com&quot;],[&quot;John&quot;,&quot;johnsmith@mail.com&quot;,&quot;john00@mail.com&quot;],[&quot;Mary&quot;,&quot;mary@mail.com&quot;],[&quot;John&quot;,&quot;johnnybravo@mail.com&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[&quot;John&quot;,&quot;john00@mail.com&quot;,&quot;john_newyork@mail.com&quot;,&quot;johnsmith@mail.com&quot;],[&quot;Mary&quot;,&quot;mary@mail.com&quot;],[&quot;John&quot;,&quot;johnnybravo@mail.com&quot;]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>accounts = [[&quot;Gabe&quot;,&quot;Gabe0@gmail.com&quot;,&quot;Gabe1@gmail.com&quot;,&quot;Gabe3@gmail.com&quot;],[&quot;Kevin&quot;,&quot;Kevin3@gmail.com&quot;,&quot;Kevin5@gmail.com&quot;],[&quot;Ethan&quot;,&quot;Ethan1@gmail.com&quot;,&quot;Ethan2@gmail.com&quot;,&quot;Ethan0@gmail.com&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[&quot;Ethan&quot;,&quot;Ethan0@gmail.com&quot;,&quot;Ethan1@gmail.com&quot;,&quot;Ethan2@gmail.com&quot;],[&quot;Gabe&quot;,&quot;Gabe0@gmail.com&quot;,&quot;Gabe1@gmail.com&quot;,&quot;Gabe3@gmail.com&quot;],[&quot;Kevin&quot;,&quot;Kevin3@gmail.com&quot;,&quot;Kevin5@gmail.com&quot;]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Union-Find trên index account: union khi email trùng (map email→first index). Mỗi component gom email unique, sort, output [name, ...emails].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,73 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> par[1000];
+static <span class="ty">int</span> uf_find(<span class="ty">int</span> x){ <span class="kw">while</span>(par[x]!=x){ par[x]=par[par[x]]; x=par[x]; } <span class="kw">return</span> x; }
+static <span class="ty">void</span> uf_union(<span class="ty">int</span> a,<span class="ty">int</span> b){ a=uf_find(a); b=uf_find(b); <span class="kw">if</span>(a!=b) par[b]=a; }
+<span class="ty">int</span> accountsMerge(<span class="ty">char</span>*** accounts, <span class="ty">int</span> n, <span class="ty">int</span>* cs, <span class="ty">char</span>**** ret, <span class="ty">int</span>* rs, <span class="ty">int</span>** rcs) {
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) par[i]=i;
+    <span class="ty">char</span> email[1000][64]; <span class="ty">int</span> owner[1000], ec=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;cs[i];j++){
+        <span class="ty">int</span> found=-1; <span class="kw">for</span>(<span class="ty">int</span> k=0;k&lt;ec;k++) <span class="kw">if</span>(strcmp(email[k],accounts[i][j])==0){ found=owner[k]; break; }
+        <span class="kw">if</span>(found&lt;0){ strcpy(email[ec],accounts[i][j]); owner[ec++]=i; } <span class="kw">else</span> uf_union(i,found);
+    }
+    <span class="kw">return</span> 0;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> accountsMerge(<span class="ty">self</span>, accounts: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]:
+        n = <span class="ty">len</span>(accounts)
+        parent = <span class="ty">list</span>(<span class="ty">range</span>(n))
+        <span class="kw">def</span> find(x):
+            <span class="kw">while</span> parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            <span class="kw">return</span> x
+        <span class="kw">def</span> union(a, b):
+            ra, rb = find(a), find(b)
+            <span class="kw">if</span> ra != rb: parent[rb] = ra
+        email_owner = {}
+        <span class="kw">for</span> i, acc <span class="kw">in</span> enumerate(accounts):
+            <span class="kw">for</span> e <span class="kw">in</span> acc[1:]:
+                <span class="kw">if</span> e <span class="kw">in</span> email_owner: union(i, email_owner[e])
+                <span class="kw">else</span>: email_owner[e] = i
+        groups = defaultdict(<span class="ty">set</span>)
+        names = {}
+        <span class="kw">for</span> i, acc <span class="kw">in</span> enumerate(accounts):
+            r = find(i)
+            names[r] = acc[0]
+            groups[r].update(acc[1:])
+        out = []
+        <span class="kw">for</span> r, emails <span class="kw">in</span> groups.items():
+            row = [names[r]] + sorted(emails)
+            out.append(row)
+        out.sort(key=lambda x: x[0])
+        <span class="kw">return</span> out</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; p;
+    <span class="ty">int</span> find(<span class="ty">int</span> x){ <span class="kw">return</span> p[x]==x?x:p[x]=find(p[x]); }
+    <span class="ty">void</span> uni(<span class="ty">int</span> a,<span class="ty">int</span> b){ a=find(a); b=find(b); <span class="kw">if</span>(a!=b) p[b]=a; }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; accountsMerge(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt;&amp; acc) {
+        <span class="ty">int</span> n=acc.size(); p.resize(n); iota(p.begin(),p.end(),0);
+        unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; own;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;(<span class="ty">int</span>)acc[i].size();j++){
+            <span class="ty">string</span>&amp; e=acc[i][j];
+            <span class="kw">if</span>(own.count(e)) uni(i, own[e]); <span class="kw">else</span> own[e]=i;
+        }
+        unordered_map&lt;<span class="ty">int</span>, set&lt;<span class="ty">string</span>&gt;&gt; g;
+        unordered_map&lt;<span class="ty">int</span>,<span class="ty">string</span>&gt; name;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){
+            <span class="ty">int</span> r=find(i); name[r]=acc[i][0]; g[r].insert(acc[i].begin()+1, acc[i].end());
+        }
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; ans;
+        <span class="kw">for</span>(auto&amp; kv: g){
+            <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; row={name[kv.first]};
+            <span class="kw">for</span>(auto&amp; e: kv.second) row.push_back(e);
+            ans.push_back(move(row));
+        }
+        sort(ans.begin(), ans.end(), [](auto&amp; a, auto&amp; b){ <span class="kw">return</span> a[0]&lt;b[0]; });
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +170,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Union Find</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Union-Find trên index account: union khi email trùng .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Mỗi component gom email unique, sort, output [name,…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>UF gộp đúng thành phần liên thông qua email chung; output sort theo yêu cầu.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một account</span><span class="analysis-tag edge">Chuỗi merge A-B, B-C</span><span class="analysis-tag edge">Cùng name khác email</span><span class="analysis-tag pit">DFS không union transitive đủ</span><span class="analysis-tag pit">Quên sort emails trong account</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Accounts merge = UF by email alias; cùng email nối account theo bắc cầu.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +199,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Accounts%20Merge&lc_id=721&embed=true"></iframe>

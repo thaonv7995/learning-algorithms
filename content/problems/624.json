@@ -5,30 +5,35 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Maximum Distance in Arrays (LeetCode #624) — Medium.",
+  "description": "Cho m arrays đã sort. Max distance |a[i]-b[j]| với a,b từ hai array khác nhau (một phần tử mỗi array).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "arrays = [[1,2,3],[4,5],[1,2,3]]",
+      "output": "4"
+    },
+    {
+      "input": "arrays = [[1],[1]]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Track global min/max first element seen; với array mới max dist = max(max-minArr, maxArr-min).",
+  "memoryTip": "Max distance arrays — rolling min/max of first elements across arrays.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxDistance(self, arrays: List[List[int]]) -> int:\n        mn, mx, ans = arrays[0][0], arrays[0][-1], 0\n        for arr in arrays[1:]:\n            ans = max(ans, abs(arr[-1]-mn), abs(mx-arr[0]))\n            mn = min(mn, arr[0]); mx = max(mx, arr[-1])\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int maxDistance(vector<vector<int>>& a) {\n        int mn=a[0][0], mx=a[0].back(), ans=0;\n        for(int i=1;i<(int)a.size();i++){\n            ans=max({ans, abs(a[i].back()-mn), abs(mx-a[i][0])});\n            mn=min(mn,a[i][0]); mx=max(mx,a[i].back());\n        }\n        return ans;\n    }\n};",
+    "c": "int maxDistance(int** arrays, int m, int* sizes) {\n    int mn=arrays[0][0], mx=arrays[0][sizes[0]-1], ans=0;\n    for(int i=1;i<m;i++){\n        int lo=arrays[i][0], hi=arrays[i][sizes[i]-1];\n        int d1=hi-mn; if(d1<0)d1=-d1; int d2=mx-lo; if(d2<0)d2=-d2;\n        if(d1>ans) ans=d1; if(d2>ans) ans=d2;\n        if(lo<mn) mn=lo; if(hi>mx) mx=hi;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Extrema chỉ xảy ra giữa min/max của các array — duy trì rolling.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Hai array",
+      "Trùng phần tử",
+      "Một phần tử/array"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "So trong cùng array",
+      "Quên abs"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -5,30 +5,39 @@
   "category": "Two Pointers",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Valid Palindrome II (LeetCode #680) — Easy.",
+  "description": "Có thể xóa tối đa một ký tự để chuỗi alphanumeric palindrome?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"aba\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"ab\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"abc\"",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers; skip mismatch try left or right once.",
+  "memoryTip": "Valid palindrome II — two pointers one skip.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def validPalindrome(self, s: str) -> bool:\n        def ok(l,r,used):\n            while l<r:\n                if s[l]!=s[r]:\n                    if used: return False\n                    return ok(l+1,r,True) or ok(l,r-1,True)\n                l+=1; r-=1\n            return True\n        return ok(0,len(s)-1,False)",
+    "cpp": "class Solution {\n    bool helper(string& s,int l,int r,bool used){\n        while(l<r){\n            if(s[l]!=s[r]){\n                if(used) return false;\n                return helper(s,l+1,r,true)||helper(s,l,r-1,true);\n            }\n            l++; r--;\n        }\n        return true;\n    }\npublic:\n    bool validPalindrome(string s){ return helper(s,0,s.size()-1,false); }\n};",
+    "c": "bool validPalindrome680(char* s){ int l=0,r=strlen(s)-1; int used=0; while(l<r){ if(s[l]!=s[r]){ if(used)return 0; used=1; if(s[l+1]==s[r])l++; else r--; } else{l++;r--;} } return 1; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "At most one deletion — try skip left or right on first mismatch.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Already palindrome",
+      "Length 1",
+      "Two chars"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Delete more than one",
+      "Non-alphanumeric version"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -3,32 +3,41 @@
   "title": "Champagne Tower",
   "difficulty": "Medium",
   "category": "Dynamic Programming",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Champagne Tower (LeetCode #799) — Medium.",
+  "timeComplexity": "O(pour^2)",
+  "spaceComplexity": "O(pour^2)",
+  "description": "Tháp champagne pour cốc glasses rows. Pour p cups. Mỗi cốc capacity 1; tràn sang hai cốc dưới. Trả tỉ lệ cốc row query_row cột query_glass chứa champagne.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "poured = 1, query_row = 1, query_glass = 1",
+      "output": "0.0"
+    },
+    {
+      "input": "poured = 2, query_row = 1, query_glass = 1",
+      "output": "0.5"
+    },
+    {
+      "input": "poured = 100000009, query_row = 10, query_glass = 7",
+      "output": "0.9375"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[row][col] = lượng champagne tại cốc; flow xuống max(0, amt-1)/2 mỗi nhánh.",
+  "memoryTip": "Champagne tower = simulate overflow row by row from top pour.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def champagneTower(self, poured: int, query_row: int, query_glass: int) -> float:\n        tower = [[0.0]*(query_row+2) for _ in range(query_row+2)]\n        tower[0][0] = poured\n        for r in range(query_row+1):\n            for c in range(r+1):\n                flow = (tower[r][c]-1)/2 if tower[r][c]>1 else 0\n                if flow>0:\n                    tower[r+1][c]+=flow; tower[r+1][c+1]+=flow\n        return min(1.0, tower[query_row][query_glass])",
+    "cpp": "class Solution {\npublic:\n    double champagneTower(int poured, int query_row, int query_glass) {\n        vector<vector<double>> t(query_row+2, vector<double>(query_row+2));\n        t[0][0]=poured;\n        for(int r=0;r<=query_row;r++) for(int c=0;c<=r;c++){\n            double flow=max(0.0,(t[r][c]-1.0)/2.0);\n            t[r+1][c]+=flow; t[r+1][c+1]+=flow;\n        }\n        return min(1.0, t[query_row][query_glass]);\n    }\n};",
+    "c": "double champagneTower(int poured, int query_row, int query_glass) {\n    double t[101][101]={0}; t[0][0]=poured;\n    for(int r=0;r<=query_row;r++) for(int c=0;c<=r;c++){\n        double flow=t[r][c]>1?(t[r][c]-1)/2:0;\n        t[r+1][c]+=flow; t[r+1][c+1]+=flow;\n    }\n    double v=t[query_row][query_glass]; return v>1?1:v;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Simulation overflow 50-50 — amount capped 1 at query glass.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "poured=0 → 0",
+      "Top glass only",
+      "Far row small fraction"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không chia overflow",
+      "Return raw >1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,38 @@
   "id": 633,
   "title": "Sum of Square Numbers",
   "difficulty": "Medium",
-  "category": "Math",
-  "timeComplexity": "O(n)",
+  "category": "Two Pointers",
+  "timeComplexity": "O(sqrt(c))",
   "spaceComplexity": "O(1)",
-  "description": "Sum of Square Numbers (LeetCode #633) — Medium.",
+  "description": "Cho số nguyên c. Trả true nếu c = a² + b² với a,b nguyên không âm.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "c = 5",
+      "output": "true"
+    },
+    {
+      "input": "c = 3",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers a=0,b=sqrt(c); nếu a²+b²==c return true; tăng a hoặc giảm b.",
+  "memoryTip": "Sum square numbers — two pointers on a,b from 0 and sqrt(c).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def judgeSquareSum(self, c: int) -> bool:\n        a,b=0,int(c**0.5)\n        while a<=b:\n            s=a*a+b*b\n            if s==c: return True\n            if s<c: a+=1\n            else: b-=1\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool judgeSquareSum(int c) {\n        long a=0,b=(long)sqrt(c);\n        while(a<=b){\n            long s=a*a+b*b;\n            if(s==c) return true;\n            if(s<c) a++; else b--;\n        }\n        return false;\n    }\n};",
+    "c": "bool judgeSquareSum(int c) {\n    long a=0,b=(long)sqrt(c);\n    while(a<=b){\n        long s=a*a+b*b;\n        if(s==c) return 1;\n        if(s<c) a++; else b--;\n    }\n    return 0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Two pointers cover mọi cặp (a,b) không trùng lặp.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "c=0 → true",
+      "c=1 → true",
+      "Overflow dùng long"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Brute O(c) TLE",
+      "Quên a=0,b=sqrt"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

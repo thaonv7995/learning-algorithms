@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #726</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Number of Atoms</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>65.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Number of Atoms (LeetCode #726) — Hard.</div>
+                        <div class="block-text">Cho công thức hóa học dạng chuỗi (nguyên tố, số lượng, ngoặc lồng). Trả chuỗi đếm số nguyên tử dạng sort alphabet: NameCount, Count=1 thì bỏ số.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>formula = &quot;H2O&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;H2O&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>formula = &quot;Mg(OH)2&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;H2MgO2&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>formula = &quot;K4(ON(SO3)2)2&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;K4N2O14S4&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Stack of map element→count. Parse token; ( push map mới; ) pop merge vào top nhân multiplier.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,73 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* countOfAtoms(<span class="ty">char</span>* formula) {
+    <span class="ty">int</span> cnt[128]={0};
+    <span class="kw">for</span>(<span class="ty">int</span> i=0; formula[i]; ){
+        <span class="kw">if</span>(formula[i]=='('){ i++; continue; }
+        <span class="kw">if</span>(formula[i]==')'){ i++; <span class="kw">while</span>(formula[i]&gt;='0'&amp;&amp;formula[i]&lt;'9') i++; continue; }
+        <span class="ty">char</span> name[8]; <span class="ty">int</span> p=0; name[p++]=formula[i++];
+        <span class="kw">while</span>(formula[i]&gt;='a'&amp;&amp;formula[i]&lt;'z') name[p++]=formula[i++]; name[p]=0;
+        <span class="ty">int</span> mul=1; <span class="kw">if</span>(formula[i]&gt;='0'&amp;&amp;formula[i]&lt;'9'){ mul=0; <span class="kw">while</span>(formula[i]&gt;='0'&amp;&amp;formula[i]&lt;'9') mul=mul*10+formula[i++]-'0'; }
+        cnt[(<span class="ty">unsigned</span> <span class="ty">char</span>)name[0]]+=mul;
+    }
+    <span class="ty">char</span>* out=<span class="kw">malloc</span>(512); <span class="ty">int</span> o=0;
+    <span class="kw">for</span>(<span class="ty">int</span> c='A'; c&lt;='Z'; c++) <span class="kw">if</span>(cnt[c]){ out[o++]=c; <span class="kw">if</span>(cnt[c]&gt;1){ <span class="ty">char</span> buf[16]; sprintf(buf,&quot;%d&quot;,cnt[c]); strcat(out+o,buf); o=strlen(out); } }
+    <span class="kw">return</span> out;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> countOfAtoms(<span class="ty">self</span>, formula: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">import</span> re
+        <span class="kw">def</span> parse(i):
+            st = [Counter()]
+            <span class="kw">while</span> i &lt; <span class="ty">len</span>(formula):
+                <span class="kw">if</span> formula[i] == '(':
+                    st.append(Counter()); i += 1
+                <span class="kw">elif</span> formula[i] == ')':
+                    top = st.pop(); i += 1
+                    m = 1
+                    <span class="kw">if</span> i &lt; <span class="ty">len</span>(formula) <span class="kw">and</span> formula[i].isdigit():
+                        j = i
+                        <span class="kw">while</span> j &lt; <span class="ty">len</span>(formula) <span class="kw">and</span> formula[j].isdigit(): j += 1
+                        m = <span class="ty">int</span>(formula[i:j]); i = j
+                    <span class="kw">for</span> k, v <span class="kw">in</span> top.items(): st[-1][k] += v * m
+                <span class="kw">else</span>:
+                    j = i + 1
+                    <span class="kw">while</span> j &lt; <span class="ty">len</span>(formula) <span class="kw">and</span> formula[j].islower(): j += 1
+                    name = formula[i:j]; i = j
+                    cnt = 1
+                    <span class="kw">if</span> i &lt; <span class="ty">len</span>(formula) <span class="kw">and</span> formula[i].isdigit():
+                        k = i
+                        <span class="kw">while</span> k &lt; <span class="ty">len</span>(formula) <span class="kw">and</span> formula[k].isdigit(): k += 1
+                        cnt = <span class="ty">int</span>(formula[i:k]); i = k
+                    st[-1][name] += cnt
+            <span class="kw">return</span> st[-1]
+        cnt = parse(0)
+        <span class="kw">return</span> &quot;&quot;.join(name + (<span class="ty">str</span>(v) <span class="kw">if</span> v &gt; 1 <span class="kw">else</span> &quot;&quot;) <span class="kw">for</span> name, v <span class="kw">in</span> sorted(cnt.items()))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> countOfAtoms(<span class="ty">string</span> formula) {
+        <span class="ty">vector</span>&lt;map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt;&gt; st(1);
+        <span class="ty">int</span> i=0, n=formula.size();
+        <span class="kw">while</span>(i&lt;n){
+            <span class="kw">if</span>(formula[i]=='('){ st.emplace_back(); i++; }
+            <span class="kw">else</span> <span class="kw">if</span>(formula[i]==')'){
+                auto top=st.back(); st.pop_back(); i++;
+                <span class="ty">int</span> mul=1;
+                <span class="kw">if</span>(i&lt;n &amp;&amp; isdigit(formula[i])){ mul=0; <span class="kw">while</span>(i&lt;n&amp;&amp;isdigit(formula[i])) mul=mul*10+formula[i++]-'0'; }
+                <span class="kw">for</span>(auto&amp; p: top) st.back()[p.first]+=p.second*mul;
+            } <span class="kw">else</span> {
+                <span class="ty">int</span> j=i+1; <span class="kw">while</span>(j&lt;n&amp;&amp;islower(formula[j])) j++;
+                <span class="ty">string</span> name=formula.substr(i,j-i); i=j;
+                <span class="ty">int</span> cnt=1;
+                <span class="kw">if</span>(i&lt;n&amp;&amp;isdigit(formula[i])){ cnt=0; <span class="kw">while</span>(i&lt;n&amp;&amp;isdigit(formula[i])) cnt=cnt*10+formula[i++]-'0'; }
+                st.back()[name]+=cnt;
+            }
+        }
+        <span class="ty">string</span> ans;
+        <span class="kw">for</span>(auto&amp; p: st[0]){ ans+=p.first; <span class="kw">if</span>(p.second&gt;1) ans+=to_string(p.second); }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +175,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
+                        <span class="pattern-chip">Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Stack of map element→count.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Parse token; pop merge vào top nhân multiplier.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack merge đúng nhân số sau ngoặc; output sort tên nguyên tố.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không ngoặc</span><span class="analysis-tag edge">Multiplier lớn</span><span class="analysis-tag edge">Nguyên tố một chữ</span><span class="analysis-tag pit">Quên sort output</span><span class="analysis-tag pit">Nhầm chữ hoa/thường tên nguyên tố</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Formula parse = stack of counters; parentheses multiply inner map.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +204,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Number%20of%20Atoms&lc_id=726&embed=true"></iframe>

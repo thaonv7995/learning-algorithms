@@ -5,30 +5,39 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Largest Number At Least Twice of Others (LeetCode #747) — Easy.",
+  "description": "Mảng nums. Kiểm tra có phần tử nào lớn gấp ít nhất 2 lần mọi phần tử khác không. Có thì trả index lớn nhất, không thì -1.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [3,6,1,0]",
+      "output": "1"
+    },
+    {
+      "input": "nums = [1,2,3,4]",
+      "output": "-1"
+    },
+    {
+      "input": "nums = [1]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tìm max1, max2 trong một pass. Nếu max1>=2*max2 return index max1 cuối cùng.",
+  "memoryTip": "Dominant element = track top two values and index of max.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def dominantIndex(self, nums: List[int]) -> int:\n        mx = max(nums)\n        if mx < 2 * max(x for x in nums if x != mx): return -1\n        return nums.index(mx)",
+    "cpp": "class Solution {\npublic:\n    int dominantIndex(vector<int>& nums) {\n        int mx=*max_element(nums.begin(),nums.end()), idx=-1, mx2=0;\n        for(int i=0;i<(int)nums.size();i++){\n            if(nums[i]==mx) idx=i;\n            else mx2=max(mx2,nums[i]);\n        }\n        return mx>=2*mx2?idx:-1;\n    }\n};",
+    "c": "int dominantIndex(int* nums, int n) {\n    int mx = nums[0], mx2 = 0, idx = 0;\n    for (int i = 0; i < n; i++) {\n        if (nums[i] > mx) { mx2 = mx; mx = nums[i]; idx = i; }\n        else if (nums[i] > mx2) mx2 = nums[i];\n    }\n    return mx >= 2 * mx2 ? idx : -1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "max1>=2*max2 iff tồn tại phần tử dominant; index max1 khi nums[i]==mx.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một phần tử → 0",
+      "Hai phần tử equal → -1",
+      "Duplicate max"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "So sánh với trung bình",
+      "Trả index đầu thay cuối"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

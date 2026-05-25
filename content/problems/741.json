@@ -2,33 +2,38 @@
   "id": 741,
   "title": "Cherry Pickup",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Cherry Pickup (LeetCode #741) — Hard.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^3)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Lưới grid: 1 là ô trống, -1 là chướng ngại. Bắt đầu (0,0), đích (n-1,n-1), chỉ đi xuống/phải. Thu cherry trên đường (mỗi ô tối đa 1). Trả số cherry tối đa.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "grid = [[0,1,-1],[1,0,-1],[1,1,1]]",
+      "output": "5"
+    },
+    {
+      "input": "grid = [[1,1,-1],[1,-1,1],[-1,1,1]]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP 3 chiều: dp[r1][c1][r2] hai người đi song song từ start; c1=r1+steps-r2, c2=c1+(c1-r1). Cộng cherry nếu ô hợp lệ, trừ trùng ô.",
+  "memoryTip": "Cherry pickup = two walkers same steps DP on (r1,c1,r2).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def cherryPickup(self, grid: List[List[int]]) -> int:\n        n = len(grid)\n        dp = [[[-1]*n for _ in range(n)] for _ in range(n)]\n        dp[0][0][0] = grid[0][0]\n        for steps in range(1, 2*n-1):\n            nd = [[-1]*n for _ in range(n)]\n            for r1 in range(n):\n                for r2 in range(n):\n                    c1 = steps - r2\n                    if r1 > steps or c1 >= n or c1 < 0: continue\n                    if grid[r1][c1] == -1: continue\n                    c2 = c1 + (r2 - r1)\n                    if c2 >= n or c2 < 0 or grid[r2][c2] == -1: continue\n                    best = -1\n                    for pr1 in (r1-1, r1):\n                        for pr2 in (r2-1, r2):\n                            if pr1 >= 0 and pr2 >= 0 and dp[pr1][c1-(r1-pr1)][pr2] >= 0:\n                                best = max(best, dp[pr1][c1-(r1-pr1)][pr2])\n                    if best >= 0:\n                        gain = grid[r1][c1] + (grid[r2][c2] if (r1,c1)!=(r2,c2) else 0)\n                        nd[r1][r2] = max(nd[r1][r2], best + gain)\n            dp = nd\n        return max(0, dp[n-1][n-1][n-1])",
+    "cpp": "class Solution {\npublic:\n    int cherryPickup(vector<vector<int>>& g) {\n        int n=g.size();\n        vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>(n, -1)));\n        dp[0][0][0]=g[0][0];\n        for(int s=1;s<2*n-1;s++){\n            vector<vector<vector<int>>> nd(n, vector<vector<int>>(n, vector<int>(n,-1)));\n            for(int r1=0;r1<n;r1++) for(int r2=0;r2<n;r2++){\n                int c1=s-r2; if(r1>s||c1<0||c1>=n||g[r1][c1]<0) continue;\n                int c2=c1+(r2-r1); if(c2<0||c2>=n||g[r2][c2]<0) continue;\n                int best=-1;\n                for(int a=r1-1;a<=r1;a++) for(int b=r2-1;b<=r2;b++){\n                    if(a>=0&&b>=0&&dp[a][c1-(r1-a)][b]>=0) best=max(best,dp[a][c1-(r1-a)][b]);\n                }\n                if(best>=0){\n                    int add=g[r1][c1]+((r1!=r2||c1!=c2)?g[r2][c2]:0);\n                    nd[r1][r2]=max(nd[r1][r2], best+add);\n                }\n            }\n            dp=move(nd);\n        }\n        return max(0, dp[n-1][n-1][n-1]);\n    }\n};",
+    "c": "int cherryPickup(int** grid, int n) {\n    int dp[25][25][25]; for(int i=0;i<25;i++) for(int j=0;j<25;j++) for(int k=0;k<25;k++) dp[i][j][k]=-1;\n    dp[0][0][0]=grid[0][0];\n    for(int s=1;s<2*n-1;s++) for(int r1=0;r1<n;r1++) for(int r2=0;r2<n;r2++){\n        int c1=s-r2; if(r1>s||c1<0||c1>=n||grid[r1][c1]<0) continue;\n        int c2=c1+(r2-r1); if(c2<0||c2>=n||grid[r2][c2]<0) continue;\n        int best=-1;\n        for(int pr1=r1-1;pr1<=r1;pr1++) for(int pr2=r2-1;pr2<=r2;pr2++){\n            if(pr1<0||pr2<0) continue; int pc1=c1-(r1-pr1); if(dp[pr1][pc1][pr2]>=0 && dp[pr1][pc1][pr2]>best) best=dp[pr1][pc1][pr2];\n        }\n        if(best>=0){ int add=grid[r1][c1]+((r1!=r2||c1!=c2)?grid[r2][c2]:0); dp[r1][c1][r2]=best+add; }\n    }\n    int v=dp[n-1][n-1][n-1]; return v<0?0:v;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Hai người cùng số bước — DP không bỏ sót cặp đường đi tối ưu.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Chướng ngại chặn → 0",
+      "Không cherry",
+      "n=1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DP 2 chiều một người",
+      "Quên trừ cherry trùng ô"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

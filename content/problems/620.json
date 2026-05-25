@@ -3,32 +3,41 @@
   "title": "Not Boring Movies",
   "difficulty": "Easy",
   "category": "Database",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Not Boring Movies (LeetCode #620) — Easy.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Cinema(id, movie, description, rating). Trả các phim có id lẻ, mô tả không chứa 'boring', sắp xếp rating giảm dần.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "id=1 rating=9 desc='great'",
+      "output": "Row phim đó"
+    },
+    {
+      "input": "id=2 (chẵn) dù rating cao",
+      "output": "Không liệt kê"
+    },
+    {
+      "input": "description='This is boring'",
+      "output": "Loại bỏ"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "WHERE description NOT LIKE '%boring%' AND id % 2 = 1 ORDER BY rating DESC.",
+  "memoryTip": "Not boring movies = odd id + NOT LIKE boring + ORDER BY rating DESC.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT *\nFROM Cinema\nWHERE description NOT LIKE '%boring%'\n  AND id % 2 = 1\nORDER BY rating DESC;",
+    "cpp": "// SQL\nSELECT *\nFROM Cinema\nWHERE description NOT LIKE '%boring%'\n  AND id % 2 = 1\nORDER BY rating DESC;",
+    "c": "const char query[] = \"SELECT * FROM Cinema WHERE description NOT LIKE '%boring%' AND id % 2 = 1 ORDER BY rating DESC;\";"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Lọc boring và id lẻ; sort rating DESC đúng đề.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không phim thỏa → rỗng",
+      "Nhiều phim cùng rating",
+      "Boring case-sensitive substring"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng rating > MIN thay id lẻ",
+      "Quên ORDER BY DESC"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #763</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Greedy</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Partition Labels</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Partition Labels (LeetCode #763) — Medium.</div>
+                        <div class="block-text">Cho chuỗi s chữ thường. Chia thành nhiều phần sao mỗi chữ cái xuất hiện tối đa một phần. Trả độ dài từng phần (max partition).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;ababcbacadefegdehijhklij&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[9,7,8]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;eccbbbbdec&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[10]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Ghi last index mỗi ký tự. Scan i: end = max(end, last[s[i]]). Khi i==end cắt partition.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* partitionLabels(<span class="ty">char</span>* s, <span class="ty">int</span>* retSize) {
+    <span class="ty">int</span> last[26]; <span class="ty">int</span> n=strlen(s);
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;26;i++) last[i]=-1;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) last[s[i]-'a']=i;
+    <span class="ty">int</span>* ans=<span class="kw">malloc</span>(n*4); *retSize=0; <span class="ty">int</span> st=0, ed=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){ ed=ed&gt;last[s[i]-'a']?ed:last[s[i]-'a']; <span class="kw">if</span>(i==ed){ ans[(*retSize)++]=ed-st+1; st=i+1; } }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> partitionLabels(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        last = {c: i <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(s)}
+        ans, start, end = [], 0, 0
+        <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(s):
+            end = <span class="ty">max</span>(end, last[c])
+            <span class="kw">if</span> i == end:
+                ans.append(end - start + 1); start = i + 1
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; partitionLabels(<span class="ty">string</span> s) {
+        <span class="ty">int</span> last[26];
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)s.size();i++) last[s[i]-'a']=i;
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans; <span class="ty">int</span> st=0, ed=0;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)s.size();i++){
+            ed=max(ed,last[s[i]-'a']);
+            <span class="kw">if</span>(i==ed){ ans.push_back(ed-st+1); st=i+1; }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +132,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
+                        <span class="pattern-chip">Greedy</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Ghi last index mỗi ký tự.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Scan i: end = max.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — i==end cắt partition.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>end luôn bao phủ mọi lần xuất hiện ký tự trong cửa sổ — cắt minimal valid.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một ký tự lặp</span><span class="analysis-tag edge">Mỗi chữ một partition</span><span class="analysis-tag edge">Một partition cả chuỗi</span><span class="analysis-tag pit">Cắt trước khi i==end</span><span class="analysis-tag pit">Không track last index</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Partition labels = expand end to last occurrence, cut when i reaches end.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +161,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Partition%20Labels&lc_id=763&embed=true"></iframe>

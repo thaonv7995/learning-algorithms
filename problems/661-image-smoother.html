@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #661</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Matrix</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Image Smoother</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>69.3% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Image Smoother (LeetCode #661) — Easy.</div>
+                        <div class="block-text">Làm mịn ảnh gray: mỗi cell = trung bình 8 neighbor + self (floor), biên thiếu neighbor.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>M=[[1,1,1],[1,0,1],[1,1,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,0,0],[0,0,0],[0,0,0]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>M=[[2,3,3],[1,9,2],[1,9,2]]</code></div>
+                <div class="ex-line"><span>Out</span><code>smoothed matrix</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Copy matrix; mỗi (i,j) sum neighbors valid / count floor.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,32 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; imageSmoother661(<span class="ty">int</span>** img,<span class="ty">int</span> m,<span class="ty">int</span>* cs,<span class="ty">int</span> n){ <span class="kw">return</span> {}; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> imageSmoother(<span class="ty">self</span>, img: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        m,n=<span class="ty">len</span>(img),<span class="ty">len</span>(img[0]); ans=[[0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m)]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+                s=c=0
+                <span class="kw">for</span> di <span class="kw">in</span> (-1,0,1):
+                    <span class="kw">for</span> dj <span class="kw">in</span> (-1,0,1):
+                        ni,nj=i+di,j+dj
+                        <span class="kw">if</span> 0&lt;=ni&lt;m <span class="kw">and</span> 0&lt;=nj&lt;n: s+=img[ni][nj]; c+=1
+                ans[i][j]=s//c
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; imageSmoother(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; img) {
+        <span class="ty">int</span> m=img.size(),n=img[0].size(); auto ans=img;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++){
+            <span class="ty">int</span> s=0,c=0;
+            <span class="kw">for</span>(<span class="ty">int</span> di=-1;di&lt;=1;di++) <span class="kw">for</span>(<span class="ty">int</span> dj=-1;dj&lt;=1;dj++){
+                <span class="ty">int</span> ni=i+di,nj=j+dj; <span class="kw">if</span>(ni&gt;=0&amp;&amp;ni&lt;m&amp;&amp;nj&gt;=0&amp;&amp;nj&lt;n){ s+=img[ni][nj]; c++; }
+            }
+            ans[i][j]=s/c;
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +129,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">Matrix</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Copy matrix; mỗi sum neighbors valid / count floor.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Average floor của cell + up to 8 neighbors.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">1x1</span><span class="analysis-tag edge">Corner 4 neighbors</span><span class="analysis-tag edge">All same</span><span class="analysis-tag pit">In-place overwrite</span><span class="analysis-tag pit">Wrong neighbor count</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Image smoother — count valid neighbors average floor.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +158,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Image%20Smoother&lc_id=661&embed=true"></iframe>

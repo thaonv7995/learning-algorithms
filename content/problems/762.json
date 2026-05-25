@@ -2,33 +2,42 @@
   "id": 762,
   "title": "Prime Number of Set Bits in Binary Representation",
   "difficulty": "Easy",
-  "category": "Math",
+  "category": "Bit Manipulation",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Prime Number of Set Bits in Binary Representation (LeetCode #762) — Easy.",
+  "description": "Cho mảng nums. Đếm số phần tử có số bit 1 trong biểu diễn nhị phân là số nguyên tố (2,3,5,7,11,13,17,19).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [0,1,1]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [1,2,3,4,5,6,7,8,9,10]",
+      "output": "4"
+    },
+    {
+      "input": "nums = [2,3,5,7,11,13,17,19]",
+      "output": "8"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Precompute prime set cho popcount 0..20. Duyệt nums, nếu popcount(x) là prime thì cộng 1.",
+  "memoryTip": "Prime set bits = popcount + small prime lookup table.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countPrimeSetBits(self, nums: List[int]) -> int:\n        primes = {2,3,5,7,11,13,17,19}\n        return sum(bin(x).count(\"1\") in primes for x in nums)",
+    "cpp": "class Solution {\npublic:\n    int countPrimeSetBits(vector<int>& nums) {\n        int primes[]={2,3,5,7,11,13,17,19};\n        auto isP=[&](int x){ for(int p:primes) if(p==x) return true; return false; };\n        int ans=0;\n        for(int x:nums) if(isP(__builtin_popcount(x))) ans++;\n        return ans;\n    }\n};",
+    "c": "static int popc(int x){ int c=0; while(x){ c+=x&1; x>>=1; } return c; }\nstatic int isPrimeBits(int x){ int ps[]={2,3,5,7,11,13,17,19}; for(int i=0;i<8;i++) if(ps[i]==x) return 1; return 0; }\nint countPrimeSetBits(int* nums, int n) {\n    int ans=0; for(int i=0;i<n;i++) if(isPrimeBits(popc(nums[i]))) ans++; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Popcount đúng số bit 1; kiểm tra membership trong tập prime nhỏ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "nums=0 popcount 0 không prime",
+      "Số lớn popcount<=20",
+      "Mảng rỗng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Prime 1",
+      "Quên 0 popcount"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

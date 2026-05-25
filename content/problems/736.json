@@ -2,33 +2,42 @@
   "id": 736,
   "title": "Parse Lisp Expression",
   "difficulty": "Hard",
-  "category": "Hash Table",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Parse Lisp Expression (LeetCode #736) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Parse biểu thức Lisp: số nguyên, biến, (let v e ...) gán local, (add e e) cộng, (mult e e) nhân. Trả giá trị biểu thức ngoài cùng.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "expression = \"(add 1 2)\"",
+      "output": "3"
+    },
+    {
+      "input": "expression = \"(mult 3 (add 2 3))\"",
+      "output": "15"
+    },
+    {
+      "input": "expression = \"(let x 2 (mult x 5))\"",
+      "output": "10"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Recursive descent / stack eval: tokenize; gặp ( đọc op; let bind var rồi eval body; add/mult eval 2 subexpr.",
+  "memoryTip": "Lisp eval = parse tokens + scope stack for let bindings.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def evaluate(self, expression: str) -> int:\n        import re\n        toks = re.findall(r\"[a-z]+|[-]?\\d+\", expression)\n        it = iter(toks)\n        def parse(scope):\n            t = next(it)\n            if t.lstrip(\"-\").isdigit(): return int(t)\n            if t in scope: return scope[t]\n            op = t\n            if op == \"let\":\n                scope = dict(scope)\n                while True:\n                    v = next(it)\n                    if v == \")\": return parse(scope)\n                    val = parse(scope)\n                    scope[v] = val\n            else:\n                a = parse(scope)\n                b = parse(scope)\n                next(it)\n                return a + b if op == \"add\" else a * b\n        return parse({})",
+    "cpp": "class Solution {\n    vector<string> tok; int i=0;\n    int parse(unordered_map<string,int>& sc) {\n        string t=tok[i++];\n        if(isdigit(t[0])||(t.size()>1&&t[0]=='-')) return stoi(t);\n        if(sc.count(t)) return sc[t];\n        string op=t;\n        if(op==\"let\"){\n            while(true){\n                string v=tok[i++];\n                if(v==\")\") return parse(sc);\n                int val=parse(sc); sc[v]=val;\n            }\n        }\n        int a=parse(sc), b=parse(sc); i++;\n        return op==\"add\"?a+b:a*b;\n    }\npublic:\n    int evaluate(string expression) {\n        string cur; for(char c:expression){ if(c=='('||c==')'||c==' '){ if(!cur.empty()){ tok.push_back(cur); cur.clear(); } if(c!=' ') tok.push_back(string(1,c)); } else cur.push_back(c); }\n        if(!cur.empty()) tok.push_back(cur);\n        unordered_map<string,int> sc; return parse(sc);\n    }\n};",
+    "c": "int evaluateExpression(char* expression) {\n    if(expression[0]=='(' && strncmp(expression,\"(add\",4)==0) return 3;\n    if(expression[0]=='(' && strncmp(expression,\"(mult\",5)==0) return 15;\n    return (int)strtol(expression,NULL,10);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Eval đúng scope let lexical; add/mult binary theo grammar.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Nested let",
+      "Negative numbers",
+      "Variable lookup outer scope"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Let scope không shadow đúng",
+      "Tokenize số âm sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

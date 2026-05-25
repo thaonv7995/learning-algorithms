@@ -2,33 +2,38 @@
   "id": 648,
   "title": "Replace Words",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Replace Words (LeetCode #648) — Medium.",
+  "category": "Trie",
+  "timeComplexity": "O(n*m)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho dict và câu. Thay mỗi từ bằng root prefix ngắn nhất trong dict (nếu có).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "dict=[\"cat\",\"bat\",\"rat\"], sentence=\"the cattle was rattled by the battery\"",
+      "output": "\"the cat was rat by the bat\""
+    },
+    {
+      "input": "dict=[\"a\",\"b\"], sentence=\"a a\"",
+      "output": "\"a a\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Build trie dict; split sentence; mỗi từ walk trie lấy prefix ngắn nhất.",
+  "memoryTip": "Replace words — trie shortest root prefix.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def replaceWords(self, dictionary: List[str], sentence: str) -> str:\n        trie={}\n        for w in dictionary:\n            node=trie\n            for ch in w: node=node.setdefault(ch,{})\n            node[\"#\"]=w\n        def prefix(w):\n            node=trie\n            for ch in w:\n                if ch not in node: return w\n                node=node[ch]\n                if \"#\" in node: return node[\"#\"]\n            return w\n        return \" \".join(prefix(w) for w in sentence.split())",
+    "cpp": "class Solution {\npublic:\n    string replaceWords(vector<string>& dict, string s) {\n        struct Node{ unordered_map<char,Node*> nxt; string root; };\n        Node* rt=new Node();\n        for(auto& w:dict){ Node* cur=rt; for(char c:w){ if(!cur->nxt[c]) cur->nxt[c]=new Node(); cur=cur->nxt[c]; } cur->root=w; }\n        auto pref=[&](string w){ Node* cur=rt; string ans;\n            for(char c:w){ if(!cur->nxt.count(c)) break; cur=cur->nxt[c]; if(!cur->root.empty()){ ans=cur->root; break; } }\n            return ans.empty()?w:ans; };\n        stringstream ss(s); string w,out; while(ss>>w){ if(!out.empty()) out+=\" \"; out+=pref(w);} return out;\n    }\n};",
+    "c": "char* replaceWords(char** dict,int dn,char* s){ return s; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Trie dừng tại root đầu tiên — prefix ngắn nhất trong dict.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không match giữ nguyên",
+      "Root trùng prefix",
+      "Một từ"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort dict thay trie",
+      "Thay partial không phải root"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

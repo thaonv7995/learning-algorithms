@@ -5,30 +5,34 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Set Mismatch (LeetCode #645) — Easy.",
+  "description": "Mảng nums gồm n số từ 1..n với một duplicate và một missing. Trả [duplicate, missing].",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,2,2,4]",
+      "output": "[2,3]"
+    },
+    {
+      "input": "nums = [1,1]",
+      "output": "[1,2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "XOR hoặc sum/sumSq: diff sum và sum squares; hoặc mark index âm.",
+  "memoryTip": "Set mismatch — sum formula or negate index marking.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findErrorNums(self, nums: List[int]) -> List[int]:\n        n=len(nums); s=n*(n+1)//2; ss=n*(n+1)*(2*n+1)//6\n        for x in nums: s-=x; ss-=x*x\n        diff=ss//s; return [(s+diff)//2, (diff-s)//2]",
+    "cpp": "class Solution {\npublic:\n    vector<int> findErrorNums(vector<int>& nums) {\n        int n=nums.size(); long s=n*(n+1)/2, ss=n*(n+1)*(2LL*n+1)/6;\n        for(int x:nums){ s-=x; ss-=1LL*x*x; }\n        long diff=ss/s; return {(int)((s+diff)/2),(int)((diff-s)/2)};\n    }\n};",
+    "c": "int* findErrorNums(int* nums,int n,int* rs){ int s=n*(n+1)/2,ss=n*(n+1)*(2*n+1)/6,i; for(i=0;i<n;i++){s-=nums[i];ss-=nums[i]*nums[i];} int diff=ss/s; static int ans[2]; ans[0]=(s+diff)/2; ans[1]=(diff-s)/2; *rs=2; return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Sum và sum squares cho hai phương trình duplicate/missing.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=2",
+      "Duplicate=missing neighbor"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Overflow n lớn",
+      "Mark array O(n) space ok too"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

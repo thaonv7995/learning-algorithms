@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #626</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Database</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Exchange Seats</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>74.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Exchange Seats (LeetCode #626) — Medium.</div>
+                        <div class="block-text">Bảng Seat(id, student). Hoán đổi chỗ ngồi liên tiếp (1↔2, 3↔4...); nếu số lẻ cuối giữ nguyên.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>id 1,2,3</code></div>
+                <div class="ex-line"><span>Out</span><code>2,1,3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>id 1,2,3,4</code></div>
+                <div class="ex-line"><span>Out</span><code>2,1,4,3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">CASE WHEN id%2=1 THEN id+1 ELSE id-1 END ORDER BY id hoặc self join swap.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,23 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
-<span class="ty">public</span>:
-};</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">const</span> <span class="ty">char</span> query[] = &quot;SELECT\n  CASE WHEN id % 2 = 1 AND id = (SELECT MAX(id) FROM Seat) THEN id\n       WHEN id % 2 = 1 THEN id + 1\n       ELSE id - 1 END AS id,\n  student\nFROM Seat\nORDER BY id;&quot;;</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># SQL</span>
+SELECT
+  CASE WHEN id % 2 = 1 AND id = (SELECT MAX(id) FROM Seat) THEN id
+       WHEN id % 2 = 1 THEN id + 1
+       ELSE id - 1 END AS id,
+  student
+FROM Seat
+ORDER BY id;</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// SQL</span>
+SELECT
+  CASE WHEN id % 2 = 1 AND id = (SELECT MAX(id) FROM Seat) THEN id
+       WHEN id % 2 = 1 THEN id + 1
+       ELSE id - 1 END AS id,
+  student
+FROM Seat
+ORDER BY id;</pre>
                         </div>
                     </div>
                 </div>
@@ -105,17 +121,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Database</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — CASE WHEN id%2=1 THEN id+1 ELSE id-1 END ORDER BY id hoặc self join…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Hoán đổi cặp liên tiếp; id lẻ max giữ nguyên khi count lẻ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một ghế</span><span class="analysis-tag edge">Hai ghế</span><span class="analysis-tag pit">Swap cả student sai cột</span><span class="analysis-tag pit">Quên ghế lẻ cuối</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Exchange seats = odd id swap with id+1, even with id-1.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +148,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Exchange%20Seats&lc_id=626&embed=true"></iframe>

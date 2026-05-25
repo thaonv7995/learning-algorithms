@@ -4,31 +4,36 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Longest Univalue Path (LeetCode #687) — Medium.",
+  "spaceComplexity": "O(h)",
+  "description": "Độ dài path dài nhất cùng giá trị (edges). Path không nhất thiết qua root.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[5,4,5,1,1,5]",
+      "output": "2"
+    },
+    {
+      "input": "root=[1,1,1]",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Postorder: extend same val left/right; global max through node.",
+  "memoryTip": "Longest univalue path — postorder same-value chain.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def longestUnivaluePath(self, root: Optional[TreeNode]) -> int:\n        self.ans=0\n        def dfs(n):\n            if not n: return 0\n            l=dfs(n.left); r=dfs(n.right)\n            ll=rr=0\n            if n.left and n.left.val==n.val: ll=l+1\n            if n.right and n.right.val==n.val: rr=r+1\n            self.ans=max(self.ans,ll+rr)\n            return max(ll,rr)\n        dfs(root); return self.ans",
+    "cpp": "class Solution {\n    int ans=0;\n    int dfs(TreeNode* n){\n        if(!n) return 0;\n        int l=dfs(n->left), r=dfs(n->right), ll=0, rr=0;\n        if(n->left&&n->left->val==n->val) ll=l+1;\n        if(n->right&&n->right->val==n->val) rr=r+1;\n        ans=max(ans,ll+rr); return max(ll,rr);\n    }\npublic:\n    int longestUnivaluePath(TreeNode* root){ dfs(root); return ans; }\n};",
+    "c": "int longestUnivaluePath687(struct TreeNode* r){ int ans=0; int dfs(struct TreeNode* n){ if(!n)return 0; int l=dfs(n->left),r=dfs(n->right),ll=0,rr=0; if(n->left&&n->left->val==n->val)ll=l+1; if(n->right&&n->right->val==n->val)rr=r+1; if(ll+rr>ans)ans=ll+rr; return ll>rr?ll:rr; } dfs(r); return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Return longest arm; combine two arms at node for path.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "All different 0",
+      "Single node 0",
+      "Path not through root"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Count nodes vs edges",
+      "Cross value boundary"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

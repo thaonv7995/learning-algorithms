@@ -2,33 +2,38 @@
   "id": 657,
   "title": "Robot Return to Origin",
   "difficulty": "Easy",
-  "category": "String",
+  "category": "Simulation",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Robot Return to Origin (LeetCode #657) — Easy.",
+  "description": "Robot bắt đầu (0,0) hướng lên. Chuỗi moves UDLR — trả true nếu quay về origin.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "moves = \"UD\"",
+      "output": "true"
+    },
+    {
+      "input": "moves = \"LL\"",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm U-D và L-R; cả hai bằng 0 thì về origin.",
+  "memoryTip": "Robot origin — balance U/D and L/R counts.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def judgeCircle(self, moves: str) -> bool:\n        x=y=0\n        for m in moves:\n            if m==\"U\": y+=1\n            elif m==\"D\": y-=1\n            elif m==\"L\": x-=1\n            else: x+=1\n        return x==0 and y==0",
+    "cpp": "class Solution {\npublic:\n    bool judgeCircle(string moves) {\n        int x=0,y=0;\n        for(char m:moves){\n            if(m=='U') y++; else if(m=='D') y--;\n            else if(m=='L') x--; else x++;\n        }\n        return !x&&!y;\n    }\n};",
+    "c": "bool judgeCircle(char* moves){ int x=0,y=0; for(;*moves;moves++){ if(*moves=='U')y++; else if(*moves=='D')y--; else if(*moves=='L')x--; else x++; } return x==0&&y==0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Net displacement zero iff counts balanced.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Empty moves true",
+      "Odd length false unless path",
+      "Large n"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Check only x or only y",
+      "Wrong axis mapping"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

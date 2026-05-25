@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #684</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Depth-First Search</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Union Find</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Redundant Connection</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n α(n))</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>67.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Redundant Connection (LeetCode #684) — Medium.</div>
+                        <div class="block-text">Tìm cạnh có thể xóa để graph thành tree (n nodes n edges). Trả edge cuối tạo cycle.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>edges=[[1,2],[1,3],[2,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,3]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>edges=[[1,2],[2,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,3]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Union-Find: first edge connecting same component is redundant.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,31 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* findRedundantConnection684(<span class="ty">int</span>** e,<span class="ty">int</span> n,<span class="ty">int</span>* rs){ <span class="ty">int</span> p[1001],i; <span class="kw">for</span>(i=0;i&lt;=n;i++)p[i]=i; <span class="ty">int</span> find(<span class="ty">int</span> x){ <span class="kw">return</span> p[x]==x?x:p[x]=find(p[x]); } <span class="kw">for</span>(i=0;i&lt;n;i++){ <span class="ty">int</span> u=find(e[i][0]),v=find(e[i][1]); <span class="kw">if</span>(u==v){ static <span class="ty">int</span> ans[2]; ans[0]=e[i][0]; ans[1]=e[i][1]; *rs=2; <span class="kw">return</span> ans;} p[u]=v; } *rs=0; <span class="kw">return</span> NULL; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findRedundantConnection(<span class="ty">self</span>, edges: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        par=<span class="ty">list</span>(<span class="ty">range</span>(<span class="ty">len</span>(edges)+1))
+        <span class="kw">def</span> find(x):
+            <span class="kw">while</span> par[x]!=x: x=par[x]
+            <span class="kw">return</span> x
+        <span class="kw">for</span> u,v <span class="kw">in</span> edges:
+            pu,pv=find(u),find(v)
+            <span class="kw">if</span> pu==pv: <span class="kw">return</span> [u,v]
+            par[pu]=pv
+        <span class="kw">return</span> []</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; p;
+    <span class="ty">int</span> find(<span class="ty">int</span> x){ <span class="kw">return</span> p[x]==x?x:p[x]=find(p[x]); }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findRedundantConnection(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; e) {
+        p.resize(e.size()+1); iota(p.begin(),p.end(),0);
+        <span class="kw">for</span>(auto&amp; ed:e){
+            <span class="ty">int</span> u=find(ed[0]), v=find(ed[1]);
+            <span class="kw">if</span>(u==v) <span class="kw">return</span> ed;
+            p[u]=v;
+        }
+        <span class="kw">return</span> {};
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +128,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Depth-First Search</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Union Find</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n α(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Union-Find: first edge connecting same component is redundant.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Last edge closing cycle in UF order per problem.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Multiple cycles return last</span><span class="analysis-tag edge">Tree plus one edge</span><span class="analysis-tag edge">Self loop</span><span class="analysis-tag pit">DFS slower</span><span class="analysis-tag pit">Return first not last</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Redundant connection — UF detect cycle edge.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +157,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Redundant%20Connection&lc_id=684&embed=true"></iframe>

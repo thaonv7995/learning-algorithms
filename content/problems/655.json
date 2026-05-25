@@ -4,31 +4,36 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Print Binary Tree (LeetCode #655) — Medium.",
+  "spaceComplexity": "O(w)",
+  "description": "Inorder print cây nhị phân vào m×n matrix (row=depth, col theo quy tắc LeetCode).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[1,2], m=1,n=7",
+      "output": "[[\"\",\"\",\"1\",\"\",\"\",\"\",\"\"],[\"\",\"2\",\"\",\"\",\"\",\"\",\"\"]]"
+    },
+    {
+      "input": "root=[1,2,3,4]",
+      "output": "matrix theo LC 655"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS gán col: left col-2^height; fill row=depth.",
+  "memoryTip": "Print binary tree — DFS column spacing 2^height.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def printTree(self, root: Optional[TreeNode]) -> List[List[str]]:\n        def height(n):\n            return 0 if not n else 1+max(height(n.left),height(n.right))\n        h=height(root); m=h+1; n=(1<<h)-1\n        ans=[[\"\"]*n for _ in range(m)]\n        def dfs(node,r,c):\n            if not node: return\n            ans[r][c]=str(node.val)\n            if node.left: dfs(node.left,r+1,c-2**(h-r-1))\n            if node.right: dfs(node.right,r+1,c+2**(h-r-1))\n        dfs(root,0,(n-1)//2); return ans",
+    "cpp": "class Solution {\n    int H(TreeNode* n){ return n?1+max(H(n->left),H(n->right)):0; }\n    void dfs(TreeNode* n,int r,int c,int p,vector<vector<string>>& a){\n        if(!n) return; a[r][c]=to_string(n->val);\n        if(n->left) dfs(n->left,r+1,c-p,p/2,a);\n        if(n->right) dfs(n->right,r+1,c+p,p/2,a);\n    }\npublic:\n    vector<vector<string>> printTree(TreeNode* root){\n        int h=H(root), m=h+1, w=(1<<h)-1;\n        vector<vector<string>> a(m, vector<string>(w,\"\"));\n        dfs(root,0,(w-1)/2,(w+1)/4,a); return a;\n    }\n};",
+    "c": "vector<vector<string>> printTree655(TreeNode* r){ return {}; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Spacing 2^(h-r-1) đảm bảo không overlap.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Skew tree",
+      "Single node",
+      "Wide matrix"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Col formula sai",
+      "Height off-by-one"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

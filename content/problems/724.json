@@ -2,33 +2,42 @@
   "id": 724,
   "title": "Find Pivot Index",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Prefix Sum",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Find Pivot Index (LeetCode #724) — Easy.",
+  "description": "Cho mảng nums. Tìm pivot index i sao tổng nums[0..i-1] = tổng nums[i+1..n-1]. Không có pivot trả -1.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,7,3,6,5,6]",
+      "output": "1"
+    },
+    {
+      "input": "nums = [1,2,3]",
+      "output": "-1"
+    },
+    {
+      "input": "nums = [2,1,-1]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tổng right = sum(nums); duyệt i: left += nums[i-1] (i>0), right -= nums[i]; nếu left==right return i.",
+  "memoryTip": "Pivot = prefix left và suffix right gặp nhau khi quét i.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def pivotIndex(self, nums: List[int]) -> int:\n        left, right = 0, sum(nums)\n        for i, x in enumerate(nums):\n            right -= x\n            if left == right: return i\n            left += x\n        return -1",
+    "cpp": "class Solution {\npublic:\n    int pivotIndex(vector<int>& nums) {\n        long long left = 0, right = accumulate(nums.begin(), nums.end(), 0LL);\n        for (int i = 0; i < (int)nums.size(); i++) {\n            right -= nums[i];\n            if (left == right) return i;\n            left += nums[i];\n        }\n        return -1;\n    }\n};",
+    "c": "int pivotIndex(int* nums, int n) {\n    long long left = 0, right = 0;\n    for (int i = 0; i < n; i++) right += nums[i];\n    for (int i = 0; i < n; i++) {\n        right -= nums[i];\n        if (left == right) return i;\n        left += nums[i];\n    }\n    return -1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Tại mỗi i, right là tổng suffix sau i; left là prefix trước i.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Pivot index 0",
+      "Pivot cuối",
+      "Toàn 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng int overflow với tổng lớn",
+      "So sánh trước khi trừ nums[i]"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

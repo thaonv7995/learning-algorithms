@@ -2,33 +2,38 @@
   "id": 795,
   "title": "Number of Subarrays with Bounded Maximum",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Two Pointers",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Number of Subarrays with Bounded Maximum (LeetCode #795) — Medium.",
+  "description": "Cho nums và left, right bounds. Đếm subarray mà max trong đoạn nằm trong [left, right].",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [2,1,4,3], left = 2, right = 3",
+      "output": "3"
+    },
+    {
+      "input": "nums = [2,9,2,5,6], left = 2, right = 8",
+      "output": "7"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "countLE(right) - countLE(left-1) where countLE(b) = subarrays with max <= b via two pointers.",
+  "memoryTip": "Bounded maximum subarrays = atMost(right) - atMost(left-1).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numSubarrayBoundedMax(self, nums: List[int], left: int, right: int) -> int:\n        def atMost(b):\n            ans = j = 0\n            for i, x in enumerate(nums):\n                if x > b: j = i + 1\n                ans += i - j + 1\n            return ans\n        return atMost(right) - atMost(left - 1)",
+    "cpp": "class Solution {\npublic:\n    int numSubarrayBoundedMax(vector<int>& nums, int left, int right) {\n        auto atMost=[&](int b){\n            long long ans=0; int j=0;\n            for(int i=0;i<(int)nums.size();i++){\n                if(nums[i]>b) j=i+1;\n                ans += i-j+1;\n            }\n            return ans;\n        };\n        return atMost(right)-atMost(left-1);\n    }\n};",
+    "c": "static long long atMost795(int* nums,int n,int b){ long long ans=0; int j=0; for(int i=0;i<n;i++){ if(nums[i]>b) j=i+1; ans+=i-j+1; } return ans; }\nint numSubarrayBoundedMax(int* nums,int n,int left,int right){ return (int)(atMost795(nums,n,right)-atMost795(nums,n,left-1)); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Subarray max in [L,R] iff max<=R and not max<=L-1.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "left=right",
+      "All out of range → 0",
+      "Single element in range"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Double count",
+      "atMost off-by-one left-1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,38 @@
   "id": 765,
   "title": "Couples Holding Hands",
   "difficulty": "Hard",
-  "category": "Greedy",
+  "category": "Union Find",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Couples Holding Hands (LeetCode #765) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "2n người, couple i ở ghế 2i và 2i+1. Hoán vị row[i]=người tại ghế i. Tối thiểu số lần swap adjacent để mọi cặp ngồi cạnh nhau?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "row = [0,2,1,3]",
+      "output": "1"
+    },
+    {
+      "input": "row = [3,2,0,1]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map partner của mỗi người. Duyệt cặp ghế (0,1),(2,3)... nếu không phải couple thì swap count++ và union/find cycle của hoán vị.",
+  "memoryTip": "Couples holding hands = permutation cycle decomposition on pair level.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minSwapsCouples(self, row: List[int]) -> int:\n        n=len(row)//2\n        pos=[0]*len(row)\n        for i,x in enumerate(row): pos[x]=i\n        partner=lambda x: x+1 if x%2==0 else x-1\n        seen=[False]*n; ans=0\n        for i in range(n):\n            if seen[i]: continue\n            cur=i; cyc=0\n            while not seen[cur]:\n                seen[cur]=True; cyc+=1\n                p=partner(row[2*cur])//2\n                cur=p\n            ans+=cyc-1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int minSwapsCouples(vector<int>& row) {\n        int n=row.size()/2;\n        vector<int> pos(row.size());\n        for(int i=0;i<(int)row.size();i++) pos[row[i]]=i;\n        auto partner=[&](int x){ return x^1; };\n        vector<char> seen(n); int ans=0;\n        for(int i=0;i<n;i++){\n            if(seen[i]) continue;\n            int cur=i, cyc=0;\n            while(!seen[cur]){\n                seen[cur]=1; cyc++;\n                int p=partner(row[2*cur])/2;\n                cur=p;\n            }\n            ans+=cyc-1;\n        }\n        return ans;\n    }\n};",
+    "c": "int minSwapsCouples(int* row, int n2) {\n    int n=n2/2, seen[500]={0}, ans=0;\n    for(int i=0;i<n;i++){ if(seen[i]) continue; int cur=i,cyc=0; while(!seen[cur]){ seen[cur]=1; cyc++; int mate=row[2*cur]^1; cur=mate/2; } ans+=cyc-1; } return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi cycle length cần len-1 swaps — tổng swaps tối thiểu.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Đã đúng cặp → 0",
+      "Hoán vị một cycle",
+      "n=1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Đếm swap adjacent sai",
+      "Partner index XOR 1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

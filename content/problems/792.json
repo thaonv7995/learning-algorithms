@@ -2,33 +2,38 @@
   "id": 792,
   "title": "Number of Matching Subsequences",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Number of Matching Subsequences (LeetCode #792) — Medium.",
+  "category": "Hash Table",
+  "timeComplexity": "O(n + W)",
+  "spaceComplexity": "O(W)",
+  "description": "Cho S và words. Subsequence match: tồn tại indices tăng dần lấy letters word từ S. Đếm số word trong words match.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"abcde\", words = [\"a\",\"bb\",\"acd\",\"ace\"]",
+      "output": "3"
+    },
+    {
+      "input": "s = \"dsahjpjauf\", words = [\"ahjpjau\",\"ja\",\"ahbwzgqnuk\",\"tnmlanowax\"]",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Bucket words theo first char; scan S, với mỗi char thử extend các candidate words (trie hoặc pointer per word).",
+  "memoryTip": "Matching subsequences = bucket by next needed char while scanning S.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numMatchingSubseq(self, s: str, words: List[str]) -> int:\n        buckets = defaultdict(list)\n        for w in words:\n            buckets[w[0]].append([w, 0])\n        ans = 0\n        for c in s:\n            nxt = []\n            for w, i in buckets.get(c, []):\n                i += 1\n                if i == len(w): ans += 1\n                else: nxt.append([w, i])\n            buckets[c] = nxt\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int numMatchingSubseq(string s, vector<string>& words) {\n        vector<vector<pair<string,int>>> buck(26);\n        for(auto& w:words) buck[w[0]-'a'].push_back({w,0});\n        int ans=0;\n        for(char c:s){\n            auto cur=buck[c-'a']; buck[c-'a'].clear();\n            for(auto [w,i]:cur){\n                i++;\n                if(i==(int)w.size()) ans++;\n                else buck[w[i]-'a'].push_back({w,i});\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int numMatchingSubseq(char* s, char** words, int n) {\n    int ans=0; for(int i=0;i<n;i++){ char* w=words[i]; int j=0; for(char* p=s;*p&&w[j];p++) if(*p==w[j]) j++; if(!w[j]) ans++; } return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Pointer per word chỉ tăng khi match — đếm completed words.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Word rỗng",
+      "Duplicate words",
+      "S ngắn"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Check mỗi word O(|S|) TLE without bucket",
+      "Case sensitivity"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

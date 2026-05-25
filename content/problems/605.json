@@ -2,33 +2,42 @@
   "id": 605,
   "title": "Can Place Flowers",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Can Place Flowers (LeetCode #605) — Easy.",
+  "description": "Cho mảng flowerbed (0=trống, 1=có hoa) và n. Có thể trồng thêm n cây sao không hai cây liền kề? Trả true/false.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "flowerbed = [1,0,0,0,1], n = 1",
+      "output": "true"
+    },
+    {
+      "input": "flowerbed = [1,0,0,0,1], n = 2",
+      "output": "false"
+    },
+    {
+      "input": "flowerbed = [0,0,1,0,0], n = 1",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Greedy quét trái→phải: nếu flowerbed[i]==0 và hai bên trống thì trồng (đặt 1) và n--.",
+  "memoryTip": "Can place flowers = greedy plant when both neighbors empty (pad with 0).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canPlaceFlowers(self, flowerbed: List[int], n: int) -> bool:\n        bed = [0] + flowerbed + [0]\n        for i in range(1, len(bed)-1):\n            if bed[i-1]==0 and bed[i]==0 and bed[i+1]==0:\n                bed[i]=1; n-=1\n                if n<=0: return True\n        return n<=0",
+    "cpp": "class Solution {\npublic:\n    bool canPlaceFlowers(vector<int>& f, int n) {\n        int m=f.size();\n        for(int i=0;i<m;i++){\n            int l=i?f[i-1]:0, r=i+1<m?f[i+1]:0;\n            if(!f[i]&&!l&&!r){ f[i]=1; if(--n<=0) return true; }\n        }\n        return n<=0;\n    }\n};",
+    "c": "bool canPlaceFlowers(int* f, int m, int n) {\n    for(int i=0;i<m;i++){\n        int l=i?f[i-1]:0, r=i+1<m?f[i+1]:0;\n        if(!f[i]&&!l&&!r){ f[i]=1; if(--n<=0) return 1; }\n    }\n    return n<=0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Greedy trồng sớm nhất không chặn slot sau — đủ iff có thể.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=0 → true",
+      "Toàn 0 → floor((m+1)/2) cây",
+      "Đầu/cuối chỉ một neighbor"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không xét biên ảo 0",
+      "Trồng không greedy"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

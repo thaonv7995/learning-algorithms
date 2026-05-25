@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #771</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Jewels and Stones</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n+m)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>89.6% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Jewels and Stones (LeetCode #771) — Easy.</div>
+                        <div class="block-text">Cho chuỗi jewels (đá quý) và stones (đá). Đếm số stones là jewel (ký tự stones nằm trong jewels).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>jewels = &quot;aA&quot;, stones = &quot;aAAbbbb&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>jewels = &quot;z&quot;, stones = &quot;ZZ&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Set jewels; đếm stones[i] in jewels.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,22 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> numJewelsInStones(<span class="ty">char</span>* jewels, <span class="ty">char</span>* stones) {
+    <span class="ty">int</span> seen[256]={0}; <span class="kw">for</span>(;*jewels;jewels++) seen[(<span class="ty">unsigned</span> <span class="ty">char</span>)*jewels]=1;
+    <span class="ty">int</span> ans=0; <span class="kw">for</span>(;*stones;stones++) <span class="kw">if</span>(seen[(<span class="ty">unsigned</span> <span class="ty">char</span>)*stones]) ans++; <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> numJewelsInStones(<span class="ty">self</span>, jewels: <span class="ty">str</span>, stones: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        j = <span class="ty">set</span>(jewels)
+        <span class="kw">return</span> sum(s <span class="kw">in</span> j <span class="kw">for</span> s <span class="kw">in</span> stones)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> numJewelsInStones(<span class="ty">string</span> jewels, <span class="ty">string</span> stones) {
+        unordered_set&lt;<span class="ty">char</span>&gt; j(jewels.begin(), jewels.end());
+        <span class="ty">int</span> ans=0;
+        <span class="kw">for</span>(<span class="ty">char</span> s:stones) <span class="kw">if</span>(j.count(s)) ans++;
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +120,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n+m)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Set jewels; đếm stones[i] in jewels.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đếm đúng membership từng stone.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Jewels rỗng → 0</span><span class="analysis-tag edge">Stones rỗng → 0</span><span class="analysis-tag edge">Case sensitive</span><span class="analysis-tag pit">Case insensitive sai đề</span><span class="analysis-tag pit">Đếm jewels thay stones</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Jewels and stones = membership count in jewel set.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +148,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Jewels%20and%20Stones&lc_id=771&embed=true"></iframe>

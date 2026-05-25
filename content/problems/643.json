@@ -2,33 +2,38 @@
   "id": 643,
   "title": "Maximum Average Subarray I",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Sliding Window",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Maximum Average Subarray I (LeetCode #643) — Easy.",
+  "description": "Cho mảng nums và k. Tìm trung bình lớn nhất của subarray độ dài k.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,12,-5,-6,50,3], k = 4",
+      "output": "12.75000"
+    },
+    {
+      "input": "nums = [5], k = 1",
+      "output": "5.00000"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sliding window sum k phần tử; cập nhật max avg.",
+  "memoryTip": "Max average subarray — fixed window sum / k.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMaxAverage(self, nums: List[int], k: int) -> float:\n        s=sum(nums[:k]); best=s\n        for i in range(k,len(nums)):\n            s+=nums[i]-nums[i-k]; best=max(best,s)\n        return best/k",
+    "cpp": "class Solution {\npublic:\n    double findMaxAverage(vector<int>& nums, int k) {\n        int s=accumulate(nums.begin(),nums.begin()+k,0), best=s;\n        for(int i=k;i<(int)nums.size();i++){ s+=nums[i]-nums[i-k]; best=max(best,s); }\n        return (double)best/k;\n    }\n};",
+    "c": "double findMaxAverage(int* nums,int n,int k){ int s=0,i; for(i=0;i<k;i++) s+=nums[i]; int best=s; for(i=k;i<n;i++){ s+=nums[i]-nums[i-k]; if(s>best) best=s; } return (double)best/k; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Window size k cố định — max sum/k = max average.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=n",
+      "k=1",
+      "Số âm"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Integer division",
+      "Không slide window"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

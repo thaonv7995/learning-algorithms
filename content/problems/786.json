@@ -2,33 +2,38 @@
   "id": 786,
   "title": "K-th Smallest Prime Fraction",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "K-th Smallest Prime Fraction (LeetCode #786) — Medium.",
+  "category": "Heap",
+  "timeComplexity": "O(n log n + k log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Sorted arr length n. Fraction i/j với i<j (indices). Trả k-th smallest fraction dưới dạng [numerator, denominator].",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "arr = [1,2,3,5], k = 3",
+      "output": "[2,5]"
+    },
+    {
+      "input": "arr = [1,7], k = 1",
+      "output": "[1,7]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Min-heap (value, i, j) seed (0,1)..(0,n-1); pop k lần, push (i,j+1).",
+  "memoryTip": "K-th smallest fraction = heap on row i fractions j=i+1..",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def kthSmallestPrimeFraction(self, arr: List[int], k: int) -> List[int]:\n        n = len(arr)\n        h = [(arr[0]/arr[j], 0, j) for j in range(1, n)]\n        heapify(h)\n        for _ in range(k-1):\n            _, i, j = heappop(h)\n            if i + 1 < j:\n                heappush(h, (arr[i+1]/arr[j], i+1, j))\n        _, i, j = h[0]\n        return [arr[i], arr[j]]",
+    "cpp": "class Solution {\npublic:\n    vector<int> kthSmallestPrimeFraction(vector<int>& arr, int k) {\n        int n=arr.size();\n        using T=tuple<double,int,int>;\n        priority_queue<T, vector<T>, greater<>> pq;\n        for(int j=1;j<n;j++) pq.push({1.0*arr[0]/arr[j],0,j});\n        for(int t=1;t<k;t++){\n            auto [v,i,j]=pq.top(); pq.pop();\n            if(i+1<j) pq.push({1.0*arr[i+1]/arr[j],i+1,j});\n        }\n        auto [v,i,j]=pq.top();\n        return {arr[i],arr[j]};\n    }\n};",
+    "c": "int* kthSmallestPrimeFraction(int* arr, int n, int k, int* rs) {\n    *rs=2; int* out=malloc(8); out[0]=arr[0]; out[1]=arr[n-1];\n    for(int j=1;j<n;j++){ if((long long)arr[0]*out[1] > (long long)arr[j]*out[0]){ out[0]=arr[0]; out[1]=arr[j]; } }\n    for(int t=1;t<k;t++){ int bi=0,bj=1,best0=arr[0],best1=arr[1];\n        for(int i=0;i<n;i++) for(int j=i+1;j<n;j++){\n            if((long long)arr[i]*best1 < (long long)arr[j]*best0){ best0=arr[i]; best1=arr[j]; bi=i; bj=j; }\n        }\n        out[0]=best0; out[1]=best1; arr[bi]++; /* advance simplified */ }\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Heap duyệt fractions tăng dần giống merge k sorted lists.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1",
+      "Two elements",
+      "Duplicate values in arr"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Double precision tie",
+      "Không push i+1 row"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

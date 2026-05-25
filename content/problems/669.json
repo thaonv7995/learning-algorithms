@@ -4,31 +4,36 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Trim a Binary Search Tree (LeetCode #669) — Medium.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho BST root và khoảng [low, high]. Cắt tỉa cây: loại mọi nút có giá trị ngoài khoảng, giữ tính chất BST.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[1,0,2], low=1, high=3",
+      "output": "[1,null,2]"
+    },
+    {
+      "input": "root=[3,0,4,null,2,null,null,1], low=1, high=3",
+      "output": "[3,2,null,1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Recursive: n<low return trim(right); n>high return trim(left); else link trimmed children.",
+  "memoryTip": "Trim BST — recurse prune outside range.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def trimBST(self, root: Optional[TreeNode], low: int, high: int) -> Optional[TreeNode]:\n        if not root: return None\n        if root.val<low: return self.trimBST(root.right,low,high)\n        if root.val>high: return self.trimBST(root.left,low,high)\n        root.left=self.trimBST(root.left,low,high)\n        root.right=self.trimBST(root.right,low,high)\n        return root",
+    "cpp": "class Solution {\npublic:\n    TreeNode* trimBST(TreeNode* r, int lo, int hi) {\n        if(!r) return nullptr;\n        if(r->val<lo) return trimBST(r->right,lo,hi);\n        if(r->val>hi) return trimBST(r->left,lo,hi);\n        r->left=trimBST(r->left,lo,hi); r->right=trimBST(r->right,lo,hi);\n        return r;\n    }\n};",
+    "c": "struct TreeNode* trimBST669(struct TreeNode* r,int lo,int hi){ if(!r)return NULL; if(r->val<lo) return trimBST669(r->right,lo,hi); if(r->val>hi) return trimBST669(r->left,lo,hi); r->left=trimBST669(r->left,lo,hi); r->right=trimBST669(r->right,lo,hi); return r; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Prune nodes outside — promote valid subtree.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "All trimmed null",
+      "Root removed",
+      "Single node in range"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Copy tree unnecessary",
+      "Not return promoted child"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

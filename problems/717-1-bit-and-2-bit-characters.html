@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #717</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">1-bit and 2-bit Characters</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">1-bit and 2-bit Characters (LeetCode #717) — Easy.</div>
+                        <div class="block-text">Mảng bits gồm 0 và 1 mô tả mã hóa: 0 là ký tự 1-bit; 10 hoặc 11 là ký tự 2-bit. bit[0] luôn là 1-bit. Kiểm tra mảng có phải chuỗi mã hóa hợp lệ không (ăn hết mọi bit).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>bits = [1,0,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>bits = [1,1,1,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>bits = [1,0,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt i=0: nếu bits[i]==0 nhảy 1; else nếu i+1 hợp lệ và bits[i+1] in {0,1} nhảy 2; else false. Cuối i==n → true.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> isOneBitCharacter(<span class="ty">int</span>* bits, <span class="ty">int</span> n) {
+    <span class="ty">int</span> i = 0;
+    <span class="kw">while</span> (i &lt; n) {
+        <span class="kw">if</span> (bits[i] == 0) i++;
+        <span class="kw">else</span> <span class="kw">if</span> (i + 1 &lt; n) i += 2;
+        <span class="kw">else</span> <span class="kw">return</span> false;
+    }
+    <span class="kw">return</span> true;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isOneBitCharacter(<span class="ty">self</span>, bits: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        i, n = 0, <span class="ty">len</span>(bits)
+        <span class="kw">while</span> i &lt; n:
+            <span class="kw">if</span> bits[i] == 0:
+                i += 1
+            <span class="kw">elif</span> i + 1 &lt; n:
+                i += 2
+            <span class="kw">else</span>:
+                <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">return</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isOneBitCharacter(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; bits) {
+        <span class="ty">int</span> i = 0, n = bits.size();
+        <span class="kw">while</span> (i &lt; n) {
+            <span class="kw">if</span> (bits[i] == 0) i++;
+            <span class="kw">else</span> <span class="kw">if</span> (i + 1 &lt; n) i += 2;
+            <span class="kw">else</span> <span class="kw">return</span> false;
+        }
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +144,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Duyệt i=0: nếu bits[i]==0 nhảy 1; else nếu i+1 hợp lệ và…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Cuối i==n → true.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Parse duy nhất theo quy tắc 1-bit/2-bit; thất bại khi 1 ở cuối không đủ cặp.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">[0] → true</span><span class="analysis-tag edge">Kết thúc bằng ...10</span><span class="analysis-tag edge">Kết thúc 1 đơn</span><span class="analysis-tag pit">Chỉ kiểm tra bit cuối = 0</span><span class="analysis-tag pit">Quên case bits[i]==1 ở index cuối</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Greedy parse: 0 đơn lẻ; 1 phải đi cùng bit kế .</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=1-bit%20and%202-bit%20Characters&lc_id=717&embed=true"></iframe>

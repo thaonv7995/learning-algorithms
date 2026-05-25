@@ -2,33 +2,42 @@
   "id": 730,
   "title": "Count Different Palindromic Subsequences",
   "difficulty": "Hard",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Count Different Palindromic Subsequences (LeetCode #730) — Hard.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Cho chuỗi S. Đếm số palindromic subsequence khác nhau (mod 10^9+7). Subsequence không cần liên tiếp.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "S = \"bccb\"",
+      "output": "6"
+    },
+    {
+      "input": "S = \"abcdabcdabcdabcdabcdabcdabcdabcddcbadcbadcbadcbadcbadcbadcbadcba\"",
+      "output": "104860361"
+    },
+    {
+      "input": "S = \"a\"",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[l][r] = số palindrome subseq trong S[l..r]. Nếu S[l]==S[r]: dp[l][r]=dp[l+1][r-1]*2+2; else dp[l][r]=dp[l+1][r]+dp[l][r-1]-dp[l+1][r-1]. Trừ trùng khi S[l]==S[r].",
+  "memoryTip": "Count pal subseq = interval DP merge/split; mod 1e9+7.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countPalindromicSubsequences(self, S: str) -> int:\n        MOD = 10**9 + 7\n        n = len(S)\n        dp = [[0]*n for _ in range(n)]\n        for i in range(n): dp[i][i] = 1\n        for length in range(2, n+1):\n            for l in range(n-length+1):\n                r = l + length - 1\n                if S[l] == S[r]:\n                    dp[l][r] = dp[l+1][r-1] * 2 + 2\n                    i, j = l+1, r-1\n                    while i <= j and S[i] != S[l]: i += 1\n                    while i <= j and S[j] != S[l]: j -= 1\n                    if i > j: dp[l][r] -= 1\n                    elif i == j: dp[l][r] -= 1\n                    else: dp[l][r] -= 2\n                else:\n                    dp[l][r] = dp[l+1][r] + dp[l][r-1] - dp[l+1][r-1]\n                dp[l][r] %= MOD\n        return dp[0][n-1]",
+    "cpp": "class Solution {\npublic:\n    int countPalindromicSubsequences(string S) {\n        const int MOD = 1e9+7;\n        int n=S.size();\n        vector<vector<long long>> dp(n, vector<long long>(n));\n        for(int i=0;i<n;i++) dp[i][i]=1;\n        for(int len=2;len<=n;len++) for(int l=0;l+len-1<n;l++){\n            int r=l+len-1;\n            if(S[l]==S[r]){\n                dp[l][r]=dp[l+1][r-1]*2+2;\n                int i=l+1,j=r-1;\n                while(i<=j&&S[i]!=S[l]) i++;\n                while(i<=j&&S[j]!=S[l]) j--;\n                if(i>j) dp[l][r]--;\n                else if(i==j) dp[l][r]--;\n                else dp[l][r]-=2;\n            } else dp[l][r]=(dp[l+1][r]+dp[l][r-1]-dp[l+1][r-1]+MOD)%MOD;\n            dp[l][r]%=MOD;\n        }\n        return dp[0][n-1];\n    }\n};",
+    "c": "int countPalindromicSubsequences(char* S) {\n    const int MOD=1000000007; int n=strlen(S);\n    long long dp[100][100]={0};\n    for(int i=0;i<n;i++) dp[i][i]=1;\n    for(int len=2;len<=n;len++) for(int l=0;l+len-1<n;l++){\n        int r=l+len-1;\n        if(S[l]==S[r]){ dp[l][r]=dp[l+1][r-1]*2+2; int i=l+1,j=r-1;\n            while(i<=j&&S[i]!=S[l]) i++; while(i<=j&&S[j]!=S[l]) j--;\n            if(i>j) dp[l][r]--; else if(i==j) dp[l][r]--; else dp[l][r]-=2; }\n        else dp[l][r]=(dp[l+1][r]+dp[l][r-1]-dp[l+1][r-1]+MOD)%MOD;\n        dp[l][r]%=MOD;\n    }\n    return (int)dp[0][n-1];\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Interval DP đếm distinct subseq palindrome; trừ duplicate khi ký tự đầu cuối trùng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một ký tự → 1",
+      "Toàn cùng chữ",
+      "Mod overflow"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên trừ duplicate inner same char",
+      "Nhầm subsequence với substring"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

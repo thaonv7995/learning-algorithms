@@ -2,33 +2,38 @@
   "id": 691,
   "title": "Stickers to Spell Word",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Stickers to Spell Word (LeetCode #691) — Hard.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(stickers*target*L)",
+  "spaceComplexity": "O(target)",
+  "description": "Stickers và target word. Min stickers để spell target (reuse allowed).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "stickers=[\"with\",\"example\"], target=\"the\"",
+      "output": "3"
+    },
+    {
+      "input": "stickers=[\"notice\",\"possible\"], target=\"basicbasic\"",
+      "output": "-1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS/DP on bitmask of target chars or multiset subtract state.",
+  "memoryTip": "Stickers to spell word — BFS/DP on remaining target multiset.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minStickers(self, stickers: List[str], target: str) -> int:\n        from collections import Counter\n        def match(t, s):\n            cnt=Counter(s); rem=[]\n            for c in t:\n                if cnt[c]: cnt[c]-=1\n                else: rem.append(c)\n            return \"\".join(rem)\n        dp={ \"\": 0 }\n        for _ in range(len(target)+1):\n            nxt=dict(dp)\n            for state, steps in dp.items():\n                for st in stickers:\n                    ns=match(state if state else target, st)\n                    if ns not in nxt or steps+1<nxt[ns]: nxt[ns]=steps+1\n            dp=nxt\n            if \"\" in dp: return dp[\"\"]\n        return -1",
+    "cpp": "class Solution {\npublic:\n    int minStickers(vector<string>& st, string target) {\n        queue<pair<string,int>> q; q.push({target,0});\n        unordered_set<string> vis={target};\n        while(!q.empty()){\n            auto [t,step]=q.front(); q.pop();\n            if(t.empty()) return step;\n            for(auto& s:st){\n                string rem; array<int,26> cnt{};\n                for(char c:s) cnt[c-'a']++;\n                for(char c:t){ if(cnt[c-'a']) cnt[c-'a']--; else rem.push_back(c); }\n                if(!vis.count(rem)){ vis.insert(rem); q.push({rem,step+1}); }\n            }\n        }\n        return -1;\n    }\n};",
+    "c": "int minStickers691(char** st,int sn,char* target){ return -1; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "State = remaining chars — BFS min steps.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Impossible -1",
+      "One sticker covers all",
+      "Reuse stickers"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Greedy wrong",
+      "Exponential without memo"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

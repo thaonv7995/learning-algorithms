@@ -2,33 +2,38 @@
   "id": 733,
   "title": "Flood Fill",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Flood Fill (LeetCode #733) — Easy.",
+  "category": "DFS",
+  "timeComplexity": "O(mn)",
+  "spaceComplexity": "O(mn)",
+  "description": "Ảnh image m×n, pixel (sr,sc) và newColor. Flood fill: đổi màu vùng liên thông 4-hướng cùng màu gốc thành newColor. Trả image sau fill.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, newColor = 2",
+      "output": "[[2,2,2],[2,2,0],[2,0,1]]"
+    },
+    {
+      "input": "image = [[0,0,0],[0,0,0]], sr = 0, sc = 0, newColor = 0",
+      "output": "[[0,0,0],[0,0,0]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS/BFS từ (sr,sc): nếu image[r][c]==oldColor thì gán newColor và lan 4 hướng.",
+  "memoryTip": "Flood fill = DFS same-color component; early return nếu newColor==oldColor.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def floodFill(self, image: List[List[int]], sr: int, sc: int, newColor: int) -> List[List[int]]:\n        old = image[sr][sc]\n        if old == newColor: return image\n        def dfs(r, c):\n            if r < 0 or c < 0 or r >= len(image) or c >= len(image[0]) or image[r][c] != old: return\n            image[r][c] = newColor\n            dfs(r+1,c); dfs(r-1,c); dfs(r,c+1); dfs(r,c-1)\n        dfs(sr, sc)\n        return image",
+    "cpp": "class Solution {\n    int oldC, newC;\n    void dfs(vector<vector<int>>& g, int r, int c) {\n        if (r<0||c<0||r>=(int)g.size()||c>=(int)g[0].size()||g[r][c]!=oldC) return;\n        g[r][c]=newC;\n        dfs(g,r+1,c); dfs(g,r-1,c); dfs(g,r,c+1); dfs(g,r,c-1);\n    }\npublic:\n    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {\n        oldC=image[sr][sc]; newC=newColor;\n        if (oldC==newC) return image;\n        dfs(image,sr,sc);\n        return image;\n    }\n};",
+    "c": "void dfs733(int** img,int m,int n,int r,int c,int old,int nw){\n    if(r<0||c<0||r>=m||c>=n||img[r][c]!=old) return;\n    img[r][c]=nw;\n    dfs733(img,m,n,r+1,c,old,nw); dfs733(img,m,n,r-1,c,old,nw);\n    dfs733(img,m,n,r,c+1,old,nw); dfs733(img,m,n,r,c-1,old,nw);\n}\nint** floodFill(int** image,int m,int* cs,int n,int sr,int sc,int newColor,int** ret,int* rs,int** rcs){\n    int old=image[sr][sc]; if(old==newColor) return image;\n    dfs733(image,m,n,sr,sc,old,newColor); return image;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DFS chỉ lan qua ô cùng oldColor — đúng định nghĩa flood fill.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "newColor==oldColor → không đổi",
+      "Một pixel",
+      "Fill toàn ảnh"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên check biên",
+      "Gán newColor trước khi check old"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,42 @@
   "id": 744,
   "title": "Find Smallest Letter Greater Than Target",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Binary Search",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Find Smallest Letter Greater Than Target (LeetCode #744) — Easy.",
+  "description": "Mảng letters sort (chữ thường) vòng tròn — sau chữ cuối là chữ đầu. Cho target. Trả chữ nhỏ nhất trong letters lớn hơn target; nếu không có trả letters[0].",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "letters = [\"c\",\"f\",\"j\"], target = \"a\"",
+      "output": "\"c\""
+    },
+    {
+      "input": "letters = [\"c\",\"f\",\"j\"], target = \"c\"",
+      "output": "\"f\""
+    },
+    {
+      "input": "letters = [\"a\",\"f\"], target = \"z\"",
+      "output": "\"a\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search first letter > target; nếu không có wrap letters[0].",
+  "memoryTip": "Circular next greater char = upper_bound BS, wrap to start.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def nextGreatestLetter(self, letters: List[str], target: str) -> str:\n        lo, hi = 0, len(letters)\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if letters[mid] <= target: lo = mid + 1\n            else: hi = mid\n        return letters[0 if lo == len(letters) else lo]",
+    "cpp": "class Solution {\npublic:\n    char nextGreatestLetter(vector<char>& letters, char target) {\n        auto it = upper_bound(letters.begin(), letters.end(), target);\n        return it == letters.end() ? letters[0] : *it;\n    }\n};",
+    "c": "char nextGreatestLetter(char* letters, int n, char target) {\n    int lo = 0, hi = n;\n    while (lo < hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (letters[mid] <= target) lo = mid + 1;\n        else hi = mid;\n    }\n    return lo == n ? letters[0] : letters[lo];\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "upper_bound tìm phần tử đầu > target; wrap khi vượt cuối.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "target lớn hơn mọi letter",
+      "target bằng max letter",
+      "Hai letter"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng >= thay >",
+      "Quên wrap circular"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

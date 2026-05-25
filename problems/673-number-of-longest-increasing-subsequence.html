@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #673</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Number of Longest Increasing Subsequence</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>51.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Number of Longest Increasing Subsequence (LeetCode #673) — Medium.</div>
+                        <div class="block-text">Cho mảng nums. Đếm số dãy con tăng dài nhất (LIS) có độ dài bằng độ dài LIS tối đa của mảng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums=[1,3,5,4,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums=[2,2,2,2,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Patience sorting + count paths: dpLen[i], dpCnt[i] update on predecessors.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,28 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findNumberOfLIS673(<span class="ty">int</span>* a,<span class="ty">int</span> n){ <span class="ty">int</span>* ln=<span class="kw">malloc</span>(n*4); <span class="ty">int</span>* cnt=<span class="kw">malloc</span>(n*4); <span class="ty">int</span> i,j,mx=0,ans=0; <span class="kw">for</span>(i=0;i&lt;n;i++){ln[i]=1;cnt[i]=1; <span class="kw">for</span>(j=0;j&lt;i;j++) <span class="kw">if</span>(a[j]&lt;a[i]){ <span class="kw">if</span>(ln[j]+1&gt;ln[i]){ln[i]=ln[j]+1;cnt[i]=cnt[j];} <span class="kw">else</span> <span class="kw">if</span>(ln[j]+1==ln[i]) cnt[i]+=cnt[j]; } <span class="kw">if</span>(ln[i]&gt;mx) mx=ln[i]; } <span class="kw">for</span>(i=0;i&lt;n;i++) <span class="kw">if</span>(ln[i]==mx) ans+=cnt[i]; <span class="kw">free</span>(ln); <span class="kw">free</span>(cnt); <span class="kw">return</span> ans; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findNumberOfLIS(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        n=<span class="ty">len</span>(nums); ln=[1]*n; cnt=[1]*n
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i):
+                <span class="kw">if</span> nums[j]&lt;nums[i]:
+                    <span class="kw">if</span> ln[j]+1&gt;ln[i]: ln[i]=ln[j]+1; cnt[i]=cnt[j]
+                    <span class="kw">elif</span> ln[j]+1==ln[i]: cnt[i]+=cnt[j]
+        mx=<span class="ty">max</span>(ln); <span class="kw">return</span> sum(c <span class="kw">for</span> l,c <span class="kw">in</span> zip(ln,cnt) <span class="kw">if</span> l==mx)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findNumberOfLIS(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a) {
+        <span class="ty">int</span> n=a.size(); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ln(n,1), cnt(n,1);
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;i;j++) <span class="kw">if</span>(a[j]&lt;a[i]){
+            <span class="kw">if</span>(ln[j]+1&gt;ln[i]){ ln[i]=ln[j]+1; cnt[i]=cnt[j]; }
+            <span class="kw">else</span> <span class="kw">if</span>(ln[j]+1==ln[i]) cnt[i]+=cnt[j];
+        }
+        <span class="ty">int</span> mx=*max_element(ln.begin(),ln.end());
+        <span class="ty">int</span> ans=0; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">if</span>(ln[i]==mx) ans+=cnt[i];
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +125,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Patience sorting + count paths: dpLen[i], dpCnt[i] update on…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DP track length và count ways to each LIS length.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Strict increasing one LIS</span><span class="analysis-tag edge">All equal n LIS</span><span class="analysis-tag edge">Decreasing len 1</span><span class="analysis-tag pit">Count any LIS not max length</span><span class="analysis-tag pit">Overflow count use long</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Number of LIS — DP length and count arrays.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +154,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Number%20of%20Longest%20Increasing%20Subsequence&lc_id=673&embed=true"></iframe>

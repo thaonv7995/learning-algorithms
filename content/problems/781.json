@@ -2,33 +2,42 @@
   "id": 781,
   "title": "Rabbits in Forest",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Rabbits in Forest (LeetCode #781) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Mỗi con thỏ trả lời có bao nhiêu con thỏ khác cùng màu. answers[i] là câu trả lời của thỏ i. Có thể có bao nhiêu con thỏ trong rừng tối đa?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "answers = [1,1,2]",
+      "output": "5"
+    },
+    {
+      "input": "answers = [1,0]",
+      "output": "2"
+    },
+    {
+      "input": "answers = [1,1,1,1,1]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Gom answers theo nhóm: mỗi nhóm k cùng answer x (x>0) cần x+1 thỏ (1 khác màu + x cùng màu). answer=0 là thỏ unique.",
+  "memoryTip": "Rabbits in forest = group by answer value x → groups of size x+1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numRabbits(self, answers: List[int]) -> int:\n        cnt = Counter(answers)\n        ans = 0\n        for x, c in cnt.items():\n            g = x + 1\n            ans += ((c + g - 1) // g) * g\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int numRabbits(vector<int>& answers) {\n        unordered_map<int,int> cnt;\n        for(int x:answers) cnt[x]++;\n        int ans=0;\n        for(auto& [x,c]: cnt){\n            int g=x+1;\n            ans += ((c+g-1)/g)*g;\n        }\n        return ans;\n    }\n};",
+    "c": "int numRabbits(int* answers, int n) {\n    int cnt[1001]={0}; for(int i=0;i<n;i++) cnt[answers[i]]++;\n    int ans=0; for(int x=0;x<1001;x++) if(cnt[x]){ int g=x+1; ans+=((cnt[x]+g-1)/g)*g; } return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi nhóm màu size x+1 giải thích x câu trả lời x — pack tối thiểu ceil(c/(x+1)) nhóm.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "answer 0 → mỗi thỏ riêng",
+      "answer lớn ít thỏ",
+      "Impossible pattern → vẫn max pack"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Cộng trực tiếp answers",
+      "Quên ceil group size"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

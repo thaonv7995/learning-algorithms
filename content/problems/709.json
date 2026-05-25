@@ -4,31 +4,40 @@
   "difficulty": "Easy",
   "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "To Lower Case (LeetCode #709) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi s. Trả bản sao s với mọi chữ hoa chuyển thành chữ thường (ASCII).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"Hello\"",
+      "output": "\"hello\""
+    },
+    {
+      "input": "s = \"here\"",
+      "output": "\"here\""
+    },
+    {
+      "input": "s = \"LOVELY\"",
+      "output": "\"lovely\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt từng ký tự: nếu A-Z thì cộng 32 (hoặc |32) để thành a-z.",
+  "memoryTip": "ASCII: chữ hoa + 32 = chữ thường; hoặc dùng tolower.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def toLowerCase(self, s: str) -> str:\n        return \"\".join(ch.lower() for ch in s)",
+    "cpp": "class Solution {\npublic:\n    string toLowerCase(string s) {\n        for (char& c : s)\n            if (c >= 'A' && c <= 'Z') c += 32;\n        return s;\n    }\n};",
+    "c": "char* toLowerCase(char* s) {\n    for (int i = 0; s[i]; i++)\n        if (s[i] >= 'A' && s[i] <= 'Z') s[i] += 32;\n    return s;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Chỉ đổi A-Z; ký tự khác giữ nguyên.",
     "edgeCases": [
+      "Đã toàn lower",
       "Rỗng",
-      "Một phần tử"
+      "Số và ký tự đặc biệt"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng tolower locale khác ASCII",
+      "Tạo string mới quên null terminator trong C"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

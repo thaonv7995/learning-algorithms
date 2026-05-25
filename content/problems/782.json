@@ -2,33 +2,38 @@
   "id": 782,
   "title": "Transform to Chessboard",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Math",
+  "timeComplexity": "O(n^2)",
   "spaceComplexity": "O(1)",
-  "description": "Transform to Chessboard (LeetCode #782) — Hard.",
+  "description": "Bàn cờ n×n chỉ 0/1. Có thể biến thành bàn cờ (mọi hàng/cột half 0 half 1, và pattern hàng đầu xor các hàng sau) bằng swap hàng/cột không?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "board = [[0,1,1,0],[0,0,1,0],[1,1,0,1],[1,0,0,1]]",
+      "output": "true"
+    },
+    {
+      "input": "board = [[0,1],[1,0]]",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Kiểm tra mọi hàng/cột có thể chuẩn hóa (min swaps row/col); hàng đầu sau chuẩn hóa phải bằng xor pattern với các hàng khác.",
+  "memoryTip": "Transform chessboard = normalize rows/cols + XOR row template check.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def movesToChessboard(self, board: List[List[int]]) -> bool:\n        n = len(board)\n        for i in range(n):\n            for j in range(n):\n                if (board[0][0]^board[i][0]^board[0][j]^board[i][j]): return False\n        row = sum(board[0])\n        col = sum(board[i][0] for i in range(n))\n        if row*2 != n or col*2 != n: return False\n        rowSwaps = sum(board[0][i]!=i%2 for i in range(n))\n        colSwaps = sum(board[i][0]!=i%2 for i in range(n))\n        return rowSwaps%2==0 and colSwaps%2==0 and rowSwaps//2 + colSwaps//2 <= 2",
+    "cpp": "class Solution {\npublic:\n    bool movesToChessboard(vector<vector<int>>& b) {\n        int n=b.size();\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++)\n            if((b[0][0]^b[i][0]^b[0][j]^b[i][j])!=0) return false;\n        int row=accumulate(b[0].begin(),b[0].end(),0);\n        int col=0; for(int i=0;i<n;i++) col+=b[i][0];\n        if(row*2!=n||col*2!=n) return false;\n        int rs=0,cs=0;\n        for(int i=0;i<n;i++){ if(b[0][i]!=i%2) rs++; if(b[i][0]!=i%2) cs++; }\n        return rs%2==0&&cs%2==0;\n    }\n};",
+    "c": "bool movesToChessboard(int** board, int n, int* cs) {\n    for(int i=0;i<n;i++) for(int j=0;j<n;j++) if((board[0][0]^board[i][0]^board[0][j]^board[i][j])!=0) return false;\n    int row=0,col=0; for(int j=0;j<n;j++) row+=board[0][j]; for(int i=0;i<n;i++) col+=board[i][0];\n    return row*2==n && col*2==n;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "XOR invariant cần cho chessboard; row/col sum n/2 và parity swaps.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=2",
+      "Đã chessboard",
+      "Invalid XOR pattern"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ check row sum",
+      "Swap count formula sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,38 @@
   "id": 745,
   "title": "Prefix and Suffix Search",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Prefix and Suffix Search (LeetCode #745) — Hard.",
+  "category": "Trie",
+  "timeComplexity": "O(n * L)",
+  "spaceComplexity": "O(n * L)",
+  "description": "Thiết kế WordFilter: WordFilter(words) và f(prefix, suffix). f trả index lớn nhất của word vừa có prefix vừa có suffix (word phải chứa suffix).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "[\"WordFilter\",\"f\",\"f\",\"f\",\"f\",\"f\"], [[[\"apple\"]],[\"a\",\"e\"],[\"b\",\"e\"],[\"a\",\"le\"],[\"apple\",\"apple\"]]",
+      "output": "[null,0,-1,-1,0]"
+    },
+    {
+      "input": "[\"WordFilter\",\"f\"], [[[\"abb\",\"ba\",\"ab\",\"a\"]],[\"a\",\"a\"]]",
+      "output": "[null,3]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Trie: mỗi node lưu max index word đi qua. Insert word với mọi suffix (word#word) hoặc paired trie prefix+suffix.",
+  "memoryTip": "WordFilter = store word as prefix + \"#\" + suffix variants in trie with max index.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class WordFilter:\n    def __init__(self, words: List[str]):\n        self.d = {}\n        for i, w in enumerate(words):\n            for p in range(len(w)+1):\n                for s in range(len(w)+1):\n                    self.d[w[:p]+\"#\"+w[len(w)-s:]] = i\n    def f(self, prefix: str, suffix: str) -> int:\n        return self.d.get(prefix+\"#\"+suffix, -1)",
+    "cpp": "class WordFilter {\n    unordered_map<string,int> mp;\npublic:\n    WordFilter(vector<string>& words) {\n        for (int i=0;i<(int)words.size();i++) {\n            string& w=words[i];\n            for (int p=0;p<=(int)w.size();p++)\n                for (int s=0;s<=(int)w.size();s++)\n                    mp[w.substr(0,p)+\"#\"+w.substr(w.size()-s)]=i;\n        }\n    }\n    int f(string prefix, string suffix) {\n        auto it=mp.find(prefix+\"#\"+suffix);\n        return it==mp.end()?-1:it->second;\n    }\n};",
+    "c": "typedef struct { char key[256]; int idx; } WFE;\nstatic WFE wf[100000]; static int wfn;\nWordFilter* wordFilterCreate(char** words, int n) {\n    WordFilter* o=malloc(sizeof(int)); wfn=0;\n    for(int i=0;i<n;i++){ int L=strlen(words[i]); for(int p=0;p<=L;p++) for(int s=0;s<=L;s++){ snprintf(wf[wfn].key,256,\"%.*s#%s\",p,words[i],words[i]+L-s); wf[wfn++].idx=i; } }\n    return o;\n}\nint wordFilterF(WordFilter* o, char* prefix, char* suffix) {\n    char k[256]; snprintf(k,256,\"%s#%s\",prefix,suffix);\n    for(int i=0;i<wfn;i++) if(strcmp(wf[i].key,k)==0) return wf[i].idx;\n    return -1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mọi cặp (prefix,suffix) của mỗi word được index — query O(1) hash.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không match → -1",
+      "Nhiều word cùng match → index max",
+      "Prefix/suffix rỗng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ match prefix OR suffix",
+      "Không lưu index lớn nhất"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #744</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Binary Search</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Find Smallest Letter Greater Than Target</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.2% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Find Smallest Letter Greater Than Target (LeetCode #744) — Easy.</div>
+                        <div class="block-text">Mảng letters sort (chữ thường) vòng tròn — sau chữ cuối là chữ đầu. Cho target. Trả chữ nhỏ nhất trong letters lớn hơn target; nếu không có trả letters[0].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>letters = [&quot;c&quot;,&quot;f&quot;,&quot;j&quot;], target = &quot;a&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;c&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>letters = [&quot;c&quot;,&quot;f&quot;,&quot;j&quot;], target = &quot;c&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;f&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>letters = [&quot;a&quot;,&quot;f&quot;], target = &quot;z&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;a&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Binary search first letter &gt; target; nếu không có wrap letters[0].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span> nextGreatestLetter(<span class="ty">char</span>* letters, <span class="ty">int</span> n, <span class="ty">char</span> target) {
+    <span class="ty">int</span> lo = 0, hi = n;
+    <span class="kw">while</span> (lo &lt; hi) {
+        <span class="ty">int</span> mid = lo + (hi - lo) / 2;
+        <span class="kw">if</span> (letters[mid] &lt;= target) lo = mid + 1;
+        <span class="kw">else</span> hi = mid;
+    }
+    <span class="kw">return</span> lo == n ? letters[0] : letters[lo];
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> nextGreatestLetter(<span class="ty">self</span>, letters: <span class="ty">List</span>[<span class="ty">str</span>], target: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        lo, hi = 0, <span class="ty">len</span>(letters)
+        <span class="kw">while</span> lo &lt; hi:
+            mid = (lo + hi) // 2
+            <span class="kw">if</span> letters[mid] &lt;= target: lo = mid + 1
+            <span class="kw">else</span>: hi = mid
+        <span class="kw">return</span> letters[0 <span class="kw">if</span> lo == <span class="ty">len</span>(letters) <span class="kw">else</span> lo]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">char</span> nextGreatestLetter(<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&amp; letters, <span class="ty">char</span> target) {
+        auto it = upper_bound(letters.begin(), letters.end(), target);
+        <span class="kw">return</span> it == letters.end() ? letters[0] : *it;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +131,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">Binary Search</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Binary search first letter &gt; target; nếu không có wrap letters[0].</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>upper_bound tìm phần tử đầu &gt; target; wrap khi vượt cuối.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">target lớn hơn mọi letter</span><span class="analysis-tag edge">target bằng max letter</span><span class="analysis-tag edge">Hai letter</span><span class="analysis-tag pit">Dùng &gt;= thay &gt;</span><span class="analysis-tag pit">Quên wrap circular</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Circular next greater char = upper_bound BS, wrap to start.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +160,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Find%20Smallest%20Letter%20Greater%20Than%20Target&lc_id=744&embed=true"></iframe>

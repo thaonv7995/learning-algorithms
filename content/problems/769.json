@@ -2,33 +2,38 @@
   "id": 769,
   "title": "Max Chunks To Make Sorted",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Stack",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Max Chunks To Make Sorted (LeetCode #769) — Medium.",
+  "description": "Permutation nums của 0..n-1 (unique). Chia max số chunk, sort từng chunk, ghép thành sorted. Trả số chunk tối đa.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [4,3,2,1,0]",
+      "output": "1"
+    },
+    {
+      "input": "nums = [1,0,2,3,4]",
+      "output": "4"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt i: end = max(end, nums[i]). Nếu end==i thì hoàn thành một chunk (+1).",
+  "memoryTip": "Max chunks I = cut when running max equals index.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxChunksToSorted(self, nums: List[int]) -> int:\n        ans = end = 0\n        for i, x in enumerate(nums):\n            end = max(end, x)\n            if end == i: ans += 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int maxChunksToSorted(vector<int>& nums) {\n        int ans=0, end=0;\n        for(int i=0;i<(int)nums.size();i++){\n            end=max(end,nums[i]);\n            if(end==i) ans++;\n        }\n        return ans;\n    }\n};",
+    "c": "int maxChunksToSorted(int* nums, int n) {\n    int ans=0, end=0;\n    for(int i=0;i<n;i++){ if(nums[i]>end) end=nums[i]; if(end==i) ans++; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Chunk [0..i] sort được iff max trong đoạn là i (permutation).",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Đã sort → n chunks",
+      "Reverse → 1 chunk",
+      "n=1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Áp dụng logic 768 có duplicate",
+      "end != i giữa chừng cắt sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

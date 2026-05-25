@@ -2,33 +2,38 @@
   "id": 731,
   "title": "My Calendar II",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "My Calendar II (LeetCode #731) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(n) per op",
+  "spaceComplexity": "O(n)",
+  "description": "My Calendar II: book(start,end) cho phép tối đa 2 booking overlap tại một thời điểm (triple overlap forbidden). Trả false nếu book tạo triple overlap.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "[\"MyCalendarTwo\",\"book\",\"book\",\"book\",\"book\",\"book\",\"book\"], [[],[10,20],[50,60],[10,40],[5,15],[5,10],[25,55]]",
+      "output": "[null,true,true,true,false,true,true]"
+    },
+    {
+      "input": "[\"MyCalendarTwo\",\"book\",\"book\",\"book\",\"book\"], [[],[26,35],[26,32],[25,32],[18,26]]",
+      "output": "[null,true,true,false,true]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Giữ bookings và overlaps (double-booked intervals). book kiểm tra overlap với overlaps → triple; else merge overlap vào overlaps, book vào bookings.",
+  "memoryTip": "Calendar II = track single + double booked regions separately.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyCalendarTwo:\n    def __init__(self):\n        self.bookings = []\n        self.overlaps = []\n    def book(self, start: int, end: int) -> bool:\n        for s, e in self.overlaps:\n            if start < e and end > s: return False\n        new_over = []\n        for s, e in self.bookings:\n            if start < e and end > s:\n                self.overlaps.append((max(start,s), min(end,e)))\n            else:\n                new_over.append((s,e))\n        self.bookings = new_over + [(start,end)]\n        return True",
+    "cpp": "class MyCalendarTwo {\n    vector<pair<int,int>> bk, ov;\n    static bool cross(int a,int b,int c,int d){ return a<d && b>c; }\npublic:\n    bool book(int start, int end) {\n        for (auto [s,e]: ov) if (cross(start,end,s,e)) return false;\n        vector<pair<int,int>> nb;\n        for (auto [s,e]: bk) {\n            if (cross(start,end,s,e)) ov.push_back({max(start,s), min(end,e)});\n            else nb.push_back({s,e});\n        }\n        nb.push_back({start,end});\n        bk = move(nb);\n        return true;\n    }\n};",
+    "c": "typedef struct { int s,e; } Iv;\nstatic Iv bk2[1000], ov2[1000]; static int nb2, no2;\nstatic int xov(int a,int b,int c,int d){ return a<d && b>c; }\nbool myCalendarTwoBook(int start,int end){\n    for(int i=0;i<no2;i++) if(xov(start,end,ov2[i].s,ov2[i].e)) return false;\n    Iv nb[1000]; int m=0;\n    for(int i=0;i<nb2;i++){\n        if(xov(start,end,bk2[i].s,bk2[i].e)){\n            ov2[no2].s=start>bk2[i].s?start:bk2[i].s;\n            ov2[no2].e=end<bk2[i].e?end:bk2[i].e; no2++;\n        } else nb[m++]=bk2[i];\n    }\n    nb[m].s=start; nb[m++].e=end; nb2=m; for(int i=0;i<m;i++) bk2[i]=nb[i];\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Overlaps lưu vùng double-book; book trùng overlap → triple → reject.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Hai overlap riêng ok",
+      "Triple tại giao 3 interval",
+      "Adjacent không overlap"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ đếm số booking không track overlap region",
+      "Nhầm Calendar I logic"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

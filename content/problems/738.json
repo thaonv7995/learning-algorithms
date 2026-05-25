@@ -2,33 +2,42 @@
   "id": 738,
   "title": "Monotone Increasing Digits",
   "difficulty": "Medium",
-  "category": "Math",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Monotone Increasing Digits (LeetCode #738) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho số nguyên dương N. Trả số lớn nhất ≤ N mà các chữ số không giảm từ trái sang phải (monotone increasing).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "N = 10",
+      "output": "9"
+    },
+    {
+      "input": "N = 1234",
+      "output": "1234"
+    },
+    {
+      "input": "N = 332",
+      "output": "299"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Quét từ phải: nếu digits[i]<digits[i-1] thì giảm digits[i-1]-- và set digits[i..] = 9.",
+  "memoryTip": "Monotone digits = find first drop from left, decrement prev, fill 9s right.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def monotoneIncreasingDigits(self, N: int) -> int:\n        s = list(str(N))\n        for i in range(len(s)-1, 0, -1):\n            if s[i] < s[i-1]:\n                s[i-1] = str(int(s[i-1]) - 1)\n                for j in range(i, len(s)): s[j] = '9'\n        return int(\"\".join(s))",
+    "cpp": "class Solution {\npublic:\n    int monotoneIncreasingDigits(int N) {\n        string s = to_string(N);\n        for (int i = s.size()-1; i > 0; i--)\n            if (s[i] < s[i-1]) {\n                s[i-1]--;\n                for (int j = i; j < (int)s.size(); j++) s[j] = '9';\n            }\n        return stoi(s);\n    }\n};",
+    "c": "int monotoneIncreasingDigits(int N) {\n    char s[16]; sprintf(s, \"%d\", N);\n    int n = strlen(s);\n    for (int i = n - 1; i > 0; i--)\n        if (s[i] < s[i-1]) {\n            s[i-1]--;\n            for (int j = i; j < n; j++) s[j] = '9';\n        }\n    return atoi(s);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Fix first violation from right guarantees max valid number ≤ N.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "N đã monotone → giữ nguyên",
+      "N=10 → 9",
+      "999→999"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Scan left-to-right sai hướng",
+      "Quên fill 9 bên phải"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

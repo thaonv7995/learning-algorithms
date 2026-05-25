@@ -2,33 +2,42 @@
   "id": 718,
   "title": "Maximum Length of Repeated Subarray",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Maximum Length of Repeated Subarray (LeetCode #718) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(mn)",
+  "spaceComplexity": "O(mn)",
+  "description": "Cho hai mảng nums1 và nums2. Tìm độ dài đoạn con liên tiếp (contiguous) dài nhất xuất hiện ở cả hai mảng.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums1 = [1,2,3,2,1], nums2 = [3,2,1,4,7]",
+      "output": "3"
+    },
+    {
+      "input": "nums1 = [0,0,0,0,0], nums2 = [0,0,0,0,0]",
+      "output": "5"
+    },
+    {
+      "input": "nums1 = [1], nums2 = [2]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP 2D: dp[i][j] = độ dài common subarray kết thúc tại i,j. Nếu nums1[i-1]==nums2[j-1]: dp[i][j]=dp[i-1][j-1]+1; cập nhật max.",
+  "memoryTip": "Contiguous ≠ LCS: reset về 0 khi phần tử khác nhau.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findLength(self, nums1: List[int], nums2: List[int]) -> int:\n        m, n = len(nums1), len(nums2)\n        dp = [[0]*(n+1) for _ in range(m+1)]\n        ans = 0\n        for i in range(1, m+1):\n            for j in range(1, n+1):\n                if nums1[i-1] == nums2[j-1]:\n                    dp[i][j] = dp[i-1][j-1] + 1\n                    ans = max(ans, dp[i][j])\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findLength(vector<int>& a, vector<int>& b) {\n        int m=a.size(), n=b.size(), ans=0;\n        vector<vector<int>> dp(m+1, vector<int>(n+1));\n        for(int i=1;i<=m;i++) for(int j=1;j<=n;j++){\n            if(a[i-1]==b[j-1]){ dp[i][j]=dp[i-1][j-1]+1; ans=max(ans,dp[i][j]); }\n        }\n        return ans;\n    }\n};",
+    "c": "int findLength(int* a, int m, int* b, int n) {\n    int dp[1001][1001]={0}, ans=0;\n    for(int i=1;i<=m;i++) for(int j=1;j<=n;j++)\n        if(a[i-1]==b[j-1]){ dp[i][j]=dp[i-1][j-1]+1; if(dp[i][j]>ans) ans=dp[i][j]; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "dp[i][j] chỉ tăng khi phần tử khớp liên tiếp — đúng subarray chung.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không phần tử chung → 0",
+      "Toàn giống nhau",
+      "Một mảng length 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng LCS không contiguous",
+      "Không reset khi khác"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

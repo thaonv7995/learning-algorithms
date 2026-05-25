@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #652</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Tree</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Find Duplicate Subtrees</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>60.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Find Duplicate Subtrees (LeetCode #652) — Medium.</div>
+                        <div class="block-text">Tìm mọi subtree trùng cấu trúc (serialize giống nhau) trong cây nhị phân.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root có hai subtree [2,4] giống nhau</code></div>
+                <div class="ex-line"><span>Out</span><code>[[2,4],[4]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [1,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Postorder serialize; map serial→list nodes; trả nodes có serial trùng ≥2.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> TreeNode** findDuplicateSubtrees652(<span class="ty">struct</span> TreeNode* r,<span class="ty">int</span>* rs) {
+    <span class="ty">struct</span> TreeNode** ans=<span class="kw">malloc</span>(256*<span class="kw">sizeof</span>(*ans)); *rs=0;
+    <span class="ty">char</span> keys[256][512]; <span class="ty">int</span> cnt[256]={0}; <span class="ty">int</span> nk=0;
+    <span class="ty">void</span> ser(<span class="ty">struct</span> TreeNode* n, <span class="ty">char</span>* s, <span class="ty">int</span>* p){
+        <span class="kw">if</span>(!n){ *p+=sprintf(s+*p,&quot;0,&quot;); <span class="kw">return</span>; }
+        *p+=sprintf(s+*p,&quot;%d,&quot;,n-&gt;val); ser(n-&gt;left,s,p); ser(n-&gt;right,s,p);
+    }
+    <span class="ty">void</span> walk(<span class="ty">struct</span> TreeNode* n){
+        <span class="kw">if</span>(!n) <span class="kw">return</span>;
+        <span class="ty">char</span> s[512]={0}; <span class="ty">int</span> p=0; ser(n,s,&amp;p);
+        <span class="ty">int</span> ki=-1; <span class="kw">for</span>(<span class="ty">int</span> k=0;k&lt;nk;k++) <span class="kw">if</span>(!strcmp(keys[k],s)){ki=k;break;}
+        <span class="kw">if</span>(ki&lt;0){ ki=nk++; strcpy(keys[ki],s); }
+        cnt[ki]++;
+        <span class="kw">if</span>(cnt[ki]==2) ans[(*rs)++]=n;
+        walk(n-&gt;left); walk(n-&gt;right);
+    }
+    walk(r); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findDuplicateSubtrees(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">List</span>[<span class="ty">Optional</span>[<span class="ty">TreeNode</span>]]:
+        mp=defaultdict(<span class="ty">int</span>); ans=[]
+        <span class="kw">def</span> ser(n):
+            <span class="kw">if</span> <span class="kw">not</span> n: <span class="kw">return</span> &quot;0&quot;
+            s=f&quot;{n.val},{ser(n.left)},{ser(n.right)}&quot;
+            mp[s]+=1
+            <span class="kw">if</span> mp[s]==2: ans.append(n)
+            <span class="kw">return</span> s
+        ser(root); <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; mp; <span class="ty">vector</span>&lt;TreeNode*&gt; ans;
+    <span class="ty">string</span> ser(TreeNode* n){
+        <span class="kw">if</span>(!n) <span class="kw">return</span> &quot;0&quot;;
+        <span class="ty">string</span> s=to_string(n-&gt;val)+&quot;,&quot;+ser(n-&gt;left)+&quot;,&quot;+ser(n-&gt;right);
+        <span class="kw">if</span>(++mp[s]==2) ans.push_back(n); <span class="kw">return</span> s;
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;TreeNode*&gt; findDuplicateSubtrees(TreeNode* root){ ser(root); <span class="kw">return</span> ans; }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +140,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
+                        <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Postorder serialize; map serial→list nodes; trả nodes có serial trùng…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Serialization unique cho cấu trúc — đếm lần 2 thu thập.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không duplicate</span><span class="analysis-tag edge">Nhiều duplicate cùng struct</span><span class="analysis-tag edge">Null left/right</span><span class="analysis-tag pit">Preorder không unique</span><span class="analysis-tag pit">Thu thập mọi lần &gt;2</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Duplicate subtrees — postorder serialization hash.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Find%20Duplicate%20Subtrees&lc_id=652&embed=true"></iframe>

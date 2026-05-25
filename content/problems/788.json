@@ -2,33 +2,42 @@
   "id": 788,
   "title": "Rotated Digits",
   "difficulty": "Medium",
-  "category": "Math",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Rotated Digits (LeetCode #788) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Đếm số x trong [1,N] mà khi xoay 180° (2↔5, 6↔9, 0/1/8 giữ) vẫn là số hợp lệ khác và khác x.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "N = 10",
+      "output": "4"
+    },
+    {
+      "input": "N = 1",
+      "output": "0"
+    },
+    {
+      "input": "N = 20",
+      "output": "6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS build valid rotated numbers <= N digit by digit với map pairs; hoặc DP digit với constraint.",
+  "memoryTip": "Rotated digits = build numbers from {0,1,2,5,6,8,9} with no leading 0.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def rotatedDigits(self, n: int) -> int:\n        pairs = {0:0,1:1,8:8,2:5,5:2,6:9,9:6}\n        def ok(x):\n            s=str(x); r=\"\".join(str(pairs[int(c)]) for c in s)\n            return r!=s and int(r)<=n\n        return sum(ok(i) for i in range(1,n+1))",
+    "cpp": "class Solution {\npublic:\n    int rotatedDigits(int n) {\n        int mp[10]={0,1,-1,-1,-1,2,-1,-1,8,-1};\n        auto good=[&](int x){\n            string s=to_string(x), r;\n            for(char c:s){ int d=c-'0'; if(d==2) r+='5'; else if(d==5) r+='2'; else if(d==6) r+='9'; else if(d==9) r+='6'; else if(d==0||d==1||d==8) r+=c; else return false; }\n            return r!=s;\n        };\n        int ans=0; for(int i=1;i<=n;i++) if(good(i)) ans++; return ans;\n    }\n};",
+    "c": "static int good788(int x){ char s[16], r[16]; sprintf(s,\"%d\",x); int L=strlen(s);\n    for(int i=0;i<L;i++){ char c=s[i]; if(c=='2') r[i]='5'; else if(c=='5') r[i]='2'; else if(c=='6') r[i]='9'; else if(c=='9') r[i]='6'; else if(c=='0'||c=='1'||c=='8') r[i]=c; else return 0; }\n    r[L]=0; return strcmp(s,r)!=0; }\nint rotatedDigits(int n){ int ans=0; for(int i=1;i<=n;i++) if(good788(i)) ans++; return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Valid iff mọi digit map được và rotated string khác original.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "N<10",
+      "Only 0,1,8 self",
+      "2/5/6/9 pairs"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chấp nhận 3,4,7",
+      "Rotated > N vẫn đếm"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

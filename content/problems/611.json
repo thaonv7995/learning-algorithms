@@ -2,33 +2,37 @@
   "id": 611,
   "title": "Valid Triangle Number",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Two Pointers",
+  "timeComplexity": "O(n^2)",
   "spaceComplexity": "O(1)",
-  "description": "Valid Triangle Number (LeetCode #611) — Medium.",
+  "description": "Cho mảng nums. Đếm số bộ ba (i,j,k) i<j<k tạo tam giác (a+b>c).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [2,2,3,4]",
+      "output": "3"
+    },
+    {
+      "input": "nums = [4,2,3,4]",
+      "output": "4"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort nums; với mỗi k cố định (cạnh lớn nhất), two pointers l,r tìm cặp sao nums[l]+nums[r]>nums[k].",
+  "memoryTip": "Valid triangle — sort + for each largest side two-pointer count pairs.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def triangleNumber(self, nums: List[int]) -> int:\n        nums.sort(); n=len(nums); ans=0\n        for k in range(n-1,1,-1):\n            l,r=0,k-1\n            while l<r:\n                if nums[l]+nums[r]>nums[k]: ans+=r-l; r-=1\n                else: l+=1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int triangleNumber(vector<int>& nums) {\n        sort(nums.begin(),nums.end()); int n=nums.size(), ans=0;\n        for(int k=n-1;k>=2;k--){\n            int l=0,r=k-1;\n            while(l<r){\n                if(nums[l]+nums[r]>nums[k]){ ans+=r-l; r--; }\n                else l++;\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int triangleNumber(int* nums, int n) {\n    qsort(nums,n,sizeof(int),cmp);\n    int ans=0;\n    for(int k=n-1;k>=2;k--){\n        int l=0,r=k-1;\n        while(l<r){\n            if(nums[l]+nums[r]>nums[k]){ ans+=r-l; r--; }\n            else l++;\n        }\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Sort đảm bảo k là cạnh max; two pointers đếm mọi cặp thỏa.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Có số 0",
+      "Tam giác đều đếm permutations index"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n³) TLE",
+      "Quên sort"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

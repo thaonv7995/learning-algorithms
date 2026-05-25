@@ -2,33 +2,38 @@
   "id": 638,
   "title": "Shopping Offers",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Shopping Offers (LeetCode #638) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n*2^n)",
+  "spaceComplexity": "O(2^n)",
+  "description": "Cho giá items, offers (bundle giảm), needs. Chi phí tối thiểu mua đủ needs.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "price=[2,5], special=[[3,0,1],[1,1,0]], needs=[3,2]",
+      "output": "8"
+    },
+    {
+      "input": "Không offer",
+      "output": "sum price*need"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS+memo trên vector needs; thử mua lẻ từng item hoặc apply từng offer.",
+  "memoryTip": "Shopping offers — DP/DFS on needs vector with offers.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def shoppingOffers(self, price: List[int], special: List[List[int]], needs: List[int]) -> int:\n        memo={}\n        def dfs(need):\n            key=tuple(need)\n            if key in memo: return memo[key]\n            ans=sum(p*n for p,n in zip(price,need))\n            for sp in special:\n                nxt=[need[i]-sp[i] for i in range(len(need))]\n                if min(nxt)>=0: ans=min(ans,sp[-1]+dfs(nxt))\n            memo[key]=ans; return ans\n        return dfs(needs)",
+    "cpp": "class Solution {\npublic:\n    int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) {\n        map<vector<int>,int> memo;\n        function<int(vector<int>&)> dfs=[&](vector<int>& need)->int{\n            if(memo.count(need)) return memo[need];\n            int ans=0; for(int i=0;i<(int)price.size();i++) ans+=price[i]*need[i];\n            for(auto& sp:special){\n                vector<int> nxt=need; bool ok=1;\n                for(int i=0;i<(int)need.size();i++){ nxt[i]-=sp[i]; if(nxt[i]<0) ok=0; }\n                if(ok) ans=min(ans, sp.back()+dfs(nxt));\n            }\n            return memo[need]=ans;\n        };\n        return dfs(needs);\n    }\n};",
+    "c": "static int shopDfs(int* price,int pn,int** sp,int sn,int* need,int w,int* memo,int key){\n    int base=0; for(int i=0;i<w;i++) base+=price[i]*need[i];\n    int ans=base;\n    for(int s=0;s<sn;s++){\n        int ok=1,nxt[16]; for(int i=0;i<w;i++){ nxt[i]=need[i]-sp[s][i]; if(nxt[i]<0) ok=0; }\n        if(!ok) continue;\n        int sub=shopDfs(price,pn,sp,sn,nxt,w,memo,0);\n        if(sp[s][w]+sub<ans) ans=sp[s][w]+sub;\n    }\n    return ans;\n}\nint shoppingOffers638(int* price,int pn,int** sp,int sn,int* needs,int w){\n    return shopDfs(price,pn,sp,sn,needs,w,NULL,0);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Memo trên needs — thử mua lẻ và mọi offer hợp lệ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "needs=0",
+      "Offer rẻ hơn lẻ",
+      "Nhiều offer"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không memo TLE",
+      "Offer vượt needs"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

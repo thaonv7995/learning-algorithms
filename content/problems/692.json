@@ -2,33 +2,38 @@
   "id": 692,
   "title": "Top K Frequent Words",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Top K Frequent Words (LeetCode #692) — Medium.",
+  "category": "Heap",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng words và k. Trả k từ xuất hiện nhiều nhất; nếu cùng tần suất thì sắp xếp theo thứ tự từ điển tăng dần.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "words=[\"i\",\"love\",\"leetcode\",\"i\",\"love\",\"coding\"], k=2",
+      "output": "[\"i\",\"love\"]"
+    },
+    {
+      "input": "words=[\"the\",\"day\",\"is\",\"sunny\",\"the\",\"the\",\"the\",\"sunny\",\"is\",\"is\"], k=4",
+      "output": "[\"the\",\"is\",\"sunny\",\"day\"]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Count freq; heap/custom sort by (-freq, word).",
+  "memoryTip": "Top k frequent words — count + sort or heap.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def topKFrequent(self, words: List[str], k: int) -> List[str]:\n        cnt=Counter(words)\n        return sorted(cnt.keys(), key=lambda w:(-cnt[w],w))[:k]",
+    "cpp": "class Solution {\npublic:\n    vector<string> topKFrequent(vector<string>& words, int k) {\n        unordered_map<string,int> cnt;\n        for(auto& w:words) cnt[w]++;\n        vector<string> keys; for(auto& p:cnt) keys.push_back(p.first);\n        sort(keys.begin(),keys.end(),[&](auto& a,auto& b){\n            return cnt[a]>cnt[b]||(cnt[a]==cnt[b]&&a<b);\n        });\n        return vector<string>(keys.begin(),keys.begin()+k);\n    }\n};",
+    "c": "char** topKFrequent692(char** words,int n,int k,int* rs) {\n    char uniq[256][64]; int cnt[256]={0}, nu=0;\n    for(int i=0;i<n;i++){\n        int fi=-1; for(int j=0;j<nu;j++) if(!strcmp(uniq[j],words[i])){fi=j;break;}\n        if(fi<0){ strcpy(uniq[nu],words[i]); cnt[nu]=1; nu++; } else cnt[fi]++;\n    }\n    for(int i=0;i<nu;i++) for(int j=i+1;j<nu;j++){\n        if(cnt[j]>cnt[i]||(cnt[j]==cnt[i]&&strcmp(uniq[j],uniq[i])<0)){\n            char t[64]; strcpy(t,uniq[i]); strcpy(uniq[i],uniq[j]); strcpy(uniq[j],t);\n            int tc=cnt[i]; cnt[i]=cnt[j]; cnt[j]=tc;\n        }\n    }\n    char** ans=malloc(k*sizeof(char*)); *rs=k;\n    for(int i=0;i<k;i++){ ans[i]=malloc(strlen(uniq[i])+1); strcpy(ans[i],uniq[i]); }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Sort by freq desc then lex asc — top k.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k equals unique",
+      "Single word",
+      "Tie many words"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Heap tie-break wrong",
+      "Case sensitivity"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

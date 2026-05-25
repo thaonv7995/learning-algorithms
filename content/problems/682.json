@@ -2,33 +2,38 @@
   "id": 682,
   "title": "Baseball Game",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Baseball Game (LeetCode #682) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Baseball ops: number push, + pop2 sum, D double top, C pop, pop2 diff push.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "ops=[\"5\",\"2\",\"C\",\"D\",\"+\"]",
+      "output": "30"
+    },
+    {
+      "input": "ops=[\"5\",\"-2\",\"4\",\"C\",\"D\",\"9\",\"+\",\"+\"]",
+      "output": "27"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack simulate each op.",
+  "memoryTip": "Baseball game — stack interpret ops.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def calPoints(self, ops: List[str]) -> int:\n        st=[]\n        for op in ops:\n            if op==\"+\": st.append(st[-1]+st[-2])\n            elif op==\"D\": st.append(st[-1]*2)\n            elif op==\"C\": st.pop()\n            else: st.append(int(op))\n        return sum(st)",
+    "cpp": "class Solution {\npublic:\n    int calPoints(vector<string>& ops) {\n        vector<int> st;\n        for(auto& op:ops){\n            if(op==\"+\") st.push_back(st[st.size()-1]+st[st.size()-2]);\n            else if(op==\"D\") st.push_back(st.back()*2);\n            else if(op==\"C\") st.pop_back();\n            else st.push_back(stoi(op));\n        }\n        return accumulate(st.begin(),st.end(),0);\n    }\n};",
+    "c": "int calPoints682(char** ops,int n){ int st[1000],top=0,i,s=0; for(i=0;i<n;i++){ if(ops[i][0]=='+') st[top]=st[top-1]+st[top-2],top++; else if(ops[i][0]=='D') st[top]=st[top-1]*2,top++; else if(ops[i][0]=='C') top--; else st[top++]=atoi(ops[i]); } for(i=0;i<top;i++) s+=st[i]; return s; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Stack matches baseball scoring rules.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Negative scores",
+      "Only numbers",
+      "C on empty invalid input"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Order pop for +",
+      "D before any number"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

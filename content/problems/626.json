@@ -4,31 +4,35 @@
   "difficulty": "Medium",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Exchange Seats (LeetCode #626) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Seat(id, student). Hoán đổi chỗ ngồi liên tiếp (1↔2, 3↔4...); nếu số lẻ cuối giữ nguyên.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "id 1,2,3",
+      "output": "2,1,3"
+    },
+    {
+      "input": "id 1,2,3,4",
+      "output": "2,1,4,3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "CASE WHEN id%2=1 THEN id+1 ELSE id-1 END ORDER BY id hoặc self join swap.",
+  "memoryTip": "Exchange seats = odd id swap with id+1, even with id-1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT\n  CASE WHEN id % 2 = 1 AND id = (SELECT MAX(id) FROM Seat) THEN id\n       WHEN id % 2 = 1 THEN id + 1\n       ELSE id - 1 END AS id,\n  student\nFROM Seat\nORDER BY id;",
+    "cpp": "// SQL\nSELECT\n  CASE WHEN id % 2 = 1 AND id = (SELECT MAX(id) FROM Seat) THEN id\n       WHEN id % 2 = 1 THEN id + 1\n       ELSE id - 1 END AS id,\n  student\nFROM Seat\nORDER BY id;",
+    "c": "const char query[] = \"SELECT\\n  CASE WHEN id % 2 = 1 AND id = (SELECT MAX(id) FROM Seat) THEN id\\n       WHEN id % 2 = 1 THEN id + 1\\n       ELSE id - 1 END AS id,\\n  student\\nFROM Seat\\nORDER BY id;\";"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Hoán đổi cặp liên tiếp; id lẻ max giữ nguyên khi count lẻ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một ghế",
+      "Hai ghế"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Swap cả student sai cột",
+      "Quên ghế lẻ cuối"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

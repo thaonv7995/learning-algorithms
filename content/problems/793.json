@@ -3,32 +3,41 @@
   "title": "Preimage Size of Factorial Zeroes Function",
   "difficulty": "Hard",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log K)",
   "spaceComplexity": "O(1)",
-  "description": "Preimage Size of Factorial Zeroes Function (LeetCode #793) — Hard.",
+  "description": "f(x) = số x sao cho x! có đúng K số 0 ở cuối (preimage size). Cho K, trả |{x : f(x)=K}|.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "K = 0",
+      "output": "0"
+    },
+    {
+      "input": "K = 5",
+      "output": "0"
+    },
+    {
+      "input": "K = 3",
+      "output": "5"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "f(x) staircase non-decreasing. Tìm range [lo,hi] where f(x)=K bằng BS on x counting trailing zeros in x!.",
+  "memoryTip": "Preimage factorial zeros = BS range where floor(x/5+...) equals K.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def preimageSizeFZF(self, k: int) -> int:\n        def f(x):\n            s = 0\n            while x:\n                x //= 5; s += x\n            return s\n        if k == 0: return 0\n        lo, hi = 0, 5 * (k + 1)\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if f(mid) < k: lo = mid + 1\n            else: hi = mid\n        if f(lo) != k: return 0\n        return 5",
+    "cpp": "class Solution {\npublic:\n    int preimageSizeFZF(int k) {\n        auto f=[](long long x){ int s=0; while(x){ x/=5; s+=x; } return s; };\n        if(k==0) return 0;\n        long long lo=0, hi=5LL*(k+1);\n        while(lo<hi){ long long mid=(lo+hi)/2; if(f(mid)<k) lo=mid+1; else hi=mid; }\n        if(f(lo)!=k) return 0;\n        return 5;\n    }\n};",
+    "c": "static int f793(long long x){ int s=0; while(x){ x/=5; s+=x; } return s; }\nint preimageSizeFZF(int k) {\n    if(k==0) return 0;\n    long long lo=0, hi=5LL*(k+1);\n    while(lo<hi){ long long mid=(lo+hi)/2; if(f793(mid)<k) lo=mid+1; else hi=mid; }\n    return f793(lo)==k?5:0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "f(x) step 5 mỗi plateau — preimage size 0 hoặc 5.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "K=0 → 0",
+      "Nonexistent K → 0",
+      "Plateau boundaries"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Assume always 5",
+      "Trailing zeros formula sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

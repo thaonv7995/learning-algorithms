@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #624</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Maximum Distance in Arrays</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Maximum Distance in Arrays (LeetCode #624) — Medium.</div>
+                        <div class="block-text">Cho m arrays đã sort. Max distance |a[i]-b[j]| với a,b từ hai array khác nhau (một phần tử mỗi array).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>arrays = [[1,2,3],[4,5],[1,2,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>arrays = [[1],[1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Track global min/max first element seen; với array mới max dist = max(max-minArr, maxArr-min).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maxDistance(<span class="ty">int</span>** arrays, <span class="ty">int</span> m, <span class="ty">int</span>* sizes) {
+    <span class="ty">int</span> mn=arrays[0][0], mx=arrays[0][sizes[0]-1], ans=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;m;i++){
+        <span class="ty">int</span> lo=arrays[i][0], hi=arrays[i][sizes[i]-1];
+        <span class="ty">int</span> d1=hi-mn; <span class="kw">if</span>(d1&lt;0)d1=-d1; <span class="ty">int</span> d2=mx-lo; <span class="kw">if</span>(d2&lt;0)d2=-d2;
+        <span class="kw">if</span>(d1&gt;ans) ans=d1; <span class="kw">if</span>(d2&gt;ans) ans=d2;
+        <span class="kw">if</span>(lo&lt;mn) mn=lo; <span class="kw">if</span>(hi&gt;mx) mx=hi;
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maxDistance(<span class="ty">self</span>, arrays: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        mn, mx, ans = arrays[0][0], arrays[0][-1], 0
+        <span class="kw">for</span> arr <span class="kw">in</span> arrays[1:]:
+            ans = <span class="ty">max</span>(ans, abs(arr[-1]-mn), abs(mx-arr[0]))
+            mn = <span class="ty">min</span>(mn, arr[0]); mx = <span class="ty">max</span>(mx, arr[-1])
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> maxDistance(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; a) {
+        <span class="ty">int</span> mn=a[0][0], mx=a[0].back(), ans=0;
+        <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;(<span class="ty">int</span>)a.size();i++){
+            ans=max({ans, abs(a[i].back()-mn), abs(mx-a[i][0])});
+            mn=min(mn,a[i][0]); mx=max(mx,a[i].back());
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +135,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Track global min/max first element seen; với array mới max dist = max.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Extrema chỉ xảy ra giữa min/max của các array — duy trì rolling.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Hai array</span><span class="analysis-tag edge">Trùng phần tử</span><span class="analysis-tag edge">Một phần tử/array</span><span class="analysis-tag pit">So trong cùng array</span><span class="analysis-tag pit">Quên abs</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Max distance arrays — rolling min/max of first elements across arrays.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +159,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Maximum%20Distance%20in%20Arrays&lc_id=624&embed=true"></iframe>

@@ -3,32 +3,41 @@
   "title": "Self Dividing Numbers",
   "difficulty": "Easy",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(n log n)",
   "spaceComplexity": "O(1)",
-  "description": "Self Dividing Numbers (LeetCode #728) — Easy.",
+  "description": "Số tự chia (self dividing): mọi chữ số khác 0 chia hết số. Liệt kê mọi số self dividing trong [left, right] theo thứ tự tăng.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "left = 1, right = 22",
+      "output": "[1,2,3,4,5,6,7,8,9,11,12,15,22]"
+    },
+    {
+      "input": "left = 47, right = 85",
+      "output": "[48,55,66,77]"
+    },
+    {
+      "input": "left = 100, right = 100",
+      "output": "[100]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt x từ left đến right: với mỗi digit d (d!=0), x%d==0; nếu mọi digit ok thì thêm vào kết quả.",
+  "memoryTip": "Self dividing = every nonzero digit divides n — brute in range ok.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def selfDividingNumbers(self, left: int, right: int) -> List[int]:\n        def ok(x):\n            for d in map(int, str(x)):\n                if d == 0 or x % d: return False\n            return True\n        return [x for x in range(left, right + 1) if ok(x)]",
+    "cpp": "class Solution {\npublic:\n    vector<int> selfDividingNumbers(int left, int right) {\n        vector<int> ans;\n        auto ok=[](int x){\n            for(int t=x;t;t/=10){ int d=t%10; if(!d||x%d) return false; }\n            return true;\n        };\n        for(int x=left;x<=right;x++) if(ok(x)) ans.push_back(x);\n        return ans;\n    }\n};",
+    "c": "int* selfDividingNumbers(int left, int right, int* retSize) {\n    int* ans = malloc((right-left+1)*4); *retSize = 0;\n    for (int x = left; x <= right; x++) {\n        int t = x, ok = 1;\n        for (; t; t /= 10) { int d = t % 10; if (!d || x % d) { ok = 0; break; } }\n        if (ok) ans[(*retSize)++] = x;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Kiểm tra đủ mọi chữ số khác 0 — điều kiện self dividing.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một số trong range",
+      "Số có digit 0 → loại",
+      "100 chia hết 1 và 0? 0 invalid"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chấp nhận digit 0",
+      "Không xử lý x=0 edge"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #705</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Design HashSet</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) avg</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Design HashSet (LeetCode #705) — Easy.</div>
+                        <div class="block-text">Thiết kế HashSet: add(key), remove(key), contains(key). Không dùng built-in hash set của ngôn ngữ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>[&quot;MyHashSet&quot;,&quot;add&quot;,&quot;add&quot;,&quot;contains&quot;,&quot;contains&quot;,&quot;add&quot;,&quot;remove&quot;,&quot;contains&quot;], [[],[1],[2],[1],[3],[2],[2],[2]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,true,false,null,null,false]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[&quot;MyHashSet&quot;,&quot;add&quot;,&quot;remove&quot;,&quot;contains&quot;], [[],[1],[1],[1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,false]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Chaining: mảng bucket size BASE, hash(key)%BASE, mỗi bucket linked list int. add/remove/contains duyệt bucket.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">#define HSZ 769
+static <span class="ty">int</span> buckets[HSZ][128], cnt[HSZ];
+static <span class="ty">int</span> hkey(<span class="ty">int</span> k){ <span class="kw">return</span> ((k%HSZ)+HSZ)%HSZ; }
+<span class="ty">void</span> myHashSetAdd(<span class="ty">int</span> key){ <span class="ty">int</span> b=hkey(key); <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;cnt[b];i++) <span class="kw">if</span>(buckets[b][i]==key) <span class="kw">return</span>; buckets[b][cnt[b]++]=key; }
+<span class="ty">void</span> myHashSetRemove(<span class="ty">int</span> key){ <span class="ty">int</span> b=hkey(key); <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;cnt[b];i++) <span class="kw">if</span>(buckets[b][i]==key){ buckets[b][i]=buckets[b][--cnt[b]]; <span class="kw">return</span>; } }
+<span class="ty">bool</span> myHashSetContains(<span class="ty">int</span> key){ <span class="ty">int</span> b=hkey(key); <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;cnt[b];i++) <span class="kw">if</span>(buckets[b][i]==key) <span class="kw">return</span> true; <span class="kw">return</span> false; }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> MyHashSet:
+    BASE = 769
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.data = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">self</span>.BASE)]
+    <span class="kw">def</span> _hash(<span class="ty">self</span>, key): <span class="kw">return</span> key % <span class="ty">self</span>.BASE
+    <span class="kw">def</span> add(<span class="ty">self</span>, key: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        h = <span class="ty">self</span>._hash(key)
+        <span class="kw">if</span> key <span class="kw">not</span> <span class="kw">in</span> <span class="ty">self</span>.data[h]: <span class="ty">self</span>.data[h].append(key)
+    <span class="kw">def</span> remove(<span class="ty">self</span>, key: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        h = <span class="ty">self</span>._hash(key)
+        <span class="kw">if</span> key <span class="kw">in</span> <span class="ty">self</span>.data[h]: <span class="ty">self</span>.data[h].remove(key)
+    <span class="kw">def</span> contains(<span class="ty">self</span>, key: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">return</span> key <span class="kw">in</span> <span class="ty">self</span>.data[<span class="ty">self</span>._hash(key)]</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> MyHashSet {
+    static <span class="ty">const</span> <span class="ty">int</span> BASE = 769;
+    <span class="ty">vector</span>&lt;list&lt;<span class="ty">int</span>&gt;&gt; data;
+    <span class="ty">int</span> hash(<span class="ty">int</span> key) { <span class="kw">return</span> key % BASE; }
 <span class="ty">public</span>:
+    MyHashSet() : data(BASE) {}
+    <span class="ty">void</span> add(<span class="ty">int</span> key) {
+        <span class="ty">int</span> h = hash(key);
+        <span class="kw">for</span> (<span class="ty">int</span> x : data[h]) <span class="kw">if</span> (x == key) <span class="kw">return</span>;
+        data[h].push_back(key);
+    }
+    <span class="ty">void</span> remove(<span class="ty">int</span> key) {
+        <span class="ty">int</span> h = hash(key);
+        data[h].remove(key);
+    }
+    <span class="ty">bool</span> contains(<span class="ty">int</span> key) {
+        <span class="ty">int</span> h = hash(key);
+        <span class="kw">for</span> (<span class="ty">int</span> x : data[h]) <span class="kw">if</span> (x == key) <span class="kw">return</span> true;
+        <span class="kw">return</span> false;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +142,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Chaining: mảng bucket size BASE, hash%BASE, mỗi bucket…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — add/remove/contains duyệt bucket.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Hash định vị bucket; list xử lý collision — add/remove/contains đúng membership.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Key âm (mod BASE)</span><span class="analysis-tag edge">Remove key không tồn tại</span><span class="analysis-tag edge">Duplicate add</span><span class="analysis-tag pit">Bucket quá nhỏ → chain dài</span><span class="analysis-tag pit">Quên xử lý key âm khi mod</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Design hash = buckets + collision chain, prime bucket size giảm cluster.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Design%20HashSet&lc_id=705&embed=true"></iframe>

@@ -4,31 +4,40 @@
   "difficulty": "Medium",
   "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Domino and Tromino Tiling (LeetCode #790) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Lát domino 2×1 và tromino L trên hàng 2×n. Trả số cách tile (mod 10^9+7).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 3",
+      "output": "5"
+    },
+    {
+      "input": "n = 1",
+      "output": "1"
+    },
+    {
+      "input": "n = 4",
+      "output": "11"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP state partial fill: dp[i][mask] ways tile 2×i với mask trạng thái cột i.",
+  "memoryTip": "Domino tromino tiling = DP on column profile bitmask.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numTilings(self, n: int) -> int:\n        MOD = 10**9 + 7\n        if n == 1: return 1\n        dp = [1,2,5] + [0]*(n-3)\n        for i in range(3, n):\n            dp[i] = (2*dp[i-1] + dp[i-3]) % MOD\n        return dp[n-1]",
+    "cpp": "class Solution {\npublic:\n    int numTilings(int n) {\n        const int MOD=1e9+7;\n        if(n==1) return 1;\n        vector<long long> dp(n+1);\n        dp[0]=1; dp[1]=1; dp[2]=2; dp[3]=5;\n        for(int i=4;i<=n;i++) dp[i]=(2*dp[i-1]+dp[i-3])%MOD;\n        return dp[n];\n    }\n};",
+    "c": "int numTilings(int n) {\n    const int MOD=1000000007;\n    if(n==1) return 1;\n    long long a=1,b=2,c=5;\n    if(n==2) return 2; if(n==3) return 5;\n    for(int i=4;i<=n;i++){ long long d=(2*b+c)%MOD; a=b; b=c; c=d; } return (int)c;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Recurrence dp[n]=2dp[n-1]+dp[n-3] từ phân tích trạng thái tiling.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1,2,3 base",
+      "Mod mọi bước",
+      "Large n"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Fibonacci sai recurrence",
+      "Quên mod"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

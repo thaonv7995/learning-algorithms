@@ -2,33 +2,38 @@
   "id": 756,
   "title": "Pyramid Transition Matrix",
   "difficulty": "Medium",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Pyramid Transition Matrix (LeetCode #756) — Medium.",
+  "category": "Backtracking",
+  "timeComplexity": "O(4^n)",
+  "spaceComplexity": "O(n)",
+  "description": "Kim tự tháp hàng r: allowed là map pattern→list màu kế. pyramid rỗng. Có thể xây pyramid hợp lệ từ bottom không?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "bottom = \"BCD\", allowed = [\"BCC\",\"CDE\",\"CEA\",\"FFF\"]",
+      "output": "true"
+    },
+    {
+      "input": "bottom = \"AABA\", allowed = [\"AAA\",\"AAB\",\"ABA\",\"ABB\",\"BAC\"]",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS/backtrack từng hàng: từ row hiện tại sinh row trên bằng cách ghép cặp kề theo allowed.",
+  "memoryTip": "Pyramid transition = backtrack row by row using pair→color map.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def pyramidTransition(self, bottom: str, allowed: List[str]) -> bool:\n        g = defaultdict(list)\n        for a in allowed: g[a[:2]].append(a[2])\n        def build(row):\n            if len(row) == 1: return True\n            nxt = []\n            def dfs(i, cur):\n                if i == len(row) - 1:\n                    return build(\"\".join(cur))\n                for c in g[row[i:i+2]]:\n                    cur.append(c)\n                    if dfs(i+1, cur): return True\n                    cur.pop()\n                return False\n            return dfs(0, [])\n        return build(bottom)",
+    "cpp": "class Solution {\npublic:\n    bool pyramidTransition(string bottom, vector<string>& allowed) {\n        unordered_map<string, vector<char>> g;\n        for(auto& a:allowed) g[a.substr(0,2)].push_back(a[2]);\n        function<bool(string)> build = [&](string row){\n            if(row.size()==1) return true;\n            string nxt;\n            function<bool(int)> dfs = [&](int i){\n                if(i== (int)row.size()-1) return build(nxt);\n                for(char c: g[row.substr(i,2)]){\n                    nxt.push_back(c);\n                    if(dfs(i+1)) return true;\n                    nxt.pop_back();\n                }\n                return false;\n            };\n            return dfs(0);\n        };\n        return build(bottom);\n    }\n};",
+    "c": "bool pyramidTransition(char* bottom, char** allowed, int n) {\n    if(!bottom[0]) return true;\n    if(bottom[1]==0) return true;\n    for(int i=0;i<n;i++){\n        char key[3]={bottom[0],bottom[1],allowed[i][2]};\n        if(strncmp(allowed[i],bottom,2)!=0) continue;\n        char nxt[32]; nxt[0]=allowed[i][2]; strcpy(nxt+1,bottom+2);\n        if(pyramidTransition(nxt,allowed,n)) return true;\n    }\n    return false;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Backtrack thử mọi hàng hợp lệ — đúng iff tồn tại pyramid.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Bottom 1 char → true",
+      "Allowed rỗng",
+      "Không rule cho cặp"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên backtrack pop",
+      "Map key 2 char sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

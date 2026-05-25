@@ -3,32 +3,37 @@
   "title": "Search in a Binary Search Tree",
   "difficulty": "Easy",
   "category": "Tree",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Search in a Binary Search Tree (LeetCode #700) — Easy.",
+  "timeComplexity": "O(h)",
+  "spaceComplexity": "O(h)",
+  "description": "Cho BST root và giá trị val. Tìm và trả con trỏ tới nút có giá trị val; nếu không tồn tại trả null.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[4,2,7,1,3], val=2",
+      "output": "subtree [2,1,3]"
+    },
+    {
+      "input": "root=[4,2,7,1,3], val=5",
+      "output": "null"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Standard BST search: val<node go left else right.",
+  "memoryTip": "Search BST — binary search property.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def searchBST(self, root: Optional[TreeNode], val: int) -> Optional[TreeNode]:\n        while root and root.val!=val:\n            root=root.left if val<root.val else root.right\n        return root",
+    "cpp": "class Solution {\npublic:\n    TreeNode* searchBST(TreeNode* root, int val) {\n        while(root&&root->val!=val) root= val<root->val?root->left:root->right;\n        return root;\n    }\n};",
+    "c": "struct TreeNode* searchBST700(struct TreeNode* r,int val){ while(r&&r->val!=val) r= val<r->val?r->left:r->right; return r; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "BST property guarantees unique search path.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Val at root",
+      "Not found null",
+      "Single node"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n) scan",
+      "Return parent not node"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

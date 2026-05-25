@@ -2,33 +2,42 @@
   "id": 678,
   "title": "Valid Parenthesis String",
   "difficulty": "Medium",
-  "category": "String",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Valid Parenthesis String (LeetCode #678) — Medium.",
+  "description": "Chuỗi ()* — * là (, ) hoặc rỗng. Có thể thành valid parentheses?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"()\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"(*)\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"(*))\"",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Track low/high open count range after each char.",
+  "memoryTip": "Valid parenthesis string — range [lo,hi] open count.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def checkValidString(self, s: str) -> bool:\n        lo=hi=0\n        for c in s:\n            if c==\"(\": lo+=1; hi+=1\n            elif c==\")\": lo-=1; hi-=1\n            else: lo-=1; hi+=1\n            if hi<0: return False\n            lo=max(lo,0)\n        return lo==0",
+    "cpp": "class Solution {\npublic:\n    bool checkValidString(string s) {\n        int lo=0, hi=0;\n        for(char c:s){\n            if(c=='('){ lo++; hi++; }\n            else if(c==')'){ lo--; hi--; }\n            else { lo--; hi++; }\n            if(hi<0) return false;\n            lo=max(lo,0);\n        }\n        return lo==0;\n    }\n};",
+    "c": "bool checkValidString678(char* s){ int lo=0,hi=0; for(;*s;s++){ if(*s=='('){lo++;hi++;} else if(*s==')'){lo--;hi--;} else{lo--;hi++;} if(hi<0)return 0; if(lo<0)lo=0; } return lo==0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Range of possible open counts — lo==0 at end feasible.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "All *",
+      "Only ) impossible",
+      "Empty true"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Single value not range",
+      "lo can go negative then clamp"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

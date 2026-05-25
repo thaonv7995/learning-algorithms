@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #797</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Backtracking</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">All Paths From Source to Target</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(2^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>83.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">All Paths From Source to Target (LeetCode #797) — Medium.</div>
+                        <div class="block-text">DAG với n node 0..n-1, graph[u] = neighbors. Liệt kê mọi path từ 0 tới n-1 (sorted lex).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>graph = [[1,2],[3],[3],[]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,1,3],[0,2,3]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>graph = [[4,3,1],[3,2,4],[3],[4],[]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,4],[0,3,4],[0,1,3,4],[0,1,2,3,4],[0,1,4]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS backtrack từ 0, push path khi tới n-1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,38 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> path797[20], pl797;
+static <span class="ty">int</span>** ans797; static <span class="ty">int</span> an797, cap797;
+static <span class="ty">void</span> dfs797(<span class="ty">int</span>** g,<span class="ty">int</span> n,<span class="ty">int</span>* gs,<span class="ty">int</span> u){
+    <span class="kw">if</span>(u==n-1){ ans797[an797]=<span class="kw">malloc</span>(pl797*4); <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;pl797;i++) ans797[an797][i]=path797[i]; an797++; <span class="kw">return</span>; }
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;gs[u];i++){ path797[pl797++]=g[u][i]; dfs797(g,n,gs,g[u][i]); pl797--; }
+}
+<span class="ty">int</span>** allPathsSourceTarget(<span class="ty">int</span>** graph, <span class="ty">int</span> n, <span class="ty">int</span>* gs, <span class="ty">int</span>* rs, <span class="ty">int</span>** rcs, <span class="ty">int</span>* cs) {
+    cap797=64; ans797=<span class="kw">malloc</span>(cap797*8); an797=0; pl797=1; path797[0]=0;
+    dfs797(graph,n,gs,0); *rs=an797; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;an797;i++){ rcs[i]=<span class="kw">malloc</span>(4); *rcs[i]=cs[i]=pl797; } <span class="kw">return</span> ans797;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> allPathsSourceTarget(<span class="ty">self</span>, graph: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        n = <span class="ty">len</span>(graph)
+        ans = []
+        path = [0]
+        <span class="kw">def</span> dfs(u):
+            <span class="kw">if</span> u == n - 1:
+                ans.append(path[:]); <span class="kw">return</span>
+            <span class="kw">for</span> v <span class="kw">in</span> graph[u]:
+                path.append(v); dfs(v); path.pop()
+        dfs(0)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; allPathsSourceTarget(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; g) {
+        <span class="ty">int</span> n=g.size(); <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; ans; <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; path={0};
+        function&lt;<span class="ty">void</span>(<span class="ty">int</span>)&gt; dfs=[&amp;](<span class="ty">int</span> u){
+            <span class="kw">if</span>(u==n-1){ ans.push_back(path); <span class="kw">return</span>; }
+            <span class="kw">for</span>(<span class="ty">int</span> v:g[u]){ path.push_back(v); dfs(v); path.pop_back(); }
+        };
+        dfs(0); <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +136,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Backtracking</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(2^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DFS backtrack từ 0, push path khi tới n-1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DAG DFS không cycle — mọi path 0→n-1 được liệt kê.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Linear graph một path</span><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">Nhiều branches</span><span class="analysis-tag pit">BFS không list all</span><span class="analysis-tag pit">Quên copy path</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>All paths DAG = DFS 0 to n-1 accumulate paths.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=All%20Paths%20From%20Source%20to%20Target&lc_id=797&embed=true"></iframe>

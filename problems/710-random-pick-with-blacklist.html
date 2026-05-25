@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #710</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Math</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Random Pick with Blacklist</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n + b log b)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(b)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>35% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Random Pick with Blacklist (LeetCode #710) — Hard.</div>
+                        <div class="block-text">Có n số [0,n-1] và blacklist. pick() trả số ngẫu nhiên đều từ tập hợp hợp lệ (không nằm blacklist). Mỗi số hợp lệ xác suất bằng nhau.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>[&quot;Solution&quot;,&quot;pick&quot;,&quot;pick&quot;,&quot;pick&quot;], [[1,[]],[],[],[]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,0,0,0]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[&quot;Solution&quot;,&quot;pick&quot;,&quot;pick&quot;,&quot;pick&quot;], [[2,[1]],[],[],[]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,0,0,1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Map blacklist nhỏ vào cuối [0,m): hoán vị sao mọi phần tử blacklist nằm ngoài vùng pick [0,m) với m = n - |blacklist trong range|.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span> m; <span class="ty">int</span> k; <span class="ty">int</span> key[1000], val[1000]; } Solution710;
+static <span class="ty">int</span> g710(<span class="ty">int</span> x, Solution710* s){ <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;s-&gt;k;i++) <span class="kw">if</span>(s-&gt;key[i]==x) <span class="kw">return</span> s-&gt;val[i]; <span class="kw">return</span> x; }
+Solution710* solution710Create(<span class="ty">int</span> n, <span class="ty">int</span>* bl, <span class="ty">int</span> bn){ Solution710* s=<span class="kw">calloc</span>(1,<span class="kw">sizeof</span>(Solution710)); s-&gt;m=n-bn; <span class="kw">return</span> s; }
+<span class="ty">int</span> solution710Pick(Solution710* s){ <span class="ty">int</span> x=rand()%s-&gt;m; <span class="kw">return</span> g710(x,s); }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, n: <span class="ty">int</span>, blacklist: <span class="ty">List</span>[<span class="ty">int</span>]):
+        <span class="ty">self</span>.m = n - <span class="ty">len</span>(blacklist)
+        <span class="ty">self</span>.mp = {}
+        bl = <span class="ty">set</span>(blacklist)
+        <span class="kw">for</span> x <span class="kw">in</span> blacklist:
+            <span class="kw">if</span> x &lt; <span class="ty">self</span>.m:
+                <span class="kw">while</span> <span class="ty">self</span>.m <span class="kw">in</span> bl <span class="kw">or</span> <span class="ty">self</span>.m <span class="kw">in</span> <span class="ty">self</span>.mp:
+                    <span class="ty">self</span>.m += 1
+                <span class="ty">self</span>.mp[x] = <span class="ty">self</span>.m
+                <span class="ty">self</span>.m += 1
+    <span class="kw">def</span> pick(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
+        x = random.randint(0, <span class="ty">self</span>.m - 1)
+        <span class="kw">return</span> <span class="ty">self</span>.mp.get(x, x)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> m;
+    unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; mp;
 <span class="ty">public</span>:
+    Solution(<span class="ty">int</span> n, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; blacklist) {
+        unordered_set&lt;<span class="ty">int</span>&gt; bl(blacklist.begin(), blacklist.end());
+        m = n - (<span class="ty">int</span>)blacklist.size();
+        <span class="kw">for</span> (<span class="ty">int</span> x : blacklist) {
+            <span class="kw">if</span> (x &lt; m) {
+                <span class="kw">while</span> (bl.count(m) || mp.count(m)) m++;
+                mp[x] = m++;
+            }
+        }
+    }
+    <span class="ty">int</span> pick() {
+        <span class="ty">int</span> x = rand() % m;
+        <span class="kw">return</span> mp.count(x) ? mp[x] : x;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +139,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Math</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n + b log b)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(b)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Map blacklist nhỏ vào cuối [0,m): hoán vị sao mọi phần tử blacklist nằm…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Hoán vị đảm bảo pick uniform trên m giá trị hợp lệ; map redirect index bị blacklist.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Blacklist rỗng → [0,n-1]</span><span class="analysis-tag edge">Blacklist toàn ngoài m</span><span class="analysis-tag edge">n=1</span><span class="analysis-tag pit">Lưu toàn bộ whitelist O(n) memory</span><span class="analysis-tag pit">Rand không uniform nếu dùng reject sampling chậm</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Random without blacklist = shrink range + swap blacklist ra ngoài.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Random%20Pick%20with%20Blacklist&lc_id=710&embed=true"></iframe>

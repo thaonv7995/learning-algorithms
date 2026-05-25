@@ -2,33 +2,38 @@
   "id": 652,
   "title": "Find Duplicate Subtrees",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Find Duplicate Subtrees (LeetCode #652) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Tìm mọi subtree trùng cấu trúc (serialize giống nhau) trong cây nhị phân.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root có hai subtree [2,4] giống nhau",
+      "output": "[[2,4],[4]]"
+    },
+    {
+      "input": "root = [1,2,3]",
+      "output": "[]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Postorder serialize; map serial→list nodes; trả nodes có serial trùng ≥2.",
+  "memoryTip": "Duplicate subtrees — postorder serialization hash.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findDuplicateSubtrees(self, root: Optional[TreeNode]) -> List[Optional[TreeNode]]:\n        mp=defaultdict(int); ans=[]\n        def ser(n):\n            if not n: return \"0\"\n            s=f\"{n.val},{ser(n.left)},{ser(n.right)}\"\n            mp[s]+=1\n            if mp[s]==2: ans.append(n)\n            return s\n        ser(root); return ans",
+    "cpp": "class Solution {\n    unordered_map<string,int> mp; vector<TreeNode*> ans;\n    string ser(TreeNode* n){\n        if(!n) return \"0\";\n        string s=to_string(n->val)+\",\"+ser(n->left)+\",\"+ser(n->right);\n        if(++mp[s]==2) ans.push_back(n); return s;\n    }\npublic:\n    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root){ ser(root); return ans; }\n};",
+    "c": "struct TreeNode** findDuplicateSubtrees652(struct TreeNode* r,int* rs) {\n    struct TreeNode** ans=malloc(256*sizeof(*ans)); *rs=0;\n    char keys[256][512]; int cnt[256]={0}; int nk=0;\n    void ser(struct TreeNode* n, char* s, int* p){\n        if(!n){ *p+=sprintf(s+*p,\"0,\"); return; }\n        *p+=sprintf(s+*p,\"%d,\",n->val); ser(n->left,s,p); ser(n->right,s,p);\n    }\n    void walk(struct TreeNode* n){\n        if(!n) return;\n        char s[512]={0}; int p=0; ser(n,s,&p);\n        int ki=-1; for(int k=0;k<nk;k++) if(!strcmp(keys[k],s)){ki=k;break;}\n        if(ki<0){ ki=nk++; strcpy(keys[ki],s); }\n        cnt[ki]++;\n        if(cnt[ki]==2) ans[(*rs)++]=n;\n        walk(n->left); walk(n->right);\n    }\n    walk(r); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Serialization unique cho cấu trúc — đếm lần 2 thu thập.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không duplicate",
+      "Nhiều duplicate cùng struct",
+      "Null left/right"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Preorder không unique",
+      "Thu thập mọi lần >2"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

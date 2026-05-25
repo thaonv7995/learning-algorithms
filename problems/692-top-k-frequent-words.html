@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #692</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Heap</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Top K Frequent Words</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>60.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Top K Frequent Words (LeetCode #692) — Medium.</div>
+                        <div class="block-text">Cho mảng words và k. Trả k từ xuất hiện nhiều nhất; nếu cùng tần suất thì sắp xếp theo thứ tự từ điển tăng dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>words=[&quot;i&quot;,&quot;love&quot;,&quot;leetcode&quot;,&quot;i&quot;,&quot;love&quot;,&quot;coding&quot;], k=2</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;i&quot;,&quot;love&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>words=[&quot;the&quot;,&quot;day&quot;,&quot;is&quot;,&quot;sunny&quot;,&quot;the&quot;,&quot;the&quot;,&quot;the&quot;,&quot;sunny&quot;,&quot;is&quot;,&quot;is&quot;], k=4</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;the&quot;,&quot;is&quot;,&quot;sunny&quot;,&quot;day&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Count freq; heap/custom sort by (-freq, word).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>** topKFrequent692(<span class="ty">char</span>** words,<span class="ty">int</span> n,<span class="ty">int</span> k,<span class="ty">int</span>* rs) {
+    <span class="ty">char</span> uniq[256][64]; <span class="ty">int</span> cnt[256]={0}, nu=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){
+        <span class="ty">int</span> fi=-1; <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;nu;j++) <span class="kw">if</span>(!strcmp(uniq[j],words[i])){fi=j;break;}
+        <span class="kw">if</span>(fi&lt;0){ strcpy(uniq[nu],words[i]); cnt[nu]=1; nu++; } <span class="kw">else</span> cnt[fi]++;
+    }
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;nu;i++) <span class="kw">for</span>(<span class="ty">int</span> j=i+1;j&lt;nu;j++){
+        <span class="kw">if</span>(cnt[j]&gt;cnt[i]||(cnt[j]==cnt[i]&amp;&amp;strcmp(uniq[j],uniq[i])&lt;0)){
+            <span class="ty">char</span> t[64]; strcpy(t,uniq[i]); strcpy(uniq[i],uniq[j]); strcpy(uniq[j],t);
+            <span class="ty">int</span> tc=cnt[i]; cnt[i]=cnt[j]; cnt[j]=tc;
+        }
+    }
+    <span class="ty">char</span>** ans=<span class="kw">malloc</span>(k*<span class="kw">sizeof</span>(<span class="ty">char</span>*)); *rs=k;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;k;i++){ ans[i]=<span class="kw">malloc</span>(strlen(uniq[i])+1); strcpy(ans[i],uniq[i]); }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> topKFrequent(<span class="ty">self</span>, words: <span class="ty">List</span>[<span class="ty">str</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        cnt=Counter(words)
+        <span class="kw">return</span> sorted(cnt.keys(), key=lambda w:(-cnt[w],w))[:k]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; topKFrequent(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; words, <span class="ty">int</span> k) {
+        unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; cnt;
+        <span class="kw">for</span>(auto&amp; w:words) cnt[w]++;
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; keys; <span class="kw">for</span>(auto&amp; p:cnt) keys.push_back(p.first);
+        sort(keys.begin(),keys.end(),[&amp;](auto&amp; a,auto&amp; b){
+            <span class="kw">return</span> cnt[a]&gt;cnt[b]||(cnt[a]==cnt[b]&amp;&amp;a&lt;b);
+        });
+        <span class="kw">return</span> <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;(keys.begin(),keys.begin()+k);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +134,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Heap</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Count freq; heap/custom sort by .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Sort by freq desc then lex asc — top k.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k equals unique</span><span class="analysis-tag edge">Single word</span><span class="analysis-tag edge">Tie many words</span><span class="analysis-tag pit">Heap tie-break wrong</span><span class="analysis-tag pit">Case sensitivity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Top k frequent words — count + sort or heap.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Top%20K%20Frequent%20Words&lc_id=692&embed=true"></iframe>

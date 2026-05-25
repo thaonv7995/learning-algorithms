@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #768</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Max Chunks To Make Sorted II</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Max Chunks To Make Sorted II (LeetCode #768) — Hard.</div>
+                        <div class="block-text">Permutation nums của 0..n-1 (có thể trùng). Chia thành nhiều chunk, sort từng chunk, ghép lại thành mảng sort. Trả số chunk tối đa (hard: duplicates).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [5,4,3,2,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [2,1,3,4,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Track max trong chunk hiện tại và sorted prefix max. Khi gặp phần tử &gt; sorted_max thì cần chunk mới.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maxChunksToSortedII(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> need[1001]={0}, have[1001]={0}, ans=0, curMax=-1;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){ need[nums[i]]++; have[nums[i]]++; <span class="kw">if</span>(nums[i]&gt;curMax) curMax=nums[i];
+        <span class="ty">int</span> ok=1; <span class="kw">for</span>(<span class="ty">int</span> v=0;v&lt;=curMax;v++) <span class="kw">if</span>(have[v]&lt;need[v]){ ok=0; break; }
+        <span class="kw">if</span>(ok){ ans++; <span class="kw">for</span>(<span class="ty">int</span> v=0;v&lt;=curMax;v++) have[v]=0; curMax=-1; }
+    } <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maxChunksToSorted(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        cnt = Counter(nums)
+        need = defaultdict(<span class="ty">int</span>)
+        have = defaultdict(<span class="ty">int</span>)
+        ans = cur_max = 0
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            need[x] += 1
+            have[x] += 1
+            cur_max = <span class="ty">max</span>(cur_max, x)
+            ok = all(have[v] &gt;= need[v] <span class="kw">for</span> v <span class="kw">in</span> <span class="ty">range</span>(cur_max + 1))
+            <span class="kw">if</span> ok:
+                ans += 1
+                <span class="kw">for</span> v <span class="kw">in</span> <span class="ty">range</span>(cur_max + 1):
+                    have[v] = 0
+                cur_max = -1
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> maxChunksToSorted(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; need, have;
+        <span class="ty">int</span> ans=0, curMax=-1;
+        <span class="kw">for</span>(<span class="ty">int</span> x:nums){
+            need[x]++; have[x]++; curMax=max(curMax,x);
+            <span class="ty">bool</span> ok=true;
+            <span class="kw">for</span>(<span class="ty">int</span> v=0;v&lt;=curMax;v++) <span class="kw">if</span>(have[v]&lt;need[v]){ ok=false; break; }
+            <span class="kw">if</span>(ok){ ans++; <span class="kw">for</span>(<span class="ty">int</span> v=0;v&lt;=curMax;v++) have[v]=0; curMax=-1; }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +140,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Track max trong chunk hiện tại và sorted prefix max.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — gặp phần tử &gt; sorted_max thì cần chunk mới.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Chunk sortable iff multiset prefix 0..curMax đủ — greedy max chunks.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Đã sort</span><span class="analysis-tag edge">Toàn cùng số</span><span class="analysis-tag edge">Permutation unique → 769 logic</span><span class="analysis-tag pit">Dùng stack monotonic của 769</span><span class="analysis-tag pit">Quên duplicate counts</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Max chunks II = cut when value exceeds running sorted boundary.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Max%20Chunks%20To%20Make%20Sorted%20II&lc_id=768&embed=true"></iframe>

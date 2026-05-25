@@ -2,33 +2,38 @@
   "id": 658,
   "title": "Find K Closest Elements",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Two Pointers",
+  "timeComplexity": "O(log(n)+k)",
   "spaceComplexity": "O(1)",
-  "description": "Find K Closest Elements (LeetCode #658) — Medium.",
+  "description": "Cho mảng arr đã sort tăng dần, số nguyên k và x. Trả k phần tử gần x nhất (tie ưu tiên phần tử nhỏ hơn), giữ thứ tự trong arr.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "arr=[1,2,3,4,5], k=4, x=3",
+      "output": "[1,2,3,4]"
+    },
+    {
+      "input": "arr=[1,2,3,4,5], k=4, x=-1",
+      "output": "[1,2,3,4]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search vị trí x; two pointers mở rộng lấy k phần tử gần nhất.",
+  "memoryTip": "Find k closest — binary search + expand window k.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:\n        lo,hi=0,len(arr)-k\n        while lo<hi:\n            mid=(lo+hi)//2\n            if x-arr[mid]>arr[mid+k]-x: lo=mid+1\n            else: hi=mid\n        return arr[lo:lo+k]",
+    "cpp": "class Solution {\npublic:\n    vector<int> findClosestElements(vector<int>& a, int k, int x) {\n        int lo=0, hi=a.size()-k;\n        while(lo<hi){\n            int mid=(lo+hi)/2;\n            if(x-a[mid]>a[mid+k]-x) lo=mid+1; else hi=mid;\n        }\n        return vector<int>(a.begin()+lo,a.begin()+lo+k);\n    }\n};",
+    "c": "int* findClosestElements(int* a,int n,int k,int x,int* rs){ int lo=0,hi=n-k; while(lo<hi){ int mid=(lo+hi)/2; if(x-a[mid]>a[mid+k]-x) lo=mid+1; else hi=mid; } *rs=k; int* ans=malloc(k*4); for(int i=0;i<k;i++) ans[i]=a[lo+i]; return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Window size k tối ưu so sánh biên trái/phải.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=n",
+      "x ngoài range",
+      "Duplicate values"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort lại O(n log n)",
+      "Heap O(n log k) ok but BS better"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

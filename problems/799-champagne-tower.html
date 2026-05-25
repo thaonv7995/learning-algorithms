@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #799</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Dynamic Programming</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Champagne Tower</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(pour^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(pour^2)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>64.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Champagne Tower (LeetCode #799) — Medium.</div>
+                        <div class="block-text">Tháp champagne pour cốc glasses rows. Pour p cups. Mỗi cốc capacity 1; tràn sang hai cốc dưới. Trả tỉ lệ cốc row query_row cột query_glass chứa champagne.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>poured = 1, query_row = 1, query_glass = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>0.0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>poured = 2, query_row = 1, query_glass = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>0.5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>poured = 100000009, query_row = 10, query_glass = 7</code></div>
+                <div class="ex-line"><span>Out</span><code>0.9375</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[row][col] = lượng champagne tại cốc; flow xuống max(0, amt-1)/2 mỗi nhánh.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">double</span> champagneTower(<span class="ty">int</span> poured, <span class="ty">int</span> query_row, <span class="ty">int</span> query_glass) {
+    <span class="ty">double</span> t[101][101]={0}; t[0][0]=poured;
+    <span class="kw">for</span>(<span class="ty">int</span> r=0;r&lt;=query_row;r++) <span class="kw">for</span>(<span class="ty">int</span> c=0;c&lt;=r;c++){
+        <span class="ty">double</span> flow=t[r][c]&gt;1?(t[r][c]-1)/2:0;
+        t[r+1][c]+=flow; t[r+1][c+1]+=flow;
+    }
+    <span class="ty">double</span> v=t[query_row][query_glass]; <span class="kw">return</span> v&gt;1?1:v;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> champagneTower(<span class="ty">self</span>, poured: <span class="ty">int</span>, query_row: <span class="ty">int</span>, query_glass: <span class="ty">int</span>) -&gt; float:
+        tower = [[0.0]*(query_row+2) <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(query_row+2)]
+        tower[0][0] = poured
+        <span class="kw">for</span> r <span class="kw">in</span> <span class="ty">range</span>(query_row+1):
+            <span class="kw">for</span> c <span class="kw">in</span> <span class="ty">range</span>(r+1):
+                flow = (tower[r][c]-1)/2 <span class="kw">if</span> tower[r][c]&gt;1 <span class="kw">else</span> 0
+                <span class="kw">if</span> flow&gt;0:
+                    tower[r+1][c]+=flow; tower[r+1][c+1]+=flow
+        <span class="kw">return</span> <span class="ty">min</span>(1.0, tower[query_row][query_glass])</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">double</span> champagneTower(<span class="ty">int</span> poured, <span class="ty">int</span> query_row, <span class="ty">int</span> query_glass) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;&gt; t(query_row+2, <span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;(query_row+2));
+        t[0][0]=poured;
+        <span class="kw">for</span>(<span class="ty">int</span> r=0;r&lt;=query_row;r++) <span class="kw">for</span>(<span class="ty">int</span> c=0;c&lt;=r;c++){
+            <span class="ty">double</span> flow=max(0.0,(t[r][c]-1.0)/2.0);
+            t[r+1][c]+=flow; t[r+1][c+1]+=flow;
+        }
+        <span class="kw">return</span> min(1.0, t[query_row][query_glass]);
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +138,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(pour^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(pour^2)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP[row][col] = lượng champagne tại cốc; flow xuống max/2 mỗi nhánh.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Simulation overflow 50-50 — amount capped 1 at query glass.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">poured=0 → 0</span><span class="analysis-tag edge">Top glass only</span><span class="analysis-tag edge">Far row small fraction</span><span class="analysis-tag pit">Không chia overflow</span><span class="analysis-tag pit">Return raw &gt;1</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Champagne tower = simulate overflow row by row from top pour.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +166,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Champagne%20Tower&lc_id=799&embed=true"></iframe>

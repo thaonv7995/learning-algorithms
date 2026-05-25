@@ -3,32 +3,37 @@
   "title": "Knight Probability in Chessboard",
   "difficulty": "Medium",
   "category": "Dynamic Programming",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Knight Probability in Chessboard (LeetCode #688) — Medium.",
+  "timeComplexity": "O(k*n^2)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Knight trên n×n, k bước. Xác suất vẫn trên board sau k bước.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n=3,k=2,row=0,column=0",
+      "output": "0.0625"
+    },
+    {
+      "input": "n=1,k=0",
+      "output": "1.0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[k][r][c] prob; spread 8 moves normalize.",
+  "memoryTip": "Knight probability — DP layers 8 moves.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def knightProbability(self, n: int, k: int, row: int, column: int) -> float:\n        dp=[[0.0]*n for _ in range(n)]; dp[row][column]=1.0\n        moves=[(-2,-1),(-2,1),(-1,-2),(-1,2),(2,-1),(2,1),(1,-2),(1,2)]\n        for _ in range(k):\n            nd=[[0.0]*n for _ in range(n)]\n            for r in range(n):\n                for c in range(n):\n                    if dp[r][c]:\n                        for dr,dc in moves:\n                            nr,nc=r+dr,c+dc\n                            if 0<=nr<n and 0<=nc<n: nd[nr][nc]+=dp[r][c]/8.0\n            dp=nd\n        return sum(sum(row) for row in dp)",
+    "cpp": "class Solution {\npublic:\n    double knightProbability(int n, int k, int r, int c) {\n        vector<vector<double>> dp(n,vector<double>(n)); dp[r][c]=1;\n        int mv[8][2]={{-2,-1},{-2,1},{-1,-2},{-1,2},{2,-1},{2,1},{1,-2},{1,2}};\n        for(int t=0;t<k;t++){\n            vector<vector<double>> nd(n,vector<double>(n));\n            for(int i=0;i<n;i++) for(int j=0;j<n;j++) if(dp[i][j])\n                for(auto& m:mv){ int ni=i+m[0],nj=j+m[1]; if(ni>=0&&ni<n&&nj>=0&&nj<n) nd[ni][nj]+=dp[i][j]/8.0; }\n            dp=nd;\n        }\n        double s=0; for(auto& row:dp) s+=accumulate(row.begin(),row.end(),0.0); return s;\n    }\n};",
+    "c": "double knightProbability688(int n,int k,int r,int c) {\n    double dp[25][25]={0}, nd[25][25]={0};\n    dp[r][c]=1.0;\n    int mv[8][2]={{-2,-1},{-2,1},{-1,-2},{-1,2},{2,-1},{2,1},{1,-2},{1,2}};\n    for(int t=0;t<k;t++){\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) nd[i][j]=0;\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) if(dp[i][j])\n            for(int m=0;m<8;m++){\n                int ni=i+mv[m][0], nj=j+mv[m][1];\n                if(ni>=0&&ni<n&&nj>=0&&nj<n) nd[ni][nj]+=dp[i][j]/8.0;\n            }\n        for(int i=0;i<n;i++) for(int j=0;j<n;j++) dp[i][j]=nd[i][j];\n    }\n    double s=0; for(int i=0;i<n;i++) for(int j=0;j<n;j++) s+=dp[i][j]; return s;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Markov chain DP — prob conserved split 8 ways.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=0 stay",
+      "n=1 always 1",
+      "Corner low prob"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "BFS not prob",
+      "Forget divide 8"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

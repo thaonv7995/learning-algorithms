@@ -3,32 +3,41 @@
   "title": "Reach a Number",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Reach a Number (LeetCode #754) — Medium.",
+  "description": "Đứng tại 0, mỗi bước +1 hoặc -1. Sau |target| bước đến target. Trả số bước tối thiểu (luôn đi đủ |target| bước).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "target = 2",
+      "output": "3"
+    },
+    {
+      "input": "target = 3",
+      "output": "2"
+    },
+    {
+      "input": "target = 1000",
+      "output": "32"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tăng k: tổng 1+2+..+k >= |target| và (sum-target) chẵn để flip một nửa bước thành -.",
+  "memoryTip": "Reach number = minimal k with k(k+1)/2 >= t and same parity as t.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reachNumber(self, target: int) -> int:\n        target = abs(target)\n        k = 0\n        while True:\n            s = k * (k + 1) // 2\n            if s >= target and (s - target) % 2 == 0:\n                return k\n            k += 1",
+    "cpp": "class Solution {\npublic:\n    int reachNumber(int target) {\n        target = abs(target);\n        for (long long k=1;;k++) {\n            long long s=k*(k+1)/2;\n            if(s>=target && (s-target)%2==0) return k;\n        }\n    }\n};",
+    "c": "int reachNumber(int target) {\n    target = target < 0 ? -target : target;\n    for (long long k = 1;; k++) {\n        long long s = k * (k + 1) / 2;\n        if (s >= target && (s - target) % 2 == 0) return (int)k;\n    }\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Sum 1..k đạt target với điều chỉnh dấu khi diff chẵn.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "target=0 → 0? actually 0 steps",
+      "target=1 → 1",
+      "Large target parity"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Thiếu điều kiện parity",
+      "Không abs target"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

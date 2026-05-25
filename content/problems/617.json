@@ -3,32 +3,36 @@
   "title": "Merge Two Binary Trees",
   "difficulty": "Easy",
   "category": "Tree",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Merge Two Binary Trees (LeetCode #617) — Easy.",
+  "timeComplexity": "O(min(m,n))",
+  "spaceComplexity": "O(min(m,n))",
+  "description": "Merge hai cây nhị phân t1, t2: nút trùng vị trí cộng val; một cây null trả cây kia.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "t1=[1,3,2], t2=[2,1,3]",
+      "output": "[3,4,5,null,null,null,null]"
+    },
+    {
+      "input": "t1=[1], t2=[1,2]",
+      "output": "[2,2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS: nếu !t1 return t2; nếu !t2 return t1; t1.val+=t2.val; merge left/right.",
+  "memoryTip": "Merge trees — add values at same node, recurse on children.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def mergeTrees(self, t1: Optional[TreeNode], t2: Optional[TreeNode]) -> Optional[TreeNode]:\n        if not t1: return t2\n        if not t2: return t1\n        t1.val += t2.val\n        t1.left = self.mergeTrees(t1.left, t2.left)\n        t1.right = self.mergeTrees(t1.right, t2.right)\n        return t1",
+    "cpp": "class Solution {\npublic:\n    TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {\n        if(!t1) return t2; if(!t2) return t1;\n        t1->val += t2->val;\n        t1->left = mergeTrees(t1->left,t2->left);\n        t1->right = mergeTrees(t1->right,t2->right);\n        return t1;\n    }\n};",
+    "c": "struct TreeNode* mergeTrees(struct TreeNode* t1, struct TreeNode* t2) {\n    if(!t1) return t2; if(!t2) return t1;\n    t1->val += t2->val;\n    t1->left = mergeTrees(t1->left, t2->left);\n    t1->right = mergeTrees(t1->right, t2->right);\n    return t1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Đệ quy cover mọi nút — cộng khi cả hai tồn tại.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một cây rỗng",
+      "Độ sâu khác nhau"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Tạo cây mới không cần",
+      "Không cộng val"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,38 @@
   "id": 721,
   "title": "Accounts Merge",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Accounts Merge (LeetCode #721) — Medium.",
+  "category": "Union Find",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho danh sách accounts, mỗi phần tử [name, email1, email2, ...]. Gộp các account có email chung (transitive). Trả danh sách đã gộp: mỗi account sort email, danh sách sort theo name.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "accounts = [[\"John\",\"johnsmith@mail.com\",\"john_newyork@mail.com\"],[\"John\",\"johnsmith@mail.com\",\"john00@mail.com\"],[\"Mary\",\"mary@mail.com\"],[\"John\",\"johnnybravo@mail.com\"]]",
+      "output": "[[\"John\",\"john00@mail.com\",\"john_newyork@mail.com\",\"johnsmith@mail.com\"],[\"Mary\",\"mary@mail.com\"],[\"John\",\"johnnybravo@mail.com\"]]"
+    },
+    {
+      "input": "accounts = [[\"Gabe\",\"Gabe0@gmail.com\",\"Gabe1@gmail.com\",\"Gabe3@gmail.com\"],[\"Kevin\",\"Kevin3@gmail.com\",\"Kevin5@gmail.com\"],[\"Ethan\",\"Ethan1@gmail.com\",\"Ethan2@gmail.com\",\"Ethan0@gmail.com\"]]",
+      "output": "[[\"Ethan\",\"Ethan0@gmail.com\",\"Ethan1@gmail.com\",\"Ethan2@gmail.com\"],[\"Gabe\",\"Gabe0@gmail.com\",\"Gabe1@gmail.com\",\"Gabe3@gmail.com\"],[\"Kevin\",\"Kevin3@gmail.com\",\"Kevin5@gmail.com\"]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Union-Find trên index account: union khi email trùng (map email→first index). Mỗi component gom email unique, sort, output [name, ...emails].",
+  "memoryTip": "Accounts merge = UF by email alias; cùng email nối account theo bắc cầu.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:\n        n = len(accounts)\n        parent = list(range(n))\n        def find(x):\n            while parent[x] != x:\n                parent[x] = parent[parent[x]]\n                x = parent[x]\n            return x\n        def union(a, b):\n            ra, rb = find(a), find(b)\n            if ra != rb: parent[rb] = ra\n        email_owner = {}\n        for i, acc in enumerate(accounts):\n            for e in acc[1:]:\n                if e in email_owner: union(i, email_owner[e])\n                else: email_owner[e] = i\n        groups = defaultdict(set)\n        names = {}\n        for i, acc in enumerate(accounts):\n            r = find(i)\n            names[r] = acc[0]\n            groups[r].update(acc[1:])\n        out = []\n        for r, emails in groups.items():\n            row = [names[r]] + sorted(emails)\n            out.append(row)\n        out.sort(key=lambda x: x[0])\n        return out",
+    "cpp": "class Solution {\n    vector<int> p;\n    int find(int x){ return p[x]==x?x:p[x]=find(p[x]); }\n    void uni(int a,int b){ a=find(a); b=find(b); if(a!=b) p[b]=a; }\npublic:\n    vector<vector<string>> accountsMerge(vector<vector<string>>& acc) {\n        int n=acc.size(); p.resize(n); iota(p.begin(),p.end(),0);\n        unordered_map<string,int> own;\n        for(int i=0;i<n;i++) for(int j=1;j<(int)acc[i].size();j++){\n            string& e=acc[i][j];\n            if(own.count(e)) uni(i, own[e]); else own[e]=i;\n        }\n        unordered_map<int, set<string>> g;\n        unordered_map<int,string> name;\n        for(int i=0;i<n;i++){\n            int r=find(i); name[r]=acc[i][0]; g[r].insert(acc[i].begin()+1, acc[i].end());\n        }\n        vector<vector<string>> ans;\n        for(auto& kv: g){\n            vector<string> row={name[kv.first]};\n            for(auto& e: kv.second) row.push_back(e);\n            ans.push_back(move(row));\n        }\n        sort(ans.begin(), ans.end(), [](auto& a, auto& b){ return a[0]<b[0]; });\n        return ans;\n    }\n};",
+    "c": "static int par[1000];\nstatic int uf_find(int x){ while(par[x]!=x){ par[x]=par[par[x]]; x=par[x]; } return x; }\nstatic void uf_union(int a,int b){ a=uf_find(a); b=uf_find(b); if(a!=b) par[b]=a; }\nint accountsMerge(char*** accounts, int n, int* cs, char**** ret, int* rs, int** rcs) {\n    for(int i=0;i<n;i++) par[i]=i;\n    char email[1000][64]; int owner[1000], ec=0;\n    for(int i=0;i<n;i++) for(int j=1;j<cs[i];j++){\n        int found=-1; for(int k=0;k<ec;k++) if(strcmp(email[k],accounts[i][j])==0){ found=owner[k]; break; }\n        if(found<0){ strcpy(email[ec],accounts[i][j]); owner[ec++]=i; } else uf_union(i,found);\n    }\n    return 0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "UF gộp đúng thành phần liên thông qua email chung; output sort theo yêu cầu.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một account",
+      "Chuỗi merge A-B, B-C",
+      "Cùng name khác email"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS không union transitive đủ",
+      "Quên sort emails trong account"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

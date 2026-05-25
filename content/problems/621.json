@@ -2,33 +2,38 @@
   "id": 621,
   "title": "Task Scheduler",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Task Scheduler (LeetCode #621) — Medium.",
+  "description": "Cho tasks (A-Z) và cooldown n. Mỗi đơn vị thời gian làm một task hoặc idle; cùng task cách nhau ít nhất n. Tìm thời gian tối thiểu.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "tasks = [\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], n = 2",
+      "output": "8"
+    },
+    {
+      "input": "tasks = [\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], n = 0",
+      "output": "6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm tần suất; task nhiều nhất quyết idle slots: (maxCount-1)*(n+1)+số task có freq max.",
+  "memoryTip": "Task scheduler — frame (maxFreq-1)*(n+1) + count max freq tasks.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def leastInterval(self, tasks: List[str], n: int) -> int:\n        cnt = Counter(tasks); m = max(cnt.values())\n        num = sum(1 for v in cnt.values() if v == m)\n        return max(len(tasks), (m-1)*(n+1)+num)",
+    "cpp": "class Solution {\npublic:\n    int leastInterval(vector<char>& tasks, int n) {\n        int c[26]={}; for(char t:tasks) c[t-'A']++;\n        int mx=*max_element(c,c+26), num=0;\n        for(int x:c) if(x==mx) num++;\n        return max((int)tasks.size(), (mx-1)*(n+1)+num);\n    }\n};",
+    "c": "int leastInterval(char* tasks, int len, int n) {\n    int c[26]={0}; for(int i=0;i<len;i++) c[tasks[i]-'A']++;\n    int mx=0; for(int i=0;i<26;i++) if(c[i]>mx) mx=c[i];\n    int num=0; for(int i=0;i<26;i++) if(c[i]==mx) num++;\n    int frame=(mx-1)*(n+1)+num;\n    return frame>len?frame:len;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Công thức khung idle tối ưu; max với len(tasks) khi không cần idle.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=0",
+      "Một loại task",
+      "Nhiều task cùng max freq"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Simulate chậm",
+      "Quên max(len, frame)"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

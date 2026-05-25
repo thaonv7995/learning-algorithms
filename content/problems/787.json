@@ -2,33 +2,38 @@
   "id": 787,
   "title": "Cheapest Flights Within K Stops",
   "difficulty": "Medium",
-  "category": "Dynamic Programming",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Cheapest Flights Within K Stops (LeetCode #787) — Medium.",
+  "category": "Graph",
+  "timeComplexity": "O(K * (E log V))",
+  "spaceComplexity": "O(VK)",
+  "description": "n cities, flights [u,v,w] cost, src, dst, k stops max. Trả chi phí vé rẻ nhất từ src tới dst với at most k stops; -1 nếu không.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1",
+      "output": "700"
+    },
+    {
+      "input": "n = 3, flights = [[0,1,100],[1,2,100],[0,2,500]], src = 0, dst = 2, k = 1",
+      "output": "200"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Bellman-Ford k+1 lần hoặc BFS level Dijkstra: dist[stops][node] min cost.",
+  "memoryTip": "Cheapest flights K stops = relax k+1 layers Bellman-Ford.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:\n        INF = 10**9\n        dist = [INF] * n\n        dist[src] = 0\n        for _ in range(k + 1):\n            nd = dist[:]\n            for u, v, w in flights:\n                if dist[u] + w < nd[v]:\n                    nd[v] = dist[u] + w\n            dist = nd\n        return dist[dst] if dist[dst] < INF else -1",
+    "cpp": "class Solution {\npublic:\n    int findCheapestPrice(int n, vector<vector<int>>& f, int src, int dst, int k) {\n        const int INF=1e9;\n        vector<int> dist(n,INF); dist[src]=0;\n        for(int s=0;s<=k;s++){\n            vector<int> nd=dist;\n            for(auto& e:f){\n                int u=e[0],v=e[1],w=e[2];\n                if(dist[u]!=INF) nd[v]=min(nd[v],dist[u]+w);\n            }\n            dist=move(nd);\n        }\n        return dist[dst]==INF?-1:dist[dst];\n    }\n};",
+    "c": "int findCheapestPrice(int n, int** flights, int fn, int* cs, int src, int dst, int k) {\n    const int INF=1000000000; int dist[100], nd[100];\n    for(int i=0;i<n;i++) dist[i]=INF; dist[src]=0;\n    for(int s=0;s<=k;s++){ for(int i=0;i<n;i++) nd[i]=dist[i];\n        for(int i=0;i<fn;i++){ int u=flights[i][0],v=flights[i][1],w=flights[i][2];\n            if(dist[u]!=INF && dist[u]+w<nd[v]) nd[v]=dist[u]+w; }\n        for(int i=0;i<n;i++) dist[i]=nd[i]; }\n    return dist[dst]==INF?-1:dist[dst];\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "k+1 relax layers = paths with at most k edges/stops.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "No path → -1",
+      "k=0 direct only",
+      "Self loops"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dijkstra không giới hạn stops",
+      "In-place relax sai layer"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

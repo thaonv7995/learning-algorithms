@@ -3,32 +3,36 @@
   "title": "K Inverse Pairs Array",
   "difficulty": "Hard",
   "category": "Dynamic Programming",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "K Inverse Pairs Array (LeetCode #629) — Hard.",
+  "timeComplexity": "O(n*k)",
+  "spaceComplexity": "O(k)",
+  "description": "Đếm số permutation của 1..n có đúng k inverse pairs (i<j nhưng arr[i]>arr[j]).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 3, k = 0",
+      "output": "1"
+    },
+    {
+      "input": "n = 3, k = 1",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[i][j] = số perm 1..i với j inversions; thêm i: dp[i][j]+=dp[i-1][j-k] for k=0..min(j,i-1).",
+  "memoryTip": "K inverse pairs — DP on length and inversion count.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def kInversePairs(self, n: int, k: int) -> int:\n        MOD=10**9+7\n        dp=[1]+[0]*k\n        for i in range(2,n+1):\n            nd=[0]*(k+1); s=0\n            for j in range(k+1):\n                s=(s+dp[j])%(MOD)\n                if j>=i: s=(s-dp[j-i])%MOD\n                nd[j]=s\n            dp=nd\n        return dp[k]",
+    "cpp": "class Solution {\npublic:\n    int kInversePairs(int n, int k) {\n        const int MOD=1e9+7;\n        vector<int> dp(k+1,0); dp[0]=1;\n        for(int i=2;i<=n;i++){\n            vector<int> nd(k+1); long s=0;\n            for(int j=0;j<=k;j++){\n                s=(s+dp[j])%MOD;\n                if(j>=i) s=(s-dp[j-i]+MOD)%MOD;\n                nd[j]=s;\n            }\n            dp=nd;\n        }\n        return dp[k];\n    }\n};",
+    "c": "int kInversePairs(int n, int k) {\n    const int MOD=1000000007;\n    int* dp=calloc(k+1,sizeof(int)); dp[0]=1;\n    for(int i=2;i<=n;i++){\n        int* nd=calloc(k+1,sizeof(int)); long s=0;\n        for(int j=0;j<=k;j++){\n            s=(s+dp[j])%MOD; if(j>=i) s=(s-dp[j-i]+MOD)%MOD;\n            nd[j]=(int)s;\n        }\n        free(dp); dp=nd;\n    }\n    int ans=dp[k]; free(dp); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP đếm perm theo inversion — sliding window trên hàng trước.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=0 → 1",
+      "k quá lớn → 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "MOD quên",
+      "O(n²k) TLE không optimize window"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

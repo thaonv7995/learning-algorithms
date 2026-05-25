@@ -2,33 +2,42 @@
   "id": 784,
   "title": "Letter Case Permutation",
   "difficulty": "Medium",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Letter Case Permutation (LeetCode #784) — Medium.",
+  "category": "Backtracking",
+  "timeComplexity": "O(2^n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi S gồm chữ và số. Trả mọi hoán vị từ S bằng cách chọn hoa/thường cho chữ cái (số giữ nguyên).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "S = \"a1b2\"",
+      "output": "[\"a1b2\",\"a1B2\",\"A1b2\",\"A1B2\"]"
+    },
+    {
+      "input": "S = \"3z4\"",
+      "output": "[\"3z4\",\"3Z4\"]"
+    },
+    {
+      "input": "S = \"12345\"",
+      "output": "[\"12345\"]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Backtrack index i: nếu chữ cái thử lower và upper; số append cố định.",
+  "memoryTip": "Letter case permutation = backtrack flip each letter bit.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def letterCasePermutation(self, s: str) -> List[str]:\n        ans = []\n        def dfs(i, path):\n            if i == len(s):\n                ans.append(\"\".join(path)); return\n            if s[i].isalpha():\n                path.append(s[i].lower()); dfs(i+1, path); path.pop()\n                path.append(s[i].upper()); dfs(i+1, path); path.pop()\n            else:\n                path.append(s[i]); dfs(i+1, path); path.pop()\n        dfs(0, [])\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<string> letterCasePermutation(string s) {\n        vector<string> ans;\n        string cur;\n        function<void(int)> dfs = [&](int i){\n            if(i==(int)s.size()){ ans.push_back(cur); return; }\n            if(isalpha(s[i])){\n                cur.push_back(tolower(s[i])); dfs(i+1); cur.pop_back();\n                cur.push_back(toupper(s[i])); dfs(i+1); cur.pop_back();\n            } else { cur.push_back(s[i]); dfs(i+1); cur.pop_back(); }\n        };\n        dfs(0); return ans;\n    }\n};",
+    "c": "static char buf784[32]; static int bp784; static char** ans784; static int an784, cap784;\nstatic void push784(){ ans784[an784]=malloc(bp784+1); strcpy(ans784[an784],buf784); an784++; }\nstatic void dfs784(char* s,int i){ if(!s[i]){ buf784[bp784]=0; push784(); return; }\n    if(isalpha(s[i])){ buf784[bp784]=tolower(s[i]); bp784++; dfs784(s,i+1); bp784--;\n        buf784[bp784]=toupper(s[i]); bp784++; dfs784(s,i+1); bp784--; }\n    else { buf784[bp784++]=s[i]; dfs784(s,i+1); bp784--; } }\nchar** letterCasePermutation(char* s, int* retSize){ cap784=64; ans784=malloc(cap784*8); an784=0; bp784=0; dfs784(s,0); *retSize=an784; return ans784; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Backtrack liệt kê đủ 2^letters hoán vị case.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không chữ cái",
+      "Toàn chữ",
+      "Mixed digits"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Thay đổi digit",
+      "Duplicate output order"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

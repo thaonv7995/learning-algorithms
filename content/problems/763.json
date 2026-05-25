@@ -2,33 +2,38 @@
   "id": 763,
   "title": "Partition Labels",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Partition Labels (LeetCode #763) — Medium.",
+  "description": "Cho chuỗi s chữ thường. Chia thành nhiều phần sao mỗi chữ cái xuất hiện tối đa một phần. Trả độ dài từng phần (max partition).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"ababcbacadefegdehijhklij\"",
+      "output": "[9,7,8]"
+    },
+    {
+      "input": "s = \"eccbbbbdec\"",
+      "output": "[10]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Ghi last index mỗi ký tự. Scan i: end = max(end, last[s[i]]). Khi i==end cắt partition.",
+  "memoryTip": "Partition labels = expand end to last occurrence, cut when i reaches end.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def partitionLabels(self, s: str) -> List[int]:\n        last = {c: i for i, c in enumerate(s)}\n        ans, start, end = [], 0, 0\n        for i, c in enumerate(s):\n            end = max(end, last[c])\n            if i == end:\n                ans.append(end - start + 1); start = i + 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> partitionLabels(string s) {\n        int last[26];\n        for(int i=0;i<(int)s.size();i++) last[s[i]-'a']=i;\n        vector<int> ans; int st=0, ed=0;\n        for(int i=0;i<(int)s.size();i++){\n            ed=max(ed,last[s[i]-'a']);\n            if(i==ed){ ans.push_back(ed-st+1); st=i+1; }\n        }\n        return ans;\n    }\n};",
+    "c": "int* partitionLabels(char* s, int* retSize) {\n    int last[26]; int n=strlen(s);\n    for(int i=0;i<26;i++) last[i]=-1;\n    for(int i=0;i<n;i++) last[s[i]-'a']=i;\n    int* ans=malloc(n*4); *retSize=0; int st=0, ed=0;\n    for(int i=0;i<n;i++){ ed=ed>last[s[i]-'a']?ed:last[s[i]-'a']; if(i==ed){ ans[(*retSize)++]=ed-st+1; st=i+1; } }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "end luôn bao phủ mọi lần xuất hiện ký tự trong cửa sổ — cắt minimal valid.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một ký tự lặp",
+      "Mỗi chữ một partition",
+      "Một partition cả chuỗi"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Cắt trước khi i==end",
+      "Không track last index"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

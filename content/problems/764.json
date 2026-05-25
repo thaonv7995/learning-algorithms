@@ -2,33 +2,38 @@
   "id": 764,
   "title": "Largest Plus Sign",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Largest Plus Sign (LeetCode #764) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Lưới n×n: 0 trống, 1 chướng ngại. Đặt dấu + lớn nhất (4 cánh) không chạm chướng ngại. Trả kích thước (số ô) của dấu + lớn nhất.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 5, mines = [[4,2]]",
+      "output": "2"
+    },
+    {
+      "input": "n = 1, mines = [[0,0]]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP left/right/up/down arm length từ mỗi ô trống. Plus size tại (i,j) = 1+min(left,right,up,down).",
+  "memoryTip": "Largest plus = 4 directional DP min arm + center.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def orderOfLargestPlusSign(self, n: int, mines: List[List[int]]) -> int:\n        banned = {tuple(m) for m in mines}\n        dp = [[[0,0,0,0] for _ in range(n)] for _ in range(n)]\n        ans = 0\n        for i in range(n):\n            l=u=0\n            for j in range(n):\n                if (i,j) in banned: l=u=0\n                else:\n                    l+=1; u= (dp[i-1][j][1]+1 if i else 1)\n                    dp[i][j][0]=l; dp[i][j][1]=u\n            l=0\n            for j in range(n-1,-1,-1):\n                if (i,j) in banned: l=0\n                else:\n                    l+=1; r=l; d=(dp[i+1][j][3]+1 if i+1<n else 1)\n                    dp[i][j][2]=r; dp[i][j][3]=d\n                    ans=max(ans, min(dp[i][j])+1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int orderOfLargestPlusSign(int n, vector<vector<int>>& mines) {\n        vector<vector<int>> ban(n, vector<int>(n));\n        for(auto& m:mines) if(m[0]<n&&m[1]<n) ban[m[0]][m[1]]=1;\n        vector<vector<array<int,4>>> dp(n, vector<array<int,4>>(n));\n        int ans=0;\n        for(int i=0;i<n;i++){\n            int l=0,u=0;\n            for(int j=0;j<n;j++){\n                if(ban[i][j]){ l=u=0; continue; }\n                l++; u=(i?dp[i-1][j][1]+1:1); dp[i][j][0]=l; dp[i][j][1]=u;\n            }\n            l=0;\n            for(int j=n-1;j>=0;j--){\n                if(ban[i][j]){ l=0; continue; }\n                l++; dp[i][j][2]=l; dp[i][j][3]=(i+1<n?dp[i+1][j][3]+1:1);\n                int m=min({dp[i][j][0],dp[i][j][1],dp[i][j][2],dp[i][j][3]});\n                ans=max(ans,m+1);\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int orderOfLargestPlusSign(int n, int** mines, int mn, int* cs) {\n    int ban[501][501]={0}; for(int i=0;i<mn;i++) ban[mines[i][0]][mines[i][1]]=1;\n    int ans=0; for(int i=0;i<n;i++) for(int j=0;j<n;j++) if(!ban[i][j]) ans=ans>1?ans:1; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "4 hướng DP cho arm length; plus kích thước 2*arm+1 tại center.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Mine tại center",
+      "n=1 không mine → 1",
+      "Mine phủ hết"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ tính một hướng",
+      "Quên banned reset 0"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

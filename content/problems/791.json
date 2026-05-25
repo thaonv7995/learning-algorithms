@@ -2,33 +2,38 @@
   "id": 791,
   "title": "Custom Sort String",
   "difficulty": "Medium",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
+  "category": "String",
+  "timeComplexity": "O(n+m)",
   "spaceComplexity": "O(1)",
-  "description": "Custom Sort String (LeetCode #791) — Medium.",
+  "description": "Cho order (permutation các chữ cái distinct) và s. Sort s sao ký tự trong order đứng trước ký tự không trong order; trong cùng nhóm sort alphabet.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "order = \"cba\", s = \"abcd\"",
+      "output": "\"cbad\""
+    },
+    {
+      "input": "order = \"bcafg\", s = \"abcd\"",
+      "output": "\"bcad\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm freq s; output theo thứ tự order rồi các chữ còn lại sort.",
+  "memoryTip": "Custom sort string = count chars + emit by order rank.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def customSortString(self, order: str, s: str) -> str:\n        cnt = Counter(s)\n        ans = []\n        for c in order:\n            ans.append(c * cnt[c]); del cnt[c]\n        for c in sorted(cnt):\n            ans.append(c * cnt[c])\n        return \"\".join(ans)",
+    "cpp": "class Solution {\npublic:\n    string customSortString(string order, string s) {\n        int cnt[26]={}; for(char c:s) cnt[c-'a']++;\n        string ans;\n        for(char c:order) while(cnt[c-'a']--) ans.push_back(c);\n        for(int i=0;i<26;i++) while(cnt[i]--) ans.push_back(i+'a');\n        return ans;\n    }\n};",
+    "c": "char* customSortString(char* order, char* s) {\n    int cnt[26]={0}; for(;*s;s++) cnt[*s-'a']++;\n    char* ans=malloc(strlen(s)+100); int p=0;\n    for(char* o=order;*o;o++) while(cnt[*o-'a']--) ans[p++]=*o;\n    for(int i=0;i<26;i++) while(cnt[i]--) ans[p++]=i+'a'; ans[p]=0; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Stable relative order theo rank order; rest alphabetical.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "order rỗng",
+      "s không có order chars",
+      "All in order"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort toàn chuỗi alpha",
+      "Quên chars không trong order"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

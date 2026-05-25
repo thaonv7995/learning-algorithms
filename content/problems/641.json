@@ -2,33 +2,42 @@
   "id": 641,
   "title": "Design Circular Deque",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Design Circular Deque (LeetCode #641) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(1)",
+  "spaceComplexity": "O(k)",
+  "description": "Thiết kế deque vòng k phần tử: insertFront/Back, deleteFront/Back, getFront/Rear, isEmpty/Full.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "MyCircularDeque(3); insertLast(1); insertLast(2); insertFront(3)",
+      "output": "true,true,true"
+    },
+    {
+      "input": "getFront(); getRear()",
+      "output": "3, 2"
+    },
+    {
+      "input": "insertLast(4) khi đầy",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mảng vòng head/tail/count giống circular queue.",
+  "memoryTip": "Circular deque — array with head/tail mod k.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyCircularDeque:\n    def __init__(self, k: int):\n        self.q=[0]*k; self.k=k; self.h=0; self.n=0\n    def insertFront(self,v):\n        if self.isFull(): return False\n        self.h=(self.h-1)%self.k; self.q[self.h]=v; self.n+=1; return True\n    def insertLast(self,v):\n        if self.isFull(): return False\n        self.q[(self.h+self.n)%self.k]=v; self.n+=1; return True\n    def deleteFront(self):\n        if self.isEmpty(): return False\n        self.h=(self.h+1)%self.k; self.n-=1; return True\n    def deleteLast(self):\n        if self.isEmpty(): return False\n        self.n-=1; return True\n    def getFront(self): return -1 if self.isEmpty() else self.q[self.h]\n    def getRear(self): return -1 if self.isEmpty() else self.q[(self.h+self.n-1)%self.k]\n    def isEmpty(self): return self.n==0\n    def isFull(self): return self.n==self.k",
+    "cpp": "class MyCircularDeque {\n    vector<int> q; int h,n,k;\npublic:\n    MyCircularDeque(int k):q(k),h(0),n(0),k(k){}\n    bool insertFront(int v){ if(isFull())return false; h=(h-1+k)%k; q[h]=v; n++; return true;}\n    bool insertLast(int v){ if(isFull())return false; q[(h+n)%k]=v; n++; return true;}\n    bool deleteFront(){ if(isEmpty())return false; h=(h+1)%k; n--; return true;}\n    bool deleteLast(){ if(isEmpty())return false; n--; return true;}\n    int getFront(){ return isEmpty()?-1:q[h];}\n    int getRear(){ return isEmpty()?-1:q[(h+n-1+k)%k];}\n    bool isEmpty(){ return n==0;}\n    bool isFull(){ return n==k;}\n};",
+    "c": "typedef struct{int*q,h,n,k;}MyCircularDeque;\nMyCircularDeque* myCircularDequeCreate(int k){MyCircularDeque* o=malloc(sizeof(*o));o->q=calloc(k,4);o->k=k;return o;}\nbool myCircularDequeInsertFront(MyCircularDeque* o,int v){if(o->n==o->k)return 0;o->h=(o->h-1+o->k)%o->k;o->q[o->h]=v;o->n++;return 1;}\nbool myCircularDequeInsertLast(MyCircularDeque* o,int v){if(o->n==o->k)return 0;o->q[(o->h+o->n)%o->k]=v;o->n++;return 1;}\nbool myCircularDequeDeleteFront(MyCircularDeque* o){if(!o->n)return 0;o->h=(o->h+1)%o->k;o->n--;return 1;}\nbool myCircularDequeDeleteLast(MyCircularDeque* o){if(!o->n)return 0;o->n--;return 1;}\nint myCircularDequeGetFront(MyCircularDeque* o){return o->n?o->q[o->h]:-1;}\nint myCircularDequeGetRear(MyCircularDeque* o){return o->n?o->q[(o->h+o->n-1+o->k)%o->k]:-1;}\nbool myCircularDequeIsEmpty(MyCircularDeque* o){return o->n==0;}\nbool myCircularDequeIsFull(MyCircularDeque* o){return o->n==o->k;}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Deque vòng O(1) với head/tail mod k.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1",
+      "Delete empty",
+      "Wrap around"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Confuse front/rear indices",
+      "Off-by-one full"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

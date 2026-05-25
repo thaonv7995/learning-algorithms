@@ -3,32 +3,41 @@
   "title": "Binary Number with Alternating Bits",
   "difficulty": "Easy",
   "category": "Bit Manipulation",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Binary Number with Alternating Bits (LeetCode #693) — Easy.",
+  "description": "Số có bit alternating (không hai bit liền nhau cùng)?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n=5 (101)",
+      "output": "true"
+    },
+    {
+      "input": "n=7 (111)",
+      "output": "false"
+    },
+    {
+      "input": "n=10 (1010)",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "n XOR (n>>1) kiểm tra dạng 111... hoặc check n&(n>>1)==0.",
+  "memoryTip": "Alternating bits — n^(n>>1) all ones or no adjacent 1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def hasAlternatingBits(self, n: int) -> bool:\n        x=n^(n>>1)\n        return x!=0 and (x&(x+1))==0",
+    "cpp": "class Solution {\npublic:\n    bool hasAlternatingBits(int n) {\n        int x=n^(n>>1);\n        return x && !(x&(x+1));\n    }\n};",
+    "c": "bool hasAlternatingBits693(int n){ int x=n^(n>>1); return x && !(x&(x+1)); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "n XOR n>>1 yields 111.. iff alternating.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1",
+      "Power of two minus patterns",
+      "32-bit boundary"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Check manually bits slow",
+      "Wrong xor trick"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #715</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Design</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Range Module</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n) add/query</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Range Module (LeetCode #715) — Hard.</div>
+                        <div class="block-text">Thiết kế cấu trúc Range Module: addRange(left,right) thêm đoạn [left,right); queryRange(left,right) kiểm tra [left,right) nằm trọn trong các đoạn đã thêm; removeRange(left,right) xóa phần giao với [left,right).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>[&quot;RangeModule&quot;,&quot;addRange&quot;,&quot;removeRange&quot;,&quot;queryRange&quot;,&quot;queryRange&quot;], [[],[10,20],[14,16],[10,14],[13,15]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,true,false]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[&quot;RangeModule&quot;,&quot;addRange&quot;,&quot;addRange&quot;,&quot;addRange&quot;,&quot;queryRange&quot;,&quot;queryRange&quot;], [[],[10,20],[20,30],[10,40],[10,15],[20,25]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,null,true,true]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Giữ danh sách đoạn không giao nhau đã merge sort theo left. add merge overlap; remove split/cắt đoạn; query kiểm tra một đoạn bao phủ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,67 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span> l, r; } Seg;
+static Seg tr[10000]; static <span class="ty">int</span> tn;
+<span class="ty">void</span> rangeModuleAddRange(<span class="ty">int</span> left,<span class="ty">int</span> right){ Seg nxt[10000]; <span class="ty">int</span> m=0; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;tn;i++){ <span class="kw">if</span>(tr[i].r&lt;left||tr[i].l&gt;right) nxt[m++]=tr[i]; <span class="kw">else</span> { <span class="kw">if</span>(tr[i].l&lt;left) left=tr[i].l; <span class="kw">if</span>(tr[i].r&gt;right) right=tr[i].r; } } nxt[m].l=left; nxt[m++].r=right; tn=m; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;tn;i++) tr[i]=nxt[i]; }
+<span class="ty">bool</span> rangeModuleQueryRange(<span class="ty">int</span> left,<span class="ty">int</span> right){ <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;tn;i++){ <span class="kw">if</span>(tr[i].l&lt;=left&amp;&amp;tr[i].r&gt;=right) <span class="kw">return</span> true; <span class="kw">if</span>(tr[i].l&gt;left) break; } <span class="kw">return</span> false; }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> RangeModule:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.tracks = []
+    <span class="kw">def</span> addRange(<span class="ty">self</span>, left: <span class="ty">int</span>, right: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        res = []
+        <span class="kw">for</span> l, r <span class="kw">in</span> <span class="ty">self</span>.tracks:
+            <span class="kw">if</span> r &lt; left <span class="kw">or</span> l &gt; right:
+                res.append([l, r])
+            <span class="kw">else</span>:
+                left = <span class="ty">min</span>(left, l); right = <span class="ty">max</span>(right, r)
+        res.append([left, right])
+        <span class="ty">self</span>.tracks = sorted(res)
+    <span class="kw">def</span> queryRange(<span class="ty">self</span>, left: <span class="ty">int</span>, right: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">for</span> l, r <span class="kw">in</span> <span class="ty">self</span>.tracks:
+            <span class="kw">if</span> l &lt;= left <span class="kw">and</span> r &gt;= right: <span class="kw">return</span> <span class="kw">True</span>
+            <span class="kw">if</span> l &gt; left: break
+        <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">def</span> removeRange(<span class="ty">self</span>, left: <span class="ty">int</span>, right: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        res = []
+        <span class="kw">for</span> l, r <span class="kw">in</span> <span class="ty">self</span>.tracks:
+            <span class="kw">if</span> r &lt;= left <span class="kw">or</span> l &gt;= right:
+                res.append([l, r])
+            <span class="kw">else</span>:
+                <span class="kw">if</span> l &lt; left: res.append([l, left])
+                <span class="kw">if</span> r &gt; right: res.append([right, r])
+        <span class="ty">self</span>.tracks = res</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> RangeModule {
+    <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; t;
 <span class="ty">public</span>:
+    <span class="ty">void</span> addRange(<span class="ty">int</span> left, <span class="ty">int</span> right) {
+        <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; nxt;
+        <span class="kw">for</span> (auto [l,r] : t) {
+            <span class="kw">if</span> (r &lt; left || l &gt; right) nxt.push_back({l,r});
+            <span class="kw">else</span> { left = min(left,l); right = max(right,r); }
+        }
+        nxt.push_back({left,right});
+        sort(nxt.begin(), nxt.end());
+        t = move(nxt);
+    }
+    <span class="ty">bool</span> queryRange(<span class="ty">int</span> left, <span class="ty">int</span> right) {
+        <span class="kw">for</span> (auto [l,r] : t) {
+            <span class="kw">if</span> (l &lt;= left &amp;&amp; r &gt;= right) <span class="kw">return</span> true;
+            <span class="kw">if</span> (l &gt; left) break;
+        }
+        <span class="kw">return</span> false;
+    }
+    <span class="ty">void</span> removeRange(<span class="ty">int</span> left, <span class="ty">int</span> right) {
+        <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; nxt;
+        <span class="kw">for</span> (auto [l,r] : t) {
+            <span class="kw">if</span> (r &lt;= left || l &gt;= right) nxt.push_back({l,r});
+            <span class="kw">else</span> {
+                <span class="kw">if</span> (l &lt; left) nxt.push_back({l,left});
+                <span class="kw">if</span> (r &gt; right) nxt.push_back({right,r});
+            }
+        }
+        t = move(nxt);
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +166,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Design</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Giữ danh sách đoạn không giao nhau đã merge sort theo…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — add merge overlap; remove split/cắt đoạn; query kiểm tra…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Tracks luôn là union đoạn đã add trừ remove; query kiểm tra sub-interval.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">add trùng/overlap merge</span><span class="analysis-tag edge">remove cắt giữa đoạn</span><span class="analysis-tag edge">query trên đoạn rỗng</span><span class="analysis-tag pit">[left,right) half-open — nhầm inclusive right</span><span class="analysis-tag pit">Không merge sau add</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Interval design = sorted merged intervals + merge on add + carve on remove.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +193,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Range%20Module&lc_id=715&embed=true"></iframe>

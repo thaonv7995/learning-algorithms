@@ -2,33 +2,38 @@
   "id": 705,
   "title": "Design HashSet",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Design HashSet (LeetCode #705) — Easy.",
+  "category": "Design",
+  "timeComplexity": "O(1) avg",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế HashSet: add(key), remove(key), contains(key). Không dùng built-in hash set của ngôn ngữ.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "[\"MyHashSet\",\"add\",\"add\",\"contains\",\"contains\",\"add\",\"remove\",\"contains\"], [[],[1],[2],[1],[3],[2],[2],[2]]",
+      "output": "[null,null,null,true,false,null,null,false]"
+    },
+    {
+      "input": "[\"MyHashSet\",\"add\",\"remove\",\"contains\"], [[],[1],[1],[1]]",
+      "output": "[null,null,null,false]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Chaining: mảng bucket size BASE, hash(key)%BASE, mỗi bucket linked list int. add/remove/contains duyệt bucket.",
+  "memoryTip": "Design hash = buckets + collision chain, prime bucket size giảm cluster.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyHashSet:\n    BASE = 769\n    def __init__(self):\n        self.data = [[] for _ in range(self.BASE)]\n    def _hash(self, key): return key % self.BASE\n    def add(self, key: int) -> None:\n        h = self._hash(key)\n        if key not in self.data[h]: self.data[h].append(key)\n    def remove(self, key: int) -> None:\n        h = self._hash(key)\n        if key in self.data[h]: self.data[h].remove(key)\n    def contains(self, key: int) -> bool:\n        return key in self.data[self._hash(key)]",
+    "cpp": "class MyHashSet {\n    static const int BASE = 769;\n    vector<list<int>> data;\n    int hash(int key) { return key % BASE; }\npublic:\n    MyHashSet() : data(BASE) {}\n    void add(int key) {\n        int h = hash(key);\n        for (int x : data[h]) if (x == key) return;\n        data[h].push_back(key);\n    }\n    void remove(int key) {\n        int h = hash(key);\n        data[h].remove(key);\n    }\n    bool contains(int key) {\n        int h = hash(key);\n        for (int x : data[h]) if (x == key) return true;\n        return false;\n    }\n};",
+    "c": "#define HSZ 769\nstatic int buckets[HSZ][128], cnt[HSZ];\nstatic int hkey(int k){ return ((k%HSZ)+HSZ)%HSZ; }\nvoid myHashSetAdd(int key){ int b=hkey(key); for(int i=0;i<cnt[b];i++) if(buckets[b][i]==key) return; buckets[b][cnt[b]++]=key; }\nvoid myHashSetRemove(int key){ int b=hkey(key); for(int i=0;i<cnt[b];i++) if(buckets[b][i]==key){ buckets[b][i]=buckets[b][--cnt[b]]; return; } }\nbool myHashSetContains(int key){ int b=hkey(key); for(int i=0;i<cnt[b];i++) if(buckets[b][i]==key) return true; return false; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Hash định vị bucket; list xử lý collision — add/remove/contains đúng membership.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Key âm (mod BASE)",
+      "Remove key không tồn tại",
+      "Duplicate add"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Bucket quá nhỏ → chain dài",
+      "Quên xử lý key âm khi mod"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

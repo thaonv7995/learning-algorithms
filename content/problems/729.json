@@ -2,33 +2,38 @@
   "id": 729,
   "title": "My Calendar I",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "My Calendar I (LeetCode #729) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(n) per op",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế lịch: book(start,end) thêm [start,end); nếu không trùng interval đã book thì true, ngược lại false. Half-open interval.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "[\"MyCalendar\",\"book\",\"book\",\"book\"], [[],[10,20],[15,25],[20,30]]",
+      "output": "[null,true,false,true]"
+    },
+    {
+      "input": "[\"MyCalendar\",\"book\",\"book\",\"book\",\"book\",\"book\",\"book\"], [[],[47,48],[24,43],[36,39],[46,49],[33,42],[12,35],[27,38]]",
+      "output": "[null,true,true,false,true,false,false]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Giữ list intervals đã book. book kiểm tra không overlap: start < other.end && end > other.start.",
+  "memoryTip": "Calendar I = overlap check [s,e) với mọi booking cũ.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyCalendar:\n    def __init__(self):\n        self.bookings = []\n    def book(self, start: int, end: int) -> bool:\n        for s, e in self.bookings:\n            if start < e and end > s: return False\n        self.bookings.append((start, end))\n        return True",
+    "cpp": "class MyCalendar {\n    vector<pair<int,int>> b;\npublic:\n    bool book(int start, int end) {\n        for (auto [s,e] : b)\n            if (start < e && end > s) return false;\n        b.push_back({start,end});\n        return true;\n    }\n};",
+    "c": "typedef struct { int s, e; } Book;\nstatic Book cal[1000]; static int cn;\nbool myCalendarBook(int start, int end) {\n    for (int i = 0; i < cn; i++)\n        if (start < cal[i].e && end > cal[i].s) return false;\n    cal[cn].s = start; cal[cn++].e = end;\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Overlap half-open: giao khi start<e2 && end>s1.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Book liền kề [10,20) và [20,30) ok",
+      "Book trùng hoàn toàn fail",
+      "Book đầu tiên luôn ok"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng inclusive end",
+      "Chỉ check start nằm trong interval"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

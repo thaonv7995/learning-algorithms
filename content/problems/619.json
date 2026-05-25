@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Biggest Single Number (LeetCode #619) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng MyNumbers(num). Trả số xuất hiện đúng một lần lớn nhất; nếu không có trả NULL.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num=8 xuất hiện 1 lần, num=3 hai lần",
+      "output": "8"
+    },
+    {
+      "input": "Mọi số ≥2 lần",
+      "output": "NULL"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "SELECT MAX(num) FROM MyNumbers GROUP BY num HAVING COUNT(*)=1 hoặc subquery.",
+  "memoryTip": "Biggest single number = MAX among nums with COUNT=1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT MAX(num) AS num\nFROM MyNumbers\nWHERE num IN (SELECT num FROM MyNumbers GROUP BY num HAVING COUNT(*) = 1);",
+    "cpp": "// SQL\nSELECT MAX(num) AS num\nFROM MyNumbers\nWHERE num IN (SELECT num FROM MyNumbers GROUP BY num HAVING COUNT(*) = 1);",
+    "c": "const char query[] = \"SELECT MAX(num) AS num\\nFROM MyNumbers\\nWHERE num IN (SELECT num FROM MyNumbers GROUP BY num HAVING COUNT(*) = 1);\";"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Lọc num count=1 rồi lấy MAX — đúng đề tie không áp dụng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một hàng duy nhất",
+      "Nhiều số unique"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng LIMIT thay MAX",
+      "Quên HAVING COUNT=1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

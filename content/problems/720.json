@@ -2,33 +2,42 @@
   "id": 720,
   "title": "Longest Word in Dictionary",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Longest Word in Dictionary (LeetCode #720) — Medium.",
+  "category": "Trie",
+  "timeComplexity": "O(n * L^2)",
+  "spaceComplexity": "O(n * L)",
+  "description": "Cho mảng chuỗi words. Trả chuỗi dài nhất trong từ điển mà mọi tiền tố (prefix) của nó cũng nằm trong words. Nếu nhiều đáp án, trả chuỗi nhỏ nhất theo thứ tự từ điển.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "words = [\"w\",\"wo\",\"wor\",\"worl\",\"world\"]",
+      "output": "\"world\""
+    },
+    {
+      "input": "words = [\"a\",\"banana\",\"app\",\"appl\",\"ap\",\"apply\",\"apple\"]",
+      "output": "\"apple\""
+    },
+    {
+      "input": "words = [\"m\",\"mo\",\"moc\",\"moch\",\"mocha\",\"l\",\"la\",\"lat\"]",
+      "output": "\"mocha\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort words. Duyệt từng word: kiểm tra mọi prefix có trong set words; nếu đủ và dài hơn (hoặc bằng nhưng lex nhỏ hơn) thì cập nhật ans.",
+  "memoryTip": "Word dictionary = sort + HashSet words + check all prefixes exist.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def longestWord(self, words: List[str]) -> str:\n        words.sort()\n        st = set(words)\n        ans = \"\"\n        for w in words:\n            ok = True\n            for i in range(1, len(w)):\n                if w[:i] not in st:\n                    ok = False; break\n            if ok and (len(w) > len(ans) or (len(w) == len(ans) and w < ans)):\n                ans = w\n        return ans",
+    "cpp": "class Solution {\npublic:\n    string longestWord(vector<string>& words) {\n        sort(words.begin(), words.end());\n        unordered_set<string> st(words.begin(), words.end());\n        string ans;\n        for (auto& w : words) {\n            bool ok = true;\n            for (int i = 1; i < (int)w.size(); i++)\n                if (!st.count(w.substr(0, i))) { ok = false; break; }\n            if (ok && (w.size() > ans.size() || (w.size() == ans.size() && w < ans))) ans = w;\n        }\n        return ans;\n    }\n};",
+    "c": "int cmpstr(const void* a,const void* b){ return strcmp(*(char**)a,*(char**)b); }\nchar* longestWord(char** words, int n) {\n    qsort(words,n,sizeof(char*),cmpstr);\n    char* ans = \"\";\n    for(int i=0;i<n;i++){ int ok=1; int L=strlen(words[i]); for(int p=1;p<L&&ok;p++){ char pref[128]; strncpy(pref,words[i],p); pref[p]=0; ok=0; for(int j=0;j<n;j++) if(strcmp(words[j],pref)==0){ ok=1; break; } } if(ok && (L>(int)strlen(ans)||(L==(int)strlen(ans)&&strcmp(words[i],ans)<0))) ans=words[i]; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Sort đảm bảo tie-break lex; prefix check đảm bảo mọi bước build hợp lệ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một từ đơn",
+      "Không từ nào có prefix chain → từ 1 ký tự",
+      "Nhiều cùng độ dài"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên sort trước tie-break",
+      "Chỉ check prefix trực tiếp một cấp"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

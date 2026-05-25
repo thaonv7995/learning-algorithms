@@ -2,33 +2,42 @@
   "id": 767,
   "title": "Reorganize String",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Reorganize String (LeetCode #767) — Medium.",
+  "description": "Cho chuỗi s. Sắp xếp lại sao không có hai ký tự giống nhau cạnh nhau. Có thể trả về bất kỳ hoặc rỗng nếu không thể.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"aab\"",
+      "output": "\"aba\""
+    },
+    {
+      "input": "s = \"aaab\"",
+      "output": "\"\""
+    },
+    {
+      "input": "s = \"vvvvlo\"",
+      "output": "\"vlvovv\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm freq; max freq > (n+1)/2 → impossible. Max-heap/largest first, xen kẽ không lặp cạnh.",
+  "memoryTip": "Reorganize string = freq max <= half ceiling else empty; alternate largest.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reorganizeString(self, s: str) -> str:\n        cnt = Counter(s)\n        maxHeap = [(-v, c) for c, v in cnt.items()]\n        heapify(maxHeap)\n        ans = []\n        prev = None\n        while maxHeap:\n            v, c = heappop(maxHeap)\n            ans.append(c)\n            if prev:\n                heappush(maxHeap, prev)\n                prev = None\n            if v + 1 < 0:\n                prev = (v + 1, c)\n        return \"\".join(ans) if len(ans) == len(s) else \"\"",
+    "cpp": "class Solution {\npublic:\n    string reorganizeString(string s) {\n        int cnt[26]={}; for(char c:s) cnt[c-'a']++;\n        int mx=*max_element(cnt,cnt+26);\n        if(mx>(int)s.size()+1)/2) return \"\";\n        string ans(s.size(),' ');\n        int i=0;\n        for(int c=0;c<26;c++) while(cnt[c]-- > 0){\n            ans[i]=c+'a'; i+=2; if(i>=(int)s.size()) i=1;\n        }\n        return ans;\n    }\n};",
+    "c": "char* reorganizeString(char* s) {\n    int cnt[26]={0}; for(;*s;s++) cnt[*s-'a']++;\n    int n=strlen(s), mx=0; for(int i=0;i<26;i++) if(cnt[i]>mx) mx=cnt[i];\n    if(mx>(n+1)/2) return strdup(\"\");\n    char* ans=malloc(n+1); int i=0;\n    for(int c=0;c<26;c++) while(cnt[c]-->0){ ans[i]=c+'a'; i+=2; if(i>=n) i=1; }\n    ans[n]=0; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Điều kiện pigeonhole; fill even indices rồi odd tránh adjacent same.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Impossible aaab",
+      "Một ký tự",
+      "Hai ký tự xen kẽ"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không check max freq",
+      "Adjacent same sau build"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

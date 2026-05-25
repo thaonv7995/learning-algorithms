@@ -2,33 +2,42 @@
   "id": 789,
   "title": "Escape The Ghosts",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Math",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Escape The Ghosts (LeetCode #789) — Medium.",
+  "description": "Pacman tại start, target; ghosts[i] tại vị trí ghost. Ghost di chuyển tùy ý nhưng không bắt được Pacman nếu Pacman tới target trước (cùng tốc độ). Escape ghosts?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "ghosts = [[1,0],[0,3]], target = [0,1]",
+      "output": "true"
+    },
+    {
+      "input": "ghosts = [[1,0]], target = [2,0]",
+      "output": "false"
+    },
+    {
+      "input": "ghosts = [[2,0]], target = [1,0]",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Pacman dist từ (0,0) = |tx|+|ty|. Nếu mọi ghost Manhattan dist tới target > pacman dist → true.",
+  "memoryTip": "Escape ghosts = no ghost closer to target than Pacman from origin.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def escapeGhosts(self, ghosts: List[List[int]], target: List[int]) -> bool:\n        d = abs(target[0]) + abs(target[1])\n        return all(abs(g[0]-target[0]) + abs(g[1]-target[1]) > d for g in ghosts)",
+    "cpp": "class Solution {\npublic:\n    bool escapeGhosts(vector<vector<int>>& ghosts, vector<int>& target) {\n        int d=abs(target[0])+abs(target[1]);\n        for(auto& g:ghosts){\n            if(abs(g[0]-target[0])+abs(g[1]-target[1])<=d) return false;\n        }\n        return true;\n    }\n};",
+    "c": "bool escapeGhosts(int** ghosts, int gn, int* gcs, int* target, int ts) {\n    int d=abs(target[0])+abs(target[1]);\n    for(int i=0;i<gn;i++){ if(abs(ghosts[i][0]-target[0])+abs(ghosts[i][1]-target[1])<=d) return false; }\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Ghost intercept target chỉ khi dist ghost-target <= dist pacman-target.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "No ghosts → true",
+      "Ghost at start",
+      "Target at origin"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "So sánh dist ghost-origin",
+      "Euclidean thay Manhattan"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #685</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Depth-First Search</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Redundant Connection II</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>36.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Redundant Connection II (LeetCode #685) — Hard.</div>
+                        <div class="block-text">Directed tree n nodes one wrong edge. Tìm edge cần sửa để thành valid rooted tree.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>edges=[[1,2],[1,3],[4,2]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[4,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>edges=[[1,2],[2,3],[3,4],[4,1],[1,5]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[4,1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Find node with 2 parents (candidate child), UF cycle in undirected view.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,57 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* findRedundantDirectedConnection685(<span class="ty">int</span>** e,<span class="ty">int</span> n,<span class="ty">int</span>* rs) {
+    <span class="ty">int</span> par[1001]={0}, cand[4]={0}, hasCand=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){ <span class="ty">int</span> u=e[i][0],v=e[i][1];
+        <span class="kw">if</span>(par[v]){ cand[0]=par[v]; cand[1]=v; cand[2]=u; cand[3]=v; hasCand=1; }
+        <span class="kw">else</span> par[v]=u;
+    }
+    <span class="ty">int</span> cyc(<span class="ty">int</span> s,<span class="ty">int</span> ban){ <span class="ty">int</span> vis[1001]={0},x=s; <span class="kw">while</span>(x&amp;&amp;!vis[x]){ <span class="kw">if</span>(x==ban)<span class="kw">return</span> 0; vis[x]=1; x=par[x]; } <span class="kw">return</span> x!=0; }
+    static <span class="ty">int</span> ans[2];
+    <span class="kw">if</span>(hasCand){ <span class="kw">if</span>(cyc(cand[2],cand[3])){ ans[0]=cand[0]; ans[1]=cand[1]; } <span class="kw">else</span> { ans[0]=cand[2]; ans[1]=cand[3]; } *rs=2; <span class="kw">return</span> ans; }
+    <span class="kw">for</span>(<span class="ty">int</span> i=n-1;i&gt;=0;i--){ <span class="ty">int</span> u=e[i][0],v=e[i][1],old=par[v]; par[v]=0;
+        <span class="kw">if</span>(!cyc(u,0)){ ans[0]=u; ans[1]=v; *rs=2; <span class="kw">return</span> ans; } par[v]=old; }
+    *rs=0; <span class="kw">return</span> NULL;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findRedundantDirectedConnection(<span class="ty">self</span>, edges: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        n=<span class="ty">len</span>(edges); par=[0]*(n+1); cand=[]
+        <span class="kw">for</span> u,v <span class="kw">in</span> edges:
+            <span class="kw">if</span> par[v]: cand=[par[v],v,u,v]
+            <span class="kw">else</span>: par[v]=u
+        root=1
+        <span class="kw">def</span> find(x, skip=-1):
+            vis=<span class="ty">set</span>()
+            <span class="kw">while</span> x <span class="kw">not</span> <span class="kw">in</span> vis:
+                <span class="kw">if</span> x==skip: break
+                vis.add(x); x=par[x]
+            <span class="kw">return</span> x <span class="kw">in</span> vis
+        <span class="kw">if</span> <span class="kw">not</span> cand: u,v=edges[-1]
+        <span class="kw">else</span>:
+            a,b,c,d=cand
+            <span class="kw">if</span> find(c,d): <span class="kw">return</span> [a,b]
+            <span class="kw">return</span> [c,d]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n-1,-1,-1):
+            u,v=edges[i]
+            par[v]=0
+            <span class="kw">if</span> <span class="kw">not</span> find(u): <span class="kw">return</span> [u,v]
+            par[v]=u
+        <span class="kw">return</span> []</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findRedundantDirectedConnection(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; e) {
+        <span class="ty">int</span> n=e.size(); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; par(n+1); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; cand;
+        <span class="kw">for</span>(auto&amp; ed:e){ <span class="kw">if</span>(par[ed[1]]) cand={par[ed[1]],ed[1],ed[0],ed[1]}; <span class="kw">else</span> par[ed[1]]=ed[0]; }
+        function&lt;<span class="ty">bool</span>(<span class="ty">int</span>,<span class="ty">int</span>)&gt; cyc=[&amp;](<span class="ty">int</span> s,<span class="ty">int</span> ban)-&gt;<span class="ty">bool</span>{
+            unordered_set&lt;<span class="ty">int</span>&gt; vis; <span class="ty">int</span> x=s;
+            <span class="kw">while</span>(x&amp;&amp;!vis.count(x)){ <span class="kw">if</span>(x==ban) <span class="kw">return</span> false; vis.insert(x); x=par[x]; }
+            <span class="kw">return</span> x!=0;
+        };
+        <span class="kw">if</span>(!cand.empty()) <span class="kw">return</span> cyc(cand[2],cand[3])?<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;{cand[0],cand[1]}:<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;{cand[2],cand[3]};
+        <span class="kw">for</span>(<span class="ty">int</span> i=n-1;i&gt;=0;i--){ <span class="ty">int</span> u=e[i][0],v=e[i][1], old=par[v]; par[v]=0; <span class="kw">if</span>(!cyc(u,0)){ <span class="kw">return</span> {u,v}; } par[v]=old; }
+        <span class="kw">return</span> {};
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +154,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Depth-First Search</span>
+                        <span class="pattern-chip">Graph</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Find node with 2 parents , UF cycle in undirected view.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Case two parents vs cycle — try remove each candidate.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Cycle no double parent</span><span class="analysis-tag edge">Root has two children issue</span><span class="analysis-tag edge">Return last valid</span><span class="analysis-tag pit">Undirected UF only</span><span class="analysis-tag pit">Wrong candidate order</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Redundant connection II — two parents or cycle in directed tree.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +183,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Redundant%20Connection%20II&lc_id=685&embed=true"></iframe>

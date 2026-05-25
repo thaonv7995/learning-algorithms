@@ -2,33 +2,38 @@
   "id": 684,
   "title": "Redundant Connection",
   "difficulty": "Medium",
-  "category": "Depth-First Search",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Redundant Connection (LeetCode #684) — Medium.",
+  "category": "Union Find",
+  "timeComplexity": "O(n α(n))",
+  "spaceComplexity": "O(n)",
+  "description": "Tìm cạnh có thể xóa để graph thành tree (n nodes n edges). Trả edge cuối tạo cycle.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "edges=[[1,2],[1,3],[2,3]]",
+      "output": "[2,3]"
+    },
+    {
+      "input": "edges=[[1,2],[2,3]]",
+      "output": "[2,3]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Union-Find: first edge connecting same component is redundant.",
+  "memoryTip": "Redundant connection — UF detect cycle edge.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:\n        par=list(range(len(edges)+1))\n        def find(x):\n            while par[x]!=x: x=par[x]\n            return x\n        for u,v in edges:\n            pu,pv=find(u),find(v)\n            if pu==pv: return [u,v]\n            par[pu]=pv\n        return []",
+    "cpp": "class Solution {\n    vector<int> p;\n    int find(int x){ return p[x]==x?x:p[x]=find(p[x]); }\npublic:\n    vector<int> findRedundantConnection(vector<vector<int>>& e) {\n        p.resize(e.size()+1); iota(p.begin(),p.end(),0);\n        for(auto& ed:e){\n            int u=find(ed[0]), v=find(ed[1]);\n            if(u==v) return ed;\n            p[u]=v;\n        }\n        return {};\n    }\n};",
+    "c": "int* findRedundantConnection684(int** e,int n,int* rs){ int p[1001],i; for(i=0;i<=n;i++)p[i]=i; int find(int x){ return p[x]==x?x:p[x]=find(p[x]); } for(i=0;i<n;i++){ int u=find(e[i][0]),v=find(e[i][1]); if(u==v){ static int ans[2]; ans[0]=e[i][0]; ans[1]=e[i][1]; *rs=2; return ans;} p[u]=v; } *rs=0; return NULL; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Last edge closing cycle in UF order per problem.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Multiple cycles return last",
+      "Tree plus one edge",
+      "Self loop"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS slower",
+      "Return first not last"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

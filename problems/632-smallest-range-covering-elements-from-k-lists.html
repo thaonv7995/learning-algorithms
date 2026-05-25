@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #632</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Heap</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Smallest Range Covering Elements from K Lists</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>70.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Smallest Range Covering Elements from K Lists (LeetCode #632) — Hard.</div>
+                        <div class="block-text">Cho k list đã sort. Tìm đoạn [min,max] ngắn nhất chứa ít nhất một phần tử từ mỗi list.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [[4,10,15,24,26],[0,9,12,20],[5,18,22,30]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[20,24]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [[1,2,3],[1,2,3],[1,2,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Min-heap (val,listIdx,elemIdx); push first of each list; pop min, push next; track min range.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,50 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* smallestRange(<span class="ty">int</span>** nums,<span class="ty">int</span> k,<span class="ty">int</span>* cs,<span class="ty">int</span>* rs) {
+    <span class="ty">int</span>* heapv=<span class="kw">malloc</span>(k*4),*heapi=<span class="kw">malloc</span>(k*4),*heapj=<span class="kw">malloc</span>(k*4),hs=0;
+    <span class="ty">int</span> mx=-1000000000, bestL=0,bestR=1000000000;
+    #define HPUSH(v,i,j){heapv[hs]=v;heapi[hs]=i;heapj[hs]=j;hs++;<span class="kw">for</span>(<span class="ty">int</span> t=hs-1;t&gt;0;t--)<span class="kw">if</span>(heapv[t]&lt;heapv[t-1]){<span class="ty">int</span> tv=heapv[t];heapv[t]=heapv[t-1];heapv[t-1]=tv;<span class="ty">int</span> ti=heapi[t];heapi[t]=heapi[t-1];heapi[t-1]=ti;ti=heapj[t];heapj[t]=heapj[t-1];heapj[t-1]=ti;}<span class="kw">else</span> break;}
+    #define HPOP() (hs--)
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;k;i++){ HPUSH(nums[i][0],i,0); <span class="kw">if</span>(nums[i][0]&gt;mx) mx=nums[i][0]; }
+    <span class="kw">while</span>(hs){
+        <span class="ty">int</span> v=heapv[0],i=heapi[0],j=heapj[0];
+        <span class="kw">if</span>(mx-v&lt;bestR-bestL){ bestL=v; bestR=mx; }
+        <span class="kw">if</span>(j+1&gt;=cs[i]) break;
+        <span class="ty">int</span> nv=nums[i][j+1];
+        heapv[0]=nv; heapi[0]=i; heapj[0]=j+1;
+        <span class="kw">if</span>(nv&gt;mx) mx=nv;
+        <span class="kw">for</span>(<span class="ty">int</span> t=0;t&lt;hs-1;t++) <span class="kw">if</span>(heapv[t+1]&lt;heapv[t]){<span class="ty">int</span> tv=heapv[t];heapv[t]=heapv[t+1];heapv[t+1]=tv;<span class="ty">int</span> ti=heapi[t];heapi[t]=heapi[t+1];heapi[t+1]=ti;ti=heapj[t];heapj[t]=heapj[t+1];heapj[t+1]=ti;}
+    }
+    <span class="ty">int</span>* ans=<span class="kw">malloc</span>(2*4); ans[0]=bestL; ans[1]=bestR; *rs=2; <span class="kw">free</span>(heapv); <span class="kw">free</span>(heapi); <span class="kw">free</span>(heapj); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> smallestRange(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        <span class="kw">import</span> heapq
+        h=[(nums[i][0],i,0) <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(nums))]; heapq.heapify(h)
+        curmax=<span class="ty">max</span>(x[0] <span class="kw">for</span> x <span class="kw">in</span> h); best=[-10**9,10**9]
+        <span class="kw">while</span> h:
+            v,i,j=heapq.heappop(h); curmax=<span class="ty">max</span>(curmax,v)
+            <span class="kw">if</span> curmax-v&lt;best[1]-best[0]: best=[v,curmax]
+            <span class="kw">if</span> j+1==<span class="ty">len</span>(nums[i]): break
+            nv=nums[i][j+1]; heapq.heappush(h,(nv,i,j+1)); curmax=<span class="ty">max</span>(curmax,nv)
+        <span class="kw">return</span> best</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; smallestRange(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; nums) {
+        <span class="kw">using</span> T=array&lt;<span class="ty">int</span>,3&gt;;
+        priority_queue&lt;T,<span class="ty">vector</span>&lt;T&gt;,greater&lt;T&gt;&gt; pq;
+        <span class="ty">int</span> mx=INT_MIN;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)nums.size();i++){ pq.push({nums[i][0],i,0}); mx=max(mx,nums[i][0]); }
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans={-1000000,1000000};
+        <span class="kw">while</span>(!pq.empty()){
+            auto [v,i,j]=pq.top(); pq.pop();
+            <span class="kw">if</span>(mx-v&lt;ans[1]-ans[0]) ans={v,mx};
+            <span class="kw">if</span>(j+1==(<span class="ty">int</span>)nums[i].size()) break;
+            <span class="ty">int</span> nv=nums[i][j+1]; pq.push({nv,i,j+1}); mx=max(mx,nv);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +147,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Heap</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Min-heap ; push first of each list; pop min, push next; track min range.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Heap duy trì k phần tử nhỏ nhất hiện tại — cập nhật range mỗi bước.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1</span><span class="analysis-tag edge">List một phần tử</span><span class="analysis-tag edge">Trùng giá trị</span><span class="analysis-tag pit">Quên cập nhật curmax</span><span class="analysis-tag pit">Break sớm khi list hết</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Smallest range k lists = sliding window on k sorted heads via min-heap.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +176,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Smallest%20Range%20Covering%20Elements%20from%20K%20Lists&lc_id=632&embed=true"></iframe>

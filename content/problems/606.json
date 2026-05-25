@@ -2,33 +2,42 @@
   "id": 606,
   "title": "Construct String from Binary Tree",
   "difficulty": "Medium",
-  "category": "String",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Construct String from Binary Tree (LeetCode #606) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho cây nhị phân root. Trả chuỗi \"N\" + preorder (val) + \"L\" + left + \"R\" + right + \")\" theo quy ước LeetCode construct string.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [1,2,3,4]",
+      "output": "\"1(2(4))(3)\""
+    },
+    {
+      "input": "root = [1,2,null,4]",
+      "output": "\"1(2(4))\""
+    },
+    {
+      "input": "root = [1]",
+      "output": "\"1\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS preorder: nếu không con trả val; nếu chỉ right bỏ L rỗng; ghép val(L)(R).",
+  "memoryTip": "Construct string — omit empty L when only right child (LeetCode rule).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def tree2str(self, root: Optional[TreeNode]) -> str:\n        if not root: return \"\"\n        if not root.left and not root.right: return str(root.val)\n        if not root.left: return f\"{root.val}()({self.tree2str(root.right)})\"\n        return f\"{root.val}({self.tree2str(root.left)})({self.tree2str(root.right) if root.right else ''})\"",
+    "cpp": "class Solution {\npublic:\n    string tree2str(TreeNode* r) {\n        if(!r) return \"\";\n        string s=to_string(r->val);\n        if(!r->left&&!r->right) return s;\n        if(!r->left) return s+\"()(\"+tree2str(r->right)+\")\";\n        s+=\"(\"+tree2str(r->left)+\")\";\n        if(r->right) s+=\"(\"+tree2str(r->right)+\")\";\n        else s+=\"()\";\n        return s;\n    }\n};",
+    "c": "void tree2strRec(struct TreeNode* r, char* buf, int* p) {\n    if(!r) return;\n    *p += sprintf(buf+*p, \"%d\", r->val);\n    if(!r->left && !r->right) return;\n    if(!r->left){ *p+=sprintf(buf+*p,\"()(\"); tree2strRec(r->right,buf,p); *p+=sprintf(buf+*p,\")\"); return; }\n    *p+=sprintf(buf+*p,\"(\"); tree2strRec(r->left,buf,p); *p+=sprintf(buf+*p,\")(\");\n    if(r->right) tree2strRec(r->right,buf,p); *p+=sprintf(buf+*p,\")\");\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DFS bám format ngoặc LeetCode — bỏ L rỗng khi chỉ có con phải.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một nút",
+      "Chỉ con trái",
+      "Chỉ con phải"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Thêm () thừa",
+      "Thiếu () khi thiếu con phải"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

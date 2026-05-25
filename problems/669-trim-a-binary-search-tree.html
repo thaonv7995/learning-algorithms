@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #669</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Trim a Binary Search Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>66.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Trim a Binary Search Tree (LeetCode #669) — Medium.</div>
+                        <div class="block-text">Cho BST root và khoảng [low, high]. Cắt tỉa cây: loại mọi nút có giá trị ngoài khoảng, giữ tính chất BST.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root=[1,0,2], low=1, high=3</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,null,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root=[3,0,4,null,2,null,null,1], low=1, high=3</code></div>
+                <div class="ex-line"><span>Out</span><code>[3,2,null,1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Recursive: n&lt;low return trim(right); n&gt;high return trim(left); else link trimmed children.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,24 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> TreeNode* trimBST669(<span class="ty">struct</span> TreeNode* r,<span class="ty">int</span> lo,<span class="ty">int</span> hi){ <span class="kw">if</span>(!r)<span class="kw">return</span> NULL; <span class="kw">if</span>(r-&gt;val&lt;lo) <span class="kw">return</span> trimBST669(r-&gt;right,lo,hi); <span class="kw">if</span>(r-&gt;val&gt;hi) <span class="kw">return</span> trimBST669(r-&gt;left,lo,hi); r-&gt;left=trimBST669(r-&gt;left,lo,hi); r-&gt;right=trimBST669(r-&gt;right,lo,hi); <span class="kw">return</span> r; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> trimBST(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>], low: <span class="ty">int</span>, high: <span class="ty">int</span>) -&gt; <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]:
+        <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> <span class="kw">None</span>
+        <span class="kw">if</span> root.val&lt;low: <span class="kw">return</span> <span class="ty">self</span>.trimBST(root.right,low,high)
+        <span class="kw">if</span> root.val&gt;high: <span class="kw">return</span> <span class="ty">self</span>.trimBST(root.left,low,high)
+        root.left=<span class="ty">self</span>.trimBST(root.left,low,high)
+        root.right=<span class="ty">self</span>.trimBST(root.right,low,high)
+        <span class="kw">return</span> root</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    TreeNode* trimBST(TreeNode* r, <span class="ty">int</span> lo, <span class="ty">int</span> hi) {
+        <span class="kw">if</span>(!r) <span class="kw">return</span> <span class="kw">nullptr</span>;
+        <span class="kw">if</span>(r-&gt;val&lt;lo) <span class="kw">return</span> trimBST(r-&gt;right,lo,hi);
+        <span class="kw">if</span>(r-&gt;val&gt;hi) <span class="kw">return</span> trimBST(r-&gt;left,lo,hi);
+        r-&gt;left=trimBST(r-&gt;left,lo,hi); r-&gt;right=trimBST(r-&gt;right,lo,hi);
+        <span class="kw">return</span> r;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +123,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Recursive: n&lt;low return trim; n&gt;high return trim; else link trimmed…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Prune nodes outside — promote valid subtree.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">All trimmed null</span><span class="analysis-tag edge">Root removed</span><span class="analysis-tag edge">Single node in range</span><span class="analysis-tag pit">Copy tree unnecessary</span><span class="analysis-tag pit">Not return promoted child</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Trim BST — recurse prune outside range.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +150,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Trim%20a%20Binary%20Search%20Tree&lc_id=669&embed=true"></iframe>

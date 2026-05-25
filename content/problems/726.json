@@ -2,33 +2,42 @@
   "id": 726,
   "title": "Number of Atoms",
   "difficulty": "Hard",
-  "category": "Hash Table",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Number of Atoms (LeetCode #726) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho công thức hóa học dạng chuỗi (nguyên tố, số lượng, ngoặc lồng). Trả chuỗi đếm số nguyên tử dạng sort alphabet: NameCount, Count=1 thì bỏ số.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "formula = \"H2O\"",
+      "output": "\"H2O\""
+    },
+    {
+      "input": "formula = \"Mg(OH)2\"",
+      "output": "\"H2MgO2\""
+    },
+    {
+      "input": "formula = \"K4(ON(SO3)2)2\"",
+      "output": "\"K4N2O14S4\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack of map element→count. Parse token; ( push map mới; ) pop merge vào top nhân multiplier.",
+  "memoryTip": "Formula parse = stack of counters; parentheses multiply inner map.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countOfAtoms(self, formula: str) -> str:\n        import re\n        def parse(i):\n            st = [Counter()]\n            while i < len(formula):\n                if formula[i] == '(':\n                    st.append(Counter()); i += 1\n                elif formula[i] == ')':\n                    top = st.pop(); i += 1\n                    m = 1\n                    if i < len(formula) and formula[i].isdigit():\n                        j = i\n                        while j < len(formula) and formula[j].isdigit(): j += 1\n                        m = int(formula[i:j]); i = j\n                    for k, v in top.items(): st[-1][k] += v * m\n                else:\n                    j = i + 1\n                    while j < len(formula) and formula[j].islower(): j += 1\n                    name = formula[i:j]; i = j\n                    cnt = 1\n                    if i < len(formula) and formula[i].isdigit():\n                        k = i\n                        while k < len(formula) and formula[k].isdigit(): k += 1\n                        cnt = int(formula[i:k]); i = k\n                    st[-1][name] += cnt\n            return st[-1]\n        cnt = parse(0)\n        return \"\".join(name + (str(v) if v > 1 else \"\") for name, v in sorted(cnt.items()))",
+    "cpp": "class Solution {\npublic:\n    string countOfAtoms(string formula) {\n        vector<map<string,int>> st(1);\n        int i=0, n=formula.size();\n        while(i<n){\n            if(formula[i]=='('){ st.emplace_back(); i++; }\n            else if(formula[i]==')'){\n                auto top=st.back(); st.pop_back(); i++;\n                int mul=1;\n                if(i<n && isdigit(formula[i])){ mul=0; while(i<n&&isdigit(formula[i])) mul=mul*10+formula[i++]-'0'; }\n                for(auto& p: top) st.back()[p.first]+=p.second*mul;\n            } else {\n                int j=i+1; while(j<n&&islower(formula[j])) j++;\n                string name=formula.substr(i,j-i); i=j;\n                int cnt=1;\n                if(i<n&&isdigit(formula[i])){ cnt=0; while(i<n&&isdigit(formula[i])) cnt=cnt*10+formula[i++]-'0'; }\n                st.back()[name]+=cnt;\n            }\n        }\n        string ans;\n        for(auto& p: st[0]){ ans+=p.first; if(p.second>1) ans+=to_string(p.second); }\n        return ans;\n    }\n};",
+    "c": "char* countOfAtoms(char* formula) {\n    int cnt[128]={0};\n    for(int i=0; formula[i]; ){\n        if(formula[i]=='('){ i++; continue; }\n        if(formula[i]==')'){ i++; while(formula[i]>='0'&&formula[i]<'9') i++; continue; }\n        char name[8]; int p=0; name[p++]=formula[i++];\n        while(formula[i]>='a'&&formula[i]<'z') name[p++]=formula[i++]; name[p]=0;\n        int mul=1; if(formula[i]>='0'&&formula[i]<'9'){ mul=0; while(formula[i]>='0'&&formula[i]<'9') mul=mul*10+formula[i++]-'0'; }\n        cnt[(unsigned char)name[0]]+=mul;\n    }\n    char* out=malloc(512); int o=0;\n    for(int c='A'; c<='Z'; c++) if(cnt[c]){ out[o++]=c; if(cnt[c]>1){ char buf[16]; sprintf(buf,\"%d\",cnt[c]); strcat(out+o,buf); o=strlen(out); } }\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Stack merge đúng nhân số sau ngoặc; output sort tên nguyên tố.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không ngoặc",
+      "Multiplier lớn",
+      "Nguyên tố một chữ"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên sort output",
+      "Nhầm chữ hoa/thường tên nguyên tố"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #757</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Greedy</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Set Intersection Size At Least Two</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Set Intersection Size At Least Two (LeetCode #757) — Hard.</div>
+                        <div class="block-text">Cho mảng intervals[i]=[start,end]. Chọn tối thiểu số điểm sao mỗi interval chứa ít nhất 2 điểm đã chọn (có thể trùng interval). Trả số điểm tối thiểu.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>intervals = [[1,3],[1,4],[2,5],[3,5]]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>intervals = [[1,2],[2,3],[2,3],[3,4],[3,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>intervals = [[1,2],[2,3],[2,3],[4,5],[4,5]]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sort theo end. Greedy: với mỗi interval thiếu điểm, thêm end và end-1 (hoặc end và end nếu overlap).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> intersectionSizeTwo(<span class="ty">int</span>** intervals, <span class="ty">int</span> n, <span class="ty">int</span>* cs) {
+    <span class="ty">int</span> ans[2000], an=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){
+        <span class="ty">int</span> s=intervals[i][0], e=intervals[i][1], cnt=0;
+        <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;an;j++) <span class="kw">if</span>(s&lt;=ans[j]&amp;&amp;ans[j]&lt;=e) cnt++;
+        <span class="kw">if</span>(cnt&gt;=2) continue;
+        <span class="kw">if</span>(cnt==0){ ans[an++]=e-1; ans[an++]=e; }
+        <span class="kw">else</span> ans[an++]=(ans[an-1]==e?e-1:e);
+    }
+    <span class="kw">return</span> an;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> intersectionSizeTwo(<span class="ty">self</span>, intervals: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        intervals.sort(key=lambda x: x[1])
+        ans = []
+        <span class="kw">for</span> s, e <span class="kw">in</span> intervals:
+            have = [x <span class="kw">for</span> x <span class="kw">in</span> ans <span class="kw">if</span> s &lt;= x &lt;= e]
+            <span class="kw">if</span> <span class="ty">len</span>(have) &gt;= 2: continue
+            <span class="kw">if</span> <span class="kw">not</span> have:
+                ans.extend([e-1, e])
+            <span class="kw">elif</span> <span class="ty">len</span>(have) == 1:
+                ans.append(e <span class="kw">if</span> have[0] != e <span class="kw">else</span> e-1)
+        <span class="kw">return</span> <span class="ty">len</span>(<span class="ty">set</span>(ans))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> intersectionSizeTwo(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; a) {
+        sort(a.begin(), a.end(), [](auto&amp; x, auto&amp; y){ <span class="kw">return</span> x[1]&lt;y[1]; });
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="kw">for</span>(auto&amp; iv: a){
+            <span class="ty">int</span> s=iv[0], e=iv[1], cnt=0;
+            <span class="kw">for</span>(<span class="ty">int</span> x: ans) <span class="kw">if</span>(s&lt;=x &amp;&amp; x&lt;=e) cnt++;
+            <span class="kw">if</span>(cnt&gt;=2) continue;
+            <span class="kw">if</span>(cnt==0){ ans.push_back(e-1); ans.push_back(e); }
+            <span class="kw">else</span> ans.push_back(ans.back()==e?e-1:e);
+        }
+        sort(ans.begin(), ans.end());
+        ans.erase(unique(ans.begin(), ans.end()), ans.end());
+        <span class="kw">return</span> ans.size();
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +147,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Greedy</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Sort theo end.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Greedy: với mỗi interval thiếu điểm, thêm end và end-1 .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Greedy chọn điểm phải nhất đủ cover interval và tối ưu cho interval sau.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Interval lồng nhau</span><span class="analysis-tag edge">Length 1 interval invalid? start&lt;end</span><span class="analysis-tag edge">Duplicate intervals</span><span class="analysis-tag pit">Chọn 1 điểm/interval</span><span class="analysis-tag pit">Sort theo start sai</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Set intersection size 2 = greedy pick two rightmost points per interval.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +176,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Set%20Intersection%20Size%20At%20Least%20Two&lc_id=757&embed=true"></iframe>

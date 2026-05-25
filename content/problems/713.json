@@ -2,33 +2,42 @@
   "id": 713,
   "title": "Subarray Product Less Than K",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Sliding Window",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Subarray Product Less Than K (LeetCode #713) — Medium.",
+  "description": "Cho mảng nums số nguyên dương và k. Đếm số đoạn con liên tiếp có tích các phần tử < k.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [10,5,2,6], k = 100",
+      "output": "8"
+    },
+    {
+      "input": "nums = [1,1,1], k = 2",
+      "output": "0"
+    },
+    {
+      "input": "nums = [1,2,3], k = 10",
+      "output": "5"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sliding window: nhân vào prod; khi prod>=k chia nums[left++] cho prod. Mỗi vị trí right, thêm (right-left+1) đoạn kết thúc tại right.",
+  "memoryTip": "Đếm subarray product < k: mở rộng right, thu left khi prod>=k; cộng window size.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numSubarrayProductLessThanK(self, nums: List[int], k: int) -> int:\n        if k <= 1: return 0\n        ans = left = 0\n        prod = 1\n        for right, x in enumerate(nums):\n            prod *= x\n            while prod >= k:\n                prod //= nums[left]\n                left += 1\n            ans += right - left + 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int numSubarrayProductLessThanK(vector<int>& nums, int k) {\n        if (k <= 1) return 0;\n        long long prod = 1;\n        int ans = 0, left = 0;\n        for (int right = 0; right < (int)nums.size(); right++) {\n            prod *= nums[right];\n            while (prod >= k) prod /= nums[left++];\n            ans += right - left + 1;\n        }\n        return ans;\n    }\n};",
+    "c": "int numSubarrayProductLessThanK(int* nums, int n, int k) {\n    if (k <= 1) return 0;\n    long long prod = 1;\n    int ans = 0, left = 0;\n    for (int right = 0; right < n; right++) {\n        prod *= nums[right];\n        while (prod >= k) prod /= nums[left++];\n        ans += right - left + 1;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mọi subarray hợp lệ có right cố định được đếm qua số lượng left hợp lệ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k<=1 → 0",
+      "Tích overflow cần long long",
+      "nums toàn 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Đếm subarray thay vì window size sai",
+      "Quên xử lý k<=1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

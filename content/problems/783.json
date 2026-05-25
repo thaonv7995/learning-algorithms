@@ -4,31 +4,36 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Minimum Distance Between BST Nodes (LeetCode #783) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho BST. Trả khoảng cách nhỏ nhất giữa giá trị hai nút bất kỳ (|a-b| min, a!=b).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [4,2,6,1,3]",
+      "output": "1"
+    },
+    {
+      "input": "root = [1,0,48,null,null,null,49]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Inorder: so sánh node hiện tại với predecessor. Min diff = min(prev diff) along inorder.",
+  "memoryTip": "Min BST distance = inorder adjacent difference.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minDiffInBST(self, root: Optional[TreeNode]) -> int:\n        self.prev = None\n        self.ans = 10**9\n        def dfs(n):\n            if not n: return\n            dfs(n.left)\n            if self.prev is not None:\n                self.ans = min(self.ans, n.val - self.prev)\n            self.prev = n.val\n            dfs(n.right)\n        dfs(root)\n        return self.ans",
+    "cpp": "class Solution {\n    TreeNode* prev=nullptr;\n    int ans=INT_MAX;\n    void inorder(TreeNode* n){\n        if(!n) return;\n        inorder(n->left);\n        if(prev) ans=min(ans,n->val-prev->val);\n        prev=n;\n        inorder(n->right);\n    }\npublic:\n    int minDiffInBST(TreeNode* root){ inorder(root); return ans; }\n};",
+    "c": "static int prev783=-1, ans783=1000000000;\nstatic void in783(struct TreeNode* n){ if(!n) return; in783(n->left); if(prev783!=-1){ int d=n->val-prev783; if(d<ans783) ans783=d; } prev783=n->val; in783(n->right); }\nint minDiffInBST(struct TreeNode* root){ prev783=-1; ans783=1000000000; in783(root); return ans783; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Inorder BST → giá trị tăng; min diff nằm giữa hai phần tử kề.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Hai nút",
+      "Chain trái/phải",
+      "Diff lớn ở xa"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "So sánh mọi cặp O(n^2)",
+      "Quên update prev"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

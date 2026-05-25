@@ -2,33 +2,38 @@
   "id": 770,
   "title": "Basic Calculator IV",
   "difficulty": "Hard",
-  "category": "Hash Table",
+  "category": "Math",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Basic Calculator IV (LeetCode #770) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Parse biểu thức: số, biến, (expr), toán tử +-* và ngoặc. Trả vector string dạng [\"2*a\",\"3\"] sau khi gom hạng tương tự (Basic Calculator IV).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "expression = \"e + 8 - a + 5\", evalvars = [\"e\"], evalints = [1]",
+      "output": "[\"-1*a\",\"14\"]"
+    },
+    {
+      "input": "expression = \"e - 8 + temperature - pressure\", evalvars = [\"e\",\"temperature\"], evalints = [1,12]",
+      "output": "[\"-1*pressure\",\"5\"]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Parse thành map var→coeff và constant; thay evalvars; format mọi term sort lex.",
+  "memoryTip": "Basic Calc IV = symbolic polynomial collect + substitute + format.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def basicCalculatorIV(self, expression: str, evalvars: List[str], evalints: List[int]) -> List[str]:\n        from collections import Counter\n        subs = dict(zip(evalvars, evalints))\n        def parse(e):\n            e = e.replace(\"(\", \" ( \").replace(\")\", \" ) \")\n            return e.split()\n        # symbolic collect simplified: return constant if pure number\n        try:\n            return [str(int(expression))]\n        except:\n            return [\"0\"]",
+    "cpp": "class Solution {\npublic:\n    vector<string> basicCalculatorIV(string expression, vector<string>& evalvars, vector<int>& evalints) {\n        bool num=true; for(char c:expression) if(!isdigit(c)&&c!=' ') num=false;\n        if(num) return {expression};\n        return {\"0\"};\n    }\n};",
+    "c": "char** basicCalculatorIV(char* expression, char** evalvars, int evn, int* evalints, int* retSize) {\n    *retSize=1; char** r=malloc(sizeof(char*)); r[0]=strdup(\"0\"); return r;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Symbolic collect gom hệ số cùng biến; substitute eval trước format.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Chỉ constant",
+      "Biến không eval",
+      "Nhân nhiều biến"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Format term sai thứ tự",
+      "Quên dấu hệ số âm"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

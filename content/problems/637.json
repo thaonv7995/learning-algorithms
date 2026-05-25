@@ -4,31 +4,36 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Average of Levels in Binary Tree (LeetCode #637) — Easy.",
+  "spaceComplexity": "O(w)",
+  "description": "Cho cây nhị phân. Trả mảng trung bình giá trị từng level (trái sang phải).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [3,9,20,null,null,15,7]",
+      "output": "[3.0,14.5,11.0]"
+    },
+    {
+      "input": "root = [1]",
+      "output": "[1.0]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS level order: queue nodes, sum/count mỗi level.",
+  "memoryTip": "Average levels BFS — queue + sum/count per level.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def averageOfLevels(self, root: Optional[TreeNode]) -> List[float]:\n        if not root: return []\n        q=[root]; ans=[]\n        while q:\n            nxt=[]; s=c=0\n            for node in q:\n                s+=node.val; c+=1\n                if node.left: nxt.append(node.left)\n                if node.right: nxt.append(node.right)\n            ans.append(s/c); q=nxt\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<double> averageOfLevels(TreeNode* root) {\n        vector<double> ans; if(!root) return ans;\n        queue<TreeNode*> q; q.push(root);\n        while(!q.empty()){\n            int sz=q.size(); double s=0;\n            for(int i=0;i<sz;i++){\n                auto* n=q.front(); q.pop(); s+=n->val;\n                if(n->left) q.push(n->left); if(n->right) q.push(n->right);\n            }\n            ans.push_back(s/sz);\n        }\n        return ans;\n    }\n};",
+    "c": "double* averageOfLevels637(struct TreeNode* root,int* rs) {\n    if(!root){ *rs=0; return NULL; }\n    struct TreeNode** q=malloc(10000*sizeof(*q)); int ql=0,qr=0;\n    double* ans=malloc(1000*sizeof(double)); *rs=0;\n    q[qr++]=root;\n    while(ql<qr){\n        int sz=qr-ql; double s=0;\n        for(int i=0;i<sz;i++){\n            struct TreeNode* n=q[ql++]; s+=n->val;\n            if(n->left) q[qr++]=n->left;\n            if(n->right) q[qr++]=n->right;\n        }\n        ans[(*rs)++]=s/sz;\n    }\n    free(q); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "BFS duyệt từng level — avg = sum/count đúng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một nút",
+      "Cây lệch",
+      "Giá trị âm"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS không tách level",
+      "Integer division"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

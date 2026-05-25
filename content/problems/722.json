@@ -2,33 +2,38 @@
   "id": 722,
   "title": "Remove Comments",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Remove Comments (LeetCode #722) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng chuỗi source mô tả code C/C++. Trả mảng code sau khi xóa comment: // đến hết dòng, /* ... */ có thể nhiều dòng. Giữ xuống dòng ngoài comment.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "source = [\"/*Test program */\", \"int main()\", \"{ \", \"  // variable declaration \", \"int a, b, c;\", \"/* This is a test\", \"   multiline  \", \"   comment for \", \"   testing */\", \"a = b + c;\", \"}\"]",
+      "output": "[\"int main()\",\"{ \",\"  \",\"int a, b, c;\",\"a = b + c;\",\"}\"]"
+    },
+    {
+      "input": "source = [\"a/*comment\", \"line\", \"more_comment*/b\"]",
+      "output": "[\"ab\"]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt từng dòng ký tự: state inCode/blockComment/lineComment. blockComment /* */; lineComment // đến \\n.",
+  "memoryTip": "Remove comments FSM: 4 state — code, //, /*, */.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def removeComments(self, source: List[str]) -> List[str]:\n        res, buf, block = [], [], False\n        for line in source:\n            i, n = 0, len(line)\n            while i < n:\n                if block:\n                    j = line.find(\"*/\", i)\n                    if j == -1: i = n; break\n                    i = j + 2; block = False\n                elif i + 1 < n and line[i:i+2] == \"//\": break\n                elif i + 1 < n and line[i:i+2] == \"/*\": block = True; i += 2\n                else: buf.append(line[i]); i += 1\n            if not block:\n                res.append(\"\".join(buf)); buf = []\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<string> removeComments(vector<string>& src) {\n        vector<string> ans;\n        string cur;\n        bool block = false;\n        for (auto& line : src) {\n            for (int i = 0; i < (int)line.size(); ) {\n                if (block) {\n                    auto p = line.find(\"*/\", i);\n                    if (p == string::npos) break;\n                    i = p + 2; block = false;\n                } else if (i+1<(int)line.size() && line[i]=='/' && line[i+1]=='/') break;\n                else if (i+1<(int)line.size() && line[i]=='/' && line[i+1]=='*') { block=true; i+=2; }\n                else cur.push_back(line[i++]);\n            }\n            if (!block) { ans.push_back(cur); cur.clear(); }\n        }\n        return ans;\n    }\n};",
+    "c": "char** removeComments(char** source, int n, int* retSize) {\n    char** ans = malloc(n * sizeof(char*)); *retSize = 0;\n    char buf[10000]; int bi = 0, block = 0;\n    for (int t = 0; t < n; t++) {\n        char* line = source[t];\n        for (int i = 0; line[i]; ) {\n            if (block) {\n                char* p = strstr(line + i, \"*/\");\n                if (!p) break;\n                i = (int)(p - line) + 2; block = 0;\n            } else if (line[i]=='/' && line[i+1]=='/') break;\n            else if (line[i]=='/' && line[i+1]=='*') { block=1; i+=2; }\n            else buf[bi++] = line[i++];\n        }\n        if (!block) { buf[bi]=0; ans[(*retSize)++]=strdup(buf); bi=0; }\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "FSM xử lý comment lồng dòng và multi-line; code ngoài comment giữ nguyên thứ tự.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không comment",
+      "Comment-only lines → rỗng",
+      "/* chưa đóng qua nhiều dòng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm // trong string (đề bỏ qua)",
+      "Quên flush buffer khi hết block"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

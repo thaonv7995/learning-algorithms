@@ -5,30 +5,35 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Beautiful Arrangement II (LeetCode #667) — Medium.",
+  "description": "Tạo permutation 1..n độ dài n với |diff| liên tiếp khác nhau max (beautiful arrangement II).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n=3,k=1",
+      "output": "[1,2,3]"
+    },
+    {
+      "input": "n=3,k=2",
+      "output": "[1,3,2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers l=1,r=n; alternate pick l,r để diff giảm dần.",
+  "memoryTip": "Beautiful arrangement II — two pointers alternate ends.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def constructArray(self, n: int, k: int) -> List[int]:\n        ans=[]; l,r=1,n\n        while l<=r:\n            if k>0:\n                if k%2: ans.append(l); l+=1\n                else: ans.append(r); r-=1\n                k-=1\n            else:\n                ans.append(l); l+=1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> constructArray(int n, int k) {\n        vector<int> ans; int l=1,r=n;\n        while(l<=r){\n            if(k>0){ if(k&1) ans.push_back(l++); else ans.push_back(r--); k--; }\n            else ans.push_back(l++);\n        }\n        return ans;\n    }\n};",
+    "c": "int* constructArray667(int n,int k,int* rs){ int* ans=malloc(n*4); int l=1,r=n,p=0; while(l<=r){ if(k>0){ if(k&1) ans[p++]=l++; else ans[p++]=r--; k--; } else ans[p++]=l++; } *rs=n; return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Alternate low/high tạo diff k,k-1,...",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1 ascending",
+      "n=1",
+      "k=n-1 max"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Random shuffle",
+      "Wrong alternate order"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

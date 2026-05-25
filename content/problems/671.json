@@ -4,31 +4,36 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Second Minimum Node In a Binary Tree (LeetCode #671) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Tìm second minimum node trong cây nhị phân đặc biệt (root min, con=parent hoặc 2*parent).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[2,2,5,null,null,5,7]",
+      "output": "5"
+    },
+    {
+      "input": "root=[2,2,2]",
+      "output": "-1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS: track min và second min khi gặp val > min.",
+  "memoryTip": "Second minimum node — traverse special tree track two mins.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findSecondMinimumValue(self, root: Optional[TreeNode]) -> int:\n        self.ans=10**9; self.root_val=root.val\n        def dfs(n):\n            if not n: return\n            if n.val>self.root_val: self.ans=min(self.ans,n.val)\n            else: dfs(n.left); dfs(n.right)\n        dfs(root); return self.ans if self.ans<10**9 else -1",
+    "cpp": "class Solution {\n    int ans=INT_MAX, rv;\n    void dfs(TreeNode* n){\n        if(!n) return;\n        if(n->val>rv) ans=min(ans,n->val);\n        else { dfs(n->left); dfs(n->right); }\n    }\npublic:\n    int findSecondMinimumValue(TreeNode* root){\n        rv=root->val; dfs(root); return ans==INT_MAX?-1:ans;\n    }\n};",
+    "c": "int findSecondMinimumValue671(struct TreeNode* r){ int ans=2147483647,rv=r->val; void dfs(struct TreeNode* n){ if(!n)return; if(n->val>rv&&n->val<ans)ans=n->val; else{dfs(n->left);dfs(n->right);} } dfs(r); return ans==2147483647?-1:ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Chỉ val>root_val mới là ứng viên; min của chúng là đáp án.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "All equal -1",
+      "Second at deep node",
+      "Two candidates"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "BFS unnecessary",
+      "Compare only children"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

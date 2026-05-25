@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #738</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Greedy</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Monotone Increasing Digits</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Monotone Increasing Digits (LeetCode #738) — Medium.</div>
+                        <div class="block-text">Cho số nguyên dương N. Trả số lớn nhất ≤ N mà các chữ số không giảm từ trái sang phải (monotone increasing).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>N = 10</code></div>
+                <div class="ex-line"><span>Out</span><code>9</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>N = 1234</code></div>
+                <div class="ex-line"><span>Out</span><code>1234</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>N = 332</code></div>
+                <div class="ex-line"><span>Out</span><code>299</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Quét từ phải: nếu digits[i]&lt;digits[i-1] thì giảm digits[i-1]-- và set digits[i..] = 9.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> monotoneIncreasingDigits(<span class="ty">int</span> N) {
+    <span class="ty">char</span> s[16]; sprintf(s, &quot;%d&quot;, N);
+    <span class="ty">int</span> n = strlen(s);
+    <span class="kw">for</span> (<span class="ty">int</span> i = n - 1; i &gt; 0; i--)
+        <span class="kw">if</span> (s[i] &lt; s[i-1]) {
+            s[i-1]--;
+            <span class="kw">for</span> (<span class="ty">int</span> j = i; j &lt; n; j++) s[j] = '9';
+        }
+    <span class="kw">return</span> atoi(s);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> monotoneIncreasingDigits(<span class="ty">self</span>, N: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        s = <span class="ty">list</span>(<span class="ty">str</span>(N))
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(s)-1, 0, -1):
+            <span class="kw">if</span> s[i] &lt; s[i-1]:
+                s[i-1] = <span class="ty">str</span>(<span class="ty">int</span>(s[i-1]) - 1)
+                <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i, <span class="ty">len</span>(s)): s[j] = '9'
+        <span class="kw">return</span> <span class="ty">int</span>(&quot;&quot;.join(s))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> monotoneIncreasingDigits(<span class="ty">int</span> N) {
+        <span class="ty">string</span> s = to_string(N);
+        <span class="kw">for</span> (<span class="ty">int</span> i = s.size()-1; i &gt; 0; i--)
+            <span class="kw">if</span> (s[i] &lt; s[i-1]) {
+                s[i-1]--;
+                <span class="kw">for</span> (<span class="ty">int</span> j = i; j &lt; (<span class="ty">int</span>)s.size(); j++) s[j] = '9';
+            }
+        <span class="kw">return</span> stoi(s);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +137,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Math</span>
+                        <span class="pattern-chip">Greedy</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Quét từ phải: nếu digits[i]&lt;digits[i-1] thì giảm digits[i-1]-- và set…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Fix first violation from right guarantees max valid number ≤ N.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">N đã monotone → giữ nguyên</span><span class="analysis-tag edge">N=10 → 9</span><span class="analysis-tag edge">999→999</span><span class="analysis-tag pit">Scan left-to-right sai hướng</span><span class="analysis-tag pit">Quên fill 9 bên phải</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Monotone digits = find first drop from left, decrement prev, fill 9s right.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +166,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Monotone%20Increasing%20Digits&lc_id=738&embed=true"></iframe>

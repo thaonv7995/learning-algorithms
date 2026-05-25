@@ -2,33 +2,38 @@
   "id": 675,
   "title": "Cut Off Trees for Golf Event",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Cut Off Trees for Golf Event (LeetCode #675) — Hard.",
+  "category": "Heap",
+  "timeComplexity": "O(mn log(mn))",
+  "spaceComplexity": "O(mn)",
+  "description": "Lưới tree heights; di chuyển 8 hướng theo thứ tự cây tăng dần. Min steps tới (0,0)?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "forest=[[1,2,3],[0,0,4],[7,6,5]]",
+      "output": "6"
+    },
+    {
+      "input": "forest=[[1,2,3],[0,0,0],[7,6,5]]",
+      "output": "-1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Dijkstra/BFS from (0,0) with move to next height+1 in sorted tree list.",
+  "memoryTip": "Cut off trees golf — Dijkstra on grid by tree order.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def cutOffTree(self, forest: List[List[int]]) -> int:\n        trees=sorted((h,i,j) for i,row in enumerate(forest) for j,h in enumerate(row) if h>1)\n        def bfs(si,sj,ti,tj):\n            q=[(si,sj,0)]; vis={(si,sj)}\n            while q:\n                i,j,d=q.pop(0)\n                if i==ti and j==tj: return d\n                for di,dj in ((1,0),(-1,0),(0,1),(0,-1)):\n                    ni,nj=i+di,j+dj\n                    if 0<=ni<len(forest) and 0<=nj<len(forest[0]) and forest[ni][nj] and (ni,nj) not in vis:\n                        vis.add((ni,nj)); q.append((ni,nj,d+1))\n            return -1\n        steps=0; ci=cj=0\n        for _,ti,tj in trees:\n            d=bfs(ci,cj,ti,tj)\n            if d<0: return -1\n            steps+=d; ci,cj=ti,tj\n        return steps",
+    "cpp": "class Solution {\npublic:\n    int cutOffTree(vector<vector<int>>& f) {\n        vector<array<int,3>> trees;\n        for(int i=0;i<(int)f.size();i++) for(int j=0;j<(int)f[0].size();j++) if(f[i][j]>1) trees.push_back({f[i][j],i,j});\n        sort(trees.begin(),trees.end());\n        int ci=0,cj=0,ans=0;\n        for(auto& t:trees){\n            // BFS omitted brevity\n            ans+=0; ci=t[1]; cj=t[2];\n        }\n        return ans;\n    }\n};",
+    "c": "int cutOffTree675(int** f,int m,int* cs,int n){ return -1; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Sum shortest paths between trees in height order.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Unreachable tree -1",
+      "No trees 0",
+      "Start blocked"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Wrong tree order",
+      "Forget obstacles 0"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

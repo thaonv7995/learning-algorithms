@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #766</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Matrix</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Toeplitz Matrix</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>69.7% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Toeplitz Matrix (LeetCode #766) — Easy.</div>
+                        <div class="block-text">Ma trận Toeplitz: mọi đường chéo từ trái-trên xuống phải-dưới có cùng giá trị. Kiểm tra matrix có Toeplitz không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>matrix = [[1,2,3,4],[5,1,2,3],[9,5,1,2]]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>matrix = [[1,2],[2,2]]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">So sánh matrix[r][c] với matrix[r-1][c-1] cho mọi r,c &gt;= 1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,24 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> isToeplitzMatrix(<span class="ty">int</span>** matrix, <span class="ty">int</span> m, <span class="ty">int</span>* cs, <span class="ty">int</span> n) {
+    <span class="kw">for</span>(<span class="ty">int</span> r=1;r&lt;m;r++) <span class="kw">for</span>(<span class="ty">int</span> c=1;c&lt;n;c++) <span class="kw">if</span>(matrix[r][c]!=matrix[r-1][c-1]) <span class="kw">return</span> false;
+    <span class="kw">return</span> true;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isToeplitzMatrix(<span class="ty">self</span>, matrix: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; bool:
+        <span class="kw">for</span> r <span class="kw">in</span> <span class="ty">range</span>(1, <span class="ty">len</span>(matrix)):
+            <span class="kw">for</span> c <span class="kw">in</span> <span class="ty">range</span>(1, <span class="ty">len</span>(matrix[0])):
+                <span class="kw">if</span> matrix[r][c] != matrix[r-1][c-1]: <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">return</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isToeplitzMatrix(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; m) {
+        <span class="ty">int</span> R=m.size(), C=m[0].size();
+        <span class="kw">for</span>(<span class="ty">int</span> r=1;r&lt;R;r++) <span class="kw">for</span>(<span class="ty">int</span> c=1;c&lt;C;c++)
+            <span class="kw">if</span>(m[r][c]!=m[r-1][c-1]) <span class="kw">return</span> false;
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +121,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">Matrix</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — So sánh matrix[r][c] với matrix[r-1][c-1] cho mọi r,c &gt;= 1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Điều kiện cần đủ trên mọi đường chéo nội bộ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">1 hàng hoặc 1 cột → true</span><span class="analysis-tag edge">1x1 → true</span><span class="analysis-tag edge">Sai một ô</span><span class="analysis-tag pit">So sánh horizontal/vertical</span><span class="analysis-tag pit">Off-by-one biên</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Toeplitz = each cell equals top-left neighbor.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +150,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Toeplitz%20Matrix&lc_id=766&embed=true"></iframe>

@@ -5,30 +5,39 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "1-bit and 2-bit Characters (LeetCode #717) — Easy.",
+  "description": "Mảng bits gồm 0 và 1 mô tả mã hóa: 0 là ký tự 1-bit; 10 hoặc 11 là ký tự 2-bit. bit[0] luôn là 1-bit. Kiểm tra mảng có phải chuỗi mã hóa hợp lệ không (ăn hết mọi bit).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "bits = [1,0,0]",
+      "output": "true"
+    },
+    {
+      "input": "bits = [1,1,1,0]",
+      "output": "false"
+    },
+    {
+      "input": "bits = [1,0,1]",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt i=0: nếu bits[i]==0 nhảy 1; else nếu i+1 hợp lệ và bits[i+1] in {0,1} nhảy 2; else false. Cuối i==n → true.",
+  "memoryTip": "Greedy parse: 0 đơn lẻ; 1 phải đi cùng bit kế (10 hoặc 11).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isOneBitCharacter(self, bits: List[int]) -> bool:\n        i, n = 0, len(bits)\n        while i < n:\n            if bits[i] == 0:\n                i += 1\n            elif i + 1 < n:\n                i += 2\n            else:\n                return False\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool isOneBitCharacter(vector<int>& bits) {\n        int i = 0, n = bits.size();\n        while (i < n) {\n            if (bits[i] == 0) i++;\n            else if (i + 1 < n) i += 2;\n            else return false;\n        }\n        return true;\n    }\n};",
+    "c": "bool isOneBitCharacter(int* bits, int n) {\n    int i = 0;\n    while (i < n) {\n        if (bits[i] == 0) i++;\n        else if (i + 1 < n) i += 2;\n        else return false;\n    }\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Parse duy nhất theo quy tắc 1-bit/2-bit; thất bại khi 1 ở cuối không đủ cặp.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "[0] → true",
+      "Kết thúc bằng ...10",
+      "Kết thúc 1 đơn"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ kiểm tra bit cuối = 0",
+      "Quên case bits[i]==1 ở index cuối"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

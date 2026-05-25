@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Triangle Judgement (LeetCode #610) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Triangles(x,y,z) là độ dài ba cạnh. Trả x,y,z và label Yes nếu ba cạnh tạo tam giác hợp lệ (a+b>c cho mọi cặp).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "x=2,y=3,z=4",
+      "output": "Yes"
+    },
+    {
+      "input": "x=1,y=2,z=3",
+      "output": "No"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "SELECT *, IF(x+y>z AND x+z>y AND y+z>x, 'Yes', 'No') AS triangle FROM Triangles.",
+  "memoryTip": "Triangle judgement = sum of any two sides > third side.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT x, y, z,\n  CASE WHEN x + y > z AND x + z > y AND y + z > x THEN 'Yes' ELSE 'No' END AS triangle\nFROM Triangles;",
+    "cpp": "// SQL\nSELECT x, y, z,\n  CASE WHEN x + y > z AND x + z > y AND y + z > x THEN 'Yes' ELSE 'No' END AS triangle\nFROM Triangles;",
+    "c": "const char query[] = \"SELECT x, y, z,\\n  CASE WHEN x + y > z AND x + z > y AND y + z > x THEN 'Yes' ELSE 'No' END AS triangle\\nFROM Triangles;\";"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Kiểm tra ba bất đẳng thức tam giác cho mọi hàng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Tam giác đều",
+      "Vi phạm một cạnh"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng >= thay >",
+      "Thiếu một điều kiện"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

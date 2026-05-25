@@ -2,33 +2,38 @@
   "id": 636,
   "title": "Exclusive Time of Functions",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Exclusive Time of Functions (LeetCode #636) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho logs Exclusive Time: function_id start/end và timestamp. Tính thời gian exclusive (ms) mỗi function.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n=2, logs=[\"0:start:0\",\"1:start:2\",\"1:end:5\",\"0:end:6\"]",
+      "output": "[3,3]"
+    },
+    {
+      "input": "Một function start/end",
+      "output": "end-start+1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack function ids; on start push; on end pop, cộng delta trừ thời gian nested cho parent.",
+  "memoryTip": "Exclusive time — stack nested calls, subtract child time from parent.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def exclusiveTime(self, n: int, logs: List[str]) -> List[int]:\n        ans=[0]*n; st=[]; prev=0\n        for log in logs:\n            fid,typ,ts= log.split(\":\"); fid=int(fid); ts=int(ts)\n            if typ==\"start\":\n                if st: ans[st[-1]]+=ts-prev\n                st.append(fid); prev=ts\n            else:\n                ans[st.pop()]+=ts-prev+1; prev=ts+1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> exclusiveTime(int n, vector<string>& logs) {\n        vector<int> ans(n); stack<int> st; int prev=0;\n        for(auto& log:logs){\n            int i=log.find(':'); int j=log.rfind(':');\n            string typ=log.substr(i+1,j-i-1); int fid=stoi(log.substr(0,i)), ts=stoi(log.substr(j+1));\n            if(typ==\"start\"){ if(!st.empty()) ans[st.top()]+=ts-prev; st.push(fid); prev=ts; }\n            else { ans[st.top()]+=ts-prev+1; st.pop(); prev=ts+1; }\n        }\n        return ans;\n    }\n};",
+    "c": "int* exclusiveTime(int n, char** logs, int ln, int* rs){ int* ans=calloc(n,sizeof(int)); int st[256],top=0,prev=0; for(int i=0;i<ln;i++){ int fid,ts; char typ[8]; sscanf(logs[i],\"%d:%7s:%d\",&fid,typ,&ts); if(typ[0]=='s'){ if(top) ans[st[top-1]]+=ts-prev; st[top++]=fid; prev=ts;} else { ans[st[--top]]+=ts-prev+1; prev=ts+1;} } *rs=n; return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Stack mô phỏng call stack — exclusive = interval trừ thời gian con.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Nested calls",
+      "Sequential không overlap",
+      "end timestamp inclusive +1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên +1 end inclusive",
+      "Không trừ nested cho parent"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

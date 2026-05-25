@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #701</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Insert into a Binary Search Tree</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(h)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>73.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Insert into a Binary Search Tree (LeetCode #701) — Medium.</div>
+                        <div class="block-text">Cho cây BST root và giá trị val. Chèn val vào cây sao cho vẫn là BST (trái nhỏ hơn, phải lớn hơn). Trả về gốc cây sau khi chèn. Nếu val đã tồn tại vẫn chèn theo quy tắc BST (thường vào nhánh phải).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [4,2,7,1,3], val = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>[4,2,7,1,3,5]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [40,20,60,10,30,50,70], val = 25</code></div>
+                <div class="ex-line"><span>Out</span><code>[40,20,60,10,30,50,70,null,null,25]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>root = [], val = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>[4]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đệ quy: nếu root null tạo nút mới; nếu val &lt; root.val chèn trái, ngược lại chèn phải. Hoặc lặp xuống lá rồi gắn nút mới.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> TreeNode* insertIntoBST(<span class="ty">struct</span> TreeNode* root, <span class="ty">int</span> val) {
+    <span class="kw">if</span> (!root) {
+        <span class="ty">struct</span> TreeNode* n = <span class="kw">malloc</span>(<span class="kw">sizeof</span>(<span class="ty">struct</span> TreeNode));
+        n-&gt;val = val; n-&gt;left = n-&gt;right = NULL;
+        <span class="kw">return</span> n;
+    }
+    <span class="kw">if</span> (val &lt; root-&gt;val) root-&gt;left = insertIntoBST(root-&gt;left, val);
+    <span class="kw">else</span> root-&gt;right = insertIntoBST(root-&gt;right, val);
+    <span class="kw">return</span> root;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> insertIntoBST(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>], val: <span class="ty">int</span>) -&gt; <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]:
+        <span class="kw">if</span> <span class="kw">not</span> root:
+            <span class="kw">return</span> <span class="ty">TreeNode</span>(val)
+        <span class="kw">if</span> val &lt; root.val:
+            root.left = <span class="ty">self</span>.insertIntoBST(root.left, val)
+        <span class="kw">else</span>:
+            root.right = <span class="ty">self</span>.insertIntoBST(root.right, val)
+        <span class="kw">return</span> root</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    TreeNode* insertIntoBST(TreeNode* root, <span class="ty">int</span> val) {
+        <span class="kw">if</span> (!root) <span class="kw">return</span> <span class="kw">new</span> TreeNode(val);
+        <span class="kw">if</span> (val &lt; root-&gt;val) root-&gt;left = insertIntoBST(root-&gt;left, val);
+        <span class="kw">else</span> root-&gt;right = insertIntoBST(root-&gt;right, val);
+        <span class="kw">return</span> root;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +136,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(h)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Đệ quy: nếu root null tạo nút mới; nếu val &lt; root.val…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc lặp xuống lá rồi gắn nút mới.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Invariant BST: mọi nút trái &lt; cha &lt; phải được giữ khi chèn đúng nhánh.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Cây rỗng → nút mới là root</span><span class="analysis-tag edge">Chèn nhỏ nhất/ lớn nhất → đi hết một nhánh</span><span class="analysis-tag pit">Chèn sai nhánh khi val bằng root.val</span><span class="analysis-tag pit">Quên return root sau đệ quy</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>BST insert luôn đi một nhánh — không cần rebalance như AVL.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Insert%20into%20a%20Binary%20Search%20Tree&lc_id=701&embed=true"></iframe>

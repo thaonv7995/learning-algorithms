@@ -2,33 +2,38 @@
   "id": 632,
   "title": "Smallest Range Covering Elements from K Lists",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Smallest Range Covering Elements from K Lists (LeetCode #632) — Hard.",
+  "category": "Heap",
+  "timeComplexity": "O(n log k)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho k list đã sort. Tìm đoạn [min,max] ngắn nhất chứa ít nhất một phần tử từ mỗi list.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [[4,10,15,24,26],[0,9,12,20],[5,18,22,30]]",
+      "output": "[20,24]"
+    },
+    {
+      "input": "nums = [[1,2,3],[1,2,3],[1,2,3]]",
+      "output": "[1,1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Min-heap (val,listIdx,elemIdx); push first of each list; pop min, push next; track min range.",
+  "memoryTip": "Smallest range k lists = sliding window on k sorted heads via min-heap.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def smallestRange(self, nums: List[List[int]]) -> List[int]:\n        import heapq\n        h=[(nums[i][0],i,0) for i in range(len(nums))]; heapq.heapify(h)\n        curmax=max(x[0] for x in h); best=[-10**9,10**9]\n        while h:\n            v,i,j=heapq.heappop(h); curmax=max(curmax,v)\n            if curmax-v<best[1]-best[0]: best=[v,curmax]\n            if j+1==len(nums[i]): break\n            nv=nums[i][j+1]; heapq.heappush(h,(nv,i,j+1)); curmax=max(curmax,nv)\n        return best",
+    "cpp": "class Solution {\npublic:\n    vector<int> smallestRange(vector<vector<int>>& nums) {\n        using T=array<int,3>;\n        priority_queue<T,vector<T>,greater<T>> pq;\n        int mx=INT_MIN;\n        for(int i=0;i<(int)nums.size();i++){ pq.push({nums[i][0],i,0}); mx=max(mx,nums[i][0]); }\n        vector<int> ans={-1000000,1000000};\n        while(!pq.empty()){\n            auto [v,i,j]=pq.top(); pq.pop();\n            if(mx-v<ans[1]-ans[0]) ans={v,mx};\n            if(j+1==(int)nums[i].size()) break;\n            int nv=nums[i][j+1]; pq.push({nv,i,j+1}); mx=max(mx,nv);\n        }\n        return ans;\n    }\n};",
+    "c": "int* smallestRange(int** nums,int k,int* cs,int* rs) {\n    int* heapv=malloc(k*4),*heapi=malloc(k*4),*heapj=malloc(k*4),hs=0;\n    int mx=-1000000000, bestL=0,bestR=1000000000;\n    #define HPUSH(v,i,j){heapv[hs]=v;heapi[hs]=i;heapj[hs]=j;hs++;for(int t=hs-1;t>0;t--)if(heapv[t]<heapv[t-1]){int tv=heapv[t];heapv[t]=heapv[t-1];heapv[t-1]=tv;int ti=heapi[t];heapi[t]=heapi[t-1];heapi[t-1]=ti;ti=heapj[t];heapj[t]=heapj[t-1];heapj[t-1]=ti;}else break;}\n    #define HPOP() (hs--)\n    for(int i=0;i<k;i++){ HPUSH(nums[i][0],i,0); if(nums[i][0]>mx) mx=nums[i][0]; }\n    while(hs){\n        int v=heapv[0],i=heapi[0],j=heapj[0];\n        if(mx-v<bestR-bestL){ bestL=v; bestR=mx; }\n        if(j+1>=cs[i]) break;\n        int nv=nums[i][j+1];\n        heapv[0]=nv; heapi[0]=i; heapj[0]=j+1;\n        if(nv>mx) mx=nv;\n        for(int t=0;t<hs-1;t++) if(heapv[t+1]<heapv[t]){int tv=heapv[t];heapv[t]=heapv[t+1];heapv[t+1]=tv;int ti=heapi[t];heapi[t]=heapi[t+1];heapi[t+1]=ti;ti=heapj[t];heapj[t]=heapj[t+1];heapj[t+1]=ti;}\n    }\n    int* ans=malloc(2*4); ans[0]=bestL; ans[1]=bestR; *rs=2; free(heapv); free(heapi); free(heapj); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Heap duy trì k phần tử nhỏ nhất hiện tại — cập nhật range mỗi bước.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1",
+      "List một phần tử",
+      "Trùng giá trị"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên cập nhật curmax",
+      "Break sớm khi list hết"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

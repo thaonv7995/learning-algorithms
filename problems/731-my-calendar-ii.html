@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #731</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">My Calendar II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n) per op</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>63.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">My Calendar II (LeetCode #731) — Medium.</div>
+                        <div class="block-text">My Calendar II: book(start,end) cho phép tối đa 2 booking overlap tại một thời điểm (triple overlap forbidden). Trả false nếu book tạo triple overlap.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>[&quot;MyCalendarTwo&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;], [[],[10,20],[50,60],[10,40],[5,15],[5,10],[25,55]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,true,true,true,false,true,true]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[&quot;MyCalendarTwo&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;], [[],[26,35],[26,32],[25,32],[18,26]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,true,true,false,true]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Giữ bookings và overlaps (double-booked intervals). book kiểm tra overlap với overlaps → triple; else merge overlap vào overlaps, book vào bookings.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,51 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span> s,e; } Iv;
+static Iv bk2[1000], ov2[1000]; static <span class="ty">int</span> nb2, no2;
+static <span class="ty">int</span> xov(<span class="ty">int</span> a,<span class="ty">int</span> b,<span class="ty">int</span> c,<span class="ty">int</span> d){ <span class="kw">return</span> a&lt;d &amp;&amp; b&gt;c; }
+<span class="ty">bool</span> myCalendarTwoBook(<span class="ty">int</span> start,<span class="ty">int</span> end){
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;no2;i++) <span class="kw">if</span>(xov(start,end,ov2[i].s,ov2[i].e)) <span class="kw">return</span> false;
+    Iv nb[1000]; <span class="ty">int</span> m=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;nb2;i++){
+        <span class="kw">if</span>(xov(start,end,bk2[i].s,bk2[i].e)){
+            ov2[no2].s=start&gt;bk2[i].s?start:bk2[i].s;
+            ov2[no2].e=end&lt;bk2[i].e?end:bk2[i].e; no2++;
+        } <span class="kw">else</span> nb[m++]=bk2[i];
+    }
+    nb[m].s=start; nb[m++].e=end; nb2=m; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++) bk2[i]=nb[i];
+    <span class="kw">return</span> true;
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> MyCalendarTwo:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.bookings = []
+        <span class="ty">self</span>.overlaps = []
+    <span class="kw">def</span> book(<span class="ty">self</span>, start: <span class="ty">int</span>, end: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">for</span> s, e <span class="kw">in</span> <span class="ty">self</span>.overlaps:
+            <span class="kw">if</span> start &lt; e <span class="kw">and</span> end &gt; s: <span class="kw">return</span> <span class="kw">False</span>
+        new_over = []
+        <span class="kw">for</span> s, e <span class="kw">in</span> <span class="ty">self</span>.bookings:
+            <span class="kw">if</span> start &lt; e <span class="kw">and</span> end &gt; s:
+                <span class="ty">self</span>.overlaps.append((<span class="ty">max</span>(start,s), <span class="ty">min</span>(end,e)))
+            <span class="kw">else</span>:
+                new_over.append((s,e))
+        <span class="ty">self</span>.bookings = new_over + [(start,end)]
+        <span class="kw">return</span> <span class="kw">True</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> MyCalendarTwo {
+    <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; bk, ov;
+    static <span class="ty">bool</span> cross(<span class="ty">int</span> a,<span class="ty">int</span> b,<span class="ty">int</span> c,<span class="ty">int</span> d){ <span class="kw">return</span> a&lt;d &amp;&amp; b&gt;c; }
 <span class="ty">public</span>:
+    <span class="ty">bool</span> book(<span class="ty">int</span> start, <span class="ty">int</span> end) {
+        <span class="kw">for</span> (auto [s,e]: ov) <span class="kw">if</span> (cross(start,end,s,e)) <span class="kw">return</span> false;
+        <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; nb;
+        <span class="kw">for</span> (auto [s,e]: bk) {
+            <span class="kw">if</span> (cross(start,end,s,e)) ov.push_back({max(start,s), min(end,e)});
+            <span class="kw">else</span> nb.push_back({s,e});
+        }
+        nb.push_back({start,end});
+        bk = move(nb);
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +148,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Design</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Giữ bookings và overlaps .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — book kiểm tra overlap với overlaps → triple; else merge…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Overlaps lưu vùng double-book; book trùng overlap → triple → reject.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Hai overlap riêng ok</span><span class="analysis-tag edge">Triple tại giao 3 interval</span><span class="analysis-tag edge">Adjacent không overlap</span><span class="analysis-tag pit">Chỉ đếm số booking không track overlap region</span><span class="analysis-tag pit">Nhầm Calendar I logic</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Calendar II = track single + double booked regions separately.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +177,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=My%20Calendar%20II&lc_id=731&embed=true"></iframe>

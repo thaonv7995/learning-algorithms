@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #640</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Solve the Equation</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Solve the Equation (LeetCode #640) — Medium.</div>
+                        <div class="block-text">Giải phương trình ax+b=cx+d dạng chuỗi. Trả &quot;x=val&quot;, &quot;Infinite solutions&quot; hoặc &quot;No solution&quot;.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>equation = &quot;2x=x+2&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;x=2&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>equation = &quot;x=x&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;Infinite solutions&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Parse hai vế; gom hệ số x và hằng; coef=0 → infinite/no; else x=-const/coef.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* solveEquation(<span class="ty">char</span>* eq){ <span class="kw">return</span> &quot;No solution&quot;; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> solveEquation(<span class="ty">self</span>, equation: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">def</span> parse(s):
+            coef=const=0; i=0; sign=1
+            <span class="kw">while</span> i&lt;<span class="ty">len</span>(s):
+                <span class="kw">if</span> s[i]=='+': sign=1; i+=1
+                <span class="kw">elif</span> s[i]=='-': sign=-1; i+=1
+                j=i
+                <span class="kw">while</span> j&lt;<span class="ty">len</span>(s) <span class="kw">and</span> (s[j].isdigit() <span class="kw">or</span> s[j]=='x'): j+=1
+                term=s[i:j]; i=j
+                <span class="kw">if</span> 'x' <span class="kw">in</span> term:
+                    c=term[:-1]; c=<span class="ty">int</span>(c) <span class="kw">if</span> c <span class="kw">not</span> <span class="kw">in</span> ('','+','-') <span class="kw">else</span> (sign <span class="kw">if</span> c <span class="kw">in</span> ('+','-') <span class="kw">else</span> 1)*sign
+                    <span class="kw">if</span> c==0: c=sign
+                    coef+=c
+                <span class="kw">else</span>:
+                    const+=sign*<span class="ty">int</span>(term)
+            <span class="kw">return</span> coef,const
+        left,right=equation.split('=')
+        lc,lk=parse(left); rc,rk=parse(right)
+        coef=lc-rc; const=rk-lk
+        <span class="kw">if</span> coef==0: <span class="kw">return</span> &quot;Infinite solutions&quot; <span class="kw">if</span> const==0 <span class="kw">else</span> &quot;No solution&quot;
+        <span class="kw">if</span> const%coef: <span class="kw">return</span> f&quot;x={const/coef}&quot;
+        <span class="kw">return</span> f&quot;x={const//coef}&quot;</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> solveEquation(<span class="ty">string</span> eq) {
+        auto parse=[](<span class="ty">string</span> s){ <span class="ty">long</span> coef=0,const_=0,sign=1; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)s.size();){
+            <span class="kw">if</span>(s[i]=='+'){sign=1;i++;} <span class="kw">else</span> <span class="kw">if</span>(s[i]=='-'){sign=-1;i++;}
+            <span class="ty">int</span> j=i; <span class="kw">while</span>(j&lt;(<span class="ty">int</span>)s.size()&amp;&amp;(isdigit(s[j])||s[j]=='x')) j++;
+            <span class="ty">string</span> t=s.substr(i,j-i); i=j;
+            <span class="kw">if</span>(t.find('x')!=<span class="ty">string</span>::npos){ <span class="ty">long</span> c=1; <span class="kw">if</span>(t.size()&gt;1) c=stol(t.substr(0,t.size()-1)); <span class="kw">else</span> <span class="kw">if</span>(t[0]=='-') c=-1; coef+=sign*c;}
+            <span class="kw">else</span> const_+=sign*stol(t);
+        } <span class="kw">return</span> pair&lt;<span class="ty">long</span>,<span class="ty">long</span>&gt;{coef,const_};};
+        <span class="ty">int</span> p=eq.find('='); auto [lc,lk]=parse(eq.substr(0,p)); auto [rc,rk]=parse(eq.substr(p+1));
+        <span class="ty">long</span> coef=lc-rc, cst=rk-lk;
+        <span class="kw">if</span>(!coef) <span class="kw">return</span> !cst?&quot;Infinite solutions&quot;:&quot;No solution&quot;;
+        <span class="kw">return</span> &quot;x=&quot;+to_string(cst/coef);
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +147,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Parse hai vế; gom hệ số x và hằng; coef=0 → infinite/no; else…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Linear equation — single solution unless coef=0.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">x=x infinite</span><span class="analysis-tag edge">0=1 no solution</span><span class="analysis-tag edge">Negative coef</span><span class="analysis-tag pit">Parse x alone as 1</span><span class="analysis-tag pit">Sign handling</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Solve equation — move x terms left, constants right.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Solve%20the%20Equation&lc_id=640&embed=true"></iframe>

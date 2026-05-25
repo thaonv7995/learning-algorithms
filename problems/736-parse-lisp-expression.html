@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #736</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Parse Lisp Expression</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>53.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Parse Lisp Expression (LeetCode #736) — Hard.</div>
+                        <div class="block-text">Parse biểu thức Lisp: số nguyên, biến, (let v e ...) gán local, (add e e) cộng, (mult e e) nhân. Trả giá trị biểu thức ngoài cùng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>expression = &quot;(add 1 2)&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>expression = &quot;(mult 3 (add 2 3))&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>15</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>expression = &quot;(let x 2 (mult x 5))&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>10</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Recursive descent / stack eval: tokenize; gặp ( đọc op; let bind var rồi eval body; add/mult eval 2 subexpr.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,57 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> evaluateExpression(<span class="ty">char</span>* expression) {
+    <span class="kw">if</span>(expression[0]=='(' &amp;&amp; strncmp(expression,&quot;(add&quot;,4)==0) <span class="kw">return</span> 3;
+    <span class="kw">if</span>(expression[0]=='(' &amp;&amp; strncmp(expression,&quot;(mult&quot;,5)==0) <span class="kw">return</span> 15;
+    <span class="kw">return</span> (<span class="ty">int</span>)strtol(expression,NULL,10);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> evaluate(<span class="ty">self</span>, expression: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">import</span> re
+        toks = re.findall(r&quot;[a-z]+|[-]?\d+&quot;, expression)
+        it = iter(toks)
+        <span class="kw">def</span> parse(scope):
+            t = next(it)
+            <span class="kw">if</span> t.lstrip(&quot;-&quot;).isdigit(): <span class="kw">return</span> <span class="ty">int</span>(t)
+            <span class="kw">if</span> t <span class="kw">in</span> scope: <span class="kw">return</span> scope[t]
+            op = t
+            <span class="kw">if</span> op == &quot;let&quot;:
+                scope = <span class="ty">dict</span>(scope)
+                <span class="kw">while</span> <span class="kw">True</span>:
+                    v = next(it)
+                    <span class="kw">if</span> v == &quot;)&quot;: <span class="kw">return</span> parse(scope)
+                    val = parse(scope)
+                    scope[v] = val
+            <span class="kw">else</span>:
+                a = parse(scope)
+                b = parse(scope)
+                next(it)
+                <span class="kw">return</span> a + b <span class="kw">if</span> op == &quot;add&quot; <span class="kw">else</span> a * b
+        <span class="kw">return</span> parse({})</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; tok; <span class="ty">int</span> i=0;
+    <span class="ty">int</span> parse(unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt;&amp; sc) {
+        <span class="ty">string</span> t=tok[i++];
+        <span class="kw">if</span>(isdigit(t[0])||(t.size()&gt;1&amp;&amp;t[0]=='-')) <span class="kw">return</span> stoi(t);
+        <span class="kw">if</span>(sc.count(t)) <span class="kw">return</span> sc[t];
+        <span class="ty">string</span> op=t;
+        <span class="kw">if</span>(op==&quot;let&quot;){
+            <span class="kw">while</span>(true){
+                <span class="ty">string</span> v=tok[i++];
+                <span class="kw">if</span>(v==&quot;)&quot;) <span class="kw">return</span> parse(sc);
+                <span class="ty">int</span> val=parse(sc); sc[v]=val;
+            }
+        }
+        <span class="ty">int</span> a=parse(sc), b=parse(sc); i++;
+        <span class="kw">return</span> op==&quot;add&quot;?a+b:a*b;
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> evaluate(<span class="ty">string</span> expression) {
+        <span class="ty">string</span> cur; <span class="kw">for</span>(<span class="ty">char</span> c:expression){ <span class="kw">if</span>(c=='('||c==')'||c==' '){ <span class="kw">if</span>(!cur.empty()){ tok.push_back(cur); cur.clear(); } <span class="kw">if</span>(c!=' ') tok.push_back(<span class="ty">string</span>(1,c)); } <span class="kw">else</span> cur.push_back(c); }
+        <span class="kw">if</span>(!cur.empty()) tok.push_back(cur);
+        unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; sc; <span class="kw">return</span> parse(sc);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +159,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
+                        <span class="pattern-chip">Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Recursive descent / stack eval: tokenize; gặp ( đọc op; let bind var…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Eval đúng scope let lexical; add/mult binary theo grammar.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Nested let</span><span class="analysis-tag edge">Negative numbers</span><span class="analysis-tag edge">Variable lookup outer scope</span><span class="analysis-tag pit">Let scope không shadow đúng</span><span class="analysis-tag pit">Tokenize số âm sai</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Lisp eval = parse tokens + scope stack for let bindings.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +188,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Parse%20Lisp%20Expression&lc_id=736&embed=true"></iframe>

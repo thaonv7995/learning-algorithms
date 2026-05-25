@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #784</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Backtracking</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Letter Case Permutation</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(2^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>75.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Letter Case Permutation (LeetCode #784) — Medium.</div>
+                        <div class="block-text">Cho chuỗi S gồm chữ và số. Trả mọi hoán vị từ S bằng cách chọn hoa/thường cho chữ cái (số giữ nguyên).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>S = &quot;a1b2&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;a1b2&quot;,&quot;a1B2&quot;,&quot;A1b2&quot;,&quot;A1B2&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>S = &quot;3z4&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;3z4&quot;,&quot;3Z4&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>S = &quot;12345&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;12345&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Backtrack index i: nếu chữ cái thử lower và upper; số append cố định.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">char</span> buf784[32]; static <span class="ty">int</span> bp784; static <span class="ty">char</span>** ans784; static <span class="ty">int</span> an784, cap784;
+static <span class="ty">void</span> push784(){ ans784[an784]=<span class="kw">malloc</span>(bp784+1); strcpy(ans784[an784],buf784); an784++; }
+static <span class="ty">void</span> dfs784(<span class="ty">char</span>* s,<span class="ty">int</span> i){ <span class="kw">if</span>(!s[i]){ buf784[bp784]=0; push784(); <span class="kw">return</span>; }
+    <span class="kw">if</span>(isalpha(s[i])){ buf784[bp784]=tolower(s[i]); bp784++; dfs784(s,i+1); bp784--;
+        buf784[bp784]=toupper(s[i]); bp784++; dfs784(s,i+1); bp784--; }
+    <span class="kw">else</span> { buf784[bp784++]=s[i]; dfs784(s,i+1); bp784--; } }
+<span class="ty">char</span>** letterCasePermutation(<span class="ty">char</span>* s, <span class="ty">int</span>* retSize){ cap784=64; ans784=<span class="kw">malloc</span>(cap784*8); an784=0; bp784=0; dfs784(s,0); *retSize=an784; <span class="kw">return</span> ans784; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> letterCasePermutation(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        ans = []
+        <span class="kw">def</span> dfs(i, path):
+            <span class="kw">if</span> i == <span class="ty">len</span>(s):
+                ans.append(&quot;&quot;.join(path)); <span class="kw">return</span>
+            <span class="kw">if</span> s[i].isalpha():
+                path.append(s[i].lower()); dfs(i+1, path); path.pop()
+                path.append(s[i].upper()); dfs(i+1, path); path.pop()
+            <span class="kw">else</span>:
+                path.append(s[i]); dfs(i+1, path); path.pop()
+        dfs(0, [])
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; letterCasePermutation(<span class="ty">string</span> s) {
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; ans;
+        <span class="ty">string</span> cur;
+        function&lt;<span class="ty">void</span>(<span class="ty">int</span>)&gt; dfs = [&amp;](<span class="ty">int</span> i){
+            <span class="kw">if</span>(i==(<span class="ty">int</span>)s.size()){ ans.push_back(cur); <span class="kw">return</span>; }
+            <span class="kw">if</span>(isalpha(s[i])){
+                cur.push_back(tolower(s[i])); dfs(i+1); cur.pop_back();
+                cur.push_back(toupper(s[i])); dfs(i+1); cur.pop_back();
+            } <span class="kw">else</span> { cur.push_back(s[i]); dfs(i+1); cur.pop_back(); }
+        };
+        dfs(0); <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +142,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Backtracking</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(2^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Backtrack index i: nếu chữ cái thử lower và upper; số append cố định.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Backtrack liệt kê đủ 2^letters hoán vị case.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không chữ cái</span><span class="analysis-tag edge">Toàn chữ</span><span class="analysis-tag edge">Mixed digits</span><span class="analysis-tag pit">Thay đổi digit</span><span class="analysis-tag pit">Duplicate output order</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Letter case permutation = backtrack flip each letter bit.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Letter%20Case%20Permutation&lc_id=784&embed=true"></iframe>

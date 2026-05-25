@@ -3,32 +3,37 @@
   "title": "All Paths From Source to Target",
   "difficulty": "Medium",
   "category": "Backtracking",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "All Paths From Source to Target (LeetCode #797) — Medium.",
+  "timeComplexity": "O(2^n)",
+  "spaceComplexity": "O(n)",
+  "description": "DAG với n node 0..n-1, graph[u] = neighbors. Liệt kê mọi path từ 0 tới n-1 (sorted lex).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "graph = [[1,2],[3],[3],[]]",
+      "output": "[[0,1,3],[0,2,3]]"
+    },
+    {
+      "input": "graph = [[4,3,1],[3,2,4],[3],[4],[]]",
+      "output": "[[0,4],[0,3,4],[0,1,3,4],[0,1,2,3,4],[0,1,4]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS backtrack từ 0, push path khi tới n-1.",
+  "memoryTip": "All paths DAG = DFS 0 to n-1 accumulate paths.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def allPathsSourceTarget(self, graph: List[List[int]]) -> List[List[int]]:\n        n = len(graph)\n        ans = []\n        path = [0]\n        def dfs(u):\n            if u == n - 1:\n                ans.append(path[:]); return\n            for v in graph[u]:\n                path.append(v); dfs(v); path.pop()\n        dfs(0)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& g) {\n        int n=g.size(); vector<vector<int>> ans; vector<int> path={0};\n        function<void(int)> dfs=[&](int u){\n            if(u==n-1){ ans.push_back(path); return; }\n            for(int v:g[u]){ path.push_back(v); dfs(v); path.pop_back(); }\n        };\n        dfs(0); return ans;\n    }\n};",
+    "c": "static int path797[20], pl797;\nstatic int** ans797; static int an797, cap797;\nstatic void dfs797(int** g,int n,int* gs,int u){\n    if(u==n-1){ ans797[an797]=malloc(pl797*4); for(int i=0;i<pl797;i++) ans797[an797][i]=path797[i]; an797++; return; }\n    for(int i=0;i<gs[u];i++){ path797[pl797++]=g[u][i]; dfs797(g,n,gs,g[u][i]); pl797--; }\n}\nint** allPathsSourceTarget(int** graph, int n, int* gs, int* rs, int** rcs, int* cs) {\n    cap797=64; ans797=malloc(cap797*8); an797=0; pl797=1; path797[0]=0;\n    dfs797(graph,n,gs,0); *rs=an797; for(int i=0;i<an797;i++){ rcs[i]=malloc(4); *rcs[i]=cs[i]=pl797; } return ans797;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DAG DFS không cycle — mọi path 0→n-1 được liệt kê.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Linear graph một path",
+      "n=1",
+      "Nhiều branches"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "BFS không list all",
+      "Quên copy path"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

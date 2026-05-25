@@ -2,33 +2,42 @@
   "id": 753,
   "title": "Cracking the Safe",
   "difficulty": "Hard",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Cracking the Safe (LeetCode #753) — Hard.",
+  "category": "Graph",
+  "timeComplexity": "O(k^n)",
+  "spaceComplexity": "O(k^n)",
+  "description": "Safe n chữ số k-ary (0..k-1). Mỗi lần nhập một chữ số, mọi chuỗi con dài n xuất hiện đúng một lần trong output. Trả chuỗi ngắn nhất (De Bruijn).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 1, k = 2",
+      "output": "\"01\""
+    },
+    {
+      "input": "n = 2, k = 2",
+      "output": "\"01100\""
+    },
+    {
+      "input": "n = 2, k = 3",
+      "output": "\"011122233020010012021\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Eulerian path trên De Bruijn graph: edge từ node (n-1)-gram tới node bằng shift+new digit. Hierholzer DFS.",
+  "memoryTip": "Cracking safe = De Bruijn sequence via Euler trail on k-ary graph.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def crackSafe(self, n: int, k: int) -> str:\n        if n == 1: return \"\".join(str(i) for i in range(k))\n        seen = set()\n        ans = []\n        def dfs(node):\n            for d in map(str, range(k)):\n                edge = node + d\n                if edge in seen: continue\n                seen.add(edge)\n                dfs(edge[1:])\n                ans.append(d)\n        start = \"0\" * (n-1)\n        dfs(start)\n        return start + \"\".join(ans)",
+    "cpp": "class Solution {\npublic:\n    string crackSafe(int n, int k) {\n        if(n==1){ string s; for(int i=0;i<k;i++) s+=char('0'+i); return s; }\n        unordered_set<string> seen;\n        string ans, start(n-1,'0');\n        function<void(string)> dfs = [&](string node){\n            for(int d=0;d<k;d++){\n                string edge=node+char('0'+d);\n                if(seen.count(edge)) continue;\n                seen.insert(edge);\n                dfs(edge.substr(1));\n                ans.push_back(char('0'+d));\n            }\n        };\n        dfs(start);\n        return start+ans;\n    }\n};",
+    "c": "static char seen753[100000][16]; static int sn753;\nstatic int has753(char* e){ for(int i=0;i<sn753;i++) if(strcmp(seen753[i],e)==0) return 1; return 0; }\nstatic void add753(char* e){ if(!has753(e)) strcpy(seen753[sn753++],e); }\nstatic void dfs753(char* node, int n, int k, char* ans, int* ap){\n    for(int d=0; d<k; d++){\n        char edge[16]; snprintf(edge,16,\"%s%d\",node,d);\n        if(has753(edge)) continue; add753(edge);\n        char nxt[16]; strcpy(nxt,edge+1);\n        dfs753(nxt,n,k,ans,ap);\n        ans[(*ap)++]='0'+d;\n    }\n}\nchar* crackSafe(int n, int k, int* retSize) {\n    if(n==1){ char* s=malloc(k+1); for(int i=0;i<k;i++) s[i]='0'+i; s[k]=0; *retSize=k; return s; }\n    char start[16]; for(int i=0;i<n-1;i++) start[i]='0'; start[n-1]=0;\n    char* ans=malloc(100000); int ap=0; sn753=0; dfs753(start,n,k,ans,&ap); ans[ap]=0;\n    char* out=malloc(n+ap+1); strcpy(out,start); strcat(out,ans); *retSize=strlen(out); free(ans); return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "De Bruijn Euler trail đảm bảo mọi n-gram xuất hiện đúng một lần.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1 → 0..k-1",
+      "k=2 classic",
+      "Start node (n-1) zeros"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Hamilton path thay Euler",
+      "Thiếu prefix start node"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

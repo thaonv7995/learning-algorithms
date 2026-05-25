@@ -2,33 +2,38 @@
   "id": 690,
   "title": "Employee Importance",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Employee Importance (LeetCode #690) — Medium.",
+  "spaceComplexity": "O(h)",
+  "description": "Employee có id, importance, subordinates. Tổng importance cây org từ id cho trước.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "employees=[[1,5,[2,3]],[2,3,[]],[3,3,[]]], id=1",
+      "output": "11"
+    },
+    {
+      "input": "id=2",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS/BFS cộng importance mọi subordinate.",
+  "memoryTip": "Employee importance — DFS sum subtree importance.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def getImportance(self, employees: List['Employee'], id: int) -> int:\n        mp={e.id:e for e in employees}\n        def dfs(i):\n            e=mp[i]; s=e.importance\n            for sub in e.subordinates: s+=dfs(sub)\n            return s\n        return dfs(id)",
+    "cpp": "class Solution {\npublic:\n    int getImportance(vector<Employee*> employees, int id) {\n        unordered_map<int,Employee*> mp;\n        for(auto e:employees) mp[e->id]=e;\n        function<int(int)> dfs=[&](int i){\n            int s=mp[i]->importance;\n            for(int sub:mp[i]->subordinates) s+=dfs(sub);\n            return s;\n        };\n        return dfs(id);\n    }\n};",
+    "c": "int getImportance690(int** emp,int n,int id) {\n    int idx=-1; for(int i=0;i<n;i++) if(emp[i][0]==id){idx=i;break;}\n    if(idx<0) return 0;\n    int sum=emp[idx][1];\n    for(int j=2;j<emp[idx][2]+2;j++) sum+=getImportance690(emp,n,emp[idx][j]);\n    return sum;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DFS sum importance entire subtree rooted at id.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "No subordinates",
+      "Deep tree",
+      "Multiple branches"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "BFS ok too",
+      "Missing employee in map"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

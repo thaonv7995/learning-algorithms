@@ -3,32 +3,37 @@
   "title": "Jewels and Stones",
   "difficulty": "Easy",
   "category": "Hash Table",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(n+m)",
   "spaceComplexity": "O(1)",
-  "description": "Jewels and Stones (LeetCode #771) — Easy.",
+  "description": "Cho chuỗi jewels (đá quý) và stones (đá). Đếm số stones là jewel (ký tự stones nằm trong jewels).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "jewels = \"aA\", stones = \"aAAbbbb\"",
+      "output": "3"
+    },
+    {
+      "input": "jewels = \"z\", stones = \"ZZ\"",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Set jewels; đếm stones[i] in jewels.",
+  "memoryTip": "Jewels and stones = membership count in jewel set.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numJewelsInStones(self, jewels: str, stones: str) -> int:\n        j = set(jewels)\n        return sum(s in j for s in stones)",
+    "cpp": "class Solution {\npublic:\n    int numJewelsInStones(string jewels, string stones) {\n        unordered_set<char> j(jewels.begin(), jewels.end());\n        int ans=0;\n        for(char s:stones) if(j.count(s)) ans++;\n        return ans;\n    }\n};",
+    "c": "int numJewelsInStones(char* jewels, char* stones) {\n    int seen[256]={0}; for(;*jewels;jewels++) seen[(unsigned char)*jewels]=1;\n    int ans=0; for(;*stones;stones++) if(seen[(unsigned char)*stones]) ans++; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Đếm đúng membership từng stone.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Jewels rỗng → 0",
+      "Stones rỗng → 0",
+      "Case sensitive"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Case insensitive sai đề",
+      "Đếm jewels thay stones"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

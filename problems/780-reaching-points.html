@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #780</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Reaching Points</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log max)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>34.4% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Reaching Points (LeetCode #780) — Hard.</div>
+                        <div class="block-text">Điểm start (sx,sy) đến target (tx,ty) bằng thao tác: từ (x,y) có thể tới (x+y,y) hoặc (x,x+y). Có thể tới target không?</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>sx = 1, sy = 1, tx = 3, ty = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>sx = 1, sy = 1, tx = 2, ty = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>sx = 1, sy = 1, tx = 1, ty = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Reverse từ target về start: while tx&gt;=ty swap/mod; ty -= tx hoặc ty %= tx. Khả thi nếu về (sx,sy).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> reachingPoints(<span class="ty">int</span> sx, <span class="ty">int</span> sy, <span class="ty">int</span> tx, <span class="ty">int</span> ty) {
+    <span class="kw">while</span>(tx&gt;=sx &amp;&amp; ty&gt;=sy){ <span class="kw">if</span>(tx==ty) break;
+        <span class="kw">if</span>(tx&gt;ty){ <span class="kw">if</span>(ty&lt;sy) <span class="kw">return</span> false; <span class="kw">if</span>(tx&gt;=ty*2) tx%=ty; <span class="kw">else</span> tx-=ty; }
+        <span class="kw">else</span> { <span class="kw">if</span>(tx&lt;sx) <span class="kw">return</span> false; <span class="kw">if</span>(ty&gt;=tx*2) ty%=tx; <span class="kw">else</span> ty-=tx; }
+    } <span class="kw">return</span> tx==sx &amp;&amp; ty==sy;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> reachingPoints(<span class="ty">self</span>, sx: <span class="ty">int</span>, sy: <span class="ty">int</span>, tx: <span class="ty">int</span>, ty: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">while</span> tx &gt;= sx <span class="kw">and</span> ty &gt;= sy:
+            <span class="kw">if</span> tx == ty: break
+            <span class="kw">if</span> tx &gt; ty:
+                <span class="kw">if</span> ty &lt; sy: <span class="kw">return</span> <span class="kw">False</span>
+                <span class="kw">if</span> tx &gt;= ty * 2: tx %= ty
+                <span class="kw">else</span>: tx -= ty
+            <span class="kw">else</span>:
+                <span class="kw">if</span> tx &lt; sx: <span class="kw">return</span> <span class="kw">False</span>
+                <span class="kw">if</span> ty &gt;= tx * 2: ty %= tx
+                <span class="kw">else</span>: ty -= tx
+        <span class="kw">return</span> tx == sx <span class="kw">and</span> ty == sy</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> reachingPoints(<span class="ty">int</span> sx, <span class="ty">int</span> sy, <span class="ty">int</span> tx, <span class="ty">int</span> ty) {
+        <span class="kw">while</span>(tx&gt;=sx &amp;&amp; ty&gt;=sy){
+            <span class="kw">if</span>(tx==ty) break;
+            <span class="kw">if</span>(tx&gt;ty){ <span class="kw">if</span>(ty&lt;sy) <span class="kw">return</span> false; <span class="kw">if</span>(tx&gt;=ty*2LL) tx%=ty; <span class="kw">else</span> tx-=ty; }
+            <span class="kw">else</span> { <span class="kw">if</span>(tx&lt;sx) <span class="kw">return</span> false; <span class="kw">if</span>(ty&gt;=tx*2LL) ty%=tx; <span class="kw">else</span> ty-=tx; }
+        }
+        <span class="kw">return</span> tx==sx &amp;&amp; ty==sy;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +138,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log max)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Reverse từ target về start: while tx&gt;=ty swap/mod; ty -=…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Khả thi nếu về .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Reverse ops undo addition branch — modulo skip nhiều bước.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Start equals target</span><span class="analysis-tag edge">tx&lt;sx or ty&lt;sy early false</span><span class="analysis-tag edge">Large coordinates</span><span class="analysis-tag pit">Forward BFS TLE</span><span class="analysis-tag pit">Quên check ty&gt;=sy trong reverse</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Reaching points = reverse Euclidean algorithm on .</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +166,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Reaching%20Points&lc_id=780&embed=true"></iframe>

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #745</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Trie</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Prefix and Suffix Search</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * L)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n * L)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>40.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Prefix and Suffix Search (LeetCode #745) — Hard.</div>
+                        <div class="block-text">Thiết kế WordFilter: WordFilter(words) và f(prefix, suffix). f trả index lớn nhất của word vừa có prefix vừa có suffix (word phải chứa suffix).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>[&quot;WordFilter&quot;,&quot;f&quot;,&quot;f&quot;,&quot;f&quot;,&quot;f&quot;,&quot;f&quot;], [[[&quot;apple&quot;]],[&quot;a&quot;,&quot;e&quot;],[&quot;b&quot;,&quot;e&quot;],[&quot;a&quot;,&quot;le&quot;],[&quot;apple&quot;,&quot;apple&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,0,-1,-1,0]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[&quot;WordFilter&quot;,&quot;f&quot;], [[[&quot;abb&quot;,&quot;ba&quot;,&quot;ab&quot;,&quot;a&quot;]],[&quot;a&quot;,&quot;a&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,3]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Trie: mỗi node lưu max index word đi qua. Insert word với mọi suffix (word#word) hoặc paired trie prefix+suffix.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">char</span> key[256]; <span class="ty">int</span> idx; } WFE;
+static WFE wf[100000]; static <span class="ty">int</span> wfn;
+WordFilter* wordFilterCreate(<span class="ty">char</span>** words, <span class="ty">int</span> n) {
+    WordFilter* o=<span class="kw">malloc</span>(<span class="kw">sizeof</span>(<span class="ty">int</span>)); wfn=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){ <span class="ty">int</span> L=strlen(words[i]); <span class="kw">for</span>(<span class="ty">int</span> p=0;p&lt;=L;p++) <span class="kw">for</span>(<span class="ty">int</span> s=0;s&lt;=L;s++){ snprintf(wf[wfn].key,256,&quot;%.*s#%s&quot;,p,words[i],words[i]+L-s); wf[wfn++].idx=i; } }
+    <span class="kw">return</span> o;
+}
+<span class="ty">int</span> wordFilterF(WordFilter* o, <span class="ty">char</span>* prefix, <span class="ty">char</span>* suffix) {
+    <span class="ty">char</span> k[256]; snprintf(k,256,&quot;%s#%s&quot;,prefix,suffix);
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;wfn;i++) <span class="kw">if</span>(strcmp(wf[i].key,k)==0) <span class="kw">return</span> wf[i].idx;
+    <span class="kw">return</span> -1;
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> WordFilter:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, words: <span class="ty">List</span>[<span class="ty">str</span>]):
+        <span class="ty">self</span>.d = {}
+        <span class="kw">for</span> i, w <span class="kw">in</span> enumerate(words):
+            <span class="kw">for</span> p <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(w)+1):
+                <span class="kw">for</span> s <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(w)+1):
+                    <span class="ty">self</span>.d[w[:p]+&quot;<span class="cm">#&quot;+w[<span class="ty">len</span>(w)-s:]] = i</span>
+    <span class="kw">def</span> f(<span class="ty">self</span>, prefix: <span class="ty">str</span>, suffix: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">return</span> <span class="ty">self</span>.d.get(prefix+&quot;<span class="cm">#&quot;+suffix, -1)</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> WordFilter {
+    unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; mp;
 <span class="ty">public</span>:
+    WordFilter(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; words) {
+        <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)words.size();i++) {
+            <span class="ty">string</span>&amp; w=words[i];
+            <span class="kw">for</span> (<span class="ty">int</span> p=0;p&lt;=(<span class="ty">int</span>)w.size();p++)
+                <span class="kw">for</span> (<span class="ty">int</span> s=0;s&lt;=(<span class="ty">int</span>)w.size();s++)
+                    mp[w.substr(0,p)+&quot;#&quot;+w.substr(w.size()-s)]=i;
+        }
+    }
+    <span class="ty">int</span> f(<span class="ty">string</span> prefix, <span class="ty">string</span> suffix) {
+        auto it=mp.find(prefix+&quot;#&quot;+suffix);
+        <span class="kw">return</span> it==mp.end()?-1:it-&gt;second;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +139,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Trie</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * L)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n * L)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Trie: mỗi node lưu max index word đi qua.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Insert word với mọi suffix hoặc paired trie prefix+suffix.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi cặp (prefix,suffix) của mỗi word được index — query O(1) hash.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không match → -1</span><span class="analysis-tag edge">Nhiều word cùng match → index max</span><span class="analysis-tag edge">Prefix/suffix rỗng</span><span class="analysis-tag pit">Chỉ match prefix OR suffix</span><span class="analysis-tag pit">Không lưu index lớn nhất</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>WordFilter = store word as prefix + &quot;#&quot; + suffix variants in trie with max index.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Prefix%20and%20Suffix%20Search&lc_id=745&embed=true"></iframe>

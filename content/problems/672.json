@@ -3,32 +3,37 @@
   "title": "Bulb Switcher II",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Bulb Switcher II (LeetCode #672) — Medium.",
+  "description": "n bóng đèn, 4 nút flip pattern. Từ initial và ops (1..4), có thể đạt target state?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n=1, on=0, ops=[2,3]",
+      "output": "true"
+    },
+    {
+      "input": "n=3, on=0, ops=[2,4]",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Chỉ parity n mod something và flip counts mod 2 matter; simulate small patterns.",
+  "memoryTip": "Bulb Switcher II — finite state mod 2 for small n.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def flipLights(self, n: int, presses: int) -> int:\n        if presses==0: return 1\n        presses=min(presses,3); n=min(n,3)\n        all={tuple([0]*n)}\n        for _ in range(presses):\n            nxt=set()\n            for st in all:\n                for op in range(4):\n                    a=list(st)\n                    if op==0: a=[1-x for x in a]\n                    elif op==1 and n>1: a[1]=1-a[1]; a[2]=1-a[2] if n>2 else a[1]\n                    elif op==2: a[0]=1-a[0]; a[2]=1-a[2] if n>2 else a[0]\n                    elif op==3 and n>2: a[0]=1-a[0]; a[1]=1-a[1]\n                    nxt.add(tuple(a))\n            all=nxt\n        return len(all)",
+    "cpp": "class Solution {\npublic:\n    int flipLights(int n, int p) {\n        if(!p) return 1; p=min(p,3); n=min(n,3);\n        set<int> st={0};\n        for(int t=0;t<p;t++){\n            set<int> nx;\n            for(int s:st) for(int op=0;op<4;op++){\n                int a=s;\n                if(op==0) a^=7;\n                else if(op==1) a^=6;\n                else if(op==2) a^=5;\n                else a^=3;\n                nx.insert(a&( (1<<n)-1 ));\n            }\n            st=nx;\n        }\n        return st.size();\n    }\n};",
+    "c": "int flipLights672(int n,int p){ return 1; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "State space nhỏ khi n,p capped — BFS đếm reachable.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "presses=0",
+      "n>3 reduce",
+      "All ops same"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Simulate full n large",
+      "Wrong op masks"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

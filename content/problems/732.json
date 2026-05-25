@@ -2,33 +2,38 @@
   "id": 732,
   "title": "My Calendar III",
   "difficulty": "Hard",
-  "category": "Binary Search",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "My Calendar III (LeetCode #732) — Hard.",
+  "category": "Design",
+  "timeComplexity": "O(n) per book",
+  "spaceComplexity": "O(n)",
+  "description": "My Calendar III: book(start,end) luôn thành công; trả max số booking overlap tại cùng một thời điểm sau mỗi lần book.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "[\"MyCalendarThree\",\"book\",\"book\",\"book\",\"book\",\"book\",\"book\",\"book\"], [[],[10,20],[50,60],[10,40],[5,15],[5,10],[25,55],[10,60]]",
+      "output": "[null,1,1,2,2,3,3,4]"
+    },
+    {
+      "input": "[\"MyCalendarThree\",\"book\",\"book\",\"book\",\"book\"], [[],[47,48],[24,43],[36,39],[26,35]]",
+      "output": "[null,1,1,2,2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Difference array / timeline: +1 tại start, -1 tại end; sweep sorted events lấy prefix max.",
+  "memoryTip": "Max overlap = sweep line +1 at start, -1 at end.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyCalendarThree:\n    def __init__(self):\n        self.delta = defaultdict(int)\n    def book(self, start: int, end: int) -> int:\n        self.delta[start] += 1\n        self.delta[end] -= 1\n        cur = ans = 0\n        for t in sorted(self.delta.keys()):\n            cur += self.delta[t]\n            ans = max(ans, cur)\n        return ans",
+    "cpp": "class MyCalendarThree {\n    map<int,int> d;\npublic:\n    int book(int start, int end) {\n        d[start]++; d[end]--;\n        int cur=0, ans=0;\n        for (auto& [t,v]: d) { cur+=v; ans=max(ans,cur); }\n        return ans;\n    }\n};",
+    "c": "typedef struct { int t, v; } Ev;\nstatic Ev ev[2000]; static int en;\nint myCalendarThreeBook(int start, int end) {\n    ev[en].t=start; ev[en++].v=1;\n    ev[en].t=end; ev[en++].v=-1;\n    qsort(ev, en, sizeof(Ev), [](const void* a,const void* b){ return ((Ev*)a)->t - ((Ev*)b)->t; });\n    int cur=0, ans=0;\n    for(int i=0;i<en;i++){ cur+=ev[i].v; if(cur>ans) ans=cur; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Sweep line đếm concurrent bookings — max prefix là đáp án.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Book trùng hoàn toàn tăng depth",
+      "Nested intervals",
+      "Book rời nhau"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort events khi cùng time (+1 trước -1)",
+      "Dùng O(n) scan mỗi point thay vì sweep"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

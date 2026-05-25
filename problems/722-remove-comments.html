@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #722</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">String</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Remove Comments</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>40.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Remove Comments (LeetCode #722) — Medium.</div>
+                        <div class="block-text">Cho mảng chuỗi source mô tả code C/C++. Trả mảng code sau khi xóa comment: // đến hết dòng, /* ... */ có thể nhiều dòng. Giữ xuống dòng ngoài comment.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>source = [&quot;/*Test program */&quot;, &quot;int main()&quot;, &quot;{ &quot;, &quot;  // variable declaration &quot;, &quot;int a, b, c;&quot;, &quot;/* This is a test&quot;, &quot;   multiline  &quot;, &quot;   comment for &quot;, &quot;   testing */&quot;, &quot;a = b + c;&quot;, &quot;}&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;int main()&quot;,&quot;{ &quot;,&quot;  &quot;,&quot;int a, b, c;&quot;,&quot;a = b + c;&quot;,&quot;}&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>source = [&quot;a/*comment&quot;, &quot;line&quot;, &quot;more_comment*/b&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;ab&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt từng dòng ký tự: state inCode/blockComment/lineComment. blockComment /* */; lineComment // đến \n.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,60 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>** removeComments(<span class="ty">char</span>** source, <span class="ty">int</span> n, <span class="ty">int</span>* retSize) {
+    <span class="ty">char</span>** ans = <span class="kw">malloc</span>(n * <span class="kw">sizeof</span>(<span class="ty">char</span>*)); *retSize = 0;
+    <span class="ty">char</span> buf[10000]; <span class="ty">int</span> bi = 0, block = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> t = 0; t &lt; n; t++) {
+        <span class="ty">char</span>* line = source[t];
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; line[i]; ) {
+            <span class="kw">if</span> (block) {
+                <span class="ty">char</span>* p = strstr(line + i, &quot;*/&quot;);
+                <span class="kw">if</span> (!p) break;
+                i = (<span class="ty">int</span>)(p - line) + 2; block = 0;
+            } <span class="kw">else</span> <span class="kw">if</span> (line[i]=='/' &amp;&amp; line[i+1]=='/') break;
+            <span class="kw">else</span> <span class="kw">if</span> (line[i]=='/' &amp;&amp; line[i+1]=='*') { block=1; i+=2; }
+            <span class="kw">else</span> buf[bi++] = line[i++];
+        }
+        <span class="kw">if</span> (!block) { buf[bi]=0; ans[(*retSize)++]=strdup(buf); bi=0; }
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> removeComments(<span class="ty">self</span>, source: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        res, buf, block = [], [], <span class="kw">False</span>
+        <span class="kw">for</span> line <span class="kw">in</span> source:
+            i, n = 0, <span class="ty">len</span>(line)
+            <span class="kw">while</span> i &lt; n:
+                <span class="kw">if</span> block:
+                    j = line.find(&quot;*/&quot;, i)
+                    <span class="kw">if</span> j == -1: i = n; break
+                    i = j + 2; block = <span class="kw">False</span>
+                <span class="kw">elif</span> i + 1 &lt; n <span class="kw">and</span> line[i:i+2] == &quot;//&quot;: break
+                <span class="kw">elif</span> i + 1 &lt; n <span class="kw">and</span> line[i:i+2] == &quot;/*&quot;: block = <span class="kw">True</span>; i += 2
+                <span class="kw">else</span>: buf.append(line[i]); i += 1
+            <span class="kw">if</span> <span class="kw">not</span> block:
+                res.append(&quot;&quot;.join(buf)); buf = []
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; removeComments(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; src) {
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; ans;
+        <span class="ty">string</span> cur;
+        <span class="ty">bool</span> block = false;
+        <span class="kw">for</span> (auto&amp; line : src) {
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)line.size(); ) {
+                <span class="kw">if</span> (block) {
+                    auto p = line.find(&quot;*/&quot;, i);
+                    <span class="kw">if</span> (p == <span class="ty">string</span>::npos) break;
+                    i = p + 2; block = false;
+                } <span class="kw">else</span> <span class="kw">if</span> (i+1&lt;(<span class="ty">int</span>)line.size() &amp;&amp; line[i]=='/' &amp;&amp; line[i+1]=='/') break;
+                <span class="kw">else</span> <span class="kw">if</span> (i+1&lt;(<span class="ty">int</span>)line.size() &amp;&amp; line[i]=='/' &amp;&amp; line[i+1]=='*') { block=true; i+=2; }
+                <span class="kw">else</span> cur.push_back(line[i++]);
+            }
+            <span class="kw">if</span> (!block) { ans.push_back(cur); cur.clear(); }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +157,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">String</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Duyệt từng dòng ký tự: state inCode/blockComment/lineComm…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — blockComment /* */; lineComment // đến \n.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>FSM xử lý comment lồng dòng và multi-line; code ngoài comment giữ nguyên thứ tự.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không comment</span><span class="analysis-tag edge">Comment-only lines → rỗng</span><span class="analysis-tag edge">/* chưa đóng qua nhiều dòng</span><span class="analysis-tag pit">Nhầm // trong string (đề bỏ qua)</span><span class="analysis-tag pit">Quên flush buffer khi hết block</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Remove comments FSM: 4 state — code, //, /*, */.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +186,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Remove%20Comments&lc_id=722&embed=true"></iframe>

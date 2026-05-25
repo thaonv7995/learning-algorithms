@@ -2,33 +2,38 @@
   "id": 710,
   "title": "Random Pick with Blacklist",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Random Pick with Blacklist (LeetCode #710) — Hard.",
+  "category": "Math",
+  "timeComplexity": "O(n + b log b)",
+  "spaceComplexity": "O(b)",
+  "description": "Có n số [0,n-1] và blacklist. pick() trả số ngẫu nhiên đều từ tập hợp hợp lệ (không nằm blacklist). Mỗi số hợp lệ xác suất bằng nhau.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "[\"Solution\",\"pick\",\"pick\",\"pick\"], [[1,[]],[],[],[]]",
+      "output": "[null,0,0,0]"
+    },
+    {
+      "input": "[\"Solution\",\"pick\",\"pick\",\"pick\"], [[2,[1]],[],[],[]]",
+      "output": "[null,0,0,1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map blacklist nhỏ vào cuối [0,m): hoán vị sao mọi phần tử blacklist nằm ngoài vùng pick [0,m) với m = n - |blacklist trong range|.",
+  "memoryTip": "Random without blacklist = shrink range + swap blacklist ra ngoài.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def __init__(self, n: int, blacklist: List[int]):\n        self.m = n - len(blacklist)\n        self.mp = {}\n        bl = set(blacklist)\n        for x in blacklist:\n            if x < self.m:\n                while self.m in bl or self.m in self.mp:\n                    self.m += 1\n                self.mp[x] = self.m\n                self.m += 1\n    def pick(self) -> int:\n        x = random.randint(0, self.m - 1)\n        return self.mp.get(x, x)",
+    "cpp": "class Solution {\n    int m;\n    unordered_map<int,int> mp;\npublic:\n    Solution(int n, vector<int>& blacklist) {\n        unordered_set<int> bl(blacklist.begin(), blacklist.end());\n        m = n - (int)blacklist.size();\n        for (int x : blacklist) {\n            if (x < m) {\n                while (bl.count(m) || mp.count(m)) m++;\n                mp[x] = m++;\n            }\n        }\n    }\n    int pick() {\n        int x = rand() % m;\n        return mp.count(x) ? mp[x] : x;\n    }\n};",
+    "c": "typedef struct { int m; int k; int key[1000], val[1000]; } Solution710;\nstatic int g710(int x, Solution710* s){ for(int i=0;i<s->k;i++) if(s->key[i]==x) return s->val[i]; return x; }\nSolution710* solution710Create(int n, int* bl, int bn){ Solution710* s=calloc(1,sizeof(Solution710)); s->m=n-bn; return s; }\nint solution710Pick(Solution710* s){ int x=rand()%s->m; return g710(x,s); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Hoán vị đảm bảo pick uniform trên m giá trị hợp lệ; map redirect index bị blacklist.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Blacklist rỗng → [0,n-1]",
+      "Blacklist toàn ngoài m",
+      "n=1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Lưu toàn bộ whitelist O(n) memory",
+      "Rand không uniform nếu dùng reject sampling chậm"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

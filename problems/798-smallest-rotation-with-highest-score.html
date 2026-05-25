@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #798</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Smallest Rotation with Highest Score</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>53.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Smallest Rotation with Highest Score (LeetCode #798) — Hard.</div>
+                        <div class="block-text">Score[i] = sum nums[j] với j&lt;i và nums[j]&gt;nums[i] + sum nums[j] với j&gt;i và nums[j]&lt;nums[i]. Rotate nums. Trả rotation index cho max score sum.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [2,3,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [100,1,1,100]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Tính score rotation 0; rotate score update O(1) per shift using prefix/suffix contributions.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,36 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> bestRotation(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> score=0; <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;n;j++) <span class="kw">if</span>(nums[j]&lt;=nums[0]) score++;
+    <span class="ty">int</span> best=score, ans=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;n;i++){ <span class="kw">if</span>(nums[i]&gt;nums[0]) score--; <span class="kw">if</span>(nums[n-i]&lt;=nums[0]) score++; <span class="kw">if</span>(score&gt;best){ best=score; ans=i; } }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> bestRotation(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        n = <span class="ty">len</span>(nums)
+        score = sum(1 <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(1, n) <span class="kw">if</span> nums[j] &lt;= nums[0])
+        best = score; ans = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, n):
+            <span class="kw">if</span> nums[i] &gt; nums[0]: score -= 1
+            <span class="kw">if</span> nums[n - i] &lt;= nums[0]: score += 1
+            <span class="kw">if</span> score &gt; best:
+                best = score; ans = i
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> bestRotation(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a) {
+        <span class="ty">int</span> n=a.size(), score=0;
+        <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;n;j++) <span class="kw">if</span>(a[j]&lt;=a[0]) score++;
+        <span class="ty">int</span> best=score, ans=0;
+        <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;n;i++){
+            <span class="kw">if</span>(a[i]&gt;a[0]) score--;
+            <span class="kw">if</span>(a[n-i]&lt;=a[0]) score++;
+            <span class="kw">if</span>(score&gt;best){ best=score; ans=i; }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +134,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Tính score rotation 0; rotate score update O per shift using…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Rotation score update O(1) — track gain/loss khi shift.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Tie → smallest index</span><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">All equal</span><span class="analysis-tag pit">Recompute O(n) each rotation</span><span class="analysis-tag pit">Wrong boundary nums[n-i]</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Smallest rotation max score = simulate rotation delta from initial score.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +162,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Smallest%20Rotation%20with%20Highest%20Score&lc_id=798&embed=true"></iframe>

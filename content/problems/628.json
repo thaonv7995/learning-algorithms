@@ -5,30 +5,39 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Maximum Product of Three Numbers (LeetCode #628) — Easy.",
+  "description": "Cho mảng nums. Tìm tích lớn nhất của ba số bất kỳ (có thể âm).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,2,3]",
+      "output": "6"
+    },
+    {
+      "input": "nums = [1,2,3,4]",
+      "output": "24"
+    },
+    {
+      "input": "nums = [-1,-2,-3]",
+      "output": "-6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort hoặc track 3 max và 2 min; max(product 3 largest, product 2 smallest * largest).",
+  "memoryTip": "Max product three = max(top3 product, min2*max1) for negatives.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maximumProduct(self, nums: List[int]) -> int:\n        nums.sort()\n        a,b=nums[-3]*nums[-2]*nums[-1], nums[0]*nums[1]*nums[-1]\n        return max(a,b)",
+    "cpp": "class Solution {\npublic:\n    int maximumProduct(vector<int>& nums) {\n        sort(nums.begin(),nums.end()); int n=nums.size();\n        return max(nums[n-1]*nums[n-2]*nums[n-3], nums[0]*nums[1]*nums[n-1]);\n    }\n};",
+    "c": "int maximumProduct(int* nums, int n) {\n    qsort(nums,n,sizeof(int),cmp);\n    int a=nums[n-1]*nums[n-2]*nums[n-3];\n    int b=nums[0]*nums[1]*nums[n-1];\n    return a>b?a:b;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Tích max chỉ là top3 hoặc hai âm nhỏ nhất × max dương.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=3",
+      "Toàn âm",
+      "Có 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ lấy 3 max",
+      "Overflow int (dùng long)"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

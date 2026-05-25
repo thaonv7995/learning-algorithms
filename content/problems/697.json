@@ -2,33 +2,38 @@
   "id": 697,
   "title": "Degree of an Array",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Hash Table",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Degree of an Array (LeetCode #697) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Degree of array = max(freq, distance giữa hai index xa nhất cùng value +1).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums=[1,2,2,3,1]",
+      "output": "2"
+    },
+    {
+      "input": "nums=[1,2,2,3,1,4,2]",
+      "output": "6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map value→first/last index and count; degree=max(freq, last-first+1).",
+  "memoryTip": "Degree of array — track first last index and count per value.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findShortestSubArray(self, nums: List[int]) -> int:\n        from collections import defaultdict\n        cnt=defaultdict(int); first={}; last={}\n        for i,x in enumerate(nums):\n            cnt[x]+=1; first.setdefault(x,i); last[x]=i\n        deg=max(cnt.values())\n        ans=len(nums)\n        for x in cnt:\n            if cnt[x]==deg: ans=min(ans,last[x]-first[x]+1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findShortestSubArray(vector<int>& a) {\n        unordered_map<int,int> cnt, fi, la;\n        for(int i=0;i<(int)a.size();i++){ cnt[a[i]]++; fi.emplace(a[i],i); la[a[i]]=i; }\n        int deg=0; for(auto& p:cnt) deg=max(deg,p.second);\n        int ans=a.size();\n        for(auto& p:cnt) if(p.second==deg) ans=min(ans, la[p.first]-fi[p.first]+1);\n        return ans;\n    }\n};",
+    "c": "int findShortestSubArray697(int* a,int n){ int cnt[50001]={0},fi[50001],la[50001],i,deg=0,ans=n; for(i=0;i<n;i++){ int x=a[i]+20000; cnt[x]++; if(!fi[x])fi[x]=i+1; la[x]=i+1; } for(i=0;i<50001;i++) if(cnt[i]>deg) deg=cnt[i]; for(i=0;i<50001;i++) if(cnt[i]==deg){ int len=la[i]-fi[i]+1; if(len<ans)ans=len; } return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Shortest subarray containing all occurrences of max-degree element.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Unique elements degree 1",
+      "All same value",
+      "Tie length"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Only freq not span",
+      "Wrong subarray definition"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

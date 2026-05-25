@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #743</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Depth-First Search</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Network Delay Time</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(E log V)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(V+E)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>60.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Network Delay Time (LeetCode #743) — Medium.</div>
+                        <div class="block-text">Có n node, times[i]=[u,v,w] thời gian tín hiệu u→v. Gửi từ node k. Trả thời gian tất cả node nhận được; -1 nếu có node không tới.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>times = [[2,1,1],[2,0,1],[0,1,1]], n = 3, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>times = [[1,2,1],[2,1,3]], n = 2, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>-1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Dijkstra từ k: dist[k]=0, min-heap relax cạnh. Trả max dist nếu mọi node finite else -1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> networkDelayTime(<span class="ty">int</span>** times, <span class="ty">int</span> tn, <span class="ty">int</span>* cs, <span class="ty">int</span> n, <span class="ty">int</span> k) {
+    <span class="ty">const</span> <span class="ty">int</span> INF = 1000000000;
+    <span class="ty">int</span> dist[101]; <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;=n;i++) dist[i]=INF; dist[k]=0;
+    <span class="kw">for</span>(<span class="ty">int</span> r=0;r&lt;n;r++) <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;tn;i++){
+        <span class="ty">int</span> u=times[i][0], v=times[i][1], w=times[i][2];
+        <span class="kw">if</span>(dist[u]+w&lt;dist[v]) dist[v]=dist[u]+w;
+    }
+    <span class="ty">int</span> ans=0; <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;=n;i++){ <span class="kw">if</span>(dist[i]==INF) <span class="kw">return</span> -1; <span class="kw">if</span>(dist[i]&gt;ans) ans=dist[i]; }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> networkDelayTime(<span class="ty">self</span>, times: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]], n: <span class="ty">int</span>, k: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        g = defaultdict(<span class="ty">list</span>)
+        <span class="kw">for</span> u,v,w <span class="kw">in</span> times: g[u].append((v,w))
+        dist = {i: float(&quot;inf&quot;) <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1,n+1)}
+        dist[k]=0
+        pq=[(0,k)]
+        <span class="kw">while</span> pq:
+            d,u=heappop(pq)
+            <span class="kw">if</span> d&gt;dist[u]: continue
+            <span class="kw">for</span> v,w <span class="kw">in</span> g[u]:
+                <span class="kw">if</span> d+w&lt;dist[v]: dist[v]=d+w; heappush(pq,(dist[v],v))
+        ans=<span class="ty">max</span>(dist.values())
+        <span class="kw">return</span> ans <span class="kw">if</span> ans&lt;float(&quot;inf&quot;) <span class="kw">else</span> -1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> networkDelayTime(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; times, <span class="ty">int</span> n, <span class="ty">int</span> k) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt;&gt; g(n+1);
+        <span class="kw">for</span>(auto&amp; t:times) g[t[0]].push_back({t[1],t[2]});
+        <span class="ty">const</span> <span class="ty">int</span> INF=1e9;
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dist(n+1,INF); dist[k]=0;
+        priority_queue&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;, <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt;, greater&lt;&gt;&gt; pq;
+        pq.push({0,k});
+        <span class="kw">while</span>(!pq.empty()){
+            auto [d,u]=pq.top(); pq.pop();
+            <span class="kw">if</span>(d&gt;dist[u]) continue;
+            <span class="kw">for</span>(auto [v,w]:g[u]) <span class="kw">if</span>(d+w&lt;dist[v]){ dist[v]=d+w; pq.push({dist[v],v}); }
+        }
+        <span class="ty">int</span> ans=*max_element(dist.begin()+1,dist.end());
+        <span class="kw">return</span> ans==INF?-1:ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +144,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Depth-First Search</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Graph</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(E log V)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(V+E)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dijkstra từ k: dist[k]=0, min-heap relax cạnh.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Trả max dist nếu mọi node finite else -1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Dijkstra cho shortest path max — node cuối nhận tín hiệu quyết định thời gian.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Graph không liên thông → -1</span><span class="analysis-tag edge">Một node</span><span class="analysis-tag edge">Self loop</span><span class="analysis-tag pit">BFS không đúng trọng số</span><span class="analysis-tag pit">Quên check mọi node reached</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Network delay = Dijkstra + max distance check all reached.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Network%20Delay%20Time&lc_id=743&embed=true"></iframe>

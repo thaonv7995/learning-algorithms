@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #747</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Largest Number At Least Twice of Others</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Largest Number At Least Twice of Others (LeetCode #747) — Easy.</div>
+                        <div class="block-text">Mảng nums. Kiểm tra có phần tử nào lớn gấp ít nhất 2 lần mọi phần tử khác không. Có thì trả index lớn nhất, không thì -1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [3,6,1,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>-1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [1]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Tìm max1, max2 trong một pass. Nếu max1&gt;=2*max2 return index max1 cuối cùng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> dominantIndex(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> mx = nums[0], mx2 = 0, idx = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="kw">if</span> (nums[i] &gt; mx) { mx2 = mx; mx = nums[i]; idx = i; }
+        <span class="kw">else</span> <span class="kw">if</span> (nums[i] &gt; mx2) mx2 = nums[i];
+    }
+    <span class="kw">return</span> mx &gt;= 2 * mx2 ? idx : -1;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> dominantIndex(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        mx = <span class="ty">max</span>(nums)
+        <span class="kw">if</span> mx &lt; 2 * <span class="ty">max</span>(x <span class="kw">for</span> x <span class="kw">in</span> nums <span class="kw">if</span> x != mx): <span class="kw">return</span> -1
+        <span class="kw">return</span> nums.index(mx)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> dominantIndex(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> mx=*max_element(nums.begin(),nums.end()), idx=-1, mx2=0;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)nums.size();i++){
+            <span class="kw">if</span>(nums[i]==mx) idx=i;
+            <span class="kw">else</span> mx2=max(mx2,nums[i]);
+        }
+        <span class="kw">return</span> mx&gt;=2*mx2?idx:-1;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +136,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Tìm max1, max2 trong một pass.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu max1&gt;=2*max2 return index max1 cuối cùng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>max1&gt;=2*max2 iff tồn tại phần tử dominant; index max1 khi nums[i]==mx.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử → 0</span><span class="analysis-tag edge">Hai phần tử equal → -1</span><span class="analysis-tag edge">Duplicate max</span><span class="analysis-tag pit">So sánh với trung bình</span><span class="analysis-tag pit">Trả index đầu thay cuối</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Dominant element = track top two values and index of max.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +160,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Largest%20Number%20At%20Least%20Twice%20of%20Others&lc_id=747&embed=true"></iframe>

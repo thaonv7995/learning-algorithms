@@ -4,31 +4,35 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Add One Row to Tree (LeetCode #623) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Thêm một hàng val vào cây nhị phân tại depth d (1-indexed). Nếu depth vượt chiều cao, thêm làm leaf.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[4,2,6,3,1,5], val=1, depth=2",
+      "output": "[4,1,1,2,null,6,null,3,null,5]"
+    },
+    {
+      "input": "root=[1], val=2, depth=1",
+      "output": "[2,1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS đến depth-1: nếu node null tạo mới; nếu depth==1 chèn val làm parent wrap node cũ.",
+  "memoryTip": "Add row to tree — insert new nodes at depth d wrapping subtrees.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def addOneRow(self, root: Optional[TreeNode], val: int, depth: int) -> Optional[TreeNode]:\n        if depth == 1: return TreeNode(val, root, None)\n        def dfs(node, d):\n            if not node: return\n            if d == depth - 1:\n                node.left = TreeNode(val, node.left, None)\n                node.right = TreeNode(val, None, node.right)\n            else:\n                dfs(node.left, d+1); dfs(node.right, d+1)\n        dfs(root, 1); return root",
+    "cpp": "class Solution {\npublic:\n    TreeNode* addOneRow(TreeNode* root, int val, int depth) {\n        if(depth==1){ auto* n=new TreeNode(val); n->left=root; return n; }\n        function<void(TreeNode*,int)> dfs=[&](TreeNode* node,int d){\n            if(!node) return;\n            if(d==depth-1){\n                auto* l=new TreeNode(val); l->left=node->left; node->left=l;\n                auto* r=new TreeNode(val); r->right=node->right; node->right=r;\n            } else { dfs(node->left,d+1); dfs(node->right,d+1); }\n        };\n        dfs(root,1); return root;\n    }\n};",
+    "c": "struct TreeNode* addOneRow(struct TreeNode* root, int val, int depth) {\n    if(depth==1){ struct TreeNode* n=malloc(sizeof(*n)); n->val=val; n->left=root; n->right=NULL; return n; }\n    addRowRec(root,val,depth,1); return root;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Chèn hàng tại depth d — node mới là cha của subtree cũ tại level đó.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "depth=1 wrap root",
+      "Cây lệch"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Ghi đè subtree",
+      "Depth 1-indexed"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

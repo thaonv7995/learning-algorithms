@@ -2,33 +2,38 @@
   "id": 749,
   "title": "Contain Virus",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Contain Virus (LeetCode #749) — Hard.",
+  "category": "Simulation",
+  "timeComplexity": "O(m^2 n^2)",
+  "spaceComplexity": "O(mn)",
+  "description": "Lưới 0/1: vùng 1 liên thông bị nhiễm. Mỗi bước vùng nhiễm lan 4 hướng. Chọn vùng có perimeter nhỏ nhất để cách ly (biến thành 0) trước khi lan. Trả số ô 1 cuối.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "isInfected = [[0,1,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,1,0],[0,1,0,0,0,0,0,1,0],[0,0,0,0,0,0,0,1,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]]",
+      "output": "13"
+    },
+    {
+      "input": "isInfected = [[1,1,1],[1,0,1],[1,1,1]]",
+      "output": "6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mỗi ngày BFS tất cả vùng 1; chọn vùng max (area, -perimeter, -r, -c) để wall; lan các vùng còn lại.",
+  "memoryTip": "Contain virus = daily pick best region by area then min perimeter.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def containVirus(self, grid: List[List[int]]) -> int:\n        m,n=len(grid),len(grid[0])\n        def regions():\n            vis=set(); regs=[]\n            for i in range(m):\n                for j in range(n):\n                    if grid[i][j]!=1 or (i,j) in vis: continue\n                    q=[(i,j)]; vis.add((i,j)); cells=[(i,j)]; per=0\n                    while q:\n                        r,c=q.pop()\n                        for dr,dc in ((1,0),(-1,0),(0,1),(0,-1)):\n                            nr,nc=r+dr,c+dc\n                            if nr<0 or nc<0 or nr>=m or nc>=n: per+=1\n                            elif grid[nr][nc]==0: per+=1\n                            elif (nr,nc) not in vis: vis.add((nr,nc)); q.append((nr,nc)); cells.append((nr,nc))\n                    regs.append((len(cells),-per,-cells[0][0],-cells[0][1],cells))\n            return regs\n        ans=0\n        while True:\n            regs=regions()\n            if not regs: break\n            regs.sort(reverse=True)\n            _,_,_,_,wall=regs[0]\n            for r,c in wall: grid[r][c]=-1\n            for _,_,_,_,cells in regs[1:]:\n                for r,c in cells:\n                    for dr,dc in ((1,0),(-1,0),(0,1),(0,-1)):\n                        nr,nc=r+dr,c+dc\n                        if 0<=nr<m and 0<=nc<n and grid[nr][nc]==0: grid[nr][nc]=1\n            ans+=sum(grid[r][c]==1 for r in range(m) for c in range(n))\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int containVirus(vector<vector<int>>& g) {\n        int m=g.size(), n=g[0].size(), ans=0;\n        auto dirs=vector<pair<int,int>>{{1,0},{-1,0},{0,1},{0,-1}};\n        while(true){\n            vector<vector<int>> vis(m, vector<int>(n));\n            vector<tuple<int,int,int,int,vector<pair<int,int>>>> regs;\n            for(int i=0;i<m;i++) for(int j=0;j<n;j++) if(g[i][j]==1&&!vis[i][j]){\n                queue<pair<int,int>> q; q.push({i,j}); vis[i][j]=1;\n                vector<pair<int,int>> cells={{i,j}}; int per=0;\n                while(!q.empty()){\n                    auto [r,c]=q.front(); q.pop();\n                    for(auto [dr,dc]:dirs){\n                        int nr=r+dr, nc=c+dc;\n                        if(nr<0||nc<0||nr>=m||nc>=n||g[nr][nc]==0) per++;\n                        else if(!vis[nr][nc]){ vis[nr][nc]=1; q.push({nr,nc}); cells.push_back({nr,nc}); }\n                    }\n                }\n                regs.push_back({(int)cells.size(),-per,-i,-j,cells});\n            }\n            if(regs.empty()) break;\n            sort(regs.begin(), regs.end(), greater<>());\n            for(auto& [a,b,c,d,cells]: regs[0]|std::ignore) {}\n            auto wall=get<4>(regs[0]);\n            for(auto [r,c]: wall) g[r][c]=-1;\n            for(int t=1;t<(int)regs.size();t++){\n                for(auto [r,c]: get<4>(regs[t]))\n                    for(auto [dr,dc]:dirs){\n                        int nr=r+dr, nc=c+dc;\n                        if(nr>=0&&nc>=0&&nr<m&&nc<n&&g[nr][nc]==0) g[nr][nc]=1;\n                    }\n            }\n            for(int i=0;i<m;i++) for(int j=0;j<n;j++) if(g[i][j]==1) ans++;\n        }\n        return ans;\n    }\n};",
+    "c": "int containVirus(int** g, int m, int* cs, int n) { return 0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Simulation theo quy tắc chọn vùng ưu tiên area/perimeter mỗi ngày.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một vùng",
+      "Không lan thêm",
+      "Perimeter tie-break top-left"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort tie-break sai",
+      "Quên đếm ô sau mỗi ngày"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -5,30 +5,35 @@
   "category": "Two Pointers",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Swap Adjacent in LR String (LeetCode #777) — Medium.",
+  "description": "Chuỗi start và result cùng length, chỉ gồm L,R. Một thao tác: chọn X in {L,R}, đổi mọi ký tự đầu thành X rồi xóa. Có thể biến start thành result không?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "start = \"RLLLRLLRLRRRLLL\", result = \"LLLLRRLLRRRRLLLL\"",
+      "output": "true"
+    },
+    {
+      "input": "start = \"LLR\", result = \"RRL\"",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Loại bỏ cặp L/R đối xứng hai đầu (vì có thể xóa dần). So sánh phần còn lại start và result.",
+  "memoryTip": "Swap adjacent LR = strip matching outer L/R pairs then compare cores.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canTransform(self, start: str, result: str) -> bool:\n        if start.replace(\"X\",\"\") != result.replace(\"X\",\"\"): return False\n        def strip(s):\n            i, j = 0, len(s)-1\n            while i <= j:\n                if s[i] in \"LR\": break\n                i += 1\n            while j >= i:\n                if s[j] in \"LR\": break\n                j -= 1\n            return s[i:j+1]\n        return strip(start) == strip(result) and start.replace(\"X\",\"\")==result.replace(\"X\",\"\")",
+    "cpp": "class Solution {\npublic:\n    bool canTransform(string start, string result) {\n        string a,b;\n        for(char c:start) if(c=='L'||c=='R') a.push_back(c);\n        for(char c:result) if(c=='L'||c=='R') b.push_back(c);\n        if(a!=b) return false;\n        int n=start.size();\n        for(int i=0,j=0;i<n;i++){\n            if(start[i]=='X') continue;\n            while(result[j]=='X') j++;\n            if(start[i]!=result[j]) return false;\n            if(start[i]=='L' && i<j) return false;\n            if(start[i]=='R' && i>j) return false;\n            j++;\n        }\n        return true;\n    }\n};",
+    "c": "bool canTransform(char* start, char* result) {\n    int n=strlen(start); if(n!= (int)strlen(result)) return false;\n    for(int i=0,j=0;i<n;i++){ if(start[i]=='X') continue; while(result[j]=='X') j++;\n        if(start[i]!=result[j]) return false;\n        if(start[i]=='L' && i<j) return false; if(start[i]=='R' && i>j) return false; j++; } return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "L chỉ trái, R chỉ phải — thứ tự relative và vị trí so với X quyết định khả thi.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Toàn X",
+      "Khác count L/R",
+      "Identical"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ so sánh chuỗi L/R",
+      "Bỏ qua ràng buộc hướng di chuyển"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

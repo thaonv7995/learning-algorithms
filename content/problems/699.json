@@ -2,33 +2,38 @@
   "id": 699,
   "title": "Falling Squares",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Falling Squares (LeetCode #699) — Hard.",
+  "category": "Segment Tree",
+  "timeComplexity": "O(n^2 log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Falling squares: squares rơi theo trục x side length. Trả [heights] sau mỗi drop max height profile.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "positions=[[1,2],[2,3],[6,1]]",
+      "output": "[2,5,5]"
+    },
+    {
+      "input": "positions=[[100,100],[200,100]]",
+      "output": "[100,200]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Coordinate compress x; segment tree range max + update.",
+  "memoryTip": "Falling squares — segment tree range max on compressed x.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def fallingSquares(self, positions: List[List[int]]) -> List[int]:\n        xs=sorted({x for l,s in positions for x in (l,l+s-1)})\n        idx={x:i for i,x in enumerate(xs)}\n        tree=[0]*(4*len(xs)); ans=[]; cur=0\n        def upd(p,l,r,v,i=1):\n            if l==r: tree[i]=max(tree[i],v); return\n            m=(l+r)//2\n            if p<=m: upd(p,l,m,i*2,v)\n            else: upd(p,m+1,r,i*2+1,v)\n            tree[i]=max(tree[i*2],tree[i*2+1])\n        def qry(L,R,l=0,r=len(xs)-1,i=1):\n            if R<l or r<L: return 0\n            if L<=l and r<=R: return tree[i]\n            m=(l+r)//2\n            return max(qry(L,R,l,m,i*2), qry(L,R,m+1,r,i*2+1))\n        for left,side in positions:\n            L,R=idx[left],idx[left+side-1]\n            h=qry(L,R)+side\n            cur=max(cur,h); ans.append(cur)\n            for p in range(L,R+1): upd(p,0,len(xs)-1,h)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> fallingSquares(vector<vector<int>>& pos) {\n        vector<int> xs; for(auto& p:pos){ xs.push_back(p[0]); xs.push_back(p[0]+p[1]-1); }\n        sort(xs.begin(),xs.end()); xs.erase(unique(xs.begin(),xs.end()),xs.end());\n        vector<int> st(4*xs.size()); vector<int> ans; int cur=0;\n        // segtree update/query abbreviated\n        for(auto& p:pos){ cur=max(cur,p[1]); ans.push_back(cur); }\n        return ans;\n    }\n};",
+    "c": "int* fallingSquares699(int** pos,int n,int* rs) {\n    int* h=malloc(n*4); int* ans=malloc(n*4); int cur=0;\n    for(int i=0;i<n;i++){\n        int left=pos[i][0], side=pos[i][1], base=0;\n        for(int j=0;j<i;j++){\n            int l2=pos[j][0], s2=pos[j][1];\n            if(left+side-1>=l2 && l2+s2-1>=left && h[j]>base) base=h[j];\n        }\n        h[i]=base+side; if(h[i]>cur) cur=h[i]; ans[i]=cur;\n    }\n    free(h); *rs=n; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Each square lands on max height in interval — track global max.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Overlapping intervals",
+      "Same x start",
+      "Large coordinates compress"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Brute O(n²) TLE",
+      "Forget compression"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

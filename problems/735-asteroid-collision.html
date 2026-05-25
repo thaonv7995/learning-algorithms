@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #735</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Asteroid Collision</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>47.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Asteroid Collision (LeetCode #735) — Medium.</div>
+                        <div class="block-text">Mảng asteroids: dương phải, âm trái. Cùng hướng không va. Ngược hướng va: nhỏ hơn nổ, bằng nhau cả hai nổ. Trả trạng thái cuối.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>asteroids = [5,10,-5]</code></div>
+                <div class="ex-line"><span>Out</span><code>[5,10]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>asteroids = [8,-8]</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>asteroids = [10,2,-5]</code></div>
+                <div class="ex-line"><span>Out</span><code>[10]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Stack: push asteroid; nếu top dương và current âm thì so sánh size pop/nổ đến khi hết va chạm.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* asteroidCollision(<span class="ty">int</span>* asteroids, <span class="ty">int</span> n, <span class="ty">int</span>* retSize) {
+    <span class="ty">int</span>* st = <span class="kw">malloc</span>(n * 4); <span class="ty">int</span> top = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="ty">int</span> x = asteroids[i], alive = 1;
+        <span class="kw">while</span> (alive &amp;&amp; top &amp;&amp; st[top-1] &gt; 0 &amp;&amp; x &lt; 0) {
+            <span class="kw">if</span> (st[top-1] &lt; -x) { top--; continue; }
+            <span class="kw">if</span> (st[top-1] == -x) top--;
+            alive = 0;
+        }
+        <span class="kw">if</span> (alive) st[top++] = x;
+    }
+    *retSize = top; <span class="kw">return</span> st;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> asteroidCollision(<span class="ty">self</span>, asteroids: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        st = []
+        <span class="kw">for</span> x <span class="kw">in</span> asteroids:
+            <span class="kw">while</span> st <span class="kw">and</span> st[-1] &gt; 0 <span class="kw">and</span> x &lt; 0:
+                <span class="kw">if</span> st[-1] &lt; -x: st.pop(); continue
+                <span class="kw">if</span> st[-1] == -x: st.pop()
+                x = 0
+                break
+            <span class="kw">if</span> x: st.append(x)
+        <span class="kw">return</span> st</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; asteroidCollision(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; st;
+        <span class="kw">for</span> (<span class="ty">int</span> x : a) {
+            <span class="ty">bool</span> alive = true;
+            <span class="kw">while</span> (alive &amp;&amp; !st.empty() &amp;&amp; st.back() &gt; 0 &amp;&amp; x &lt; 0) {
+                <span class="kw">if</span> (st.back() &lt; -x) { st.pop_back(); continue; }
+                <span class="kw">if</span> (st.back() == -x) st.pop_back();
+                alive = false;
+            }
+            <span class="kw">if</span> (alive) st.push_back(x);
+        }
+        <span class="kw">return</span> st;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +147,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Stack: push asteroid; nếu top dương và current âm thì so sánh size…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack mô phỏng va chạm tuần tự trái sang phải — chỉ cặp +/- adjacent.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không va cùng dấu</span><span class="analysis-tag edge">Equal destroy both</span><span class="analysis-tag edge">Chain collision</span><span class="analysis-tag pit">Va cả hai chiều sai</span><span class="analysis-tag pit">Quên reset x=0 sau destroy</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Asteroid collision = stack + chỉ va khi stack top &gt;0 và current &lt;0.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +176,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Asteroid%20Collision&lc_id=735&embed=true"></iframe>

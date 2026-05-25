@@ -2,33 +2,38 @@
   "id": 653,
   "title": "Two Sum IV - Input is a BST",
   "difficulty": "Easy",
-  "category": "Hash Table",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Two Sum IV - Input is a BST (LeetCode #653) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "BST và target. Trả true nếu có hai phần tử sum=target.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[5,3,6,2,4,null,7], target=9",
+      "output": "true"
+    },
+    {
+      "input": "root=[5,3,6,2,4,null,7], target=28",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Inorder BST + two pointers hoặc DFS + hash set complement.",
+  "memoryTip": "Two Sum BST — inorder sorted two pointers or set.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findTarget(self, root: Optional[TreeNode], k: int) -> bool:\n        vals=[]\n        def dfs(n):\n            if not n: return\n            dfs(n.left); vals.append(n.val); dfs(n.right)\n        dfs(root); i,j=0,len(vals)-1\n        while i<j:\n            s=vals[i]+vals[j]\n            if s==k: return True\n            if s<k: i+=1\n            else: j-=1\n        return False",
+    "cpp": "class Solution {\n    void in(TreeNode* n, vector<int>& v){ if(!n) return; in(n->left,v); v.push_back(n->val); in(n->right,v);}\npublic:\n    bool findTarget(TreeNode* root, int k) {\n        vector<int> v; in(root,v); int i=0,j=v.size()-1;\n        while(i<j){ int s=v[i]+v[j]; if(s==k) return true; if(s<k) i++; else j--; }\n        return false;\n    }\n};",
+    "c": "bool findTarget(struct TreeNode* r,int k){ int v[10000],n=0; void in(struct TreeNode* x){if(!x)return;in(x->left);v[n++]=x->val;in(x->right);} in(r); int i=0,j=n-1; while(i<j){ int s=v[i]+v[j]; if(s==k)return 1; if(s<k)i++; else j--; } return 0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Inorder BST sorted — two sum classic two pointers.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một nút",
+      "Duplicate values",
+      "Negative target"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Hash không tận dụng BST",
+      "Quên duplicate pair"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

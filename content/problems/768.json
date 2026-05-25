@@ -2,33 +2,38 @@
   "id": 768,
   "title": "Max Chunks To Make Sorted II",
   "difficulty": "Hard",
-  "category": "Array",
+  "category": "Stack",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Max Chunks To Make Sorted II (LeetCode #768) — Hard.",
+  "description": "Permutation nums của 0..n-1 (có thể trùng). Chia thành nhiều chunk, sort từng chunk, ghép lại thành mảng sort. Trả số chunk tối đa (hard: duplicates).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [5,4,3,2,1]",
+      "output": "1"
+    },
+    {
+      "input": "nums = [2,1,3,4,4]",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Track max trong chunk hiện tại và sorted prefix max. Khi gặp phần tử > sorted_max thì cần chunk mới.",
+  "memoryTip": "Max chunks II = cut when value exceeds running sorted boundary.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxChunksToSorted(self, nums: List[int]) -> int:\n        cnt = Counter(nums)\n        need = defaultdict(int)\n        have = defaultdict(int)\n        ans = cur_max = 0\n        for x in nums:\n            need[x] += 1\n            have[x] += 1\n            cur_max = max(cur_max, x)\n            ok = all(have[v] >= need[v] for v in range(cur_max + 1))\n            if ok:\n                ans += 1\n                for v in range(cur_max + 1):\n                    have[v] = 0\n                cur_max = -1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int maxChunksToSorted(vector<int>& nums) {\n        map<int,int> need, have;\n        int ans=0, curMax=-1;\n        for(int x:nums){\n            need[x]++; have[x]++; curMax=max(curMax,x);\n            bool ok=true;\n            for(int v=0;v<=curMax;v++) if(have[v]<need[v]){ ok=false; break; }\n            if(ok){ ans++; for(int v=0;v<=curMax;v++) have[v]=0; curMax=-1; }\n        }\n        return ans;\n    }\n};",
+    "c": "int maxChunksToSortedII(int* nums, int n) {\n    int need[1001]={0}, have[1001]={0}, ans=0, curMax=-1;\n    for(int i=0;i<n;i++){ need[nums[i]]++; have[nums[i]]++; if(nums[i]>curMax) curMax=nums[i];\n        int ok=1; for(int v=0;v<=curMax;v++) if(have[v]<need[v]){ ok=0; break; }\n        if(ok){ ans++; for(int v=0;v<=curMax;v++) have[v]=0; curMax=-1; }\n    } return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Chunk sortable iff multiset prefix 0..curMax đủ — greedy max chunks.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Đã sort",
+      "Toàn cùng số",
+      "Permutation unique → 769 logic"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng stack monotonic của 769",
+      "Quên duplicate counts"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

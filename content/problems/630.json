@@ -2,33 +2,37 @@
   "id": 630,
   "title": "Course Schedule III",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Course Schedule III (LeetCode #630) — Hard.",
+  "category": "Greedy",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho courses[i]=[duration, deadline]. Làm tối đa bao nhiêu course sao tổng thời gian mỗi course ≤ deadline.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "courses = [[100,200],[200,1300],[1000,1250],[2000,3200]]",
+      "output": "3"
+    },
+    {
+      "input": "courses = [[5,5],[8,8],[7,7]]",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort theo deadline; max-heap thời gian; nếu tổng>deadline pop course dài nhất.",
+  "memoryTip": "Course Schedule III — sort by deadline, max-heap drop longest.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def scheduleCourse(self, courses: List[List[int]]) -> int:\n        courses.sort(key=lambda x: x[1])\n        heap=[]; t=0\n        for d,dl in courses:\n            heapq.heappush(heap,-d); t+=d\n            if t>dl: t+=heapq.heappop(heap)\n        return len(heap)",
+    "cpp": "class Solution {\npublic:\n    int scheduleCourse(vector<vector<int>>& c) {\n        sort(c.begin(),c.end(),[](auto&a,auto&b){return a[1]<b[1];});\n        priority_queue<int> pq; long t=0;\n        for(auto& v:c){\n            t+=v[0]; pq.push(v[0]);\n            if(t>v[1]){ t-=pq.top(); pq.pop(); }\n        }\n        return pq.size();\n    }\n};",
+    "c": "typedef struct { int d, dl; } Course;\nint cmpCourse(const void* a, const void* b){ return ((Course*)a)->dl - ((Course*)b)->dl; }\nint scheduleCourse(int** c, int n, int* cs) {\n    Course* a=malloc(n*sizeof(Course));\n    for(int i=0;i<n;i++){ a[i].d=c[i][0]; a[i].dl=c[i][1]; }\n    qsort(a,n,sizeof(Course),cmpCourse);\n    int* heap=malloc(n*sizeof(int)); int hs=0; long t=0;\n    for(int i=0;i<n;i++){\n        t+=a[i].d; heap[hs++]=a[i].d;\n        for(int j=hs-1;j>0;j--) if(heap[j]>heap[j-1]){ int tmp=heap[j]; heap[j]=heap[j-1]; heap[j-1]=tmp; } else break;\n        if(t>a[i].dl){ t-=heap[0]; heap[0]=heap[--hs-1]; hs--; if(hs>1){ int mx=0; for(int j=1;j<hs;j++) if(heap[j]>heap[mx]) mx=j; int tmp=heap[0]; heap[0]=heap[mx]; heap[mx]=tmp; } }\n    }\n    int ans=hs; free(a); free(heap); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Greedy: khi vượt deadline bỏ course dài nhất đã chọn — optimal.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một course",
+      "Không course nào fit"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort theo duration",
+      "Không pop khi overflow"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

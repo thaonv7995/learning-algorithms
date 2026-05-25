@@ -2,33 +2,38 @@
   "id": 673,
   "title": "Number of Longest Increasing Subsequence",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Number of Longest Increasing Subsequence (LeetCode #673) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums. Đếm số dãy con tăng dài nhất (LIS) có độ dài bằng độ dài LIS tối đa của mảng.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums=[1,3,5,4,7]",
+      "output": "2"
+    },
+    {
+      "input": "nums=[2,2,2,2,2]",
+      "output": "5"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Patience sorting + count paths: dpLen[i], dpCnt[i] update on predecessors.",
+  "memoryTip": "Number of LIS — DP length and count arrays.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findNumberOfLIS(self, nums: List[int]) -> int:\n        n=len(nums); ln=[1]*n; cnt=[1]*n\n        for i in range(n):\n            for j in range(i):\n                if nums[j]<nums[i]:\n                    if ln[j]+1>ln[i]: ln[i]=ln[j]+1; cnt[i]=cnt[j]\n                    elif ln[j]+1==ln[i]: cnt[i]+=cnt[j]\n        mx=max(ln); return sum(c for l,c in zip(ln,cnt) if l==mx)",
+    "cpp": "class Solution {\npublic:\n    int findNumberOfLIS(vector<int>& a) {\n        int n=a.size(); vector<int> ln(n,1), cnt(n,1);\n        for(int i=0;i<n;i++) for(int j=0;j<i;j++) if(a[j]<a[i]){\n            if(ln[j]+1>ln[i]){ ln[i]=ln[j]+1; cnt[i]=cnt[j]; }\n            else if(ln[j]+1==ln[i]) cnt[i]+=cnt[j];\n        }\n        int mx=*max_element(ln.begin(),ln.end());\n        int ans=0; for(int i=0;i<n;i++) if(ln[i]==mx) ans+=cnt[i];\n        return ans;\n    }\n};",
+    "c": "int findNumberOfLIS673(int* a,int n){ int* ln=malloc(n*4); int* cnt=malloc(n*4); int i,j,mx=0,ans=0; for(i=0;i<n;i++){ln[i]=1;cnt[i]=1; for(j=0;j<i;j++) if(a[j]<a[i]){ if(ln[j]+1>ln[i]){ln[i]=ln[j]+1;cnt[i]=cnt[j];} else if(ln[j]+1==ln[i]) cnt[i]+=cnt[j]; } if(ln[i]>mx) mx=ln[i]; } for(i=0;i<n;i++) if(ln[i]==mx) ans+=cnt[i]; free(ln); free(cnt); return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP track length và count ways to each LIS length.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Strict increasing one LIS",
+      "All equal n LIS",
+      "Decreasing len 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Count any LIS not max length",
+      "Overflow count use long"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

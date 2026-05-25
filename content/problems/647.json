@@ -2,33 +2,38 @@
   "id": 647,
   "title": "Palindromic Substrings",
   "difficulty": "Medium",
-  "category": "Two Pointers",
-  "timeComplexity": "O(n)",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^2)",
   "spaceComplexity": "O(1)",
-  "description": "Palindromic Substrings (LeetCode #647) — Medium.",
+  "description": "Cho chuỗi s. Đếm số substring liên tiếp là palindrome (đọc xuôi ngược giống nhau), kể cả substring một ký tự.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"abc\"",
+      "output": "3"
+    },
+    {
+      "input": "s = \"aaa\"",
+      "output": "6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Expand center mỗi i (odd/even) hoặc DP[i][j].",
+  "memoryTip": "Palindromic substrings — expand around center.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countSubstrings(self, s: str) -> int:\n        n=len(s); ans=0\n        def expand(l,r):\n            nonlocal ans\n            while l>=0 and r<n and s[l]==s[r]: ans+=1; l-=1; r+=1\n        for i in range(n):\n            expand(i,i); expand(i,i+1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int countSubstrings(string s) {\n        int n=s.size(), ans=0;\n        auto expand=[&](int l,int r){ while(l>=0&&r<n&&s[l]==s[r]){ ans++; l--; r++; }};\n        for(int i=0;i<n;i++){ expand(i,i); expand(i,i+1); }\n        return ans;\n    }\n};",
+    "c": "int countSubstrings(char* s){ int n=strlen(s),ans=0,i; for(i=0;i<n;i++){ int l=i,r=i; while(l>=0&&r<n&&s[l]==s[r]){ans++;l--;r++;} l=i;r=i+1; while(l>=0&&r<n&&s[l]==s[r]){ans++;l--;r++;} } return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mọi palindrome có unique center — expand đếm đủ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Empty",
+      "All same char",
+      "Length 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Double count",
+      "O(n³) expand naive"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

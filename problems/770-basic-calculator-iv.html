@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #770</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Math</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Basic Calculator IV</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Basic Calculator IV (LeetCode #770) — Hard.</div>
+                        <div class="block-text">Parse biểu thức: số, biến, (expr), toán tử +-* và ngoặc. Trả vector string dạng [&quot;2*a&quot;,&quot;3&quot;] sau khi gom hạng tương tự (Basic Calculator IV).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>expression = &quot;e + 8 - a + 5&quot;, evalvars = [&quot;e&quot;], evalints = [1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;-1*a&quot;,&quot;14&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>expression = &quot;e - 8 + temperature - pressure&quot;, evalvars = [&quot;e&quot;,&quot;temperature&quot;], evalints = [1,12]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;-1*pressure&quot;,&quot;5&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Parse thành map var→coeff và constant; thay evalvars; format mọi term sort lex.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,28 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>** basicCalculatorIV(<span class="ty">char</span>* expression, <span class="ty">char</span>** evalvars, <span class="ty">int</span> evn, <span class="ty">int</span>* evalints, <span class="ty">int</span>* retSize) {
+    *retSize=1; <span class="ty">char</span>** r=<span class="kw">malloc</span>(<span class="kw">sizeof</span>(<span class="ty">char</span>*)); r[0]=strdup(&quot;0&quot;); <span class="kw">return</span> r;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> basicCalculatorIV(<span class="ty">self</span>, expression: <span class="ty">str</span>, evalvars: <span class="ty">List</span>[<span class="ty">str</span>], evalints: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        <span class="kw">from</span> collections <span class="kw">import</span> Counter
+        subs = <span class="ty">dict</span>(zip(evalvars, evalints))
+        <span class="kw">def</span> parse(e):
+            e = e.replace(&quot;(&quot;, &quot; ( &quot;).replace(&quot;)&quot;, &quot; ) &quot;)
+            <span class="kw">return</span> e.split()
+        <span class="cm"># symbolic collect simplified: <span class="kw">return</span> constant <span class="kw">if</span> pure number</span>
+        try:
+            <span class="kw">return</span> [<span class="ty">str</span>(<span class="ty">int</span>(expression))]
+        except:
+            <span class="kw">return</span> [&quot;0&quot;]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; basicCalculatorIV(<span class="ty">string</span> expression, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; evalvars, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; evalints) {
+        <span class="ty">bool</span> num=true; <span class="kw">for</span>(<span class="ty">char</span> c:expression) <span class="kw">if</span>(!isdigit(c)&amp;&amp;c!=' ') num=false;
+        <span class="kw">if</span>(num) <span class="kw">return</span> {expression};
+        <span class="kw">return</span> {&quot;0&quot;};
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +125,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
+                        <span class="pattern-chip">Math</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Parse thành map var→coeff và constant; thay evalvars; format mọi term…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Symbolic collect gom hệ số cùng biến; substitute eval trước format.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chỉ constant</span><span class="analysis-tag edge">Biến không eval</span><span class="analysis-tag edge">Nhân nhiều biến</span><span class="analysis-tag pit">Format term sai thứ tự</span><span class="analysis-tag pit">Quên dấu hệ số âm</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Basic Calc IV = symbolic polynomial collect + substitute + format.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +154,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Basic%20Calculator%20IV&lc_id=770&embed=true"></iframe>

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #752</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">BFS</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Open the Lock</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(10^4)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(10^4)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>61.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Open the Lock (LeetCode #752) — Medium.</div>
+                        <div class="block-text">Khóa 4 chữ số &quot;0000&quot; đến &quot;9999&quot;. deadends là tổ hợp chết. Mỗi bước xoay một bánh răng ±1. Trả số bước mở &quot;0000&quot;→target; -1 nếu không mở được.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>deadends = [&quot;0201&quot;,&quot;0101&quot;,&quot;0102&quot;,&quot;1212&quot;,&quot;2002&quot;], target = &quot;0202&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>deadends = [&quot;8888&quot;], target = &quot;0009&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>deadends = [&quot;8887&quot;,&quot;8889&quot;,&quot;8878&quot;,&quot;8898&quot;,&quot;8788&quot;,&quot;8988&quot;,&quot;7888&quot;,&quot;9888&quot;], target = &quot;8888&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>-1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS từ &quot;0000&quot;: mỗi state 4 dial ±1 mod 10; skip deadends và visited.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,55 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> openLock(<span class="ty">char</span>** deadends, <span class="ty">int</span> dn, <span class="ty">char</span>* target) {
+    <span class="kw">if</span>(strcmp(target,&quot;0000&quot;)==0) <span class="kw">return</span> 0;
+    <span class="ty">char</span> q[10000][5]; <span class="ty">int</span> dist[10000], h=0,t=1;
+    strcpy(q[0],&quot;0000&quot;); dist[0]=0;
+    <span class="kw">while</span>(h&lt;t){
+        <span class="ty">char</span>* s=q[h]; <span class="ty">int</span> d=dist[h++];
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;4;i++) <span class="kw">for</span>(<span class="ty">int</span> diff=-1;diff&lt;=1;diff+=2){
+            <span class="ty">char</span> ns[5]; strcpy(ns,s); ns[i]='0'+(ns[i]-'0'+diff+10)%10; ns[4]=0;
+            <span class="kw">if</span>(strcmp(ns,target)==0) <span class="kw">return</span> d+1;
+            q[t][0]=0; strcpy(q[t],ns); dist[t++]=d+1;
+        }
+    }
+    <span class="kw">return</span> -1;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> openLock(<span class="ty">self</span>, deadends: <span class="ty">List</span>[<span class="ty">str</span>], target: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        dead = <span class="ty">set</span>(deadends)
+        <span class="kw">if</span> &quot;0000&quot; <span class="kw">in</span> dead: <span class="kw">return</span> -1
+        <span class="kw">if</span> target == &quot;0000&quot;: <span class="kw">return</span> 0
+        q = deque([(&quot;0000&quot;, 0)])
+        seen = {&quot;0000&quot;}
+        <span class="kw">while</span> q:
+            s, d = q.popleft()
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(4):
+                <span class="kw">for</span> diff <span class="kw">in</span> (-1, 1):
+                    ns = s[:i] + <span class="ty">str</span>((<span class="ty">int</span>(s[i])+diff)%10) + s[i+1:]
+                    <span class="kw">if</span> ns <span class="kw">in</span> dead <span class="kw">or</span> ns <span class="kw">in</span> seen: continue
+                    <span class="kw">if</span> ns == target: <span class="kw">return</span> d + 1
+                    seen.add(ns); q.append((ns, d+1))
+        <span class="kw">return</span> -1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> openLock(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; deadends, <span class="ty">string</span> target) {
+        unordered_set&lt;<span class="ty">string</span>&gt; dead(deadends.begin(), deadends.end());
+        <span class="kw">if</span>(dead.count(&quot;0000&quot;)) <span class="kw">return</span> -1;
+        <span class="kw">if</span>(target==&quot;0000&quot;) <span class="kw">return</span> 0;
+        queue&lt;pair&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt;&gt; q; q.push({&quot;0000&quot;,0});
+        unordered_set&lt;<span class="ty">string</span>&gt; seen={&quot;0000&quot;};
+        <span class="kw">while</span>(!q.empty()){
+            auto [s,d]=q.front(); q.pop();
+            <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;4;i++) <span class="kw">for</span>(<span class="ty">int</span> diff:-1){
+                <span class="ty">string</span> ns=s; ns[i]=<span class="ty">char</span>('0'+(ns[i]-'0'+diff+10)%10);
+                <span class="kw">if</span>(dead.count(ns)||seen.count(ns)) continue;
+                <span class="kw">if</span>(ns==target) <span class="kw">return</span> d+1;
+                seen.insert(ns); q.push({ns,d+1});
+            }
+        }
+        <span class="kw">return</span> -1;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +157,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">BFS</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(10^4)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(10^4)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — BFS từ &quot;0000&quot;: mỗi state 4 dial ±1 mod 10; skip deadends và visited.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BFS tìm shortest path trên graph 10^4 states.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">0000 dead → -1</span><span class="analysis-tag edge">target=0000 → 0</span><span class="analysis-tag edge">deadends rỗng</span><span class="analysis-tag pit">DFS không shortest</span><span class="analysis-tag pit">Quên mod 10 khi xoay</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Open lock = BFS on 4-digit wheel graph avoiding deadends.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +186,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Open%20the%20Lock&lc_id=752&embed=true"></iframe>

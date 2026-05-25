@@ -4,31 +4,40 @@
   "difficulty": "Medium",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Tree Node (LeetCode #608) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Tree(id, p_id) mô tả cây nhị phân (p_id NULL là root). Trả id và type: Root (p_id NULL), Leaf (id không là p_id của ai), Inner (còn lại).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "1 root, 2 và 3 con của 1",
+      "output": "1 Root, 2 Leaf, 3 Leaf"
+    },
+    {
+      "input": "1→2→3 chain",
+      "output": "1 Root, 2 Inner, 3 Leaf"
+    },
+    {
+      "input": "Một nút root duy nhất",
+      "output": "type=Root"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "CASE: p_id IS NULL → Root; id NOT IN (SELECT p_id FROM Tree WHERE p_id IS NOT NULL) → Leaf; else Inner.",
+  "memoryTip": "Tree node type = CASE on root / not parent of anyone / else inner.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT id,\n  CASE\n    WHEN p_id IS NULL THEN 'Root'\n    WHEN id NOT IN (SELECT p_id FROM Tree WHERE p_id IS NOT NULL) THEN 'Leaf'\n    ELSE 'Inner'\n  END AS type\nFROM Tree;",
+    "cpp": "// SQL\nSELECT id,\n  CASE\n    WHEN p_id IS NULL THEN 'Root'\n    WHEN id NOT IN (SELECT p_id FROM Tree WHERE p_id IS NOT NULL) THEN 'Leaf'\n    ELSE 'Inner'\n  END AS type\nFROM Tree;",
+    "c": "const char query[] = \"SELECT id, CASE WHEN p_id IS NULL THEN 'Root' WHEN id NOT IN (SELECT p_id FROM Tree WHERE p_id IS NOT NULL) THEN 'Leaf' ELSE 'Inner' END AS type FROM Tree;\";"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Phân loại đủ 3 loại mutually exclusive trên mọi nút.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Single node → Root",
+      "Star graph → root + leaves",
+      "p_id trỏ node không tồn tại — ngoài scope"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Leaf check thiếu IS NOT NULL trên p_id subquery",
+      "Nhầm Inner khi có con"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

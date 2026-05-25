@@ -2,33 +2,42 @@
   "id": 735,
   "title": "Asteroid Collision",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Asteroid Collision (LeetCode #735) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Mảng asteroids: dương phải, âm trái. Cùng hướng không va. Ngược hướng va: nhỏ hơn nổ, bằng nhau cả hai nổ. Trả trạng thái cuối.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "asteroids = [5,10,-5]",
+      "output": "[5,10]"
+    },
+    {
+      "input": "asteroids = [8,-8]",
+      "output": "[]"
+    },
+    {
+      "input": "asteroids = [10,2,-5]",
+      "output": "[10]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack: push asteroid; nếu top dương và current âm thì so sánh size pop/nổ đến khi hết va chạm.",
+  "memoryTip": "Asteroid collision = stack + chỉ va khi stack top >0 và current <0.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def asteroidCollision(self, asteroids: List[int]) -> List[int]:\n        st = []\n        for x in asteroids:\n            while st and st[-1] > 0 and x < 0:\n                if st[-1] < -x: st.pop(); continue\n                if st[-1] == -x: st.pop()\n                x = 0\n                break\n            if x: st.append(x)\n        return st",
+    "cpp": "class Solution {\npublic:\n    vector<int> asteroidCollision(vector<int>& a) {\n        vector<int> st;\n        for (int x : a) {\n            bool alive = true;\n            while (alive && !st.empty() && st.back() > 0 && x < 0) {\n                if (st.back() < -x) { st.pop_back(); continue; }\n                if (st.back() == -x) st.pop_back();\n                alive = false;\n            }\n            if (alive) st.push_back(x);\n        }\n        return st;\n    }\n};",
+    "c": "int* asteroidCollision(int* asteroids, int n, int* retSize) {\n    int* st = malloc(n * 4); int top = 0;\n    for (int i = 0; i < n; i++) {\n        int x = asteroids[i], alive = 1;\n        while (alive && top && st[top-1] > 0 && x < 0) {\n            if (st[top-1] < -x) { top--; continue; }\n            if (st[top-1] == -x) top--;\n            alive = 0;\n        }\n        if (alive) st[top++] = x;\n    }\n    *retSize = top; return st;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Stack mô phỏng va chạm tuần tự trái sang phải — chỉ cặp +/- adjacent.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không va cùng dấu",
+      "Equal destroy both",
+      "Chain collision"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Va cả hai chiều sai",
+      "Quên reset x=0 sau destroy"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,42 @@
   "id": 740,
   "title": "Delete and Earn",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Delete and Earn (LeetCode #740) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Mảng nums. Chọn phần tử không adjacent. nums[i] cho điểm nums[i]; mỗi giá trị có thể chọn nhiều lần (mỗi index một lần). Trả điểm tối đa (House Robber with duplicates grouped).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [3,4,1]",
+      "output": "6"
+    },
+    {
+      "input": "nums = [2,2,3,3,3,4]",
+      "output": "9"
+    },
+    {
+      "input": "nums = [2,2,2,2,3,3]",
+      "output": "10"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Gom count theo value. DP trên distinct values sort: take = count[v]*v + dp[v-2]; skip = dp[v-1].",
+  "memoryTip": "Delete and earn = House Robber on value line with count*value reward.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def deleteAndEarn(self, nums: List[int]) -> int:\n        mx = max(nums)\n        cnt = [0]*(mx+1)\n        for x in nums: cnt[x] += x\n        prev2 = prev1 = 0\n        for v in range(mx+1):\n            cur = max(prev1, prev2 + cnt[v])\n            prev2, prev1 = prev1, cur\n        return prev1",
+    "cpp": "class Solution {\npublic:\n    int deleteAndEarn(vector<int>& nums) {\n        int mx=*max_element(nums.begin(), nums.end());\n        vector<int> earn(mx+1);\n        for(int x:nums) earn[x]+=x;\n        int p2=0,p1=0;\n        for(int v=0;v<=mx;v++){\n            int cur=max(p1,p2+earn[v]);\n            p2=p1; p1=cur;\n        }\n        return p1;\n    }\n};",
+    "c": "int deleteAndEarn(int* nums, int n) {\n    int mx = 0; for (int i = 0; i < n; i++) if (nums[i] > mx) mx = nums[i];\n    int* earn = calloc(mx + 1, 4);\n    for (int i = 0; i < n; i++) earn[nums[i]] += nums[i];\n    int p2 = 0, p1 = 0;\n    for (int v = 0; v <= mx; v++) {\n        int cur = p1 > p2 + earn[v] ? p1 : p2 + earn[v];\n        p2 = p1; p1 = cur;\n    }\n    free(earn); return p1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Không chọn v và v±1 cùng lúc — DP trên dãy giá trị sort tương đương House Robber.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một phần tử",
+      "Toàn cùng value",
+      "Value gap >1 independent"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "House Robber trên index thay value",
+      "Quên cộng x*count"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

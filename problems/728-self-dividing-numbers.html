@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #728</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Self Dividing Numbers</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>80.8% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Self Dividing Numbers (LeetCode #728) — Easy.</div>
+                        <div class="block-text">Số tự chia (self dividing): mọi chữ số khác 0 chia hết số. Liệt kê mọi số self dividing trong [left, right] theo thứ tự tăng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>left = 1, right = 22</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2,3,4,5,6,7,8,9,11,12,15,22]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>left = 47, right = 85</code></div>
+                <div class="ex-line"><span>Out</span><code>[48,55,66,77]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>left = 100, right = 100</code></div>
+                <div class="ex-line"><span>Out</span><code>[100]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt x từ left đến right: với mỗi digit d (d!=0), x%d==0; nếu mọi digit ok thì thêm vào kết quả.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* selfDividingNumbers(<span class="ty">int</span> left, <span class="ty">int</span> right, <span class="ty">int</span>* retSize) {
+    <span class="ty">int</span>* ans = <span class="kw">malloc</span>((right-left+1)*4); *retSize = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> x = left; x &lt;= right; x++) {
+        <span class="ty">int</span> t = x, ok = 1;
+        <span class="kw">for</span> (; t; t /= 10) { <span class="ty">int</span> d = t % 10; <span class="kw">if</span> (!d || x % d) { ok = 0; break; } }
+        <span class="kw">if</span> (ok) ans[(*retSize)++] = x;
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> selfDividingNumbers(<span class="ty">self</span>, left: <span class="ty">int</span>, right: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        <span class="kw">def</span> ok(x):
+            <span class="kw">for</span> d <span class="kw">in</span> map(<span class="ty">int</span>, <span class="ty">str</span>(x)):
+                <span class="kw">if</span> d == 0 <span class="kw">or</span> x % d: <span class="kw">return</span> <span class="kw">False</span>
+            <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">return</span> [x <span class="kw">for</span> x <span class="kw">in</span> <span class="ty">range</span>(left, right + 1) <span class="kw">if</span> ok(x)]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; selfDividingNumbers(<span class="ty">int</span> left, <span class="ty">int</span> right) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        auto ok=[](<span class="ty">int</span> x){
+            <span class="kw">for</span>(<span class="ty">int</span> t=x;t;t/=10){ <span class="ty">int</span> d=t%10; <span class="kw">if</span>(!d||x%d) <span class="kw">return</span> false; }
+            <span class="kw">return</span> true;
+        };
+        <span class="kw">for</span>(<span class="ty">int</span> x=left;x&lt;=right;x++) <span class="kw">if</span>(ok(x)) ans.push_back(x);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +136,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Duyệt x từ left đến right: với mỗi digit d , x%d==0; nếu mọi digit ok…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Kiểm tra đủ mọi chữ số khác 0 — điều kiện self dividing.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một số trong range</span><span class="analysis-tag edge">Số có digit 0 → loại</span><span class="analysis-tag edge">100 chia hết 1 và 0? 0 invalid</span><span class="analysis-tag pit">Chấp nhận digit 0</span><span class="analysis-tag pit">Không xử lý x=0 edge</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Self dividing = every nonzero digit divides n — brute in range ok.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Self%20Dividing%20Numbers&lc_id=728&embed=true"></iframe>

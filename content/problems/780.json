@@ -3,32 +3,41 @@
   "title": "Reaching Points",
   "difficulty": "Hard",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log max)",
   "spaceComplexity": "O(1)",
-  "description": "Reaching Points (LeetCode #780) — Hard.",
+  "description": "Điểm start (sx,sy) đến target (tx,ty) bằng thao tác: từ (x,y) có thể tới (x+y,y) hoặc (x,x+y). Có thể tới target không?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "sx = 1, sy = 1, tx = 3, ty = 5",
+      "output": "true"
+    },
+    {
+      "input": "sx = 1, sy = 1, tx = 2, ty = 2",
+      "output": "false"
+    },
+    {
+      "input": "sx = 1, sy = 1, tx = 1, ty = 1",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Reverse từ target về start: while tx>=ty swap/mod; ty -= tx hoặc ty %= tx. Khả thi nếu về (sx,sy).",
+  "memoryTip": "Reaching points = reverse Euclidean algorithm on (tx,ty).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reachingPoints(self, sx: int, sy: int, tx: int, ty: int) -> bool:\n        while tx >= sx and ty >= sy:\n            if tx == ty: break\n            if tx > ty:\n                if ty < sy: return False\n                if tx >= ty * 2: tx %= ty\n                else: tx -= ty\n            else:\n                if tx < sx: return False\n                if ty >= tx * 2: ty %= tx\n                else: ty -= tx\n        return tx == sx and ty == sy",
+    "cpp": "class Solution {\npublic:\n    bool reachingPoints(int sx, int sy, int tx, int ty) {\n        while(tx>=sx && ty>=sy){\n            if(tx==ty) break;\n            if(tx>ty){ if(ty<sy) return false; if(tx>=ty*2LL) tx%=ty; else tx-=ty; }\n            else { if(tx<sx) return false; if(ty>=tx*2LL) ty%=tx; else ty-=tx; }\n        }\n        return tx==sx && ty==sy;\n    }\n};",
+    "c": "bool reachingPoints(int sx, int sy, int tx, int ty) {\n    while(tx>=sx && ty>=sy){ if(tx==ty) break;\n        if(tx>ty){ if(ty<sy) return false; if(tx>=ty*2) tx%=ty; else tx-=ty; }\n        else { if(tx<sx) return false; if(ty>=tx*2) ty%=tx; else ty-=tx; }\n    } return tx==sx && ty==sy;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Reverse ops undo addition branch — modulo skip nhiều bước.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Start equals target",
+      "tx<sx or ty<sy early false",
+      "Large coordinates"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Forward BFS TLE",
+      "Quên check ty>=sy trong reverse"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

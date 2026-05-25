@@ -2,33 +2,38 @@
   "id": 664,
   "title": "Strange Printer",
   "difficulty": "Hard",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Strange Printer (LeetCode #664) — Hard.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^3)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Strange printer in một màu/lần, in liên tiếp cùng ký tự. Min số lần in để có s.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"aaabbb\"",
+      "output": "2"
+    },
+    {
+      "input": "s = \"aba\"",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[l][r] min prints for s[l..r]; if s[l]==s[r] extend inner else min split.",
+  "memoryTip": "Strange printer — interval DP same char merge.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def strangePrinter(self, s: str) -> int:\n        s=\"\".join(a for a,b in zip(s,s[1:]+\"#\") if a!=b)\n        n=len(s); dp=[[0]*n for _ in range(n)]\n        for i in range(n-1,-1,-1):\n            dp[i][i]=1\n            for j in range(i+1,n):\n                dp[i][j]=dp[i][j-1]+1\n                for k in range(i,j):\n                    if s[k]==s[j]: dp[i][j]=min(dp[i][j], dp[i][k]+(dp[k+1][j-1] if k+1<=j-1 else 0))\n        return dp[0][n-1] if n else 0",
+    "cpp": "class Solution {\npublic:\n    int strangePrinter(string s) {\n        string t; for(int i=0;i<(int)s.size();i++) if(i+1==(int)s.size()||s[i]!=s[i+1]) t.push_back(s[i]);\n        int n=t.size(); if(!n) return 0;\n        vector<vector<int>> dp(n, vector<int>(n));\n        for(int i=n-1;i>=0;i--){ dp[i][i]=1;\n            for(int j=i+1;j<n;j++){ dp[i][j]=dp[i][j-1]+1;\n                for(int k=i;k<j;k++) if(t[k]==t[j]) dp[i][j]=min(dp[i][j], dp[i][k]+(k+1<=j-1?dp[k+1][j-1]:0));\n            }\n        }\n        return dp[0][n-1];\n    }\n};",
+    "c": "int strangePrinter664(char* s) {\n    char t[256]; int tn=0, n=strlen(s);\n    for(int i=0;i<n;i++) if(i+1==n||s[i]!=s[i+1]) t[tn++]=s[i];\n    if(!tn) return 0;\n    int dp[256][256];\n    for(int i=tn-1;i>=0;i--){ dp[i][i]=1;\n        for(int j=i+1;j<tn;j++){ dp[i][j]=dp[i][j-1]+1;\n            for(int k=i;k<j;k++) if(t[k]==t[j]){\n                int right=(k+1<=j-1)?dp[k+1][j-1]:0;\n                if(dp[i][k]+right<dp[i][j]) dp[i][j]=dp[i][k]+right;\n            }\n        }\n    }\n    return dp[0][tn-1];\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Remove consecutive dup trước — interval DP optimal.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Single char",
+      "All same",
+      "Palindrome"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n²) greedy wrong",
+      "Forget dedupe consecutive"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #609</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Hash Table</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Find Duplicate File in System</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * m)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n * m)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>67.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Find Duplicate File in System (LeetCode #609) — Medium.</div>
+                        <div class="block-text">Cho mảng paths [&quot;root/a/x&quot;,&quot;root/b/x&quot;]. Trả các nhóm [root, ...paths] có cùng nội dung file (hash cùng nhau).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>paths = [&quot;/home/a.txt&quot;,&quot;/home/b.txt&quot;] cùng nội dung</code></div>
+                <div class="ex-line"><span>Out</span><code>[[&quot;/home&quot;,&quot;/home/a.txt&quot;,&quot;/home/b.txt&quot;]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>Không trùng</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Parse path lấy content sau dấu cách; map content→list paths; output nếu ≥2 path.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,60 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>*** findDuplicate(<span class="ty">char</span>** paths, <span class="ty">int</span> n, <span class="ty">int</span>* rs, <span class="ty">int</span>** cs) {
+    <span class="ty">char</span>*** ans = NULL; *rs = 0;
+    <span class="ty">char</span> keys[256][256]; <span class="ty">int</span> cnt[256] = {0}; <span class="ty">int</span> nk = 0;
+    <span class="ty">char</span>* lists[256][64]; <span class="ty">int</span> ls[256] = {0};
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="ty">char</span>* p = paths[i]; <span class="ty">char</span>* sp = strchr(p, ' ');
+        <span class="ty">char</span> root[256]; <span class="ty">int</span> rl = sp ? (<span class="ty">int</span>)(sp - p) : (<span class="ty">int</span>)strlen(p);
+        memcpy(root, p, rl); root[rl] = 0;
+        <span class="kw">for</span> (<span class="ty">char</span>* q = sp ? sp + 1 : p; *q;) {
+            <span class="ty">char</span>* lp = strchr(q, '('); <span class="ty">char</span>* rp = strchr(lp, ')');
+            <span class="ty">char</span> content[256]; <span class="ty">int</span> cl = (<span class="ty">int</span>)(rp - lp - 1); memcpy(content, lp + 1, cl); content[cl] = 0;
+            <span class="ty">char</span> full[512]; snprintf(full, <span class="kw">sizeof</span>(full), &quot;%s/%.*s&quot;, root, (<span class="ty">int</span>)(lp - q), q);
+            <span class="ty">int</span> ki = -1; <span class="kw">for</span> (<span class="ty">int</span> k = 0; k &lt; nk; k++) <span class="kw">if</span> (!strcmp(keys[k], content)) { ki = k; break; }
+            <span class="kw">if</span> (ki &lt; 0) { ki = nk++; strcpy(keys[ki], content); }
+            strcpy(lists[ki][ls[ki]++], full);
+            q = rp + 1; <span class="kw">while</span> (*q == ' ') q++;
+        }
+    }
+    <span class="kw">for</span> (<span class="ty">int</span> k = 0; k &lt; nk; k++) <span class="kw">if</span> (ls[k] &gt; 1) (*rs)++;
+    ans = <span class="kw">malloc</span>(*rs * <span class="kw">sizeof</span>(<span class="ty">char</span>**)); cs = <span class="kw">malloc</span>(*rs * <span class="kw">sizeof</span>(<span class="ty">int</span>)); <span class="ty">int</span> ai = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> k = 0; k &lt; nk; k++) <span class="kw">if</span> (ls[k] &gt; 1) {
+        ans[ai] = <span class="kw">malloc</span>(ls[k] * <span class="kw">sizeof</span>(<span class="ty">char</span>*)); cs[ai] = ls[k];
+        <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; ls[k]; j++) ans[ai][j] = lists[k][j];
+        ai++;
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findDuplicate(<span class="ty">self</span>, paths: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]:
+        mp = defaultdict(<span class="ty">list</span>)
+        <span class="kw">for</span> p <span class="kw">in</span> paths:
+            parts = p.split()
+            root = parts[0]
+            <span class="kw">for</span> f <span class="kw">in</span> parts[1:]:
+                i = f.index('(')
+                mp[f[i+1:-1]].append(root + '/' + f[:i])
+        <span class="kw">return</span> [[v[0]]+v <span class="kw">for</span> v <span class="kw">in</span> mp.values() <span class="kw">if</span> <span class="ty">len</span>(v)&gt;1]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; findDuplicate(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; paths) {
+        unordered_map&lt;<span class="ty">string</span>, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; mp;
+        <span class="kw">for</span>(auto&amp; p:paths){
+            <span class="ty">int</span> sp=p.find(' '); <span class="ty">string</span> root=p.substr(0,sp);
+            <span class="kw">for</span>(<span class="ty">int</span> i=sp+1;i&lt;(<span class="ty">int</span>)p.size();){
+                <span class="ty">int</span> j=p.find('(',i); <span class="ty">int</span> k=p.find(')',j);
+                <span class="ty">string</span> file=p.substr(i,j-i), content=p.substr(j+1,k-j-1);
+                mp[content].push_back(root+&quot;/&quot;+file);
+                i=k+2;
+            }
+        }
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; ans;
+        <span class="kw">for</span>(auto&amp; [c,v]:mp) <span class="kw">if</span>(v.size()&gt;1){ <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; row={v[0]}; row.insert(row.end(),v.begin(),v.end()); ans.push_back(row); }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +157,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Hash Table</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * m)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n * m)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Parse path lấy content sau dấu cách; map content→list paths; output nếu…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Nhóm theo content trong ngoặc — chỉ xuất nhóm ≥2 file.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một file duy nhất</span><span class="analysis-tag edge">Cùng tên khác content</span><span class="analysis-tag pit">Parse sai format</span><span class="analysis-tag pit">Quên prefix root path</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Duplicate files = hash content string, group paths by content.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +186,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Find%20Duplicate%20File%20in%20System&lc_id=609&embed=true"></iframe>

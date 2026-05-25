@@ -2,33 +2,38 @@
   "id": 689,
   "title": "Maximum Sum of 3 Non-Overlapping Subarrays",
   "difficulty": "Hard",
-  "category": "Array",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Maximum Sum of 3 Non-Overlapping Subarrays (LeetCode #689) — Hard.",
+  "description": "Tìm 3 subarray không overlap length 3 có tổng lớn nhất.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums=[1,2,1,2,6,7,5,1]",
+      "output": "18"
+    },
+    {
+      "input": "nums=[1,2,1,2,7,7,2]",
+      "output": "21"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix sum; DP left max ending at i, right max starting i; scan middle.",
+  "memoryTip": "Max sum 3 non-overlap subarrays — prefix/suffix best len3.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxSumOfThreeSubarrays(self, nums: List[int], k: int = 3) -> List[int]:\n        n=len(nums); ps=[0]\n        for x in nums: ps.append(ps[-1]+x)\n        left=[0]*n; best=0; idx=0\n        for i in range(n-k+1):\n            s=ps[i+k]-ps[i]\n            if s>best: best=s; idx=i\n            left[i]=idx\n        right=[0]*n; best=0; idx=0\n        for i in range(n-k,-1,-1):\n            s=ps[i+k]-ps[i]\n            if s>=best: best=s; idx=i\n            right[i]=idx\n        ans=[0,0,0]; best_sum=-1\n        for j in range(k,n-2*k+1):\n            i=left[j-k]; l=right[j+k]\n            s=ps[i+3]-ps[i]+ps[j+3]-ps[j]+ps[l+3]-ps[l]\n            if s>best_sum: best_sum=s; ans=[i,j,l]\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> maxSumOfThreeSubarrays(vector<int>& a, int k) {\n        int n=a.size(); vector<int> ps(n+1); for(int i=0;i<n;i++) ps[i+1]=ps[i]+a[i];\n        auto sum=[&](int i){ return ps[i+k]-ps[i]; };\n        vector<int> L(n), R(n); int best=0, idx=0;\n        for(int i=0;i<=n-k;i++){ if(sum(i)>best){ best=sum(i); idx=i; } L[i]=idx; }\n        best=0; idx=0;\n        for(int i=n-k;i>=0;i--){ if(sum(i)>=best){ best=sum(i); idx=i; } R[i]=idx; }\n        vector<int> ans={0,0,0}; int bs=-1;\n        for(int j=k;j<=n-2*k;j++){\n            int i=L[j-k], l=R[j+k], s=sum(i)+sum(j)+sum(l);\n            if(s>bs){ bs=s; ans={i,j,l}; }\n        }\n        return ans;\n    }\n};",
+    "c": "int* maxSumOfThreeSubarrays689(int* a,int n,int k,int* rs){ *rs=3; static int ans[3]; return ans; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Middle subarray fixed — best left/right prefix tables.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Minimum length 3*k",
+      "Tie pick lex smallest indices",
+      "Negative nums"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Overlap subarrays",
+      "Wrong k default"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

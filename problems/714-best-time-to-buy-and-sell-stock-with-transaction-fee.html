@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #714</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Best Time to Buy and Sell Stock with Transaction Fee</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Best Time to Buy and Sell Stock with Transaction Fee (LeetCode #714) — Medium.</div>
+                        <div class="block-text">Mảng giá cổ phiếu prices và phí giao dịch fee. Có thể mua/bán nhiều lần nhưng không giữ cổ phiếu qua ngày (mua xong phải bán trước mua lại). Trả lợi nhuận tối đa.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>prices = [1,3,2,8,4,9], fee = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>8</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>prices = [1,3,7,5,10,3], fee = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>prices = [4,5,2,4,3,3,1,2,1], fee = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP cash/hold: cash = max(cash, hold+price-fee); hold = max(hold, cash-price). cash ban đầu 0, hold=-inf.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,32 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maxProfit(<span class="ty">int</span>* prices, <span class="ty">int</span> n, <span class="ty">int</span> fee) {
+    <span class="ty">int</span> cash = 0, hold = -prices[0];
+    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; n; i++) {
+        <span class="ty">int</span> nc = cash &gt; hold + prices[i] - fee ? cash : hold + prices[i] - fee;
+        hold = hold &gt; cash - prices[i] ? hold : cash - prices[i];
+        cash = nc;
+    }
+    <span class="kw">return</span> cash;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maxProfit(<span class="ty">self</span>, prices: <span class="ty">List</span>[<span class="ty">int</span>], fee: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        cash, hold = 0, -prices[0]
+        <span class="kw">for</span> p <span class="kw">in</span> prices[1:]:
+            cash = <span class="ty">max</span>(cash, hold + p - fee)
+            hold = <span class="ty">max</span>(hold, cash - p)
+        <span class="kw">return</span> cash</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> maxProfit(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; prices, <span class="ty">int</span> fee) {
+        <span class="ty">int</span> cash = 0, hold = -prices[0];
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; (<span class="ty">int</span>)prices.size(); i++) {
+            cash = max(cash, hold + prices[i] - fee);
+            hold = max(hold, cash - prices[i]);
+        }
+        <span class="kw">return</span> cash;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +134,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP cash/hold: cash = max; hold = max.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — cash ban đầu 0, hold=-inf.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Invariant cash/hold là lợi nhuận tối đa với/không cổ phiếu cuối ngày.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Giá giảm liên tục → 0</span><span class="analysis-tag edge">Fee lớn → không giao dịch</span><span class="analysis-tag edge">Một ngày</span><span class="analysis-tag pit">Trừ fee khi mua thay vì bán</span><span class="analysis-tag pit">Cho phép nhiều cổ cùng lúc</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Stock với fee: state cash vs hold, bán trừ fee tại cash update.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Best%20Time%20to%20Buy%20and%20Sell%20Stock%20with%20Transaction%20Fee&lc_id=714&embed=true"></iframe>

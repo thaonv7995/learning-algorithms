@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #664</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Strange Printer</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^3)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>60.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Strange Printer (LeetCode #664) — Hard.</div>
+                        <div class="block-text">Strange printer in một màu/lần, in liên tiếp cùng ký tự. Min số lần in để có s.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;aaabbb&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;aba&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[l][r] min prints for s[l..r]; if s[l]==s[r] extend inner else min split.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> strangePrinter664(<span class="ty">char</span>* s) {
+    <span class="ty">char</span> t[256]; <span class="ty">int</span> tn=0, n=strlen(s);
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">if</span>(i+1==n||s[i]!=s[i+1]) t[tn++]=s[i];
+    <span class="kw">if</span>(!tn) <span class="kw">return</span> 0;
+    <span class="ty">int</span> dp[256][256];
+    <span class="kw">for</span>(<span class="ty">int</span> i=tn-1;i&gt;=0;i--){ dp[i][i]=1;
+        <span class="kw">for</span>(<span class="ty">int</span> j=i+1;j&lt;tn;j++){ dp[i][j]=dp[i][j-1]+1;
+            <span class="kw">for</span>(<span class="ty">int</span> k=i;k&lt;j;k++) <span class="kw">if</span>(t[k]==t[j]){
+                <span class="ty">int</span> right=(k+1&lt;=j-1)?dp[k+1][j-1]:0;
+                <span class="kw">if</span>(dp[i][k]+right&lt;dp[i][j]) dp[i][j]=dp[i][k]+right;
+            }
+        }
+    }
+    <span class="kw">return</span> dp[0][tn-1];
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> strangePrinter(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        s=&quot;&quot;.join(a <span class="kw">for</span> a,b <span class="kw">in</span> zip(s,s[1:]+&quot;<span class="cm">#&quot;) <span class="kw">if</span> a!=b)</span>
+        n=<span class="ty">len</span>(s); dp=[[0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n)]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n-1,-1,-1):
+            dp[i][i]=1
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i+1,n):
+                dp[i][j]=dp[i][j-1]+1
+                <span class="kw">for</span> k <span class="kw">in</span> <span class="ty">range</span>(i,j):
+                    <span class="kw">if</span> s[k]==s[j]: dp[i][j]=<span class="ty">min</span>(dp[i][j], dp[i][k]+(dp[k+1][j-1] <span class="kw">if</span> k+1&lt;=j-1 <span class="kw">else</span> 0))
+        <span class="kw">return</span> dp[0][n-1] <span class="kw">if</span> n <span class="kw">else</span> 0</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> strangePrinter(<span class="ty">string</span> s) {
+        <span class="ty">string</span> t; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)s.size();i++) <span class="kw">if</span>(i+1==(<span class="ty">int</span>)s.size()||s[i]!=s[i+1]) t.push_back(s[i]);
+        <span class="ty">int</span> n=t.size(); <span class="kw">if</span>(!n) <span class="kw">return</span> 0;
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(n, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n));
+        <span class="kw">for</span>(<span class="ty">int</span> i=n-1;i&gt;=0;i--){ dp[i][i]=1;
+            <span class="kw">for</span>(<span class="ty">int</span> j=i+1;j&lt;n;j++){ dp[i][j]=dp[i][j-1]+1;
+                <span class="kw">for</span>(<span class="ty">int</span> k=i;k&lt;j;k++) <span class="kw">if</span>(t[k]==t[j]) dp[i][j]=min(dp[i][j], dp[i][k]+(k+1&lt;=j-1?dp[k+1][j-1]:0));
+            }
+        }
+        <span class="kw">return</span> dp[0][n-1];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +142,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^3)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP[l][r] min prints for s[l..r]; if s[l]==s[r] extend inner else min…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Remove consecutive dup trước — interval DP optimal.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Single char</span><span class="analysis-tag edge">All same</span><span class="analysis-tag edge">Palindrome</span><span class="analysis-tag pit">O(n²) greedy wrong</span><span class="analysis-tag pit">Forget dedupe consecutive</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Strange printer — interval DP same char merge.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Strange%20Printer&lc_id=664&embed=true"></iframe>

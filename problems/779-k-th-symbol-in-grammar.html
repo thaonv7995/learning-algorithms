@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #779</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">K-th Symbol in Grammar</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(log k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>48.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">K-th Symbol in Grammar (LeetCode #779) — Medium.</div>
+                        <div class="block-text">Hàng 1 của tam giác grammar: 0. Mỗi hàng: thay 0→01, 1→10. Trả k-th bit (1-indexed) ở hàng n.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 1, k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 2, k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>n = 2, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đệ quy: hàng n, k: parent = (k+1)/2 ở hàng n-1; nếu k lẻ giữ parent; chẵn thì flip parent bit.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,23 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> kthGrammar(<span class="ty">int</span> n, <span class="ty">int</span> k) {
+    <span class="kw">if</span>(n==1) <span class="kw">return</span> 0;
+    <span class="ty">int</span> p=kthGrammar(n-1,(k+1)/2);
+    <span class="kw">return</span> k%2? p : 1-p;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> kthGrammar(<span class="ty">self</span>, n: <span class="ty">int</span>, k: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> n == 1: <span class="kw">return</span> 0
+        parent = <span class="ty">self</span>.kthGrammar(n - 1, (k + 1) // 2)
+        <span class="kw">return</span> parent <span class="kw">if</span> k % 2 <span class="kw">else</span> 1 - parent</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> kthGrammar(<span class="ty">int</span> n, <span class="ty">int</span> k) {
+        <span class="kw">if</span>(n==1) <span class="kw">return</span> 0;
+        <span class="ty">int</span> p=kthGrammar(n-1,(k+1)/2);
+        <span class="kw">return</span> k%2? p : 1-p;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +126,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(log k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Đệ quy: hàng n, k: parent = /2 ở hàng n-1; nếu k lẻ giữ parent; chẵn…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Cấu trúc 0→01, 1→10 → bit con phụ thuộc parent và parity k.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1 always 0</span><span class="analysis-tag edge">k=1</span><span class="analysis-tag edge">Large n recursive depth</span><span class="analysis-tag pit">Build full row O(2^n)</span><span class="analysis-tag pit">1-indexed k off-by-one</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>K-th symbol grammar = recursive parent + parity flip.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +154,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=K-th%20Symbol%20in%20Grammar&lc_id=779&embed=true"></iframe>

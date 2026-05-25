@@ -2,33 +2,38 @@
   "id": 622,
   "title": "Design Circular Queue",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Design Circular Queue (LeetCode #622) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(1) amortized",
+  "spaceComplexity": "O(k)",
+  "description": "Thiết kế hàng đợi vòng k k phần tử: enQueue, deQueue, Front, Rear, isEmpty, isFull.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "CircularQueue(3); enQueue(1); enQueue(2); enQueue(3); enQueue(4)",
+      "output": "true,true,true,false"
+    },
+    {
+      "input": "Rear() sau enqueue",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mảng size k+1 hoặc k với head/tail và count; modulo cho vòng.",
+  "memoryTip": "Circular queue — array + head/tail indices mod k.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyCircularQueue:\n    def __init__(self, k: int):\n        self.q=[0]*k; self.h=self.t=self.n=0; self.k=k\n    def enQueue(self, v): \n        if self.isFull(): return False\n        self.q[self.t]=v; self.t=(self.t+1)%self.k; self.n+=1; return True\n    def deQueue(self):\n        if self.isEmpty(): return False\n        self.h=(self.h+1)%self.k; self.n-=1; return True\n    def Front(self): return -1 if self.isEmpty() else self.q[self.h]\n    def Rear(self): return -1 if self.isEmpty() else self.q[(self.t-1)%self.k]\n    def isEmpty(self): return self.n==0\n    def isFull(self): return self.n==self.k",
+    "cpp": "class MyCircularQueue {\n    vector<int> q; int h,t,n,k;\npublic:\n    MyCircularQueue(int k):q(k),h(0),t(0),n(0),k(k){}\n    bool enQueue(int v){ if(isFull())return false; q[t]=v; t=(t+1)%k; n++; return true;}\n    bool deQueue(){ if(isEmpty())return false; h=(h+1)%k; n--; return true;}\n    int Front(){ return isEmpty()?-1:q[h];}\n    int Rear(){ return isEmpty()?-1:q[(t-1+k)%k];}\n    bool isEmpty(){ return n==0;}\n    bool isFull(){ return n==k;}\n};",
+    "c": "typedef struct { int* q; int h,t,n,k; } MyCircularQueue;\nMyCircularQueue* myCircularQueueCreate(int k){ MyCircularQueue* o=malloc(sizeof(*o)); o->q=calloc(k,sizeof(int)); o->k=k; return o;}\nbool myCircularQueueEnQueue(MyCircularQueue* o,int v){ if(o->n==o->k)return false; o->q[o->t]=v; o->t=(o->t+1)%o->k; o->n++; return true;}\nbool myCircularQueueDeQueue(MyCircularQueue* o){ if(!o->n)return false; o->h=(o->h+1)%o->k; o->n--; return true;}\nint myCircularQueueFront(MyCircularQueue* o){ return o->n?o->q[o->h]:-1;}\nint myCircularQueueRear(MyCircularQueue* o){ return o->n?o->q[(o->t-1+o->k)%o->k]:-1;}\nbool myCircularQueueIsEmpty(MyCircularQueue* o){ return o->n==0;}\nbool myCircularQueueIsFull(MyCircularQueue* o){ return o->n==o->k;}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Head/tail mod k duy trì FIFO vòng đúng capacity.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1",
+      "Dequeue rỗng",
+      "Full enqueue fail"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Off-by-one tail",
+      "Không mod k"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

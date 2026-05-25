@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #718</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Maximum Length of Repeated Subarray</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(mn)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>51.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Maximum Length of Repeated Subarray (LeetCode #718) — Medium.</div>
+                        <div class="block-text">Cho hai mảng nums1 và nums2. Tìm độ dài đoạn con liên tiếp (contiguous) dài nhất xuất hiện ở cả hai mảng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums1 = [1,2,3,2,1], nums2 = [3,2,1,4,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums1 = [0,0,0,0,0], nums2 = [0,0,0,0,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums1 = [1], nums2 = [2]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP 2D: dp[i][j] = độ dài common subarray kết thúc tại i,j. Nếu nums1[i-1]==nums2[j-1]: dp[i][j]=dp[i-1][j-1]+1; cập nhật max.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findLength(<span class="ty">int</span>* a, <span class="ty">int</span> m, <span class="ty">int</span>* b, <span class="ty">int</span> n) {
+    <span class="ty">int</span> dp[1001][1001]={0}, ans=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;=m;i++) <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;=n;j++)
+        <span class="kw">if</span>(a[i-1]==b[j-1]){ dp[i][j]=dp[i-1][j-1]+1; <span class="kw">if</span>(dp[i][j]&gt;ans) ans=dp[i][j]; }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findLength(<span class="ty">self</span>, nums1: <span class="ty">List</span>[<span class="ty">int</span>], nums2: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        m, n = <span class="ty">len</span>(nums1), <span class="ty">len</span>(nums2)
+        dp = [[0]*(n+1) <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m+1)]
+        ans = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, m+1):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(1, n+1):
+                <span class="kw">if</span> nums1[i-1] == nums2[j-1]:
+                    dp[i][j] = dp[i-1][j-1] + 1
+                    ans = <span class="ty">max</span>(ans, dp[i][j])
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findLength(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; b) {
+        <span class="ty">int</span> m=a.size(), n=b.size(), ans=0;
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(m+1, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n+1));
+        <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;=m;i++) <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;=n;j++){
+            <span class="kw">if</span>(a[i-1]==b[j-1]){ dp[i][j]=dp[i-1][j-1]+1; ans=max(ans,dp[i][j]); }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +135,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(mn)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP 2D: dp[i][j] = độ dài common subarray kết thúc tại i,j.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu nums1[i-1]==nums2[j-1]: dp[i][j]=dp[i-1][j-1]+1; cập…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>dp[i][j] chỉ tăng khi phần tử khớp liên tiếp — đúng subarray chung.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không phần tử chung → 0</span><span class="analysis-tag edge">Toàn giống nhau</span><span class="analysis-tag edge">Một mảng length 1</span><span class="analysis-tag pit">Dùng LCS không contiguous</span><span class="analysis-tag pit">Không reset khi khác</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Contiguous ≠ LCS: reset về 0 khi phần tử khác nhau.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Maximum%20Length%20of%20Repeated%20Subarray&lc_id=718&embed=true"></iframe>

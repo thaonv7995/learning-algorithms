@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #753</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Cracking the Safe</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(k^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(k^n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cracking the Safe (LeetCode #753) — Hard.</div>
+                        <div class="block-text">Safe n chữ số k-ary (0..k-1). Mỗi lần nhập một chữ số, mọi chuỗi con dài n xuất hiện đúng một lần trong output. Trả chuỗi ngắn nhất (De Bruijn).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 1, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;01&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 2, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;01100&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>n = 2, k = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;011122233020010012021&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Eulerian path trên De Bruijn graph: edge từ node (n-1)-gram tới node bằng shift+new digit. Hierholzer DFS.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,57 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">char</span> seen753[100000][16]; static <span class="ty">int</span> sn753;
+static <span class="ty">int</span> has753(<span class="ty">char</span>* e){ <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;sn753;i++) <span class="kw">if</span>(strcmp(seen753[i],e)==0) <span class="kw">return</span> 1; <span class="kw">return</span> 0; }
+static <span class="ty">void</span> add753(<span class="ty">char</span>* e){ <span class="kw">if</span>(!has753(e)) strcpy(seen753[sn753++],e); }
+static <span class="ty">void</span> dfs753(<span class="ty">char</span>* node, <span class="ty">int</span> n, <span class="ty">int</span> k, <span class="ty">char</span>* ans, <span class="ty">int</span>* ap){
+    <span class="kw">for</span>(<span class="ty">int</span> d=0; d&lt;k; d++){
+        <span class="ty">char</span> edge[16]; snprintf(edge,16,&quot;%s%d&quot;,node,d);
+        <span class="kw">if</span>(has753(edge)) continue; add753(edge);
+        <span class="ty">char</span> nxt[16]; strcpy(nxt,edge+1);
+        dfs753(nxt,n,k,ans,ap);
+        ans[(*ap)++]='0'+d;
+    }
+}
+<span class="ty">char</span>* crackSafe(<span class="ty">int</span> n, <span class="ty">int</span> k, <span class="ty">int</span>* retSize) {
+    <span class="kw">if</span>(n==1){ <span class="ty">char</span>* s=<span class="kw">malloc</span>(k+1); <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;k;i++) s[i]='0'+i; s[k]=0; *retSize=k; <span class="kw">return</span> s; }
+    <span class="ty">char</span> start[16]; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n-1;i++) start[i]='0'; start[n-1]=0;
+    <span class="ty">char</span>* ans=<span class="kw">malloc</span>(100000); <span class="ty">int</span> ap=0; sn753=0; dfs753(start,n,k,ans,&amp;ap); ans[ap]=0;
+    <span class="ty">char</span>* out=<span class="kw">malloc</span>(n+ap+1); strcpy(out,start); strcat(out,ans); *retSize=strlen(out); <span class="kw">free</span>(ans); <span class="kw">return</span> out;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> crackSafe(<span class="ty">self</span>, n: <span class="ty">int</span>, k: <span class="ty">int</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">if</span> n == 1: <span class="kw">return</span> &quot;&quot;.join(<span class="ty">str</span>(i) <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(k))
+        seen = <span class="ty">set</span>()
+        ans = []
+        <span class="kw">def</span> dfs(node):
+            <span class="kw">for</span> d <span class="kw">in</span> map(<span class="ty">str</span>, <span class="ty">range</span>(k)):
+                edge = node + d
+                <span class="kw">if</span> edge <span class="kw">in</span> seen: continue
+                seen.add(edge)
+                dfs(edge[1:])
+                ans.append(d)
+        start = &quot;0&quot; * (n-1)
+        dfs(start)
+        <span class="kw">return</span> start + &quot;&quot;.join(ans)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> crackSafe(<span class="ty">int</span> n, <span class="ty">int</span> k) {
+        <span class="kw">if</span>(n==1){ <span class="ty">string</span> s; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;k;i++) s+=<span class="ty">char</span>('0'+i); <span class="kw">return</span> s; }
+        unordered_set&lt;<span class="ty">string</span>&gt; seen;
+        <span class="ty">string</span> ans, start(n-1,'0');
+        function&lt;<span class="ty">void</span>(<span class="ty">string</span>)&gt; dfs = [&amp;](<span class="ty">string</span> node){
+            <span class="kw">for</span>(<span class="ty">int</span> d=0;d&lt;k;d++){
+                <span class="ty">string</span> edge=node+<span class="ty">char</span>('0'+d);
+                <span class="kw">if</span>(seen.count(edge)) continue;
+                seen.insert(edge);
+                dfs(edge.substr(1));
+                ans.push_back(<span class="ty">char</span>('0'+d));
+            }
+        };
+        dfs(start);
+        <span class="kw">return</span> start+ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +159,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Graph</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(k^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(k^n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Eulerian path trên De Bruijn graph: edge từ node -gram…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hierholzer DFS.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>De Bruijn Euler trail đảm bảo mọi n-gram xuất hiện đúng một lần.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1 → 0..k-1</span><span class="analysis-tag edge">k=2 classic</span><span class="analysis-tag edge">Start node (n-1) zeros</span><span class="analysis-tag pit">Hamilton path thay Euler</span><span class="analysis-tag pit">Thiếu prefix start node</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Cracking safe = De Bruijn sequence via Euler trail on k-ary graph.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +188,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Cracking%20the%20Safe&lc_id=753&embed=true"></iframe>

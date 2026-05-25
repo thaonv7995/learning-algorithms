@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #638</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Shopping Offers</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n*2^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(2^n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>52.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Shopping Offers (LeetCode #638) — Medium.</div>
+                        <div class="block-text">Cho giá items, offers (bundle giảm), needs. Chi phí tối thiểu mua đủ needs.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>price=[2,5], special=[[3,0,1],[1,1,0]], needs=[3,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>8</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>Không offer</code></div>
+                <div class="ex-line"><span>Out</span><code>sum price*need</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS+memo trên vector needs; thử mua lẻ từng item hoặc apply từng offer.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> shopDfs(<span class="ty">int</span>* price,<span class="ty">int</span> pn,<span class="ty">int</span>** sp,<span class="ty">int</span> sn,<span class="ty">int</span>* need,<span class="ty">int</span> w,<span class="ty">int</span>* memo,<span class="ty">int</span> key){
+    <span class="ty">int</span> base=0; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;w;i++) base+=price[i]*need[i];
+    <span class="ty">int</span> ans=base;
+    <span class="kw">for</span>(<span class="ty">int</span> s=0;s&lt;sn;s++){
+        <span class="ty">int</span> ok=1,nxt[16]; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;w;i++){ nxt[i]=need[i]-sp[s][i]; <span class="kw">if</span>(nxt[i]&lt;0) ok=0; }
+        <span class="kw">if</span>(!ok) continue;
+        <span class="ty">int</span> sub=shopDfs(price,pn,sp,sn,nxt,w,memo,0);
+        <span class="kw">if</span>(sp[s][w]+sub&lt;ans) ans=sp[s][w]+sub;
+    }
+    <span class="kw">return</span> ans;
+}
+<span class="ty">int</span> shoppingOffers638(<span class="ty">int</span>* price,<span class="ty">int</span> pn,<span class="ty">int</span>** sp,<span class="ty">int</span> sn,<span class="ty">int</span>* needs,<span class="ty">int</span> w){
+    <span class="kw">return</span> shopDfs(price,pn,sp,sn,needs,w,NULL,0);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> shoppingOffers(<span class="ty">self</span>, price: <span class="ty">List</span>[<span class="ty">int</span>], special: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]], needs: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        memo={}
+        <span class="kw">def</span> dfs(need):
+            key=tuple(need)
+            <span class="kw">if</span> key <span class="kw">in</span> memo: <span class="kw">return</span> memo[key]
+            ans=sum(p*n <span class="kw">for</span> p,n <span class="kw">in</span> zip(price,need))
+            <span class="kw">for</span> sp <span class="kw">in</span> special:
+                nxt=[need[i]-sp[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(need))]
+                <span class="kw">if</span> <span class="ty">min</span>(nxt)&gt;=0: ans=<span class="ty">min</span>(ans,sp[-1]+dfs(nxt))
+            memo[key]=ans; <span class="kw">return</span> ans
+        <span class="kw">return</span> dfs(needs)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> shoppingOffers(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; price, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; special, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; needs) {
+        map&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;,<span class="ty">int</span>&gt; memo;
+        function&lt;<span class="ty">int</span>(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp;)&gt; dfs=[&amp;](<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; need)-&gt;<span class="ty">int</span>{
+            <span class="kw">if</span>(memo.count(need)) <span class="kw">return</span> memo[need];
+            <span class="ty">int</span> ans=0; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)price.size();i++) ans+=price[i]*need[i];
+            <span class="kw">for</span>(auto&amp; sp:special){
+                <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; nxt=need; <span class="ty">bool</span> ok=1;
+                <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)need.size();i++){ nxt[i]-=sp[i]; <span class="kw">if</span>(nxt[i]&lt;0) ok=0; }
+                <span class="kw">if</span>(ok) ans=min(ans, sp.back()+dfs(nxt));
+            }
+            <span class="kw">return</span> memo[need]=ans;
+        };
+        <span class="kw">return</span> dfs(needs);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +145,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n*2^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(2^n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DFS+memo trên vector needs; thử mua lẻ từng item hoặc apply từng offer.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Memo trên needs — thử mua lẻ và mọi offer hợp lệ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">needs=0</span><span class="analysis-tag edge">Offer rẻ hơn lẻ</span><span class="analysis-tag edge">Nhiều offer</span><span class="analysis-tag pit">Không memo TLE</span><span class="analysis-tag pit">Offer vượt needs</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Shopping offers — DP/DFS on needs vector with offers.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +174,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Shopping%20Offers&lc_id=638&embed=true"></iframe>

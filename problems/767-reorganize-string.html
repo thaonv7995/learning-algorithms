@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #767</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Greedy</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Reorganize String</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Reorganize String (LeetCode #767) — Medium.</div>
+                        <div class="block-text">Cho chuỗi s. Sắp xếp lại sao không có hai ký tự giống nhau cạnh nhau. Có thể trả về bất kỳ hoặc rỗng nếu không thể.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;aab&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;aba&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;aaab&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;vvvvlo&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;vlvovv&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đếm freq; max freq &gt; (n+1)/2 → impossible. Max-heap/largest first, xen kẽ không lặp cạnh.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* reorganizeString(<span class="ty">char</span>* s) {
+    <span class="ty">int</span> cnt[26]={0}; <span class="kw">for</span>(;*s;s++) cnt[*s-'a']++;
+    <span class="ty">int</span> n=strlen(s), mx=0; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;26;i++) <span class="kw">if</span>(cnt[i]&gt;mx) mx=cnt[i];
+    <span class="kw">if</span>(mx&gt;(n+1)/2) <span class="kw">return</span> strdup(&quot;&quot;);
+    <span class="ty">char</span>* ans=<span class="kw">malloc</span>(n+1); <span class="ty">int</span> i=0;
+    <span class="kw">for</span>(<span class="ty">int</span> c=0;c&lt;26;c++) <span class="kw">while</span>(cnt[c]--&gt;0){ ans[i]=c+'a'; i+=2; <span class="kw">if</span>(i&gt;=n) i=1; }
+    ans[n]=0; <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> reorganizeString(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        cnt = Counter(s)
+        maxHeap = [(-v, c) <span class="kw">for</span> c, v <span class="kw">in</span> cnt.items()]
+        heapify(maxHeap)
+        ans = []
+        prev = <span class="kw">None</span>
+        <span class="kw">while</span> maxHeap:
+            v, c = heappop(maxHeap)
+            ans.append(c)
+            <span class="kw">if</span> prev:
+                heappush(maxHeap, prev)
+                prev = <span class="kw">None</span>
+            <span class="kw">if</span> v + 1 &lt; 0:
+                prev = (v + 1, c)
+        <span class="kw">return</span> &quot;&quot;.join(ans) <span class="kw">if</span> <span class="ty">len</span>(ans) == <span class="ty">len</span>(s) <span class="kw">else</span> &quot;&quot;</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> reorganizeString(<span class="ty">string</span> s) {
+        <span class="ty">int</span> cnt[26]={}; <span class="kw">for</span>(<span class="ty">char</span> c:s) cnt[c-'a']++;
+        <span class="ty">int</span> mx=*max_element(cnt,cnt+26);
+        <span class="kw">if</span>(mx&gt;(<span class="ty">int</span>)s.size()+1)/2) <span class="kw">return</span> &quot;&quot;;
+        <span class="ty">string</span> ans(s.size(),' ');
+        <span class="ty">int</span> i=0;
+        <span class="kw">for</span>(<span class="ty">int</span> c=0;c&lt;26;c++) <span class="kw">while</span>(cnt[c]-- &gt; 0){
+            ans[i]=c+'a'; i+=2; <span class="kw">if</span>(i&gt;=(<span class="ty">int</span>)s.size()) i=1;
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +145,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
+                        <span class="pattern-chip">Greedy</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Đếm freq; max freq &gt; /2 → impossible.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Max-heap/largest first, xen kẽ không lặp cạnh.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Điều kiện pigeonhole; fill even indices rồi odd tránh adjacent same.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Impossible aaab</span><span class="analysis-tag edge">Một ký tự</span><span class="analysis-tag edge">Hai ký tự xen kẽ</span><span class="analysis-tag pit">Không check max freq</span><span class="analysis-tag pit">Adjacent same sau build</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Reorganize string = freq max &lt;= half ceiling else empty; alternate largest.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +174,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Reorganize%20String&lc_id=767&embed=true"></iframe>

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #707</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Linked List</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Design Linked List</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n) get/addAt/remove</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>30.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Design Linked List (LeetCode #707) — Medium.</div>
+                        <div class="block-text">Thiết kế linked list hỗ trợ get(index), addAtHead(val), addAtTail(val), addAtIndex(index,val), deleteAtIndex(index). Index hợp lệ 0..size-1 trừ addAtIndex có thể = size.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>[&quot;MyLinkedList&quot;,&quot;addAtHead&quot;,&quot;addAtTail&quot;,&quot;addAtIndex&quot;,&quot;get&quot;,&quot;deleteAtIndex&quot;,&quot;get&quot;], [[],[1],[3],[1,2],[1],[1],[1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,null,2,null,3]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[&quot;MyLinkedList&quot;,&quot;addAtHead&quot;,&quot;addAtHead&quot;,&quot;get&quot;,&quot;addAtIndex&quot;,&quot;get&quot;], [[],[4],[5],[0],[1,2],[1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,5,null,2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Doubly linked list + dummy head/tail hoặc singly với size. Duyệt tới index cho get/add/delete.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,64 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> Node { <span class="ty">int</span> val; <span class="ty">struct</span> Node* next; } Node;
+typedef <span class="ty">struct</span> { Node dummy; <span class="ty">int</span> sz; } MyLinkedList;
+static Node* nodeAt(MyLinkedList* t, <span class="ty">int</span> i){ Node* c=&amp;t-&gt;dummy; <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;=i;j++) c=c-&gt;next; <span class="kw">return</span> c; }
+MyLinkedList* myLinkedListCreate(<span class="ty">void</span>){ MyLinkedList* o=<span class="kw">calloc</span>(1,<span class="kw">sizeof</span>(MyLinkedList)); <span class="kw">return</span> o; }
+<span class="ty">int</span> myLinkedListGet(MyLinkedList* o,<span class="ty">int</span> idx){ <span class="kw">if</span>(idx&lt;0||idx&gt;=o-&gt;sz) <span class="kw">return</span> -1; <span class="kw">return</span> nodeAt(o,idx)-&gt;val; }
+<span class="ty">void</span> myLinkedListAddAtIndex(MyLinkedList* o,<span class="ty">int</span> idx,<span class="ty">int</span> val){ <span class="kw">if</span>(idx&lt;0||idx&gt;o-&gt;sz) <span class="kw">return</span>; Node* p=nodeAt(o,idx-1); Node* n=<span class="kw">malloc</span>(<span class="kw">sizeof</span>(Node)); n-&gt;val=val; n-&gt;next=p-&gt;next; p-&gt;next=n; o-&gt;sz++; }
+<span class="ty">void</span> myLinkedListDeleteAtIndex(MyLinkedList* o,<span class="ty">int</span> idx){ <span class="kw">if</span>(idx&lt;0||idx&gt;=o-&gt;sz) <span class="kw">return</span>; Node* p=nodeAt(o,idx-1); Node* d=p-&gt;next; p-&gt;next=d-&gt;next; <span class="kw">free</span>(d); o-&gt;sz--; }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Node:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, val=0, nxt=<span class="kw">None</span>):
+        <span class="ty">self</span>.val, <span class="ty">self</span>.next = val, nxt
+<span class="kw">class</span> MyLinkedList:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.dummy = Node()
+        <span class="ty">self</span>.size = 0
+    <span class="kw">def</span> _node(<span class="ty">self</span>, index):
+        cur = <span class="ty">self</span>.dummy
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(index + 1):
+            cur = cur.next
+        <span class="kw">return</span> cur
+    <span class="kw">def</span> get(<span class="ty">self</span>, index: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> index &lt; 0 <span class="kw">or</span> index &gt;= <span class="ty">self</span>.size: <span class="kw">return</span> -1
+        <span class="kw">return</span> <span class="ty">self</span>._node(index).next.val
+    <span class="kw">def</span> addAtHead(<span class="ty">self</span>, val: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        <span class="ty">self</span>.addAtIndex(0, val)
+    <span class="kw">def</span> addAtTail(<span class="ty">self</span>, val: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        <span class="ty">self</span>.addAtIndex(<span class="ty">self</span>.size, val)
+    <span class="kw">def</span> addAtIndex(<span class="ty">self</span>, index: <span class="ty">int</span>, val: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        <span class="kw">if</span> index &lt; 0 <span class="kw">or</span> index &gt; <span class="ty">self</span>.size: <span class="kw">return</span>
+        prev = <span class="ty">self</span>._node(index - 1)
+        prev.next = Node(val, prev.next)
+        <span class="ty">self</span>.size += 1
+    <span class="kw">def</span> deleteAtIndex(<span class="ty">self</span>, index: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        <span class="kw">if</span> index &lt; 0 <span class="kw">or</span> index &gt;= <span class="ty">self</span>.size: <span class="kw">return</span>
+        prev = <span class="ty">self</span>._node(index - 1)
+        prev.next = prev.next.next
+        <span class="ty">self</span>.size -= 1</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">struct</span> Node { <span class="ty">int</span> val; Node* next; Node(<span class="ty">int</span> v=0, Node* n=<span class="kw">nullptr</span>): val(v), next(n) {} };
+<span class="ty">class</span> MyLinkedList {
+    Node dummy; <span class="ty">int</span> sz = 0;
+    Node* at(<span class="ty">int</span> i) { Node* cur = &amp;dummy; <span class="kw">for</span> (<span class="ty">int</span> j=0;j&lt;=i;j++) cur = cur-&gt;next; <span class="kw">return</span> cur; }
 <span class="ty">public</span>:
+    MyLinkedList() {}
+    <span class="ty">int</span> get(<span class="ty">int</span> index) { <span class="kw">if</span> (index&lt;0||index&gt;=sz) <span class="kw">return</span> -1; <span class="kw">return</span> at(index)-&gt;val; }
+    <span class="ty">void</span> addAtHead(<span class="ty">int</span> val) { addAtIndex(0, val); }
+    <span class="ty">void</span> addAtTail(<span class="ty">int</span> val) { addAtIndex(sz, val); }
+    <span class="ty">void</span> addAtIndex(<span class="ty">int</span> index, <span class="ty">int</span> val) {
+        <span class="kw">if</span> (index&lt;0||index&gt;sz) <span class="kw">return</span>;
+        Node* prev = at(index-1);
+        prev-&gt;next = <span class="kw">new</span> Node(val, prev-&gt;next);
+        sz++;
+    }
+    <span class="ty">void</span> deleteAtIndex(<span class="ty">int</span> index) {
+        <span class="kw">if</span> (index&lt;0||index&gt;=sz) <span class="kw">return</span>;
+        Node* prev = at(index-1);
+        Node* del = prev-&gt;next;
+        prev-&gt;next = del-&gt;next;
+        <span class="kw">delete</span> del; sz--;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +163,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Linked List</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Doubly linked list + dummy head/tail hoặc singly với size.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Duyệt tới index cho get/add/delete.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Dummy head giúp insert/delete tại index 0; size kiểm soát biên.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Index ngoài range bỏ qua</span><span class="analysis-tag edge">addAtIndex tại size = append</span><span class="analysis-tag edge">List rỗng get → -1</span><span class="analysis-tag pit">Off-by-one khi duyệt tới index</span><span class="analysis-tag pit">Quên cập nhật size</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Design LL: luôn track size; addAtIndex=size → addAtTail.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +190,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=3&problem=Design%20Linked%20List&lc_id=707&embed=true"></iframe>

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #602</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Database</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Friend Requests II: Who Has the Most Friends</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>62.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Friend Requests II: Who Has the Most Friends (LeetCode #602) — Medium.</div>
+                        <div class="block-text">Bảng RequestAccepted(requester_id, accepter_id) — mỗi hàng là một tình bạn đã chấp nhận. Trả id và số bạn bè của người có nhiều bạn nhất (một hàng nếu hòa theo LeetCode).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>A chấp nhận B, A chấp nhận C</code></div>
+                <div class="ex-line"><span>Out</span><code>id=A, num=2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>Chỉ một cặp A↔B</code></div>
+                <div class="ex-line"><span>Out</span><code>Cả A và B đều có 1 bạn</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>Nhiều người cùng max</code></div>
+                <div class="ex-line"><span>Out</span><code>Một id (LIMIT 1)</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">UNION ALL requester_id và accepter_id thành id; GROUP BY id COUNT(*); ORDER BY num DESC LIMIT 1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +100,27 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
-<span class="ty">public</span>:
-};</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">const</span> <span class="ty">char</span> query[] = &quot;SELECT id, COUNT(*) AS num FROM ( SELECT requester_id AS id FROM RequestAccepted UNION ALL SELECT accepter_id AS id FROM RequestAccepted ) t GROUP BY id ORDER BY num DESC LIMIT 1;&quot;;</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># SQL</span>
+SELECT id, COUNT(*) AS num
+FROM (
+  SELECT requester_id AS id FROM RequestAccepted
+  UNION ALL
+  SELECT accepter_id AS id FROM RequestAccepted
+) t
+GROUP BY id
+ORDER BY num DESC
+LIMIT 1;</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// SQL</span>
+SELECT id, COUNT(*) AS num
+FROM (
+  SELECT requester_id AS id FROM RequestAccepted
+  UNION ALL
+  SELECT accepter_id AS id FROM RequestAccepted
+) t
+GROUP BY id
+ORDER BY num DESC
+LIMIT 1;</pre>
                         </div>
                     </div>
                 </div>
@@ -104,18 +129,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Database</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — UNION ALL requester_id và accepter_id thành id; GROUP BY id COUNT;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>UNION ALL đếm mỗi người ở cả hai vai trò; LIMIT 1 lấy max.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không request → rỗng</span><span class="analysis-tag edge">Hòa số bạn → một id bất kỳ</span><span class="analysis-tag edge">Self-friend không có trong bảng</span><span class="analysis-tag pit">Chỉ đếm accepter_id</span><span class="analysis-tag pit">UNION thay UNION ALL làm mất bội số</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Most friends = UNION both roles, GROUP BY id, ORDER BY count DESC LIMIT 1.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +157,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Friend%20Requests%20II%3A%20Who%20Has%20the%20Most%20Friends&lc_id=602&embed=true"></iframe>

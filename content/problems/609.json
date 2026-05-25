@@ -2,33 +2,37 @@
   "id": 609,
   "title": "Find Duplicate File in System",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Find Duplicate File in System (LeetCode #609) — Medium.",
+  "category": "Hash Table",
+  "timeComplexity": "O(n * m)",
+  "spaceComplexity": "O(n * m)",
+  "description": "Cho mảng paths [\"root/a/x\",\"root/b/x\"]. Trả các nhóm [root, ...paths] có cùng nội dung file (hash cùng nhau).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "paths = [\"/home/a.txt\",\"/home/b.txt\"] cùng nội dung",
+      "output": "[[\"/home\",\"/home/a.txt\",\"/home/b.txt\"]]"
+    },
+    {
+      "input": "Không trùng",
+      "output": "[]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Parse path lấy content sau dấu cách; map content→list paths; output nếu ≥2 path.",
+  "memoryTip": "Duplicate files = hash content string, group paths by content.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findDuplicate(self, paths: List[str]) -> List[List[str]]:\n        mp = defaultdict(list)\n        for p in paths:\n            parts = p.split()\n            root = parts[0]\n            for f in parts[1:]:\n                i = f.index('(')\n                mp[f[i+1:-1]].append(root + '/' + f[:i])\n        return [[v[0]]+v for v in mp.values() if len(v)>1]",
+    "cpp": "class Solution {\npublic:\n    vector<vector<string>> findDuplicate(vector<string>& paths) {\n        unordered_map<string, vector<string>> mp;\n        for(auto& p:paths){\n            int sp=p.find(' '); string root=p.substr(0,sp);\n            for(int i=sp+1;i<(int)p.size();){\n                int j=p.find('(',i); int k=p.find(')',j);\n                string file=p.substr(i,j-i), content=p.substr(j+1,k-j-1);\n                mp[content].push_back(root+\"/\"+file);\n                i=k+2;\n            }\n        }\n        vector<vector<string>> ans;\n        for(auto& [c,v]:mp) if(v.size()>1){ vector<string> row={v[0]}; row.insert(row.end(),v.begin(),v.end()); ans.push_back(row); }\n        return ans;\n    }\n};",
+    "c": "char*** findDuplicate(char** paths, int n, int* rs, int** cs) {\n    char*** ans = NULL; *rs = 0;\n    char keys[256][256]; int cnt[256] = {0}; int nk = 0;\n    char* lists[256][64]; int ls[256] = {0};\n    for (int i = 0; i < n; i++) {\n        char* p = paths[i]; char* sp = strchr(p, ' ');\n        char root[256]; int rl = sp ? (int)(sp - p) : (int)strlen(p);\n        memcpy(root, p, rl); root[rl] = 0;\n        for (char* q = sp ? sp + 1 : p; *q;) {\n            char* lp = strchr(q, '('); char* rp = strchr(lp, ')');\n            char content[256]; int cl = (int)(rp - lp - 1); memcpy(content, lp + 1, cl); content[cl] = 0;\n            char full[512]; snprintf(full, sizeof(full), \"%s/%.*s\", root, (int)(lp - q), q);\n            int ki = -1; for (int k = 0; k < nk; k++) if (!strcmp(keys[k], content)) { ki = k; break; }\n            if (ki < 0) { ki = nk++; strcpy(keys[ki], content); }\n            strcpy(lists[ki][ls[ki]++], full);\n            q = rp + 1; while (*q == ' ') q++;\n        }\n    }\n    for (int k = 0; k < nk; k++) if (ls[k] > 1) (*rs)++;\n    ans = malloc(*rs * sizeof(char**)); cs = malloc(*rs * sizeof(int)); int ai = 0;\n    for (int k = 0; k < nk; k++) if (ls[k] > 1) {\n        ans[ai] = malloc(ls[k] * sizeof(char*)); cs[ai] = ls[k];\n        for (int j = 0; j < ls[k]; j++) ans[ai][j] = lists[k][j];\n        ai++;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Nhóm theo content trong ngoặc — chỉ xuất nhóm ≥2 file.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một file duy nhất",
+      "Cùng tên khác content"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Parse sai format",
+      "Quên prefix root path"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

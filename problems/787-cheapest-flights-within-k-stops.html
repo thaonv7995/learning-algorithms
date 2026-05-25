@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #787</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Dynamic Programming</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Cheapest Flights Within K Stops</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(K * (E log V))</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(VK)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>41.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cheapest Flights Within K Stops (LeetCode #787) — Medium.</div>
+                        <div class="block-text">n cities, flights [u,v,w] cost, src, dst, k stops max. Trả chi phí vé rẻ nhất từ src tới dst với at most k stops; -1 nếu không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>700</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 3, flights = [[0,1,100],[1,2,100],[0,2,500]], src = 0, dst = 2, k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>200</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Bellman-Ford k+1 lần hoặc BFS level Dijkstra: dist[stops][node] min cost.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findCheapestPrice(<span class="ty">int</span> n, <span class="ty">int</span>** flights, <span class="ty">int</span> fn, <span class="ty">int</span>* cs, <span class="ty">int</span> src, <span class="ty">int</span> dst, <span class="ty">int</span> k) {
+    <span class="ty">const</span> <span class="ty">int</span> INF=1000000000; <span class="ty">int</span> dist[100], nd[100];
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) dist[i]=INF; dist[src]=0;
+    <span class="kw">for</span>(<span class="ty">int</span> s=0;s&lt;=k;s++){ <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) nd[i]=dist[i];
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;fn;i++){ <span class="ty">int</span> u=flights[i][0],v=flights[i][1],w=flights[i][2];
+            <span class="kw">if</span>(dist[u]!=INF &amp;&amp; dist[u]+w&lt;nd[v]) nd[v]=dist[u]+w; }
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) dist[i]=nd[i]; }
+    <span class="kw">return</span> dist[dst]==INF?-1:dist[dst];
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findCheapestPrice(<span class="ty">self</span>, n: <span class="ty">int</span>, flights: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]], src: <span class="ty">int</span>, dst: <span class="ty">int</span>, k: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        INF = 10**9
+        dist = [INF] * n
+        dist[src] = 0
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(k + 1):
+            nd = dist[:]
+            <span class="kw">for</span> u, v, w <span class="kw">in</span> flights:
+                <span class="kw">if</span> dist[u] + w &lt; nd[v]:
+                    nd[v] = dist[u] + w
+            dist = nd
+        <span class="kw">return</span> dist[dst] <span class="kw">if</span> dist[dst] &lt; INF <span class="kw">else</span> -1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findCheapestPrice(<span class="ty">int</span> n, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; f, <span class="ty">int</span> src, <span class="ty">int</span> dst, <span class="ty">int</span> k) {
+        <span class="ty">const</span> <span class="ty">int</span> INF=1e9;
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dist(n,INF); dist[src]=0;
+        <span class="kw">for</span>(<span class="ty">int</span> s=0;s&lt;=k;s++){
+            <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; nd=dist;
+            <span class="kw">for</span>(auto&amp; e:f){
+                <span class="ty">int</span> u=e[0],v=e[1],w=e[2];
+                <span class="kw">if</span>(dist[u]!=INF) nd[v]=min(nd[v],dist[u]+w);
+            }
+            dist=move(nd);
+        }
+        <span class="kw">return</span> dist[dst]==INF?-1:dist[dst];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +139,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Graph</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(K * (E log V)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(VK)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Bellman-Ford k+1 lần hoặc BFS level Dijkstra: dist[stops][node] min…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>k+1 relax layers = paths with at most k edges/stops.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">No path → -1</span><span class="analysis-tag edge">k=0 direct only</span><span class="analysis-tag edge">Self loops</span><span class="analysis-tag pit">Dijkstra không giới hạn stops</span><span class="analysis-tag pit">In-place relax sai layer</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Cheapest flights K stops = relax k+1 layers Bellman-Ford.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Cheapest%20Flights%20Within%20K%20Stops&lc_id=787&embed=true"></iframe>

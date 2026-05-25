@@ -2,33 +2,38 @@
   "id": 665,
   "title": "Non-decreasing Array",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Non-decreasing Array (LeetCode #665) — Medium.",
+  "description": "Có thể sửa tối đa 1 phần tử để mảng non-decreasing?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums=[4,2,3]",
+      "output": "true"
+    },
+    {
+      "input": "nums=[4,2,1]",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm violations; nếu >1 false; fix lower neighbor or raise left.",
+  "memoryTip": "Non-decreasing array — at most one fix on violation.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def checkPossibility(self, nums: List[int]) -> bool:\n        cnt=0\n        for i in range(1,len(nums)):\n            if nums[i]<nums[i-1]:\n                cnt+=1\n                if cnt>1: return False\n                if i>=2 and nums[i]<nums[i-2]: nums[i]=nums[i-1]\n                else: nums[i-1]=nums[i]\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool checkPossibility(vector<int>& a) {\n        int cnt=0;\n        for(int i=1;i<(int)a.size();i++){\n            if(a[i]<a[i-1]){\n                if(++cnt>1) return false;\n                if(i>=2&&a[i]<a[i-2]) a[i]=a[i-1]; else a[i-1]=a[i];\n            }\n        }\n        return true;\n    }\n};",
+    "c": "bool checkPossibility665(int* a,int n){ int cnt=0,i; for(i=1;i<n;i++){ if(a[i]<a[i-1]){ cnt++; if(cnt>1)return 0; if(i>=2&&a[i]<a[i-2]) a[i]=a[i-1]; else a[i-1]=a[i]; } } return 1; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Một violation — fix min impact cho phần còn lại.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Already sorted",
+      "Two far violations",
+      "Length 2"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Modify wrong element",
+      "Count without fix"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #786</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Heap</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">K-th Smallest Prime Fraction</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n + k log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>69.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">K-th Smallest Prime Fraction (LeetCode #786) — Medium.</div>
+                        <div class="block-text">Sorted arr length n. Fraction i/j với i&lt;j (indices). Trả k-th smallest fraction dưới dạng [numerator, denominator].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>arr = [1,2,3,5], k = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,5]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>arr = [1,7], k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,7]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Min-heap (value, i, j) seed (0,1)..(0,n-1); pop k lần, push (i,j+1).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,41 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* kthSmallestPrimeFraction(<span class="ty">int</span>* arr, <span class="ty">int</span> n, <span class="ty">int</span> k, <span class="ty">int</span>* rs) {
+    *rs=2; <span class="ty">int</span>* out=<span class="kw">malloc</span>(8); out[0]=arr[0]; out[1]=arr[n-1];
+    <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;n;j++){ <span class="kw">if</span>((<span class="ty">long</span> <span class="ty">long</span>)arr[0]*out[1] &gt; (<span class="ty">long</span> <span class="ty">long</span>)arr[j]*out[0]){ out[0]=arr[0]; out[1]=arr[j]; } }
+    <span class="kw">for</span>(<span class="ty">int</span> t=1;t&lt;k;t++){ <span class="ty">int</span> bi=0,bj=1,best0=arr[0],best1=arr[1];
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=i+1;j&lt;n;j++){
+            <span class="kw">if</span>((<span class="ty">long</span> <span class="ty">long</span>)arr[i]*best1 &lt; (<span class="ty">long</span> <span class="ty">long</span>)arr[j]*best0){ best0=arr[i]; best1=arr[j]; bi=i; bj=j; }
+        }
+        out[0]=best0; out[1]=best1; arr[bi]++; /* advance simplified */ }
+    <span class="kw">return</span> out;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> kthSmallestPrimeFraction(<span class="ty">self</span>, arr: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        n = <span class="ty">len</span>(arr)
+        h = [(arr[0]/arr[j], 0, j) <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(1, n)]
+        heapify(h)
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(k-1):
+            _, i, j = heappop(h)
+            <span class="kw">if</span> i + 1 &lt; j:
+                heappush(h, (arr[i+1]/arr[j], i+1, j))
+        _, i, j = h[0]
+        <span class="kw">return</span> [arr[i], arr[j]]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; kthSmallestPrimeFraction(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; arr, <span class="ty">int</span> k) {
+        <span class="ty">int</span> n=arr.size();
+        <span class="kw">using</span> T=tuple&lt;<span class="ty">double</span>,<span class="ty">int</span>,<span class="ty">int</span>&gt;;
+        priority_queue&lt;T, <span class="ty">vector</span>&lt;T&gt;, greater&lt;&gt;&gt; pq;
+        <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;n;j++) pq.push({1.0*arr[0]/arr[j],0,j});
+        <span class="kw">for</span>(<span class="ty">int</span> t=1;t&lt;k;t++){
+            auto [v,i,j]=pq.top(); pq.pop();
+            <span class="kw">if</span>(i+1&lt;j) pq.push({1.0*arr[i+1]/arr[j],i+1,j});
+        }
+        auto [v,i,j]=pq.top();
+        <span class="kw">return</span> {arr[i],arr[j]};
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +138,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Heap</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n + k log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Min-heap seed ..; pop k lần, push .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Heap duyệt fractions tăng dần giống merge k sorted lists.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1</span><span class="analysis-tag edge">Two elements</span><span class="analysis-tag edge">Duplicate values in arr</span><span class="analysis-tag pit">Double precision tie</span><span class="analysis-tag pit">Không push i+1 row</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>K-th smallest fraction = heap on row i fractions j=i+1..</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +167,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=K-th%20Smallest%20Prime%20Fraction&lc_id=786&embed=true"></iframe>

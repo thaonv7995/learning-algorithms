@@ -2,33 +2,42 @@
   "id": 739,
   "title": "Daily Temperatures",
   "difficulty": "Medium",
-  "category": "Stack",
+  "category": "Monotonic Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Daily Temperatures (LeetCode #739) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng temperatures (°F). answer[i] = số ngày chờ đến ngày ấm hơn; không có thì 0.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "temperatures = [73,74,75,71,69,72,76,73]",
+      "output": "[1,1,4,2,1,1,0,0]"
+    },
+    {
+      "input": "temperatures = [30,40,50,60]",
+      "output": "[1,1,1,0]"
+    },
+    {
+      "input": "temperatures = [30,60,90]",
+      "output": "[1,1,0]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Monotonic decreasing stack lưu index: pop khi current temp > stack top temp; ans[popped]=i-popped.",
+  "memoryTip": "Next warmer day = monotonic stack pop when warmer found.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:\n        n = len(temperatures)\n        ans = [0]*n\n        st = []\n        for i, t in enumerate(temperatures):\n            while st and temperatures[st[-1]] < t:\n                j = st.pop()\n                ans[j] = i - j\n            st.append(i)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> dailyTemperatures(vector<int>& T) {\n        int n=T.size(); vector<int> ans(n);\n        vector<int> st;\n        for(int i=0;i<n;i++){\n            while(!st.empty() && T[st.back()]<T[i]){\n                int j=st.back(); st.pop_back();\n                ans[j]=i-j;\n            }\n            st.push_back(i);\n        }\n        return ans;\n    }\n};",
+    "c": "int* dailyTemperatures(int* T, int n, int* retSize) {\n    int* ans = calloc(n, 4); int* st = malloc(n * 4); int top = 0;\n    for (int i = 0; i < n; i++) {\n        while (top && T[st[top-1]] < T[i]) {\n            int j = st[--top]; ans[j] = i - j;\n        }\n        st[top++] = i;\n    }\n    *retSize = n; free(st); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi index pop đúng khi gặp ngày ấm hơn đầu tiên bên phải.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Giảm dần → toàn 0",
+      "Tăng dần → 1,1,...,0",
+      "Một ngày"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Stack tăng thay giảm",
+      "Lưu temp thay index"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

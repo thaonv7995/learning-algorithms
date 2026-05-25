@@ -2,33 +2,42 @@
   "id": 712,
   "title": "Minimum ASCII Delete Sum for Two Strings",
   "difficulty": "Medium",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Minimum ASCII Delete Sum for Two Strings (LeetCode #712) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(mn)",
+  "spaceComplexity": "O(mn)",
+  "description": "Cho hai chuỗi s1, s2. Xóa một số ký tự (không đảo thứ tự) sao hai chuỗi bằng nhau. Chi phí xóa ký tự = mã ASCII của ký tự đó. Trả tổng chi phí xóa tối thiểu.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s1 = \"sea\", s2 = \"eat\"",
+      "output": "231"
+    },
+    {
+      "input": "s1 = \"delete\", s2 = \"leet\"",
+      "output": "403"
+    },
+    {
+      "input": "s1 = \"a\", s2 = \"b\"",
+      "output": "195"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "LCS DP: dp[i][j] = min cost để khớp s1[:i] và s2[:j]. Nếu s1[i-1]==s2[j-1] giữ; else min(delete s1[i-1], delete s2[j-1]).",
+  "memoryTip": "Min delete sum = tổng ASCII cả hai chuỗi trừ 2×ASCII của LCS (common subsequence giữ lại).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minimumDeleteSum(self, s1: str, s2: str) -> int:\n        m, n = len(s1), len(s2)\n        dp = [[0]*(n+1) for _ in range(m+1)]\n        for i in range(1, m+1): dp[i][0] = dp[i-1][0] + ord(s1[i-1])\n        for j in range(1, n+1): dp[0][j] = dp[0][j-1] + ord(s2[j-1])\n        for i in range(1, m+1):\n            for j in range(1, n+1):\n                if s1[i-1] == s2[j-1]: dp[i][j] = dp[i-1][j-1]\n                else: dp[i][j] = min(dp[i-1][j]+ord(s1[i-1]), dp[i][j-1]+ord(s2[j-1]))\n        return dp[m][n]",
+    "cpp": "class Solution {\npublic:\n    int minimumDeleteSum(string s1, string s2) {\n        int m=s1.size(), n=s2.size();\n        vector<vector<int>> dp(m+1, vector<int>(n+1));\n        for(int i=1;i<=m;i++) dp[i][0]=dp[i-1][0]+s1[i-1];\n        for(int j=1;j<=n;j++) dp[0][j]=dp[0][j-1]+s2[j-1];\n        for(int i=1;i<=m;i++) for(int j=1;j<=n;j++){\n            if(s1[i-1]==s2[j-1]) dp[i][j]=dp[i-1][j-1];\n            else dp[i][j]=min(dp[i-1][j]+s1[i-1], dp[i][j-1]+s2[j-1]);\n        }\n        return dp[m][n];\n    }\n};",
+    "c": "int minimumDeleteSum(char* s1, char* s2) {\n    int m=strlen(s1), n=strlen(s2);\n    int dp[1001][1001]={0};\n    for(int i=1;i<=m;i++) dp[i][0]=dp[i-1][0]+s1[i-1];\n    for(int j=1;j<=n;j++) dp[0][j]=dp[0][j-1]+s2[j-1];\n    for(int i=1;i<=m;i++) for(int j=1;j<=n;j++){\n        if(s1[i-1]==s2[j-1]) dp[i][j]=dp[i-1][j-1];\n        else dp[i][j]=dp[i-1][j]+s1[i-1] < dp[i][j-1]+s2[j-1] ? dp[i-1][j]+s1[i-1] : dp[i][j-1]+s2[j-1];\n    }\n    return dp[m][n];\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP optimal substructure: mọi bước chọn xóa bên nào hoặc giữ ký tự trùng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một chuỗi rỗng → xóa hết chuỗi kia",
+      "Giống hệt → 0",
+      "Không ký tự chung"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm edit distance (insert)",
+      "Quên cộng ASCII khi khởi tạo hàng/cột 0"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

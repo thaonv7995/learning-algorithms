@@ -2,33 +2,38 @@
   "id": 639,
   "title": "Decode Ways II",
   "difficulty": "Hard",
-  "category": "String",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Decode Ways II (LeetCode #639) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Chuỗi s chỉ gồm 0-9. Đếm số cách decode (A=1..Z=26) modulo 10^9+7; * cũng là ký tự hợp lệ.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"1*\"",
+      "output": "9"
+    },
+    {
+      "input": "s = \"*\"",
+      "output": "9"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[i] = ways prefix i; xử lý digit và * (1-9 cho 1 chữ, 10-26 cho 2 chữ).",
+  "memoryTip": "Decode Ways II — DP with * wildcard counts.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numDecodings(self, s: str) -> int:\n        MOD=10**9+7\n        n=len(s); dp=[0]*(n+1); dp[0]=1; dp[1]=9 if s[0]=='*' else (0 if s[0]=='0' else 1)\n        for i in range(2,n+1):\n            if s[i-1]=='*': dp[i]=9*dp[i-1]\n            elif s[i-1]!='0': dp[i]=dp[i-1]\n            a=s[i-2]\n            if a=='*': dp[i]+=dp[i-2]*9 if s[i-1]=='*' else (dp[i-2] if s[i-1]<='6' else 0)\n            elif a=='1': dp[i]+=dp[i-2]*(9 if s[i-1]=='*' else 1)\n            elif a=='2': dp[i]+=dp[i-2]*(6 if s[i-1]=='*' else (1 if s[i-1]<='6' else 0))\n        return dp[n]%MOD",
+    "cpp": "class Solution {\npublic:\n    int numDecodings(string s) {\n        const int MOD=1e9+7; int n=s.size();\n        vector<long> dp(n+1); dp[0]=1;\n        dp[1]= s[0]=='*'?9:(s[0]=='0'?0:1);\n        for(int i=2;i<=n;i++){\n            if(s[i-1]=='*') dp[i]=9*dp[i-1]%MOD;\n            else if(s[i-1]!='0') dp[i]=dp[i-1];\n            char a=s[i-2];\n            if(a=='*'){ if(s[i-1]=='*') dp[i]=(dp[i]+9LL*dp[i-2])%MOD; else if(s[i-1]<='6') dp[i]=(dp[i]+dp[i-2])%MOD; }\n            else if(a=='1') dp[i]=(dp[i]+(s[i-1]=='*'?9LL:1LL)*dp[i-2])%MOD;\n            else if(a=='2'){ long add=s[i-1]=='*'?6:(s[i-1]<='6'); dp[i]=(dp[i]+add*dp[i-2])%MOD; }\n        }\n        return dp[n];\n    }\n};",
+    "c": "int numDecodings639(char* s) {\n    const int MOD=1000000007;\n    int n=strlen(s); if(!n||s[0]=='0') return 0;\n    long dp0=1, dp1=1;\n    for(int i=1;i<n;i++){\n        long nd=0;\n        if(s[i]!='0') nd=(nd+dp1)%MOD;\n        int two=(s[i-1]-'0')*10+(s[i]-'0');\n        if(two>=10&&two<=26) nd=(nd+dp0)%MOD;\n        dp0=dp1; dp1=nd;\n    }\n    return (int)dp1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP cover 1-char và 2-char decode với * branches.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Leading 0",
+      "Toàn *",
+      "MOD wrap"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên MOD",
+      "Case 1* vs 2* counts"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

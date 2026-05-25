@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #643</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Sliding Window</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Maximum Average Subarray I</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Maximum Average Subarray I (LeetCode #643) — Easy.</div>
+                        <div class="block-text">Cho mảng nums và k. Tìm trung bình lớn nhất của subarray độ dài k.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,12,-5,-6,50,3], k = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>12.75000</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [5], k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>5.00000</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sliding window sum k phần tử; cập nhật max avg.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,20 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">double</span> findMaxAverage(<span class="ty">int</span>* nums,<span class="ty">int</span> n,<span class="ty">int</span> k){ <span class="ty">int</span> s=0,i; <span class="kw">for</span>(i=0;i&lt;k;i++) s+=nums[i]; <span class="ty">int</span> best=s; <span class="kw">for</span>(i=k;i&lt;n;i++){ s+=nums[i]-nums[i-k]; <span class="kw">if</span>(s&gt;best) best=s; } <span class="kw">return</span> (<span class="ty">double</span>)best/k; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findMaxAverage(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; float:
+        s=sum(nums[:k]); best=s
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(k,<span class="ty">len</span>(nums)):
+            s+=nums[i]-nums[i-k]; best=<span class="ty">max</span>(best,s)
+        <span class="kw">return</span> best/k</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">double</span> findMaxAverage(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> k) {
+        <span class="ty">int</span> s=accumulate(nums.begin(),nums.begin()+k,0), best=s;
+        <span class="kw">for</span>(<span class="ty">int</span> i=k;i&lt;(<span class="ty">int</span>)nums.size();i++){ s+=nums[i]-nums[i-k]; best=max(best,s); }
+        <span class="kw">return</span> (<span class="ty">double</span>)best/k;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +117,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Sliding Window</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sliding window sum k phần tử; cập nhật max avg.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Window size k cố định — max sum/k = max average.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=n</span><span class="analysis-tag edge">k=1</span><span class="analysis-tag edge">Số âm</span><span class="analysis-tag pit">Integer division</span><span class="analysis-tag pit">Không slide window</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Max average subarray — fixed window sum / k.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +146,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Maximum%20Average%20Subarray%20I&lc_id=643&embed=true"></iframe>

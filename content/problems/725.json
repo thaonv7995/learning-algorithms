@@ -3,32 +3,37 @@
   "title": "Split Linked List in Parts",
   "difficulty": "Medium",
   "category": "Linked List",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Split Linked List in Parts (LeetCode #725) — Medium.",
+  "timeComplexity": "O(n + k)",
+  "spaceComplexity": "O(k)",
+  "description": "Cho linked list head và số k. Chia list thành k phần liên tiếp gần bằng nhau (các phần đầu dài hơn nếu n không chia hết). Phần cuối có thể ngắn hơn.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "head = [1,2,3], k = 5",
+      "output": "[[1],[2],[3],[],[]]"
+    },
+    {
+      "input": "head = [1,2,3,4,5,6,7,8,9,10], k = 3",
+      "output": "[[1,2,3,4],[5,6,7],[8,9,10]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm n node. width=n/k, rem=n%k — rem phần đầu có width+1 node. Cắt list tại từng đoạn.",
+  "memoryTip": "Split k parts: base=n/k, first rem parts get +1 node.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def splitListToParts(self, head: Optional[ListNode], k: int) -> List[Optional[ListNode]]:\n        n = 0; cur = head\n        while cur: n += 1; cur = cur.next\n        width, rem = divmod(n, k)\n        ans, cur = [], head\n        for i in range(k):\n            part = cur\n            size = width + (1 if i < rem else 0)\n            for _ in range(size - 1):\n                if cur: cur = cur.next\n            if cur:\n                nxt = cur.next; cur.next = None; cur = nxt\n            ans.append(part)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<ListNode*> splitListToParts(ListNode* head, int k) {\n        int n=0; for(auto c=head;c;c=c->next) n++;\n        int w=n/k, r=n%k;\n        vector<ListNode*> ans(k);\n        auto cur=head;\n        for(int i=0;i<k;i++){\n            ans[i]=cur;\n            int sz=w+(i<r);\n            for(int j=1;j<sz&&cur;j++) cur=cur->next;\n            if(cur){ auto nxt=cur->next; cur->next=nullptr; cur=nxt; }\n        }\n        return ans;\n    }\n};",
+    "c": "struct ListNode** splitListToParts(struct ListNode* head, int k, int* retSize) {\n    int n=0; struct ListNode* c=head; while(c){ n++; c=c->next; }\n    int w=n/k, r=n%k; *retSize=k;\n    struct ListNode** ans=malloc(k*sizeof(struct ListNode*));\n    c=head;\n    for(int i=0;i<k;i++){ ans[i]=c; int sz=w+(i<r); for(int j=1;j<sz&&c;j++) c=c->next; if(c){ struct ListNode* nx=c->next; c->next=NULL; c=nx; } }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Phân bổ rem phần dư vào các part đầu — tổng node giữ nguyên thứ tự.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k > n → nhiều list rỗng",
+      "k=1 → cả list",
+      "List rỗng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên null terminate sau cắt",
+      "Sai công thức rem parts"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }
