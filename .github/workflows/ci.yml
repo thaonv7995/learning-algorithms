@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+      - name: Pack www
+        run: bash scripts/pack-www.sh dist/www
+      - name: Build
+        run: go build -o dist/algo-explorer ./cmd/algo-explorer/
+      - name: Smoke test
+        run: |
+          timeout 3 dist/algo-explorer serve --root dist/www --port 4173 &
+          sleep 1
+          curl -sf http://127.0.0.1:4173/ | head -c 200
