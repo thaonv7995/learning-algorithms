@@ -48,11 +48,12 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            height: 56px;
+            min-height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            gap: 14px;
+            padding: 8px 20px;
             background: rgba(7, 9, 15, 0.88);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
@@ -64,6 +65,7 @@
             gap: 10px;
             text-decoration: none;
             color: var(--text-strong);
+            flex-shrink: 0;
         }
         .logo-mark {
             width: 30px; height: 30px;
@@ -90,34 +92,25 @@
             font-size: 0.78rem;
             font-weight: 600;
             transition: 0.15s;
+            margin-left: auto;
+            flex-shrink: 0;
         }
         .nav-link:hover { color: var(--text-strong); border-color: var(--border-hover); background: var(--surface); }
         .nav-link i { font-size: 0.72rem; color: var(--cyan); }
 
-        /* MAIN — compact header, grid-first */
+        .nav-page-head {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            min-width: 0;
+        }
+
+        /* MAIN — grid-first */
         .main-container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 20px 20px 60px;
+            padding: 16px 20px 60px;
         }
-
-        /* Compact page header: title + inline stats */
-        .page-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-        .page-head h1 {
-            font-family: 'Sora', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--text-strong);
-            letter-spacing: -0.02em;
-        }
-        .page-head h1 span { color: var(--muted); font-weight: 600; font-size: 0.95rem; }
 
         .stat-pills {
             display: flex;
@@ -389,22 +382,6 @@
             border-top: 1px solid var(--border);
         }
 
-        .tier-dot {
-            width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
-        }
-        .tier-dot.premium { background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,.5); }
-        .tier-dot.catalog { background: #818cf8; }
-        .card-tier {
-            margin-left: auto;
-            font-size: 0.58rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: var(--faint);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
         .paid-lock { color: #f87171; font-size: 0.62rem; margin-left: 4px; }
 
         .category-tag {
@@ -565,6 +542,12 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
+        @media (max-width: 960px) {
+            .stat-pill:not(.total) { font-size: 0; padding: 4px 8px; }
+            .stat-pill:not(.total) .n { font-size: 0.72rem; }
+            .stat-pill:not(.total) .dot { margin-right: 0; }
+        }
+
         @media (max-width: 640px) {
             .pagination { justify-content: center; }
             .pagination-info { width: 100%; text-align: center; }
@@ -579,26 +562,20 @@
             <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
             <span>Algorithms Explorer</span>
         </a>
-            <a href="index.html" class="nav-link">
-            <i class="fa-solid fa-arrow-left"></i> Sách giáo khoa
-        </a>
-        <a href="checklist/checklist.html" class="nav-link" title="Checklist hoàn thiện 3,175 bài">
-            <i class="fa-solid fa-list-check"></i> Checklist
-        </a>
-    </header>
-
-    <main class="main-container">
-
-        <div class="page-head">
-            <h1>Thư viện thuật toán <span id="head-total">· … bài</span></h1>
+        <div class="nav-page-head">
             <div class="stat-pills">
                 <span class="stat-pill total"><span class="dot"></span> <span class="n" id="stats-total">0</span></span>
-                <span class="stat-pill" style="--pill-color:#fbbf24" title="Bài premium đầy đủ"><span class="dot" style="background:#fbbf24"></span> <span class="n" id="stats-premium">0</span> ★</span>
                 <span class="stat-pill easy"><span class="dot"></span> <span class="n" id="stats-easy">0</span> Easy</span>
                 <span class="stat-pill medium"><span class="dot"></span> <span class="n" id="stats-medium">0</span> Med</span>
                 <span class="stat-pill hard"><span class="dot"></span> <span class="n" id="stats-hard">0</span> Hard</span>
             </div>
         </div>
+        <a href="index.html" class="nav-link" title="Mở sách giáo khoa Algorithms Explorer">
+            <i class="fa-solid fa-file-lines"></i> Document
+        </a>
+    </header>
+
+    <main class="main-container">
 
         <div class="toolbar">
             <div class="search-box">
@@ -611,11 +588,6 @@
                 <button class="btn-filter-difficulty" data-diff="medium">Med</button>
                 <button class="btn-filter-difficulty" data-diff="hard">Hard</button>
             </div>
-            <select id="tier-select" class="category-select" title="Loại bài">
-                <option value="all">Tất cả loại</option>
-                <option value="premium">★ Premium (đầy đủ)</option>
-                <option value="catalog">Catalog LC</option>
-            </select>
             <select id="category-select" class="category-select" title="Chủ đề">
                 <option value="all">Tất cả chủ đề</option>
             </select>
@@ -652,7 +624,6 @@
         const searchInput = document.getElementById("search-input");
         const diffButtons = document.querySelectorAll(".btn-filter-difficulty");
         const categorySelect = document.getElementById("category-select");
-        const tierSelect = document.getElementById("tier-select");
         const pageSizeSelect = document.getElementById("page-size-select");
         const paginationEl = document.getElementById("pagination");
         const paginationControls = document.getElementById("pagination-controls");
@@ -668,10 +639,31 @@
         let searchFilter = "";
         let difficultyFilter = "all";
         let categoryFilter = "all";
-        let tierFilter = "all";
         let currentPage = 1;
         let pageSize = 24;
         let filteredCache = [];
+
+        function readPageFromUrl() {
+            const raw = new URLSearchParams(window.location.search).get("page");
+            const page = parseInt(raw, 10);
+            return Number.isFinite(page) && page >= 1 ? page : 1;
+        }
+
+        function syncPageToUrl(page) {
+            const url = new URL(window.location.href);
+            if (page <= 1) {
+                url.searchParams.delete("page");
+            } else {
+                url.searchParams.set("page", String(page));
+            }
+            const next = url.pathname + url.search + url.hash;
+            const current = window.location.pathname + window.location.search + window.location.hash;
+            if (next !== current) {
+                history.replaceState(null, "", next);
+            }
+        }
+
+        currentPage = readPageFromUrl();
 
         function getSlug(title) {
             return title.toLowerCase()
@@ -691,14 +683,10 @@
             const easy = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "easy").length;
             const medium = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "medium").length;
             const hard = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "hard").length;
-            const premium = PROBLEMS.filter(p => p.tier === "premium").length;
-
             document.getElementById("stats-total").innerText = total;
             document.getElementById("stats-easy").innerText = easy;
             document.getElementById("stats-medium").innerText = medium;
             document.getElementById("stats-hard").innerText = hard;
-            document.getElementById("stats-premium").innerText = premium;
-            document.getElementById("head-total").innerText = `· ${total.toLocaleString()} bài`;
         }
 
         function populateCategories(topTags) {
@@ -728,8 +716,7 @@
                 const matchesCat = categoryFilter === "all" ||
                     p.category === categoryFilter ||
                     (p.tags || []).includes(categoryFilter);
-                const matchesTier = tierFilter === "all" || p.tier === tierFilter;
-                return matchesSearch && matchesDiff && matchesCat && matchesTier;
+                return matchesSearch && matchesDiff && matchesCat;
             });
         }
 
@@ -866,6 +853,7 @@
             const total = filteredCache.length;
             const totalPages = getTotalPages(total);
             currentPage = clampPage(currentPage, totalPages);
+            syncPageToUrl(currentPage);
 
             if (total === 0) {
                 renderPlaceholder('empty');
@@ -892,8 +880,6 @@
                     ? p.teaser + (p.teaser.length >= 120 ? '…' : '')
                     : (p.tags || []).slice(0, 3).join(' · ') || p.category;
 
-                const tierLabel = p.tier === 'premium' ? 'Premium' : 'LC';
-                const tierClass = p.tier === 'premium' ? 'premium' : 'catalog';
                 const paidIcon = p.paid ? '<i class="fa-solid fa-lock paid-lock" title="LeetCode Premium"></i>' : '';
                 const acChip = p.acRate != null ? `<span class="comp-chip">${p.acRate}% AC</span>` : '';
 
@@ -902,7 +888,6 @@
                         <span class="card-num">#${p.id}</span>
                         <span class="diff-badge ${dc}">${p.difficulty}</span>
                         ${paidIcon}
-                        <span class="card-tier"><span class="tier-dot ${tierClass}"></span>${tierLabel}</span>
                     </div>
                     <h3 class="card-title">${p.title}</h3>
                     <p class="card-teaser">${teaser}</p>
@@ -941,11 +926,6 @@
             resetPageAndRender();
         });
 
-        tierSelect.addEventListener("change", e => {
-            tierFilter = e.target.value;
-            resetPageAndRender();
-        });
-
         pageSizeSelect.addEventListener("change", e => {
             pageSize = parseInt(e.target.value, 10) || 24;
             resetPageAndRender();
@@ -960,6 +940,11 @@
 
         pageJumpInput.addEventListener("blur", () => {
             pageJumpInput.value = currentPage;
+        });
+
+        window.addEventListener("popstate", () => {
+            currentPage = readPageFromUrl();
+            renderGrid(false);
         });
 
         async function loadCatalog() {

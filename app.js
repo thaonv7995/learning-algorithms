@@ -5,11 +5,9 @@
 
 function startApp() {
     // DOM Elements
-    const btnModeInteractive = document.getElementById("btn-mode-interactive");
     const btnModePrint = document.getElementById("btn-mode-print");
     const btnToggleSandbox = document.getElementById("btn-toggle-sandbox");
     const btnToggleSidebar = document.getElementById("btn-toggle-sidebar");
-    const btnTriggerPrint = document.getElementById("btn-trigger-print");
     const btnThemeToggle = document.getElementById("btn-theme-toggle");
     const themeIcon = document.getElementById("theme-icon");
     const tocSearchInput = document.getElementById("toc-search");
@@ -116,30 +114,49 @@ function startApp() {
     // 1. NAVIGATION & MODE SWITCHING
     // ==========================================================================
     
-    // Toggle between Interactive Dashboard and Print Preview
-    btnModeInteractive.addEventListener("click", () => {
-        btnModeInteractive.classList.add("active");
-        btnModePrint.classList.remove("active");
+    function isPrintMode() {
+        return printLayout && getComputedStyle(printLayout).display !== "none";
+    }
+
+    function setInteractiveMode() {
         interactiveLayout.style.display = "flex";
         printLayout.style.display = "none";
+        if (btnModePrint) {
+            btnModePrint.classList.remove("active");
+            btnModePrint.title = "Xem trang in A4";
+            btnModePrint.setAttribute("aria-pressed", "false");
+        }
         loadChapterContent(activeChapter);
-    });
+    }
 
-    btnModePrint.addEventListener("click", () => {
-        btnModePrint.classList.add("active");
-        btnModeInteractive.classList.remove("active");
+    function setPrintMode() {
         interactiveLayout.style.display = "none";
         printLayout.style.display = "block";
-    });
+        if (btnModePrint) {
+            btnModePrint.classList.add("active");
+            btnModePrint.title = "Quay lại học tương tác";
+            btnModePrint.setAttribute("aria-pressed", "true");
+        }
+    }
+
+    if (btnModePrint) {
+        btnModePrint.addEventListener("click", () => {
+            if (isPrintMode()) setInteractiveMode();
+            else setPrintMode();
+        });
+    }
 
     // Hide/Show sandbox in Interactive view
     btnToggleSandbox.addEventListener("click", () => {
-        if (visualizerSandbox.style.display === "none") {
+        const hidden = visualizerSandbox.style.display === "none";
+        if (hidden) {
             visualizerSandbox.style.display = "flex";
-            btnToggleSandbox.innerHTML = '<i class="fa-solid fa-cubes"></i> Ẩn Sandbox';
+            btnToggleSandbox.title = "Ẩn sandbox";
+            btnToggleSandbox.setAttribute("aria-pressed", "false");
         } else {
             visualizerSandbox.style.display = "none";
-            btnToggleSandbox.innerHTML = '<i class="fa-solid fa-cubes"></i> Hiện Sandbox';
+            btnToggleSandbox.title = "Hiện sandbox";
+            btnToggleSandbox.setAttribute("aria-pressed", "true");
         }
     });
 
@@ -147,27 +164,11 @@ function startApp() {
     if (btnToggleSidebar && tocSidebar) {
         btnToggleSidebar.addEventListener("click", () => {
             tocSidebar.classList.toggle("collapsed");
-            if (tocSidebar.classList.contains("collapsed")) {
-                btnToggleSidebar.innerHTML = '<i class="fa-solid fa-bars"></i> Hiện Danh Mục';
-            } else {
-                btnToggleSidebar.innerHTML = '<i class="fa-solid fa-bars"></i> Ẩn Danh Mục';
-            }
+            const collapsed = tocSidebar.classList.contains("collapsed");
+            btnToggleSidebar.title = collapsed ? "Hiện danh mục" : "Ẩn danh mục";
+            btnToggleSidebar.setAttribute("aria-pressed", collapsed ? "true" : "false");
         });
     }
-
-    // Print button
-    btnTriggerPrint.addEventListener("click", () => {
-        // Automatically switch to A4 Print Preview to guarantee rendering prior to printing
-        interactiveLayout.style.display = "none";
-        printLayout.style.display = "block";
-        btnModePrint.classList.add("active");
-        btnModeInteractive.classList.remove("active");
-        
-        // Timeout to allow styles to adapt
-        setTimeout(() => {
-            window.print();
-        }, 100);
-    });
 
     // Sidebar navigation
     sidebarItems.forEach(item => {
@@ -871,15 +872,146 @@ function startApp() {
         });
     }
 
+    function memRectBorderPoint(rect, stageRect, towardX, towardY, inset) {
+        const cx = rect.left + rect.width / 2 - stageRect.left;
+        const cy = rect.top + rect.height / 2 - stageRect.top;
+        const dx = towardX - cx;
+        const dy = towardY - cy;
+        const hw = rect.width / 2 - (inset || 0);
+        const hh = rect.height / 2 - (inset || 0);
+        if (!dx && !dy) return { x: cx, y: cy };
+        const sx = Math.abs(dx) * hh;
+        const sy = Math.abs(dy) * hw;
+        if (sx > sy) {
+            const sign = dx > 0 ? 1 : -1;
+            return { x: cx + sign * hw, y: cy + (hw * dy) / Math.abs(dx) };
+        }
+        const sign = dy > 0 ? 1 : -1;
+        return { x: cx + (hh * dx) / Math.abs(dy), y: cy + sign * hh };
+    }
+
+    function memRouteY(stageRect, fromRect, toRect, cellEls, lane) {
+        const xMin = Math.min(fromRect.left, toRect.left) - stageRect.left;
+        const xMax = Math.max(fromRect.right, toRect.right) - stageRect.left;
+        let minTop = Infinity;
+        cellEls.forEach(el => {
+            const r = el.getBoundingClientRect();
+            const left = r.left - stageRect.left;
+            const right = r.right - stageRect.left;
+            if (right >= xMin - 4 && left <= xMax + 4) {
+                minTop = Math.min(minTop, r.top - stageRect.top);
+            }
+        });
+        const laneOffset = (lane || 0) * 20;
+        const base = minTop === Infinity ? fromRect.top - stageRect.top : minTop;
+        return Math.max(8, base - 32 - laneOffset);
+    }
+
+    function drawMemoryPointerArrows() {
+        const stage = document.getElementById("memory-viz-stage");
+        const svg = document.getElementById("memory-viz-arrows");
+        if (!stage || !svg) return;
+
+        const w = stage.clientWidth;
+        const h = stage.clientHeight;
+        svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+        svg.setAttribute("width", w);
+        svg.setAttribute("height", h);
+        svg.innerHTML = "";
+
+        const stageRect = stage.getBoundingClientRect();
+        const ns = "http://www.w3.org/2000/svg";
+        const cellEls = Array.from(document.querySelectorAll(".memory-viz-cells .array-cell"));
+
+        const defs = document.createElementNS(ns, "defs");
+        defs.innerHTML = `
+            <marker id="mem-ptr-arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M1.2,1.5 L8.8,5 L1.2,8.5 Z" fill="#34d399"/>
+            </marker>`;
+        svg.appendChild(defs);
+
+        cellEls.forEach(el => el.classList.remove("ptr-target"));
+
+        let lane = 0;
+        for (const [ptrName, info] of Object.entries(pointers)) {
+            const targetName = info.target;
+            if (!targetName || !variables[targetName]) continue;
+
+            const fromEl = document.getElementById(`mem-${ptrName}`);
+            const toEl = document.getElementById(`mem-${targetName}`);
+            if (!fromEl || !toEl) continue;
+
+            toEl.classList.add("ptr-target");
+
+            const fromRect = fromEl.getBoundingClientRect();
+            const toRect = toEl.getBoundingClientRect();
+            const tcx = toRect.left + toRect.width / 2 - stageRect.left;
+            const tcy = toRect.top + toRect.height / 2 - stageRect.top;
+            const fcx = fromRect.left + fromRect.width / 2 - stageRect.left;
+            const fcy = fromRect.top + fromRect.height / 2 - stageRect.top;
+
+            const start = memRectBorderPoint(fromRect, stageRect, tcx, tcy, 2);
+            const end = memRectBorderPoint(toRect, stageRect, fcx, fcy, 2);
+            const routeY = memRouteY(stageRect, fromRect, toRect, cellEls, lane);
+            lane++;
+
+            const path = document.createElementNS(ns, "path");
+            const d = Math.abs(end.x - start.x) > 8 || Math.abs(end.y - start.y) > 8
+                ? `M ${start.x} ${start.y} L ${start.x} ${routeY} L ${end.x} ${routeY} L ${end.x} ${end.y}`
+                : `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+            path.setAttribute("d", d);
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "#34d399");
+            path.setAttribute("stroke-width", "1.5");
+            path.setAttribute("stroke-linecap", "round");
+            path.setAttribute("marker-end", "url(#mem-ptr-arrow)");
+            path.setAttribute("opacity", "0.9");
+            svg.appendChild(path);
+
+            const labelText = `&${targetName}`;
+            const lx = start.x + (end.x >= start.x ? 14 : -14);
+            const ly = routeY - 6;
+            const labelW = labelText.length * 6.2 + 12;
+            const labelH = 15;
+
+            const bg = document.createElementNS(ns, "rect");
+            bg.setAttribute("x", lx - labelW / 2);
+            bg.setAttribute("y", ly - labelH + 2);
+            bg.setAttribute("width", labelW);
+            bg.setAttribute("height", labelH);
+            bg.setAttribute("rx", "4");
+            bg.setAttribute("fill", "rgba(7, 9, 15, 0.95)");
+            bg.setAttribute("stroke", "rgba(52, 211, 153, 0.4)");
+            bg.setAttribute("stroke-width", "1");
+            svg.appendChild(bg);
+
+            const label = document.createElementNS(ns, "text");
+            label.setAttribute("x", lx);
+            label.setAttribute("y", ly);
+            label.setAttribute("text-anchor", "middle");
+            label.setAttribute("fill", "#6ee7b7");
+            label.setAttribute("font-size", "9.5");
+            label.setAttribute("font-family", "JetBrains Mono, Inter, sans-serif");
+            label.setAttribute("font-weight", "600");
+            label.textContent = labelText;
+            svg.appendChild(label);
+        }
+
+        stage.classList.toggle("has-ptr-routes", lane > 0);
+    }
+
     function renderMemoryCanvas() {
-        let html = `<div style="display:flex; flex-direction:column; gap:20px; width:100%; padding:20px; align-items:center;">
-            <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">VÙNG NHỚ RAM VẬT LÝ</div>
-            <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; position:relative; width:100%;">
+        let html = `<div class="memory-viz">
+            <div class="memory-viz-title">VÙNG NHỚ RAM VẬT LÝ</div>
+            <div class="memory-viz-stage" id="memory-viz-stage">
+                <svg class="memory-viz-arrows" id="memory-viz-arrows" aria-hidden="true"></svg>
+                <div class="memory-viz-cells">
         `;
         
         for (const [name, info] of Object.entries(variables)) {
             html += `
-                <div class="array-cell active" style="width:90px; height:80px; cursor:pointer;" id="mem-${name}" title="Click để xem chi tiết C">
+                <div class="array-cell active mem-var-cell" style="width:90px; height:80px; cursor:pointer;" id="mem-${name}" data-mem-name="${name}" title="Click để xem chi tiết C">
                     <div style="font-size:0.7rem; color:var(--primary); font-weight:700; padding:2px;">int ${name}</div>
                     <div class="cell-val" style="font-size:1.3rem;">${info.val}</div>
                     <div class="cell-idx" style="font-size:0.6rem;">${info.addr}</div>
@@ -890,7 +1022,7 @@ function startApp() {
         for (const [name, info] of Object.entries(pointers)) {
             const targetAddr = variables[info.target] ? variables[info.target].addr : "NULL";
             html += `
-                <div class="array-cell success" style="width:90px; height:80px; border-color:var(--accent); cursor:pointer;" id="mem-${name}" title="Click để xem chi tiết C">
+                <div class="array-cell success mem-ptr-cell" style="width:90px; height:80px; border-color:var(--accent); cursor:pointer;" id="mem-${name}" data-mem-name="${name}" title="Click để xem chi tiết C">
                     <div style="font-size:0.7rem; color:var(--accent); font-weight:700; padding:2px;">int* ${name}</div>
                     <div class="cell-val" style="font-size:0.85rem; font-family:monospace; font-weight:500;">${targetAddr}</div>
                     <div class="cell-idx cell-idx-accent">${info.addr}</div>
@@ -899,11 +1031,19 @@ function startApp() {
         }
 
         if (Object.keys(variables).length === 0 && Object.keys(pointers).length === 0) {
-            html += `<div style="color:var(--text-muted); font-style:italic; padding:20px;">Trống - Chưa cấp phát bộ nhớ</div>`;
+            html += `<div class="memory-viz-empty">Trống - Chưa cấp phát bộ nhớ</div>`;
         }
 
-        html += `</div></div>`;
+        html += `</div></div></div>`;
         sandboxCanvas.innerHTML = html;
+
+        const stage = document.getElementById("memory-viz-stage");
+        const hasPtrRoutes = Object.entries(pointers).some(
+            ([, info]) => info.target && variables[info.target]
+        );
+        if (stage) stage.classList.toggle("has-ptr-routes", hasPtrRoutes);
+
+        requestAnimationFrame(drawMemoryPointerArrows);
 
         // Bind click handlers
         for (const [name, info] of Object.entries(variables)) {
