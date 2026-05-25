@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #393</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Bit Manipulation</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">UTF-8 Validation</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">UTF-8 Validation (LeetCode #393) — Medium.</div>
+                        <div class="block-text">Cho mảng byte data. Kiểm tra có phải chuỗi UTF-8 hợp lệ không theo quy tắc encoding 1–4 byte.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>data = [197,130,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>data = [235,140,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt i: đếm số byte follow từ prefix (1110xxxx → 3 byte total); mỗi follow phải 10xxxxxx; validate range 1–4 byte.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,50 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> validUtf8(<span class="ty">int</span>* data, <span class="ty">int</span> n) {
+    <span class="ty">int</span> i = 0;
+    <span class="kw">while</span> (i &lt; n) {
+        <span class="ty">int</span> need = 0;
+        <span class="kw">if</span> ((data[i] &gt;&gt; 7) == 0) i++;
+        <span class="kw">else</span> <span class="kw">if</span> ((data[i] &gt;&gt; 5) == 0b110) { need = 1; i++; }
+        <span class="kw">else</span> <span class="kw">if</span> ((data[i] &gt;&gt; 4) == 0b1110) { need = 2; i++; }
+        <span class="kw">else</span> <span class="kw">if</span> ((data[i] &gt;&gt; 3) == 0b11110) { need = 3; i++; }
+        <span class="kw">else</span> <span class="kw">return</span> false;
+        <span class="kw">for</span> (<span class="ty">int</span> k = 0; k &lt; need; k++, i++)
+            <span class="kw">if</span> (i &gt;= n || (data[i] &gt;&gt; 6) != 0b10) <span class="kw">return</span> false;
+    }
+    <span class="kw">return</span> true;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> validUtf8(<span class="ty">self</span>, data: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        i, n = 0, <span class="ty">len</span>(data)
+        <span class="kw">while</span> i &lt; n:
+            b = data[i]
+            <span class="kw">if</span> b &gt;&gt; 7 == 0: i += 1
+            <span class="kw">elif</span> b &gt;&gt; 5 == 0b110: need, i = 1, i+1
+            <span class="kw">elif</span> b &gt;&gt; 4 == 0b1110: need, i = 2, i+1
+            <span class="kw">elif</span> b &gt;&gt; 3 == 0b11110: need, i = 3, i+1
+            <span class="kw">else</span>: <span class="kw">return</span> <span class="kw">False</span>
+            <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(need):
+                <span class="kw">if</span> i &gt;= n <span class="kw">or</span> data[i] &gt;&gt; 6 != 0b10: <span class="kw">return</span> <span class="kw">False</span>
+                i += 1
+        <span class="kw">return</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> validUtf8(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; data) {
+        <span class="ty">int</span> i = 0, n = data.size();
+        <span class="kw">while</span> (i &lt; n) {
+            <span class="ty">int</span> need = 0;
+            <span class="kw">if</span> ((data[i] &gt;&gt; 7) == 0) i++;
+            <span class="kw">else</span> <span class="kw">if</span> ((data[i] &gt;&gt; 5) == 0b110) { need = 1; i++; }
+            <span class="kw">else</span> <span class="kw">if</span> ((data[i] &gt;&gt; 4) == 0b1110) { need = 2; i++; }
+            <span class="kw">else</span> <span class="kw">if</span> ((data[i] &gt;&gt; 3) == 0b11110) { need = 3; i++; }
+            <span class="kw">else</span> <span class="kw">return</span> false;
+            <span class="kw">for</span> (<span class="ty">int</span> k = 0; k &lt; need; k++, i++)
+                <span class="kw">if</span> (i &gt;= n || (data[i] &gt;&gt; 6) != 0b10) <span class="kw">return</span> false;
+        }
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +147,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Bit Manipulation</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Duyệt i: đếm số byte follow từ prefix ; mỗi follow phải 10xxxxxx;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi lead byte xác định số follow; validate prefix và continuation 10xxxxxx.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một byte ASCII</span><span class="analysis-tag edge">Thiếu continuation</span><span class="analysis-tag edge">Lead 11111xxx invalid</span><span class="analysis-tag pit">Không mask &amp;0xFF cho int âm</span><span class="analysis-tag pit">Overlong encoding edge (đề thường bỏ qua)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Lead byte pattern: 0xxxxxxx, 110xxxxx, 1110xxxx, 11110xxx — count n follow 10xxxxxx.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +176,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=UTF-8%20Validation&lc_id=393&embed=true"></iframe>

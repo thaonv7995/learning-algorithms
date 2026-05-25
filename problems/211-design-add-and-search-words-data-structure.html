@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #211</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Design Add and Search Words Data Structure</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>48.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Design Add and Search Words Data Structure (LeetCode #211) — Medium.</div>
+                        <div class="block-text">Thiết kế cấu trúc WordDictionary: addWord(word) thêm từ; search(word) tìm từ — ký tự '.' khớp bất kỳ chữ cái nào một lần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>add &quot;bad&quot;,&quot;dad&quot;,&quot;mad&quot;; search &quot;pad&quot; → false; search &quot;bad&quot; → true; search &quot;.ad&quot; → true; search &quot;b..&quot; → true</code></div>
+                <div class="ex-line"><span>Out</span><code>false, true, true, true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>add &quot;a&quot;; search &quot;.&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Trie lưu từ; search DFS tại node hiện tại: nếu '.' thì thử mọi con 26 nhánh, else đi theo ký tự cụ thể.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,72 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> WNode { <span class="ty">struct</span> WNode* ch[26]; <span class="ty">int</span> end; } WNode;
+
+static <span class="ty">int</span> wSearch(WNode* node, <span class="ty">const</span> <span class="ty">char</span>* w, <span class="ty">int</span> i) {
+    <span class="kw">if</span> (!w[i]) <span class="kw">return</span> node-&gt;end;
+    <span class="kw">if</span> (w[i] == '.') {
+        <span class="kw">for</span> (<span class="ty">int</span> k = 0; k &lt; 26; k++)
+            <span class="kw">if</span> (node-&gt;ch[k] &amp;&amp; wSearch(node-&gt;ch[k], w, i + 1)) <span class="kw">return</span> 1;
+        <span class="kw">return</span> 0;
+    }
+    <span class="ty">int</span> k = w[i] - 'a';
+    <span class="kw">return</span> node-&gt;ch[k] &amp;&amp; wSearch(node-&gt;ch[k], w, i + 1);
+}
+
+<span class="ty">void</span> wAdd(WNode* root, <span class="ty">const</span> <span class="ty">char</span>* word) {
+    WNode* cur = root;
+    <span class="kw">for</span> (; *word; word++) {
+        <span class="ty">int</span> k = *word - 'a';
+        <span class="kw">if</span> (!cur-&gt;ch[k]) cur-&gt;ch[k] = <span class="kw">calloc</span>(1, <span class="kw">sizeof</span>(WNode));
+        cur = cur-&gt;ch[k];
+    }
+    cur-&gt;end = 1;
+}
+
+<span class="ty">int</span> wFind(WNode* root, <span class="ty">const</span> <span class="ty">char</span>* word) { <span class="kw">return</span> wSearch(root, word, 0); }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> WordDictionary:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.root = {}
+    <span class="kw">def</span> addWord(<span class="ty">self</span>, word: <span class="ty">str</span>) -&gt; <span class="kw">None</span>:
+        node = <span class="ty">self</span>.root
+        <span class="kw">for</span> c <span class="kw">in</span> word:
+            node = node.setdefault(c, {})
+        node['<span class="cm">#'] = <span class="kw">True</span></span>
+    <span class="kw">def</span> search(<span class="ty">self</span>, word: <span class="ty">str</span>) -&gt; bool:
+        <span class="kw">def</span> dfs(node, i):
+            <span class="kw">if</span> i == <span class="ty">len</span>(word):
+                <span class="kw">return</span> node.get('<span class="cm">#', <span class="kw">False</span>)</span>
+            c = word[i]
+            <span class="kw">if</span> c == '.':
+                <span class="kw">return</span> any(dfs(child, i + 1) <span class="kw">for</span> k, child <span class="kw">in</span> node.items() <span class="kw">if</span> k != '<span class="cm">#')</span>
+            <span class="kw">if</span> c <span class="kw">not</span> <span class="kw">in</span> node:
+                <span class="kw">return</span> <span class="kw">False</span>
+            <span class="kw">return</span> dfs(node[c], i + 1)
+        <span class="kw">return</span> dfs(<span class="ty">self</span>.root, 0)</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> WordDictionary {
+    <span class="ty">struct</span> Node { unordered_map&lt;<span class="ty">char</span>, Node*&gt; ch; <span class="ty">bool</span> end=false; }* root;
+    <span class="ty">bool</span> dfs(Node* node, <span class="ty">const</span> <span class="ty">string</span>&amp; w, <span class="ty">int</span> i) {
+        <span class="kw">if</span> (i == (<span class="ty">int</span>)w.size()) <span class="kw">return</span> node-&gt;end;
+        <span class="kw">if</span> (w[i] == '.') {
+            <span class="kw">for</span> (auto&amp; [c, child] : node-&gt;ch)
+                <span class="kw">if</span> (dfs(child, w, i + 1)) <span class="kw">return</span> true;
+            <span class="kw">return</span> false;
+        }
+        auto it = node-&gt;ch.find(w[i]);
+        <span class="kw">return</span> it != node-&gt;ch.end() &amp;&amp; dfs(it-&gt;second, w, i + 1);
+    }
 <span class="ty">public</span>:
+    WordDictionary() { root = <span class="kw">new</span> Node(); }
+    <span class="ty">void</span> addWord(<span class="ty">string</span> word) {
+        Node* cur = root;
+        <span class="kw">for</span> (<span class="ty">char</span> c : word) {
+            <span class="kw">if</span> (!cur-&gt;ch.count(c)) cur-&gt;ch[c] = <span class="kw">new</span> Node();
+            cur = cur-&gt;ch[c];
+        }
+        cur-&gt;end = true;
+    }
+    <span class="ty">bool</span> search(<span class="ty">string</span> word) { <span class="kw">return</span> dfs(root, word, 0); }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +169,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Trie lưu từ; search DFS tại node hiện tại: nếu '.' thì thử mọi con 26…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Trie đảm bảo prefix chung; DFS thử đủ nhánh khi '.' nên không bỏ sót match.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Từ rỗng (nếu có) → isEnd root</span><span class="analysis-tag edge">Nhiều '.' liên tiếp</span><span class="analysis-tag pit">Linear scan all words → TLE</span><span class="analysis-tag pit">Quên backtrack khi '.' thất bại một nhánh</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>WordDictionary = Trie + DFS backtrack khi gặp '.'.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +198,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=13&problem=Design%20Add%20and%20Search%20Words%20Data%20Structure&lc_id=211&embed=true"></iframe>

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #274</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">H-Index</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>41.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">H-Index (LeetCode #274) — Medium.</div>
+                        <div class="block-text">Mảng citations[i] là số trích dẫn bài thứ i. H-index: max h sao cho có ≥ h bài với ≥ h trích dẫn. Tính h-index.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>citations = [3,0,6,1,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>citations = [1,3,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Counting sort bucket: count[c] với c capped n; duyệt h từ n xuống 0 cộng dồn papers ≥ h.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> hIndex(<span class="ty">int</span>* citations, <span class="ty">int</span> n) {
+    <span class="ty">int</span>* count = <span class="kw">calloc</span>(n + 1, <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) count[citations[i] &gt; n ? n : citations[i]]++;
+    <span class="ty">int</span> papers = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> h = n; h &gt;= 0; h--) {
+        papers += count[h];
+        <span class="kw">if</span> (papers &gt;= h) { <span class="kw">free</span>(count); <span class="kw">return</span> h; }
+    }
+    <span class="kw">free</span>(count);
+    <span class="kw">return</span> 0;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> hIndex(<span class="ty">self</span>, citations: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        n = <span class="ty">len</span>(citations)
+        count = [0] * (n + 1)
+        <span class="kw">for</span> c <span class="kw">in</span> citations:
+            count[<span class="ty">min</span>(c, n)] += 1
+        papers = 0
+        <span class="kw">for</span> h <span class="kw">in</span> <span class="ty">range</span>(n, -1, -1):
+            papers += count[h]
+            <span class="kw">if</span> papers &gt;= h:
+                <span class="kw">return</span> h
+        <span class="kw">return</span> 0</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> hIndex(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; citations) {
+        <span class="ty">int</span> n = citations.size();
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; count(n + 1);
+        <span class="kw">for</span> (<span class="ty">int</span> c : citations) count[min(c, n)]++;
+        <span class="ty">int</span> papers = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> h = n; h &gt;= 0; h--) {
+            papers += count[h];
+            <span class="kw">if</span> (papers &gt;= h) <span class="kw">return</span> h;
+        }
+        <span class="kw">return</span> 0;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +141,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Counting sort bucket: count[c] với c capped n; duyệt h từ n xuống 0…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Bucket đếm papers theo citation cap n; h lớn nhất với papers≥h là h-index.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Toàn 0 → 0</span><span class="analysis-tag edge">Mọi citation ≥ n → n</span><span class="analysis-tag pit">Sort O(n log n) chậm hơn</span><span class="analysis-tag pit">Không cap citation &gt; n</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>H-index = bucket count citations capped at n, scan h down.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=H-Index&lc_id=274&embed=true"></iframe>

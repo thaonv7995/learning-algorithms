@@ -5,30 +5,23 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Summary Ranges (LeetCode #228) — Easy.",
+  "description": "Cho mảng nums đã sort tăng dần (có thể trùng?). Gom các dãy liên tiếp thành chuỗi \"a->b\" hoặc \"a\" nếu một phần tử.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [0,1,2,4,5,7]", "output": "[\"0->2\",\"4->5\",\"7\"]" },
+    { "input": "nums = [0,2,3,4,6,8,9]", "output": "[\"0\",\"2->4\",\"6\",\"8->9\"]" },
+    { "input": "nums = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers: start=i; while i+1 < n và nums[i+1]==nums[i]+1 thì i++; format range từ start đến i.",
+  "memoryTip": "Summary ranges = scan sorted array, extend while next==prev+1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def summaryRanges(self, nums: List[int]) -> List[str]:\n        res, i, n = [], 0, len(nums)\n        while i < n:\n            start = i\n            while i + 1 < n and nums[i + 1] == nums[i] + 1:\n                i += 1\n            if start == i:\n                res.append(str(nums[start]))\n            else:\n                res.append(f\"{nums[start]}->{nums[i]}\")\n            i += 1\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<string> summaryRanges(vector<int>& nums) {\n        vector<string> res;\n        int n = nums.size(), i = 0;\n        while (i < n) {\n            int start = i;\n            while (i + 1 < n && nums[i + 1] == nums[i] + 1) i++;\n            if (start == i) res.push_back(to_string(nums[start]));\n            else res.push_back(to_string(nums[start]) + \"->\" + to_string(nums[i]));\n            i++;\n        }\n        return res;\n    }\n};",
+    "c": "char** summaryRanges(int* nums, int n, int* retSize) {\n    *retSize = 0;\n    if (!n) return NULL;\n    char** out = malloc(n * sizeof(char*));\n    for (int i = 0; i < n; ) {\n        int start = i;\n        while (i + 1 < n && nums[i + 1] == nums[i] + 1) i++;\n        char buf[64];\n        if (start == i) snprintf(buf, sizeof(buf), \"%d\", nums[start]);\n        else snprintf(buf, sizeof(buf), \"%d->%d\", nums[start], nums[i]);\n        out[(*retSize)++] = strdup(buf);\n        i++;\n    }\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mảng sorted nên mỗi lần mở rộng i đến hết dãy liên tiếp.",
+    "edgeCases": ["Rỗng → []", "Một phần tử → \"x\""],
+    "pitfalls": ["Quên tăng i sau khi đóng range", "Format thiếu ->"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

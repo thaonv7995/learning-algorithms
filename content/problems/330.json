@@ -2,33 +2,25 @@
   "id": 330,
   "title": "Patching Array",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Greedy",
+  "timeComplexity": "O(n + log max)",
   "spaceComplexity": "O(1)",
-  "description": "Patching Array (LeetCode #330) — Hard.",
+  "description": "Cho mảng nums đã sort gồm số dương. Thêm số dương tối thiểu sao mọi số trong [1,n] đều là tổng một tập con của nums (sau khi thêm).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,5,10], n = 20", "output": "2" },
+    { "input": "nums = [1,2,2], n = 5", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Greedy: miss là số nhỏ nhất chưa tạo được. Nếu nums[i]≤miss thì miss+=nums[i]; else thêm miss, patches++, miss*=2.",
+  "memoryTip": "Invariant: [1, miss-1] đã cover — nums[i]≤miss mở rộng thêm nums[i].",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minPatches(self, nums: List[int], n: int) -> int:\n        patches, miss, i = 0, 1, 0\n        while miss <= n:\n            if i < len(nums) and nums[i] <= miss:\n                miss += nums[i]; i += 1\n            else:\n                miss += miss; patches += 1\n        return patches",
+    "cpp": "class Solution {\npublic:\n    int minPatches(vector<int>& nums, int n) {\n        long long miss = 1; int patches = 0, i = 0;\n        while (miss <= n) {\n            if (i < (int)nums.size() && nums[i] <= miss) miss += nums[i++];\n            else { miss += miss; patches++; }\n        }\n        return patches;\n    }\n};",
+    "c": "int minPatches(int* nums, int numsSize, int n) {\n    long long miss = 1; int patches = 0, i = 0;\n    while (miss <= n) {\n        if (i < numsSize && nums[i] <= miss) miss += nums[i++];\n        else { miss += miss; patches++; }\n    }\n    return patches;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "miss là ngưỡng cover liên tục; thêm miss bù lỗ hổng nhỏ nhất, nhân đôi phạm vi.",
+    "edgeCases": ["nums rỗng", "Đã cover tới n", "nums[0]>1"],
+    "pitfalls": ["int overflow trên miss", "Không sort — đề đã sort"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

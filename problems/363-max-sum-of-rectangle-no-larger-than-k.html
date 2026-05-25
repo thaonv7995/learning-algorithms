@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #363</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Max Sum of Rectangle No Larger Than K</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m²n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Max Sum of Rectangle No Larger Than K (LeetCode #363) — Hard.</div>
+                        <div class="block-text">Cho ma trận matrix và số k. Tìm tổng lớn nhất của vùng chữ nhật con sao tổng ≤ k.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>matrix = [[1,0,1],[0,-2,3]], k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>matrix = [[2,2,-1]], k = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Fix cột trái/phải, tính tổng từng hàng → mảng 1D; trên prefix sum dùng TreeSet tìm prefix ≥ sum-k (max subarray ≤ k).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,59 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maxSumSubmatrix(<span class="ty">int</span>** matrix, <span class="ty">int</span> m, <span class="ty">int</span>* cs, <span class="ty">int</span> k) {
+    <span class="ty">int</span> n=cs[0], ans=INT_MIN;
+    <span class="kw">for</span>(<span class="ty">int</span> l=0;l&lt;n;l++){
+        <span class="ty">int</span>* row=<span class="kw">calloc</span>(m,<span class="kw">sizeof</span>(<span class="ty">int</span>));
+        <span class="kw">for</span>(<span class="ty">int</span> r=l;r&lt;n;r++){
+            <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++) row[i]+=matrix[i][r];
+            <span class="ty">int</span> sum=0; <span class="ty">int</span>* pref=<span class="kw">malloc</span>(100000*<span class="kw">sizeof</span>(<span class="ty">int</span>)); <span class="ty">int</span> ps=0; pref[ps++]=0;
+            <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++){
+                sum+=row[i];
+                <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;ps;j++) <span class="kw">if</span>(sum-pref[j]&lt;=k &amp;&amp; sum-pref[j]&gt;ans) ans=sum-pref[j];
+                pref[ps++]=sum;
+            }
+            <span class="kw">free</span>(pref);
+        }
+        <span class="kw">free</span>(row);
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maxSumSubmatrix(<span class="ty">self</span>, matrix: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]], k: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        m, n = <span class="ty">len</span>(matrix), <span class="ty">len</span>(matrix[0])
+        ans = -10**18
+        <span class="kw">for</span> left <span class="kw">in</span> <span class="ty">range</span>(n):
+            row = [0]*m
+            <span class="kw">for</span> right <span class="kw">in</span> <span class="ty">range</span>(left, n):
+                <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m): row[i] += matrix[i][right]
+                curr, prefixes = 0, [0]
+                <span class="kw">for</span> x <span class="kw">in</span> row:
+                    curr += x
+                    idx = bisect.bisect_left(prefixes, curr - k)
+                    <span class="kw">if</span> idx &lt; <span class="ty">len</span>(prefixes): ans = <span class="ty">max</span>(ans, curr - prefixes[idx])
+                    bisect.insort(prefixes, curr)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> maxSumSubmatrix(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; matrix, <span class="ty">int</span> k) {
+        <span class="ty">int</span> m = matrix.size(), n = matrix[0].size(), ans = INT_MIN;
+        <span class="kw">for</span> (<span class="ty">int</span> l = 0; l &lt; n; l++) {
+            <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; row(m, 0);
+            <span class="kw">for</span> (<span class="ty">int</span> r = l; r &lt; n; r++) {
+                <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++) row[i] += matrix[i][r];
+                set&lt;<span class="ty">int</span>&gt; st; st.insert(0);
+                <span class="ty">int</span> sum = 0;
+                <span class="kw">for</span> (<span class="ty">int</span> x : row) {
+                    sum += x;
+                    auto it = st.lower_bound(sum - k);
+                    <span class="kw">if</span> (it != st.end()) ans = max(ans, sum - *it);
+                    st.insert(sum);
+                }
+            }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +157,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m²n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Fix cột trái/phải, tính tổng từng hàng → mảng 1D; trên prefix sum dùng…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi hình chữ nhật xác định bởi cột l,r; bài 1D max subarray ≤ k bằng prefix + set.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một ô</span><span class="analysis-tag edge">Toàn số âm</span><span class="analysis-tag edge">k nhỏ hơn mọi tổng</span><span class="analysis-tag pit">Kadane thuần không áp dụng cap k</span><span class="analysis-tag pit">Quên init ans INT_MIN</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>2D → 1D kadans biến thể: sorted set + lower_bound trên prefix.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +185,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Max%20Sum%20of%20Rectangle%20No%20Larger%20Than%20K&lc_id=363&embed=true"></iframe>

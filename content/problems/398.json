@@ -3,32 +3,24 @@
   "title": "Random Pick Index",
   "difficulty": "Medium",
   "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Random Pick Index (LeetCode #398) — Medium.",
+  "timeComplexity": "O(n) pickIndex",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums có thể trùng. pickIndex trả index ngẫu nhiên sao mỗi index của mỗi giá trị target có xác suất bằng nhau.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3,3,3], pickIndex(3)", "output": "2 or 3 or 4 each prob 1/3" },
+    { "input": "nums = [1], pickIndex(1)", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map target → list indices; pickIndex random chọn index trong list. Hoặc reservoir on the fly khi gọi.",
+  "memoryTip": "Index reservoir per value — preprocess map O(n) once.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def __init__(self, nums: List[int]):\n        self.idx = defaultdict(list)\n        for i, x in enumerate(nums):\n            self.idx[x].append(i)\n    def pick(self, target: int) -> int:\n        arr = self.idx[target]\n        return arr[random.randint(0, len(arr)-1)]",
+    "cpp": "class Solution {\n    unordered_map<int, vector<int>> idx;\npublic:\n    Solution(vector<int>& nums) {\n        for (int i = 0; i < (int)nums.size(); i++) idx[nums[i]].push_back(i);\n    }\n    int pick(int target) {\n        auto& v = idx[target];\n        return v[rand() % v.size()];\n    }\n};",
+    "c": "typedef struct {\n    int* nums; int n;\n} Solution;\nSolution* solutionCreate(int* nums, int n) {\n    Solution* s = malloc(sizeof(Solution)); s->nums = nums; s->n = n; return s;\n}\nint solutionPick(Solution* obj, int target) {\n    int cnt = 0, ans = 0;\n    for (int i = 0; i < obj->n; i++)\n        if (obj->nums[i] == target) {\n            cnt++;\n            if (rand() % cnt == 0) ans = i;\n        }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Reservoir trên indices matching target cho uniform random index mỗi lần pick.",
+    "edgeCases": ["Target không tồn tại — không gọi", "Một index", "Nhiều duplicate"],
+    "pitfalls": ["Pick value thay index", "Không uniform nếu không reservoir"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

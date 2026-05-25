@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #313</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Super Ugly Number</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n×k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n+k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Super Ugly Number (LeetCode #313) — Medium.</div>
+                        <div class="block-text">Số xấu xí chỉ có thừa số nguyên tố 2,3,5. Cho mảng primes và n, trả số xấu xí thứ n (super ugly) chỉ dùng thừa số trong primes.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 12, primes = [2,7,13,19]</code></div>
+                <div class="ex-line"><span>Out</span><code>32</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1, primes = [2,3,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP giống Ugly Number II: ugly[0]=1; mỗi prime giữ con trỏ idx[i]; ugly[j]=min(ugly[idx[i]]*primes[i]); tăng mọi idx[i] đạt min.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,50 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> nthSuperUglyNumber(<span class="ty">int</span> n, <span class="ty">int</span>* primes, <span class="ty">int</span> k) {
+    <span class="ty">long</span> <span class="ty">long</span>* ugly = <span class="kw">malloc</span>(n * <span class="kw">sizeof</span>(<span class="ty">long</span> <span class="ty">long</span>));
+    <span class="ty">int</span>* idx = <span class="kw">calloc</span>(k, <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    ugly[0] = 1; <span class="ty">int</span> sz = 1;
+    <span class="kw">while</span> (sz &lt; n) {
+        <span class="ty">long</span> <span class="ty">long</span> nxt = LLONG_MAX;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; k; i++) {
+            <span class="ty">long</span> <span class="ty">long</span> v = ugly[idx[i]] * primes[i];
+            <span class="kw">if</span> (v &lt; nxt) nxt = v;
+        }
+        ugly[sz++] = nxt;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; k; i++)
+            <span class="kw">if</span> (ugly[idx[i]] * primes[i] == nxt) idx[i]++;
+    }
+    <span class="ty">int</span> ans = (<span class="ty">int</span>)ugly[n-1];
+    <span class="kw">free</span>(ugly); <span class="kw">free</span>(idx);
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> nthSuperUglyNumber(<span class="ty">self</span>, n: <span class="ty">int</span>, primes: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        ugly = [1]
+        idx = [0]*<span class="ty">len</span>(primes)
+        <span class="kw">while</span> <span class="ty">len</span>(ugly) &lt; n:
+            nxt = <span class="ty">min</span>(ugly[idx[i]]*primes[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(primes)))
+            ugly.append(nxt)
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(primes)):
+                <span class="kw">if</span> ugly[idx[i]]*primes[i] == nxt:
+                    idx[i] += 1
+        <span class="kw">return</span> ugly[-1]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> nthSuperUglyNumber(<span class="ty">int</span> n, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; primes) {
+        <span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; ugly = {1};
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; idx(primes.size(), 0);
+        <span class="kw">while</span> ((<span class="ty">int</span>)ugly.size() &lt; n) {
+            <span class="ty">long</span> <span class="ty">long</span> nxt = LLONG_MAX;
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)primes.size(); i++)
+                nxt = min(nxt, ugly[idx[i]] * (<span class="ty">long</span> <span class="ty">long</span>)primes[i]);
+            ugly.push_back(nxt);
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)primes.size(); i++)
+                <span class="kw">if</span> (ugly[idx[i]] * (<span class="ty">long</span> <span class="ty">long</span>)primes[i] == nxt) idx[i]++;
+        }
+        <span class="kw">return</span> (<span class="ty">int</span>)ugly.back();
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +147,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n×k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n+k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP giống Ugly Number II: ugly[0]=1; mỗi prime giữ con trỏ idx[i];…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi ugly mới là bội nhỏ nhất chưa có; con trỏ đảm bảo không bỏ sót và tránh trùng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1 → 1</span><span class="analysis-tag edge">Một prime</span><span class="analysis-tag edge">Trùng min từ nhiều prime</span><span class="analysis-tag pit">Heap chậm hơn DP con trỏ</span><span class="analysis-tag pit">Quên nhích mọi idx đạt min</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>K con trỏ song song — mỗi bước lấy min kích thước và nhích con trỏ prime tương ứng.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +176,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Super%20Ugly%20Number&lc_id=313&embed=true"></iframe>

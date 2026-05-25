@@ -3,32 +3,24 @@
   "title": "Intersection of Two Arrays II",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Intersection of Two Arrays II (LeetCode #350) — Easy.",
+  "timeComplexity": "O(n+m)",
+  "spaceComplexity": "O(min(n,m))",
+  "description": "Trả giao hai mảng nums1 và nums2 — mỗi phần tử xuất hiện trong kết quả đúng số lần min(count1, count2).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums1 = [1,2,2,1], nums2 = [2,2]", "output": "[2,2]" },
+    { "input": "nums1 = [4,9,5], nums2 = [9,4,9,8,4]", "output": "[4,9]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hash map đếm nums1; duyệt nums2, nếu count>0 thì push vào ans và giảm count.",
+  "memoryTip": "Multiset intersection — frequency map, không dùng set đơn giản.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:\n        cnt = Counter(nums1)\n        ans = []\n        for x in nums2:\n            if cnt[x]:\n                ans.append(x)\n                cnt[x] -= 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {\n        if (nums1.size() > nums2.size()) return intersect(nums2, nums1);\n        unordered_map<int,int> cnt;\n        for (int x : nums1) cnt[x]++;\n        vector<int> ans;\n        for (int x : nums2) if (cnt[x]-- > 0) ans.push_back(x);\n        return ans;\n    }\n};",
+    "c": "int* intersect(int* nums1, int n1, int* nums2, int n2, int* retSize) {\n    int map[2001] = {0};\n    for (int i=0;i<n1;i++) if(nums1[i]>=-1000&&nums1[i]<=1000) map[nums1[i]+1000]++;\n    int* ans = malloc((n1<n2?n1:n2)*sizeof(int)); *retSize=0;\n    for (int i=0;i<n2;i++){\n        int k=nums2[i]+1000;\n        if(k>=0&&k<=2000&&map[k]>0){ ans[(*retSize)++]=nums2[i]; map[k]--; }\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Map frequency đảm bảo mỗi giá trị lấy đúng min số lần xuất hiện.",
+    "edgeCases": ["Một mảng rỗng", "Toàn trùng", "Không giao"],
+    "pitfalls": ["Dùng set như 349", "Sort merge k khi cần output sorted"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

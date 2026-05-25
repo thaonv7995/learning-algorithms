@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #327</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Count of Range Sum</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>39% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Count of Range Sum (LeetCode #327) — Hard.</div>
+                        <div class="block-text">Cho mảng nums và lower, upper. Đếm số cặp (i,j) với i≤j sao lower ≤ tổng nums[i..j] ≤ upper.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [-2,5,-1], lower = -2, upper = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [0], lower = 0, upper = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Prefix sum + merge sort đếm: trong merge, với mỗi prefix trái t, đếm prefix phải trong [t-upper, t-lower] bằng two pointers trên mảng sorted.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,59 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> countRangeSum(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span> lower, <span class="ty">int</span> upper) {
+    <span class="ty">long</span> <span class="ty">long</span>* pre = <span class="kw">malloc</span>((n+1)*<span class="kw">sizeof</span>(<span class="ty">long</span> <span class="ty">long</span>)); pre[0]=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++) pre[i+1]=pre[i]+nums[i];
+    <span class="ty">int</span> ans=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;=n;i++) <span class="kw">for</span> (<span class="ty">int</span> j=i;j&lt;=n;j++) {
+        <span class="ty">long</span> <span class="ty">long</span> s=pre[j]-pre[i];
+        <span class="kw">if</span> (s&gt;=lower &amp;&amp; s&lt;=upper) ans++;
+    }
+    <span class="kw">free</span>(pre); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> countRangeSum(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], lower: <span class="ty">int</span>, upper: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        pre = [0]
+        <span class="kw">for</span> x <span class="kw">in</span> nums: pre.append(pre[-1] + x)
+        ans = 0
+        <span class="kw">def</span> mergeSort(arr):
+            nonlocal ans
+            <span class="kw">if</span> <span class="ty">len</span>(arr) &lt;= 1: <span class="kw">return</span> arr
+            m = <span class="ty">len</span>(arr)//2
+            L, R = mergeSort(arr[:m]), mergeSort(arr[m:])
+            i = j = 0
+            <span class="kw">for</span> x <span class="kw">in</span> L:
+                <span class="kw">while</span> j &lt; <span class="ty">len</span>(R) <span class="kw">and</span> R[j] &lt; x + lower: j += 1
+                k = j
+                <span class="kw">while</span> k &lt; <span class="ty">len</span>(R) <span class="kw">and</span> R[k] &lt;= x + upper: k += 1
+                ans += k - j
+            <span class="kw">return</span> sorted(L + R)
+        mergeSort(pre)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">long</span> <span class="ty">long</span> ans = 0;
+    <span class="ty">void</span> mergeCount(<span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt;&amp; v, <span class="ty">int</span> l, <span class="ty">int</span> m, <span class="ty">int</span> r, <span class="ty">int</span> lo, <span class="ty">int</span> hi) {
+        <span class="ty">int</span> j = m+1, k = m+1;
+        <span class="kw">for</span> (<span class="ty">int</span> i = l; i &lt;= m; i++) {
+            <span class="kw">while</span> (j &lt;= r &amp;&amp; v[j] &lt; v[i] + lo) j++;
+            <span class="kw">while</span> (k &lt;= r &amp;&amp; v[k] &lt;= v[i] + hi) k++;
+            ans += k - j;
+        }
+        inplace_merge(v.begin()+l, v.begin()+m+1, v.begin()+r+1);
+    }
+    <span class="ty">void</span> sort(<span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt;&amp; v, <span class="ty">int</span> l, <span class="ty">int</span> r, <span class="ty">int</span> lo, <span class="ty">int</span> hi) {
+        <span class="kw">if</span> (l &gt;= r) <span class="kw">return</span>;
+        <span class="ty">int</span> m = (l + r) / 2;
+        sort(v, l, m, lo, hi); sort(v, m+1, r, lo, hi);
+        mergeCount(v, l, m, r, lo, hi);
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> countRangeSum(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> lower, <span class="ty">int</span> upper) {
+        <span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; pre = {0};
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums) pre.push_back(pre.back() + x);
+        sort(pre, 0, pre.size()-1, lower, upper);
+        <span class="kw">return</span> (<span class="ty">int</span>)ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +157,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Prefix sum + merge sort đếm: trong merge, với mỗi prefix trái t, đếm…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Merge sort trên prefix đếm cặp thỏa biên trong O(n log n); brute O(n²) chỉ cho n nhỏ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">lower=upper</span><span class="analysis-tag edge">Số âm lớn</span><span class="analysis-tag pit">int overflow trên prefix</span><span class="analysis-tag pit">Two pointers sai thứ tự merge</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Biến đổi: tổng=P[j]-P[i-1] ∈ [L,U] ⇔ P[j]∈[P[i-1]+L, P[i-1]+U].</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +185,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Count%20of%20Range%20Sum&lc_id=327&embed=true"></iframe>

@@ -2,33 +2,25 @@
   "id": 377,
   "title": "Combination Sum IV",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Combination Sum IV (LeetCode #377) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(target×n)",
+  "spaceComplexity": "O(target)",
+  "description": "Cho mảng nums số nguyên dương distinct và target. Đếm số tổ hợp có thứ tự (permutation) các số trong nums cộng bằng target.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3], target = 4", "output": "7" },
+    { "input": "nums = [9], target = 3", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP: dp[0]=1; với t từ 1..target, dp[t]+=dp[t-num] với mọi num≤t. Thứ tự outer t quan trọng (permutation).",
+  "memoryTip": "Khác Coin Change II — ở đây thứ tự cộng được tính (ordered combinations).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def combinationSum4(self, nums: List[int], target: int) -> int:\n        dp = [0] * (target + 1)\n        dp[0] = 1\n        for t in range(1, target + 1):\n            for x in nums:\n                if x <= t:\n                    dp[t] += dp[t - x]\n        return dp[target]",
+    "cpp": "class Solution {\npublic:\n    int combinationSum4(vector<int>& nums, int target) {\n        vector<unsigned> dp(target + 1, 0);\n        dp[0] = 1;\n        for (int t = 1; t <= target; t++)\n            for (int x : nums)\n                if (x <= t) dp[t] += dp[t - x];\n        return dp[target];\n    }\n};",
+    "c": "int combinationSum4(int* nums, int n, int target) {\n    unsigned* dp = calloc(target + 1, sizeof(unsigned)); dp[0] = 1;\n    for (int t = 1; t <= target; t++)\n        for (int i = 0; i < n; i++)\n            if (nums[i] <= t) dp[t] += dp[t - nums[i]];\n    int ans = (int)dp[target]; free(dp); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "dp[t] đếm cách ghép có thứ tự tới t; cộng mọi bước cuối num.",
+    "edgeCases": ["target=0 → 1", "Không ghép được → 0", "Overflow — dùng unsigned/long"],
+    "pitfalls": ["Loop nums outer như unbounded subset", "Nhầm với Coin Change min coins"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

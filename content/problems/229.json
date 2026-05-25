@@ -5,30 +5,23 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Majority Element II (LeetCode #229) — Medium.",
+  "description": "Cho mảng nums kích thước n. Trả mọi phần tử xuất hiện hơn ⌊n/3⌋ lần (tối đa 2 phần tử). Kết quả theo thứ tự bất kỳ.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [3,2,3]", "output": "[3]" },
+    { "input": "nums = [1]", "output": "[1]" },
+    { "input": "nums = [1,2]", "output": "[1,2]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Boyer-Moore k=2: giữ c1,c2 và count; pass 2 verify count > n/3.",
+  "memoryTip": "Elements > n/3 = Boyer-Moore with 2 slots + verification pass.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def majorityElement(self, nums: List[int]) -> List[int]:\n        c1 = c2 = None\n        cnt1 = cnt2 = 0\n        for x in nums:\n            if c1 == x:\n                cnt1 += 1\n            elif c2 == x:\n                cnt2 += 1\n            elif cnt1 == 0:\n                c1, cnt1 = x, 1\n            elif cnt2 == 0:\n                c2, cnt2 = x, 1\n            else:\n                cnt1 -= 1\n                cnt2 -= 1\n        n = len(nums)\n        res = []\n        for c in (c1, c2):\n            if c is not None and nums.count(c) > n // 3:\n                res.append(c)\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<int> majorityElement(vector<int>& nums) {\n        int c1 = 0, c2 = 1, cnt1 = 0, cnt2 = 0;\n        for (int x : nums) {\n            if (x == c1) cnt1++;\n            else if (x == c2) cnt2++;\n            else if (!cnt1) { c1 = x; cnt1 = 1; }\n            else if (!cnt2) { c2 = x; cnt2 = 1; }\n            else { cnt1--; cnt2--; }\n        }\n        cnt1 = cnt2 = 0;\n        for (int x : nums) { if (x == c1) cnt1++; else if (x == c2) cnt2++; }\n        vector<int> res;\n        int n = nums.size();\n        if (cnt1 > n / 3) res.push_back(c1);\n        if (cnt2 > n / 3 && c2 != c1) res.push_back(c2);\n        return res;\n    }\n};",
+    "c": "int* majorityElement229(int* nums, int n, int* rs) {\n    int c1=0,c2=1,cnt1=0,cnt2=0;\n    for (int i=0;i<n;i++) {\n        int x=nums[i];\n        if (x==c1) cnt1++;\n        else if (x==c2) cnt2++;\n        else if (!cnt1) { c1=x; cnt1=1; }\n        else if (!cnt2) { c2=x; cnt2=1; }\n        else { cnt1--; cnt2--; }\n    }\n    cnt1=cnt2=0;\n    for (int i=0;i<n;i++) { if (nums[i]==c1) cnt1++; else if (nums[i]==c2) cnt2++; }\n    int* out=malloc(2*sizeof(int)); *rs=0;\n    if (cnt1>n/3) out[(*rs)++]=c1;\n    if (cnt2>n/3 && c2!=c1) out[(*rs)++]=c2;\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Định lý: tối đa 2 phần tử > n/3; Boyer-Moore mở rộng tìm ứng viên, verify bắt buộc.",
+    "edgeCases": ["Một phần tử", "Không có majority → []"],
+    "pitfalls": ["Quên pass verify", "Hash map O(n) space cũng OK"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

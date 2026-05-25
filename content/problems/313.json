@@ -2,33 +2,25 @@
   "id": 313,
   "title": "Super Ugly Number",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Super Ugly Number (LeetCode #313) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n×k)",
+  "spaceComplexity": "O(n+k)",
+  "description": "Số xấu xí chỉ có thừa số nguyên tố 2,3,5. Cho mảng primes và n, trả số xấu xí thứ n (super ugly) chỉ dùng thừa số trong primes.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 12, primes = [2,7,13,19]", "output": "32" },
+    { "input": "n = 1, primes = [2,3,5]", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP giống Ugly Number II: ugly[0]=1; mỗi prime giữ con trỏ idx[i]; ugly[j]=min(ugly[idx[i]]*primes[i]); tăng mọi idx[i] đạt min.",
+  "memoryTip": "K con trỏ song song — mỗi bước lấy min kích thước và nhích con trỏ prime tương ứng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def nthSuperUglyNumber(self, n: int, primes: List[int]) -> int:\n        ugly = [1]\n        idx = [0]*len(primes)\n        while len(ugly) < n:\n            nxt = min(ugly[idx[i]]*primes[i] for i in range(len(primes)))\n            ugly.append(nxt)\n            for i in range(len(primes)):\n                if ugly[idx[i]]*primes[i] == nxt:\n                    idx[i] += 1\n        return ugly[-1]",
+    "cpp": "class Solution {\npublic:\n    int nthSuperUglyNumber(int n, vector<int>& primes) {\n        vector<long long> ugly = {1};\n        vector<int> idx(primes.size(), 0);\n        while ((int)ugly.size() < n) {\n            long long nxt = LLONG_MAX;\n            for (int i = 0; i < (int)primes.size(); i++)\n                nxt = min(nxt, ugly[idx[i]] * (long long)primes[i]);\n            ugly.push_back(nxt);\n            for (int i = 0; i < (int)primes.size(); i++)\n                if (ugly[idx[i]] * (long long)primes[i] == nxt) idx[i]++;\n        }\n        return (int)ugly.back();\n    }\n};",
+    "c": "int nthSuperUglyNumber(int n, int* primes, int k) {\n    long long* ugly = malloc(n * sizeof(long long));\n    int* idx = calloc(k, sizeof(int));\n    ugly[0] = 1; int sz = 1;\n    while (sz < n) {\n        long long nxt = LLONG_MAX;\n        for (int i = 0; i < k; i++) {\n            long long v = ugly[idx[i]] * primes[i];\n            if (v < nxt) nxt = v;\n        }\n        ugly[sz++] = nxt;\n        for (int i = 0; i < k; i++)\n            if (ugly[idx[i]] * primes[i] == nxt) idx[i]++;\n    }\n    int ans = (int)ugly[n-1];\n    free(ugly); free(idx);\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi ugly mới là bội nhỏ nhất chưa có; con trỏ đảm bảo không bỏ sót và tránh trùng.",
+    "edgeCases": ["n=1 → 1", "Một prime", "Trùng min từ nhiều prime"],
+    "pitfalls": ["Heap chậm hơn DP con trỏ", "Quên nhích mọi idx đạt min"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

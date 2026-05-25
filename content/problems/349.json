@@ -3,32 +3,24 @@
   "title": "Intersection of Two Arrays",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Intersection of Two Arrays (LeetCode #349) — Easy.",
+  "timeComplexity": "O(n+m)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho hai mảng nums1 và nums2. Trả giao các phần tử distinct (mỗi giá trị xuất hiện tối đa một lần trong kết quả).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums1 = [1,2,2,1], nums2 = [2,2]", "output": "[2]" },
+    { "input": "nums1 = [4,9,5], nums2 = [9,4]", "output": "[9,4]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hash set từ nums1; duyệt nums2, nếu x trong set thì thêm vào kết quả và xóa khỏi set (distinct).",
+  "memoryTip": "Set intersection — erase sau khi thêm tránh trùng output.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:\n        s = set(nums1)\n        return [x for x in set(nums2) if x in s]",
+    "cpp": "class Solution {\npublic:\n    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {\n        unordered_set<int> s(nums1.begin(), nums1.end());\n        unordered_set<int> out;\n        for (int x : nums2) if (s.count(x)) out.insert(x);\n        return vector<int>(out.begin(), out.end());\n    }\n};",
+    "c": "int* intersection(int* nums1, int n1, int* nums2, int n2, int* retSize) {\n    int* set = calloc(2001, sizeof(int));\n    for (int i=0;i<n1;i++) if(nums1[i]>=0&&nums1[i]<=2000) set[nums1[i]]=1;\n    int* ans = malloc((n1<n2?n1:n2)*sizeof(int)); *retSize=0;\n    int* used = calloc(2001,sizeof(int));\n    for (int i=0;i<n2;i++) if(nums2[i]>=0&&nums2[i]<=2000&&set[nums2[i]]&&!used[nums2[i]]){\n        ans[(*retSize)++]=nums2[i]; used[nums2[i]]=1;\n    }\n    free(set); free(used); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Set lưu phần tử nums1; giao với nums2 cho distinct intersection.",
+    "edgeCases": ["Không giao → []", "Một mảng rỗng", "Trùng nhiều trong input"],
+    "pitfalls": ["Trả multiset như 350 II", "Sort+two pointer cần sort trước"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

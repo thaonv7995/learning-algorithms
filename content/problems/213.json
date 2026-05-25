@@ -2,33 +2,26 @@
   "id": 213,
   "title": "House Robber II",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "House Robber II (LeetCode #213) — Medium.",
+  "description": "Mảng nums biểu diễn tiền tại mỗi nhà xếp vòng tròn — nhà đầu và cuối kề nhau. Cướp tối đa không cướp hai nhà liền kề. Trả số tiền lớn nhất.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [2,3,2]", "output": "3" },
+    { "input": "nums = [1,2,3,1]", "output": "4" },
+    { "input": "nums = [1,2,3]", "output": "3" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Chia hai case House Robber I: rob(nums[1:]) và rob(nums[:-1]); lấy max. Một nhà thì trả nums[0].",
+  "memoryTip": "House Robber II = max(rob line bỏ đầu, rob line bỏ cuối).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def rob(self, nums: List[int]) -> int:\n        def line(a):\n            prev, cur = 0, 0\n            for x in a:\n                prev, cur = cur, max(cur, prev + x)\n            return cur\n        if len(nums) == 1:\n            return nums[0]\n        return max(line(nums[1:]), line(nums[:-1]))",
+    "cpp": "class Solution {\n    int robLine(vector<int>& a, int l, int r) {\n        int prev = 0, cur = 0;\n        for (int i = l; i <= r; i++) {\n            int nxt = max(cur, prev + a[i]);\n            prev = cur; cur = nxt;\n        }\n        return cur;\n    }\npublic:\n    int rob(vector<int>& nums) {\n        int n = nums.size();\n        if (n == 1) return nums[0];\n        return max(robLine(nums, 0, n - 2), robLine(nums, 1, n - 1));\n    }\n};",
+    "c": "static int robLine(int* a, int l, int r) {\n    int prev = 0, cur = 0;\n    for (int i = l; i <= r; i++) {\n        int nxt = cur > prev + a[i] ? cur : prev + a[i];\n        prev = cur; cur = nxt;\n    }\n    return cur;\n}\nint rob(int* nums, int n) {\n    if (n == 1) return nums[0];\n    int a = robLine(nums, 0, n - 2);\n    int b = robLine(nums, 1, n - 1);\n    return a > b ? a : b;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Optimal path hoặc bỏ nhà 0 hoặc bỏ nhà n-1; max hai subproblem line đủ.",
+    "edgeCases": ["n=1", "n=2 → max hai phần tử không cần split phức tạp"],
+    "pitfalls": ["Rob I trực tiếp trên vòng → vi phạm", "Quên case một phần tử"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

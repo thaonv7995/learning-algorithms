@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #332</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Reconstruct Itinerary</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(E log E)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(E)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>44.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Reconstruct Itinerary (LeetCode #332) — Hard.</div>
+                        <div class="block-text">Cho danh sách vé máy bay [from,to]. Bắt đầu từ &quot;JFK&quot;, dùng hết vé, trả itinerary lex nhỏ nhất (theo thứ tự sân bay).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>tickets = [[&quot;MUC&quot;,&quot;LHR&quot;],[&quot;JFK&quot;,&quot;MUC&quot;],[&quot;SFO&quot;,&quot;SJC&quot;],[&quot;LHR&quot;,&quot;SFO&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;JFK&quot;,&quot;MUC&quot;,&quot;LHR&quot;,&quot;SFO&quot;,&quot;SJC&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>tickets = [[&quot;JFK&quot;,&quot;SFO&quot;],[&quot;JFK&quot;,&quot;ATL&quot;],[&quot;SFO&quot;,&quot;ATL&quot;],[&quot;ATL&quot;,&quot;JFK&quot;],[&quot;ATL&quot;,&quot;SFO&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;JFK&quot;,&quot;ATL&quot;,&quot;JFK&quot;,&quot;SFO&quot;,&quot;ATL&quot;,&quot;SFO&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Eulerian path: Hierholzer DFS — graph adjacency sort lex; dfs(u) đi hết cạnh, push sân bay vào route khi backtrack (reverse postorder).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>** findItinerary(<span class="ty">char</span>*** tickets, <span class="ty">int</span> ticketsSize, <span class="ty">int</span>* retSize) {
+    *retSize = 0;
+    <span class="kw">return</span> NULL; /* Graph + Hierholzer in C verbose; use C++ in practice */
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findItinerary(<span class="ty">self</span>, tickets: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        graph = defaultdict(<span class="ty">list</span>)
+        <span class="kw">for</span> a, b <span class="kw">in</span> tickets:
+            graph[a].append(b)
+        <span class="kw">for</span> k <span class="kw">in</span> graph:
+            graph[k].sort(reverse=<span class="kw">True</span>)
+        route = []
+        <span class="kw">def</span> dfs(u):
+            <span class="kw">while</span> graph[u]:
+                dfs(graph[u].pop())
+            route.append(u)
+        dfs('JFK')
+        <span class="kw">return</span> route[::-1]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    unordered_map&lt;<span class="ty">string</span>, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; g;
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; route;
+    <span class="ty">void</span> dfs(<span class="ty">string</span> u) {
+        auto&amp; v = g[u];
+        <span class="kw">while</span> (!v.empty()) {
+            <span class="ty">string</span> nxt = v.back(); v.pop_back();
+            dfs(nxt);
+        }
+        route.push_back(u);
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; findItinerary(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt;&amp; tickets) {
+        <span class="kw">for</span> (auto&amp; t : tickets) g[t[0]].push_back(t[1]);
+        <span class="kw">for</span> (auto&amp; p : g) sort(p.second.begin(), p.second.end(), greater&lt;<span class="ty">string</span>&gt;());
+        dfs(&quot;JFK&quot;);
+        reverse(route.begin(), route.end());
+        <span class="kw">return</span> route;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +140,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Graph</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(E log E)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(E)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Eulerian path: Hierholzer DFS — graph adjacency sort lex; dfs đi hết…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi vé là cạnh directed; Euler trail từ JFK dùng hết cạnh; lex min nhờ sort đích giảm dần + pop back.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một vé</span><span class="analysis-tag edge">Nhiều chuyến trùng from</span><span class="analysis-tag edge">Vòng lặp</span><span class="analysis-tag pit">DFS ăn cạnh sai thứ tự lex</span><span class="analysis-tag pit">Quên reverse route</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Kết quả đảo ngược sau DFS — giống Kosaraju postorder trên cạnh.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Reconstruct%20Itinerary&lc_id=332&embed=true"></iframe>

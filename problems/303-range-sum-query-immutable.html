@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #303</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Range Sum Query - Immutable</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n) khởi tạo, O(1) truy vấn</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>72.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Range Sum Query - Immutable (LeetCode #303) — Easy.</div>
+                        <div class="block-text">Cho mảng số nguyên nums. Thiết kế cấu trúc trả lời nhanh tổng nums[left..right] inclusive cho nhiều truy vấn sumRange(left, right).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [-2,0,3,-5,2,-1], sumRange(0,2), sumRange(2,5), sumRange(0,5)</code></div>
+                <div class="ex-line"><span>Out</span><code>1, -1, -3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3], sumRange(0,0), sumRange(1,2)</code></div>
+                <div class="ex-line"><span>Out</span><code>1, 5</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Prefix sum: pre[i+1] = pre[i] + nums[i]. Truy vấn sumRange(l,r) = pre[r+1] - pre[l] trong O(1).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,38 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> {
+    <span class="ty">long</span> <span class="ty">long</span>* pre;
+    <span class="ty">int</span> n;
+} NumArray;
+NumArray* numArrayCreate(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    NumArray* obj = <span class="kw">malloc</span>(<span class="kw">sizeof</span>(NumArray));
+    obj-&gt;n = n;
+    obj-&gt;pre = <span class="kw">malloc</span>((n + 1) * <span class="kw">sizeof</span>(<span class="ty">long</span> <span class="ty">long</span>));
+    obj-&gt;pre[0] = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) obj-&gt;pre[i + 1] = obj-&gt;pre[i] + nums[i];
+    <span class="kw">return</span> obj;
+}
+<span class="ty">int</span> numArraySumRange(NumArray* obj, <span class="ty">int</span> left, <span class="ty">int</span> right) {
+    <span class="kw">return</span> (<span class="ty">int</span>)(obj-&gt;pre[right + 1] - obj-&gt;pre[left]);
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> NumArray:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]):
+        <span class="ty">self</span>.pre = [0]
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="ty">self</span>.pre.append(<span class="ty">self</span>.pre[-1] + x)
+    <span class="kw">def</span> sumRange(<span class="ty">self</span>, left: <span class="ty">int</span>, right: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">return</span> <span class="ty">self</span>.pre[right + 1] - <span class="ty">self</span>.pre[left]</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> NumArray {
+    <span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; pre;
 <span class="ty">public</span>:
+    NumArray(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        pre.push_back(0);
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums) pre.push_back(pre.back() + x);
+    }
+    <span class="ty">int</span> sumRange(<span class="ty">int</span> left, <span class="ty">int</span> right) {
+        <span class="kw">return</span> pre[right + 1] - pre[left];
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +137,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Prefix sum: pre[i+1] = pre[i] + nums[i].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Truy vấn sumRange = pre[r+1] - pre[l] trong O.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Prefix sum tích lũy đúng mọi phần tử; hiệu hai prefix cho tổng đoạn [l,r].</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">left=right</span><span class="analysis-tag edge">Số âm lớn → dùng long long</span><span class="analysis-tag pit">pre[i] gán nums[i] thay vì tích lũy</span><span class="analysis-tag pit">Nhầm pre[r]-pre[l] thiếu +1 index</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>pre có độ dài n+1; pre[0]=0 → công thức luôn pre[r+1]-pre[l].</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Range%20Sum%20Query%20-%20Immutable&lc_id=303&embed=true"></iframe>

@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Odd Even Linked List (LeetCode #328) — Medium.</div>
+                        <div class="block-text">Sắp xếp lại linked list: nút vị trí lẻ (1-indexed) trước, vị trí chẵn sau, giữ thứ tự tương đối trong từng nhóm.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,3,4,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,3,5,2,4]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [2,1,3,5,6,4,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,3,6,7,1,5,4]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hai con trỏ odd và even: nối odd→odd.next.next, even→even.next.next; cuối odd.next=evenHead.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,41 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> ListNode* oddEvenList(<span class="ty">struct</span> ListNode* head) {
+    <span class="kw">if</span> (!head) <span class="kw">return</span> NULL;
+    <span class="ty">struct</span> ListNode *odd = head, *even = head-&gt;next, *evenHead = even;
+    <span class="kw">while</span> (even &amp;&amp; even-&gt;next) {
+        odd-&gt;next = even-&gt;next; odd = odd-&gt;next;
+        even-&gt;next = odd-&gt;next; even = even-&gt;next;
+    }
+    odd-&gt;next = evenHead;
+    <span class="kw">return</span> head;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> oddEvenList(<span class="ty">self</span>, head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]) -&gt; <span class="ty">Optional</span>[<span class="ty">ListNode</span>]:
+        <span class="kw">if</span> <span class="kw">not</span> head: <span class="kw">return</span> <span class="kw">None</span>
+        odd, even, even_head = head, head.next, head.next
+        <span class="kw">while</span> even <span class="kw">and</span> even.next:
+            odd.next = even.next
+            odd = odd.next
+            even.next = odd.next
+            even = even.next
+        odd.next = even_head
+        <span class="kw">return</span> head</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    ListNode* oddEvenList(ListNode* head) {
+        <span class="kw">if</span> (!head) <span class="kw">return</span> <span class="kw">nullptr</span>;
+        ListNode *odd = head, *even = head-&gt;next, *evenHead = even;
+        <span class="kw">while</span> (even &amp;&amp; even-&gt;next) {
+            odd-&gt;next = even-&gt;next;
+            odd = odd-&gt;next;
+            even-&gt;next = odd-&gt;next;
+            even = even-&gt;next;
+        }
+        odd-&gt;next = evenHead;
+        <span class="kw">return</span> head;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +143,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Hai con trỏ odd và even: nối odd→odd.next.next, even→even.next.next;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Odd chain và even chain tách rời rồi nối — giữ thứ tự trong mỗi nhóm.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Một nút</span><span class="analysis-tag edge">Hai nút</span><span class="analysis-tag pit">Tạo list mới O(n) space</span><span class="analysis-tag pit">Mất evenHead</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Giữ evenHead; chỉ sửa next pointer — O extra.</p>
                     </details>
                 </div>
                 </div>

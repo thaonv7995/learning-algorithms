@@ -3,32 +3,24 @@
   "title": "Lowest Common Ancestor of a Binary Search Tree",
   "difficulty": "Medium",
   "category": "Tree",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(h)",
   "spaceComplexity": "O(1)",
-  "description": "Lowest Common Ancestor of a Binary Search Tree (LeetCode #235) — Medium.",
+  "description": "Cho BST root và hai node p, q (guaranteed tồn tại). Trả LCA — node sâu nhất mà cả p và q đều nằm trong subtree của nó.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8", "output": "6" },
+    { "input": "root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4", "output": "2" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Từ root: nếu p,q < root → trái; nếu cả hai > root → phải; else root là split → LCA.",
+  "memoryTip": "LCA BST = walk until p,q split sides of current node.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def lowestCommonAncestor(self, root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode:\n        cur = root\n        while cur:\n            if p.val < cur.val and q.val < cur.val:\n                cur = cur.left\n            elif p.val > cur.val and q.val > cur.val:\n                cur = cur.right\n            else:\n                return cur",
+    "cpp": "class Solution {\npublic:\n    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {\n        while (root) {\n            if (p->val < root->val && q->val < root->val) root = root->left;\n            else if (p->val > root->val && q->val > root->val) root = root->right;\n            else return root;\n        }\n        return nullptr;\n    }\n};",
+    "c": "struct TreeNode* lowestCommonAncestorBST(struct TreeNode* root, struct TreeNode* p, struct TreeNode* q) {\n    while (root) {\n        if (p->val < root->val && q->val < root->val) root = root->left;\n        else if (p->val > root->val && q->val > root->val) root = root->right;\n        else return root;\n    }\n    return NULL;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "BST order: LCA là node đầu tiên nằm giữa p và q theo giá trị.",
+    "edgeCases": ["p là ancestor của q", "p và q cùng subtree một phía"],
+    "pitfalls": ["Dùng LCA binary tree O(n) không cần", "So sánh pointer thay val"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

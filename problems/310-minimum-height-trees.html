@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #310</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Depth-First Search</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Minimum Height Trees</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>42.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Minimum Height Trees (LeetCode #310) — Medium.</div>
+                        <div class="block-text">Cho cây vô hướng n nút (n-1 cạnh). Root tại bất kỳ nút nào tạo cây có chiều cao. Trả về mọi root cho chiều cao cây nhỏ nhất (MHT).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 4, edges = [[1,0],[1,2],[1,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 6, edges = [[3,0],[3,1],[3,2],[3,4],[5,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[3,4]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Topological peel: bắt đầu từ lá (degree=1), lột dần từng lớp. Nút còn lại cuối (≤2) là tâm cây — root MHT.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,70 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* findMinHeightTrees(<span class="ty">int</span> n, <span class="ty">int</span>** edges, <span class="ty">int</span> edgesSize, <span class="ty">int</span>* retSize) {
+    <span class="kw">if</span> (n &lt;= 2) { <span class="ty">int</span>* r = <span class="kw">malloc</span>(n*<span class="kw">sizeof</span>(<span class="ty">int</span>)); <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++) r[i]=i; *retSize=n; <span class="kw">return</span> r; }
+    <span class="ty">int</span>* deg = <span class="kw">calloc</span>(n, <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="ty">int</span>** adj = <span class="kw">calloc</span>(n, <span class="kw">sizeof</span>(<span class="ty">int</span>*)); <span class="ty">int</span>* alen = <span class="kw">calloc</span>(n, <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; edgesSize; i++) {
+        <span class="ty">int</span> u=edges[i][0], v=edges[i][1]; deg[u]++; deg[v]++;
+        adj[u] = realloc(adj[u], deg[u]*<span class="kw">sizeof</span>(<span class="ty">int</span>)); adj[u][alen[u]++]=v;
+        adj[v] = realloc(adj[v], deg[v]*<span class="kw">sizeof</span>(<span class="ty">int</span>)); adj[v][alen[v]++]=u;
+    }
+    <span class="ty">int</span>* q = <span class="kw">malloc</span>(n*<span class="kw">sizeof</span>(<span class="ty">int</span>)), qs=0, rem=n;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">if</span> (deg[i]==1) q[qs++]=i;
+    <span class="kw">while</span> (rem &gt; 2) {
+        <span class="ty">int</span> sz=qs; rem-=sz; <span class="ty">int</span> nqs=0;
+        <span class="kw">for</span> (<span class="ty">int</span> t=0;t&lt;sz;t++) { <span class="ty">int</span> u=q[t]; <span class="kw">for</span> (<span class="ty">int</span> j=0;j&lt;alen[u];j++) { <span class="ty">int</span> v=adj[u][j]; <span class="kw">if</span> (--deg[v]==1) q[nqs++]=v; } }
+        qs=nqs;
+    }
+    *retSize=qs; <span class="kw">return</span> q;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findMinHeightTrees(<span class="ty">self</span>, n: <span class="ty">int</span>, edges: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        <span class="kw">if</span> n &lt;= 2:
+            <span class="kw">return</span> <span class="ty">list</span>(<span class="ty">range</span>(n))
+        adj = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n)]
+        deg = [0]*n
+        <span class="kw">for</span> u, v <span class="kw">in</span> edges:
+            adj[u].append(v); adj[v].append(u)
+            deg[u] += 1; deg[v] += 1
+        q = [i <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n) <span class="kw">if</span> deg[i] == 1]
+        rem = n
+        <span class="kw">while</span> rem &gt; 2:
+            rem -= <span class="ty">len</span>(q)
+            nxt = []
+            <span class="kw">for</span> u <span class="kw">in</span> q:
+                <span class="kw">for</span> v <span class="kw">in</span> adj[u]:
+                    deg[v] -= 1
+                    <span class="kw">if</span> deg[v] == 1:
+                        nxt.append(v)
+            q = nxt
+        <span class="kw">return</span> q</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findMinHeightTrees(<span class="ty">int</span> n, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; edges) {
+        <span class="kw">if</span> (n &lt;= 2) { <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; r(n); iota(r.begin(), r.end(), 0); <span class="kw">return</span> r; }
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; adj(n);
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; deg(n, 0);
+        <span class="kw">for</span> (auto&amp; e : edges) {
+            adj[e[0]].push_back(e[1]);
+            adj[e[1]].push_back(e[0]);
+            deg[e[0]]++; deg[e[1]]++;
+        }
+        queue&lt;<span class="ty">int</span>&gt; q;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) <span class="kw">if</span> (deg[i] == 1) q.push(i);
+        <span class="ty">int</span> rem = n;
+        <span class="kw">while</span> (rem &gt; 2) {
+            <span class="ty">int</span> sz = q.size(); rem -= sz;
+            <span class="kw">for</span> (<span class="ty">int</span> t = 0; t &lt; sz; t++) {
+                <span class="ty">int</span> u = q.front(); q.pop();
+                <span class="kw">for</span> (<span class="ty">int</span> v : adj[u]) <span class="kw">if</span> (--deg[v] == 1) q.push(v);
+            }
+        }
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="kw">while</span> (!q.empty()) { ans.push_back(q.front()); q.pop(); }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +167,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Depth-First Search</span>
+                        <span class="pattern-chip">Graph</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Topological peel: bắt đầu từ lá , lột dần từng lớp.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nút còn lại cuối là tâm cây — root MHT.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Tâm đường kính cây là root MHT; lột lá đến ≤2 nút cho đúng tâm.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">n=2</span><span class="analysis-tag edge">Chuỗi dài</span><span class="analysis-tag pit">BFS từ mọi nút O(n²)</span><span class="analysis-tag pit">Trả một nút khi có hai tâm</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Giống lột vỏ onion: mỗi vòng bỏ lá; tâm cây đường kính lớn nhất còn 1 hoặc 2 nút.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +196,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Minimum%20Height%20Trees&lc_id=310&embed=true"></iframe>

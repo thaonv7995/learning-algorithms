@@ -2,33 +2,25 @@
   "id": 279,
   "title": "Perfect Squares",
   "difficulty": "Medium",
-  "category": "Math",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Perfect Squares (LeetCode #279) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^{3/2})",
+  "spaceComplexity": "O(n)",
+  "description": "Cho số nguyên n. Trả số lượng số hoàn hảo (square) nhỏ nhất sao cho tổng bằng n (Lagrange: tối đa 4, đề cho DP/BFS).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 12", "output": "3" },
+    { "input": "n = 13", "output": "2" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP: dp[i]=min(dp[i-j*j]+1) với j*j<=i; dp[0]=0. Hoặc BFS layer trên i trừ square.",
+  "memoryTip": "Perfect squares = DP min coins with squares 1,4,9,...",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numSquares(self, n: int) -> int:\n        dp = [0] + [10**9] * n\n        for i in range(1, n + 1):\n            j = 1\n            while j * j <= i:\n                dp[i] = min(dp[i], dp[i - j * j] + 1)\n                j += 1\n        return dp[n]",
+    "cpp": "class Solution {\npublic:\n    int numSquares(int n) {\n        vector<int> dp(n + 1, INT_MAX);\n        dp[0] = 0;\n        for (int i = 1; i <= n; i++)\n            for (int j = 1; j * j <= i; j++)\n                dp[i] = min(dp[i], dp[i - j * j] + 1);\n        return dp[n];\n    }\n};",
+    "c": "int numSquares(int n) {\n    int* dp = malloc((n + 1) * sizeof(int));\n    for (int i = 0; i <= n; i++) dp[i] = 2147483647;\n    dp[0] = 0;\n    for (int i = 1; i <= n; i++)\n        for (int j = 1; j * j <= i; j++) {\n            int v = dp[i - j * j] + 1;\n            if (v < dp[i]) dp[i] = v;\n        }\n    int ans = dp[n];\n    free(dp);\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "dp[i] optimal bằng thử mọi square j² và 1+dp[i-j²].",
+    "edgeCases": ["n=1 → 1", "n perfect square → 1"],
+    "pitfalls": ["BFS cũng OK", "Math four-square theorem không cần phỏng vấn"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

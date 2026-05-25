@@ -3,32 +3,24 @@
   "title": "Rectangle Area",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Rectangle Area (LeetCode #223) — Medium.",
+  "description": "Hai hình chữ nhật song song trục trên mặt phẳng 2D: ax1,ay1,ax2,ay2 và bx1,by1,bx2,by2. Tính tổng diện tích phủ (trừ phần giao).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "ax1=0, ay1=0, ax2=2, ay2=2, bx1=1, by1=1, bx2=3, by2=3", "output": "7" },
+    { "input": "ax1=0, ay1=0, ax2=2, ay2=2, bx1=3, by1=3, bx2=4, by2=4", "output": "8" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "areaA + areaB - overlap; overlap width = max(0, min(ax2,bx2)-max(ax1,bx1)), height tương tự.",
+  "memoryTip": "Union rectangle area = sum areas − intersection rectangle.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def computeArea(self, ax1: int, ay1: int, ax2: int, ay2: int, bx1: int, by1: int, bx2: int, by2: int) -> int:\n        a = (ax2 - ax1) * (ay2 - ay1)\n        b = (bx2 - bx1) * (by2 - by1)\n        w = max(0, min(ax2, bx2) - max(ax1, bx1))\n        h = max(0, min(ay2, by2) - max(ay1, by1))\n        return a + b - w * h",
+    "cpp": "class Solution {\npublic:\n    int computeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2) {\n        long long a = 1LL*(ax2-ax1)*(ay2-ay1);\n        long long b = 1LL*(bx2-bx1)*(by2-by1);\n        long long w = max(0, min(ax2,bx2) - max(ax1,bx1));\n        long long h = max(0, min(ay2,by2) - max(ay1,by1));\n        return (int)(a + b - w*h);\n    }\n};",
+    "c": "int computeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2) {\n    long long a = (long long)(ax2-ax1)*(ay2-ay1);\n    long long b = (long long)(bx2-bx1)*(by2-by1);\n    long long w = (min(ax2,bx2) > max(ax1,bx1)) ? min(ax2,bx2)-max(ax1,bx1) : 0;\n    long long h = (min(ay2,by2) > max(ay1,by1)) ? min(ay2,by2)-max(ay1,by1) : 0;\n    return (int)(a + b - w*h);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Inclusion-exclusion: union = A+B−intersection; overlap 0 nếu không giao.",
+    "edgeCases": ["Không overlap → cộng đơn giản", "Một rect nằm trong rect kia"],
+    "pitfalls": ["int overflow → long long", "Nhầm overlap width/height"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,25 @@
   "id": 345,
   "title": "Reverse Vowels of a String",
   "difficulty": "Easy",
-  "category": "Two Pointers",
+  "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Reverse Vowels of a String (LeetCode #345) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Đảo vị trí các nguyên âm trong chuỗi s, giữ nguyên phụ âm và thứ tự tương đối của chúng.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"hello\"", "output": "\"holle\"" },
+    { "input": "s = \"leetcode\"", "output": "\"leotcede\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers trên mảng char: tìm vowel từ trái/phải, swap, tiếp tục. isVowel check a,e,i,o,u hoa thường.",
+  "memoryTip": "Giống reverse string nhưng chỉ swap khi cả hai là nguyên âm.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reverseVowels(self, s: str) -> str:\n        v = set('aeiouAEIOU')\n        arr = list(s)\n        l, r = 0, len(arr) - 1\n        while l < r:\n            while l < r and arr[l] not in v: l += 1\n            while l < r and arr[r] not in v: r -= 1\n            arr[l], arr[r] = arr[r], arr[l]\n            l += 1; r -= 1\n        return ''.join(arr)",
+    "cpp": "class Solution {\n    bool isV(char c) {\n        return c=='a'||c=='e'||c=='i'||c=='o'||c=='u'||c=='A'||c=='E'||c=='I'||c=='O'||c=='U';\n    }\npublic:\n    string reverseVowels(string s) {\n        int l = 0, r = s.size()-1;\n        while (l < r) {\n            while (l < r && !isV(s[l])) l++;\n            while (l < r && !isV(s[r])) r--;\n            swap(s[l++], s[r--]);\n        }\n        return s;\n    }\n};",
+    "c": "static int isV(char c) {\n    return c=='a'||c=='e'||c=='i'||c=='o'||c=='u'||c=='A'||c=='E'||c=='I'||c=='O'||c=='U';\n}\nchar* reverseVowels(char* s) {\n    int l=0, r=strlen(s)-1;\n    while (l<r) {\n        while (l<r && !isV(s[l])) l++;\n        while (l<r && !isV(s[r])) r--;\n        char t=s[l]; s[l]=s[r]; s[r]=t; l++; r--;\n    }\n    return s;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Chỉ hoán vị nguyên âm theo cặp đối xứng — phụ âm giữ nguyên vị trí.",
+    "edgeCases": ["Không có nguyên âm", "Một nguyên âm", "Toàn nguyên âm"],
+    "pitfalls": ["Quên chữ hoa", "Two pointer không skip phụ âm"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

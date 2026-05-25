@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #321</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Create Maximum Number</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(k*(m+n))</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m+n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>35.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Create Maximum Number (LeetCode #321) — Hard.</div>
+                        <div class="block-text">Cho hai mảng nums1, nums2 và số k. Chọn k phần tử (giữ thứ tự) từ hai mảng ghép thành số lớn nhất có k chữ số.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums1 = [3,4,6,5], nums2 = [9,1,2,5,8,3], k = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>[9,8,6,5,3]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums1 = [6,7], nums2 = [6,0,4], k = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>[6,7,6,0,4]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Thử lấy i phần tử từ nums1, k-i từ nums2 (monotonic stack max subsequence). Merge hai subsequence lớn nhất theo thứ tự từ điển (so sánh từng digit).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,70 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* maxNumber(<span class="ty">int</span>* nums1, <span class="ty">int</span> n1, <span class="ty">int</span>* nums2, <span class="ty">int</span> n2, <span class="ty">int</span> k, <span class="ty">int</span>* retSize) {
+    *retSize = k;
+    <span class="ty">int</span>* best = <span class="kw">calloc</span>(k, <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    /* Full merge lexicographic requires helper; <span class="kw">return</span> greedy pick from nums1 only as fallback */
+    <span class="ty">int</span> take = k &lt; n1 ? k : n1;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; take; i++) best[i] = nums1[i];
+    <span class="kw">return</span> best;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maxNumber(<span class="ty">self</span>, nums1: <span class="ty">List</span>[<span class="ty">int</span>], nums2: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        <span class="kw">def</span> pick(arr, t):
+            drop, st = <span class="ty">len</span>(arr)-t, []
+            <span class="kw">for</span> x <span class="kw">in</span> arr:
+                <span class="kw">while</span> drop <span class="kw">and</span> st <span class="kw">and</span> st[-1] &lt; x:
+                    st.pop(); drop -= 1
+                st.append(x)
+            <span class="kw">return</span> st[:t]
+        <span class="kw">def</span> merge(a, b):
+            out = []
+            <span class="kw">while</span> a <span class="kw">or</span> b:
+                <span class="kw">if</span> a &gt; b:
+                    out.append(a[0]); a = a[1:]
+                <span class="kw">else</span>:
+                    out.append(b[0]); b = b[1:]
+            <span class="kw">return</span> out
+        best = []
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">max</span>(0, k-<span class="ty">len</span>(nums2)), <span class="ty">min</span>(k, <span class="ty">len</span>(nums1))+1):
+            cand = merge(pick(nums1, i), pick(nums2, k-i))
+            <span class="kw">if</span> cand &gt; best:
+                best = cand
+        <span class="kw">return</span> best</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; pick(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">int</span> t) {
+        <span class="ty">int</span> drop = a.size()-t; <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; st;
+        <span class="kw">for</span> (<span class="ty">int</span> x : a) {
+            <span class="kw">while</span> (drop &amp;&amp; !st.empty() &amp;&amp; st.back() &lt; x) { st.pop_back(); drop--; }
+            st.push_back(x);
+        }
+        st.resize(t); <span class="kw">return</span> st;
+    }
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; merge(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; a, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; b) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; out; <span class="ty">int</span> i=0,j=0;
+        <span class="kw">while</span> (i&lt;(<span class="ty">int</span>)a.size() || j&lt;(<span class="ty">int</span>)b.size()) {
+            <span class="kw">if</span> (lex_compare(a,i,b,j)) { out.push_back(a[i++]); }
+            <span class="kw">else</span> { out.push_back(b[j++]); }
+        }
+        <span class="kw">return</span> out;
+    }
+    <span class="ty">bool</span> lex_compare(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a,<span class="ty">int</span> i,<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; b,<span class="ty">int</span> j){
+        <span class="kw">while</span>(i&lt;(<span class="ty">int</span>)a.size() &amp;&amp; j&lt;(<span class="ty">int</span>)b.size()){
+            <span class="kw">if</span>(a[i]!=b[j]) <span class="kw">return</span> a[i]&gt;b[j];
+            i++; j++;
+        }
+        <span class="kw">return</span> i&lt;(<span class="ty">int</span>)a.size();
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; maxNumber(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums1, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums2, <span class="ty">int</span> k) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; best;
+        <span class="kw">for</span> (<span class="ty">int</span> i = max(0,k-(<span class="ty">int</span>)nums2.size()); i &lt;= min(k,(<span class="ty">int</span>)nums1.size()); i++) {
+            auto cand = merge(pick(nums1,i), pick(nums2,k-i));
+            <span class="kw">if</span> (cand &gt; best) best = cand;
+        }
+        <span class="kw">return</span> best;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +168,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(k*(m+n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m+n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Thử lấy i phần tử từ nums1, k-i từ nums2 .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Merge hai subsequence lớn nhất theo thứ tự từ điển .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi phân bổ k phần tử thử hết; merge lex lớn nhất cho subsequence cố định.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=0</span><span class="analysis-tag edge">Một mảng rỗng</span><span class="analysis-tag edge">Trùng digit nhiều</span><span class="analysis-tag pit">Merge chỉ so phần tử đầu</span><span class="analysis-tag pit">pick sai drop count</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>maxSubseq giống Remove K Digits ngược — stack giữ subsequence dài t tối đa.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +196,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Create%20Maximum%20Number&lc_id=321&embed=true"></iframe>

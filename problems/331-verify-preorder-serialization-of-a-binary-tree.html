@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #331</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Verify Preorder Serialization of a Binary Tree</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Verify Preorder Serialization of a Binary Tree (LeetCode #331) — Medium.</div>
+                        <div class="block-text">Chuỗi preorder serialization dùng số nút và '#' đánh dấu null. Kiểm tra chuỗi có mô tả cây nhị phân hợp lệ không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>preorder = &quot;9,3,4,#,#,1,#,#,6,#,#,#&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>preorder = &quot;1,#&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>preorder = &quot;9,#,#,1&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Slot counting: bắt đầu slots=1; mỗi token tốn 1 slot; '#' thêm 1 slot, số thêm 2 slot; hết chuỗi slots==0.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> isValidSerialization(<span class="ty">char</span>* preorder) {
+    <span class="ty">int</span> slots = 1;
+    <span class="ty">char</span>* tok = strtok(preorder, &quot;,&quot;);
+    <span class="kw">while</span> (tok) {
+        slots--;
+        <span class="kw">if</span> (slots &lt; 0) <span class="kw">return</span> false;
+        <span class="kw">if</span> (tok[0] != '#' || tok[1]) slots += 2;
+        tok = strtok(NULL, &quot;,&quot;);
+    }
+    <span class="kw">return</span> slots == 0;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isValidSerialization(<span class="ty">self</span>, preorder: <span class="ty">str</span>) -&gt; bool:
+        slots = 1
+        <span class="kw">for</span> node <span class="kw">in</span> preorder.split(','):
+            slots -= 1
+            <span class="kw">if</span> slots &lt; 0:
+                <span class="kw">return</span> <span class="kw">False</span>
+            <span class="kw">if</span> node != '<span class="cm">#':</span>
+                slots += 2
+        <span class="kw">return</span> slots == 0</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isValidSerialization(<span class="ty">string</span> preorder) {
+        <span class="ty">int</span> slots = 1;
+        <span class="ty">string</span> cur;
+        <span class="kw">for</span> (<span class="ty">char</span> c : preorder + ',') {
+            <span class="kw">if</span> (c == ',') {
+                slots--;
+                <span class="kw">if</span> (slots &lt; 0) <span class="kw">return</span> false;
+                <span class="kw">if</span> (cur != &quot;#&quot;) slots += 2;
+                cur.clear();
+            } <span class="kw">else</span> cur.push_back(c);
+        }
+        <span class="kw">return</span> slots == 0;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +149,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Slot counting: bắt đầu slots=1; mỗi token tốn 1 slot; '#' thêm 1 slot,…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Slots mô hình số chỗ trống còn lại trong cây đang dựng; âm hoặc dư slot ⇒ invalid.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chỉ &quot;#&quot;</span><span class="analysis-tag edge">Một nút &quot;1,#,#&quot;</span><span class="analysis-tag edge">Thừa token</span><span class="analysis-tag pit">Stack rebuild phức tạp hơn cần</span><span class="analysis-tag pit">Quên slots-- trước khi check</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Mỗi nút thật tạo thêm 2 chỗ con; null chỉ tiêu thụ không tạo thêm .</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Verify%20Preorder%20Serialization%20of%20a%20Binary%20Tree&lc_id=331&embed=true"></iframe>

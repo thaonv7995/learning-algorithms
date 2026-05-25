@@ -3,32 +3,24 @@
   "title": "Different Ways to Add Parentheses",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Different Ways to Add Parentheses (LeetCode #241) — Medium.",
+  "timeComplexity": "O(4^n)",
+  "spaceComplexity": "O(4^n)",
+  "description": "Chuỗi expression gồm số nguyên và toán tử +, -, * (không có ngoặc sẵn). Trả mọi giá trị có thể khi thêm ngoặc hợp lệ (không đổi thứ tự số và op).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "expression = \"2-1-1\"", "output": "[0,2]" },
+    { "input": "expression = \"2*3-4*5\"", "output": "[-34,-14,-10,-10,10]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Divide & conquer + memo: với mỗi op ở i, tách trái/phải, kết hợp mọi cặp kết quả con the op[i].",
+  "memoryTip": "Add parentheses = split at each operator, combine left×right results.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def diffWaysToCompute(self, expression: str) -> List[int]:\n        memo = {}\n        def dfs(s):\n            if s in memo:\n                return memo[s]\n            if s.isdigit():\n                return [int(s)]\n            res = []\n            for i, c in enumerate(s):\n                if c in '+-*':\n                    for a in dfs(s[:i]):\n                        for b in dfs(s[i+1:]):\n                            if c == '+': res.append(a + b)\n                            elif c == '-': res.append(a - b)\n                            else: res.append(a * b)\n            memo[s] = res\n            return res\n        return dfs(expression)",
+    "cpp": "class Solution {\n    unordered_map<string, vector<int>> memo;\n    vector<int> dfs(string s) {\n        if (memo.count(s)) return memo[s];\n        vector<int> res;\n        bool allDigit = true;\n        for (char c : s) if (!isdigit(c)) { allDigit = false; break; }\n        if (allDigit) return {stoi(s)};\n        for (int i = 0; i < (int)s.size(); i++) {\n            if (s[i] == '+' || s[i] == '-' || s[i] == '*') {\n                auto L = dfs(s.substr(0, i)), R = dfs(s.substr(i + 1));\n                for (int a : L) for (int b : R) {\n                    if (s[i] == '+') res.push_back(a + b);\n                    else if (s[i] == '-') res.push_back(a - b);\n                    else res.push_back(a * b);\n                }\n            }\n        }\n        return memo[s] = res;\n    }\npublic:\n    vector<int> diffWaysToCompute(string expression) { return dfs(expression); }\n};",
+    "c": "static int eval241(int a, int b, char op) {\n    if (op == '+') return a + b;\n    if (op == '-') return a - b;\n    return a * b;\n}\nstatic int* dfs241(char* s, int* sz) {\n    int allDigit = 1;\n    for (int i = 0; s[i]; i++) if (s[i] < '0' || s[i] > '9') { allDigit = 0; break; }\n    if (allDigit) { int* r = malloc(sizeof(int)); *r = atoi(s); *sz = 1; return r; }\n    int cap = 8, n = 0; int* res = malloc(cap * sizeof(int));\n    for (int i = 0; s[i]; i++) {\n        if (s[i] == '+' || s[i] == '-' || s[i] == '*') {\n            char tmp = s[i]; s[i] = 0;\n            int ls, rs;\n            int* L = dfs241(s, &ls);\n            int* R = dfs241(s + i + 1, &rs);\n            s[i] = tmp;\n            for (int a = 0; a < ls; a++) for (int b = 0; b < rs; b++) {\n                if (n >= cap) { cap *= 2; res = realloc(res, cap * sizeof(int)); }\n                res[n++] = eval241(L[a], R[b], tmp);\n            }\n            free(L); free(R);\n        }\n    }\n    *sz = n; return res;\n}\nint* diffWaysToCompute(char* expression, int* rs) { return dfs241(expression, rs); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi cách parenthesize tương ứng một lần split tại một op; đệ quy bao phủ.",
+    "edgeCases": ["Một số không op → [n]", "Nhiều kết quả trùng trong list"],
+    "pitfalls": ["Không memo → exponential lặp", "Parse số nhiều chữ số sai"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

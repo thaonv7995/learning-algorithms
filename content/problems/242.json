@@ -2,33 +2,25 @@
   "id": 242,
   "title": "Valid Anagram",
   "difficulty": "Easy",
-  "category": "String",
+  "category": "Hash Table",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Valid Anagram (LeetCode #242) — Easy.",
+  "description": "Cho hai chuỗi s và t. Trả true nếu t là anagram của s (cùng ký tự, khác thứ tự hoán vị).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"anagram\", t = \"nagaram\"", "output": "true" },
+    { "input": "s = \"rat\", t = \"car\"", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm tần suất 26 chữ cái cho s (+1) và t (-1); mọi count = 0 → anagram.",
+  "memoryTip": "Valid anagram = frequency count or sort equal strings.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isAnagram(self, s: str, t: str) -> bool:\n        if len(s) != len(t):\n            return False\n        cnt = [0] * 26\n        for a, b in zip(s, t):\n            cnt[ord(a) - 97] += 1\n            cnt[ord(b) - 97] -= 1\n        return all(c == 0 for c in cnt)",
+    "cpp": "class Solution {\npublic:\n    bool isAnagram(string s, string t) {\n        if (s.size() != t.size()) return false;\n        int cnt[26] = {};\n        for (int i = 0; i < (int)s.size(); i++) {\n            cnt[s[i] - 'a']++;\n            cnt[t[i] - 'a']--;\n        }\n        for (int c : cnt) if (c) return false;\n        return true;\n    }\n};",
+    "c": "bool isAnagram(char* s, char* t) {\n    int cnt[26] = {0};\n    for (; *s && *t; s++, t++) {\n        cnt[*s - 'a']++;\n        cnt[*t - 'a']--;\n    }\n    if (*s || *t) return false;\n    for (int i = 0; i < 26; i++) if (cnt[i]) return false;\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Anagram ⇔ multiset ký tự giống nhau ⇔ count balance zero.",
+    "edgeCases": ["Độ dài khác → false", "Chuỗi rỗng → true"],
+    "pitfalls": ["Sort O(n log n) chấp nhận được", "Counter chỉ một chuỗi thiếu so sánh"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

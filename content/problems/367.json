@@ -3,32 +3,24 @@
   "title": "Valid Perfect Square",
   "difficulty": "Easy",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Valid Perfect Square (LeetCode #367) — Easy.",
+  "description": "Kiểm tra số nguyên dương num có phải số chính phương không (tồn tại k nguyên với k*k=num).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "num = 16", "output": "true" },
+    { "input": "num = 14", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search trên k trong [1, num]: mid*mid so với num; tránh overflow dùng long long.",
+  "memoryTip": "BS trên câu trả lời k — O(log n) không cần sqrt float.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isPerfectSquare(self, num: int) -> bool:\n        lo, hi = 1, num\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            sq = mid * mid\n            if sq == num: return True\n            if sq < num: lo = mid + 1\n            else: hi = mid - 1\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool isPerfectSquare(int num) {\n        long long lo = 1, hi = num;\n        while (lo <= hi) {\n            long long mid = (lo + hi) / 2;\n            long long sq = mid * mid;\n            if (sq == num) return true;\n            if (sq < num) lo = mid + 1;\n            else hi = mid - 1;\n        }\n        return false;\n    }\n};",
+    "c": "bool isPerfectSquare(int num) {\n    long long lo = 1, hi = num;\n    while (lo <= hi) {\n        long long mid = (lo + hi) / 2;\n        long long sq = mid * mid;\n        if (sq == num) return true;\n        if (sq < num) lo = mid + 1;\n        else hi = mid - 1;\n    }\n    return false;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Binary search tìm k với k²=num; không gian tìm kiếm thu hẹp đúng.",
+    "edgeCases": ["num=1", "num=INT_MAX perfect square", "num=2"],
+    "pitfalls": ["mid*mid overflow int", "sqrt float sai số"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

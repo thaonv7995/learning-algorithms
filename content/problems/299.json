@@ -5,30 +5,22 @@
   "category": "Hash Table",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Bulls and Cows (LeetCode #299) — Medium.",
+  "description": "Trò Mastermind: secret và guess là chuỗi 4 chữ số. Bulls = đúng vị trí; Cows = đúng digit sai vị trí (không đếm bulls). Trả \"xAyB\".",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "secret = \"1807\", guess = \"7810\"", "output": "\"1A3B\"" },
+    { "input": "secret = \"1123\", guess = \"0111\"", "output": "\"1A1B\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Một pass: bulls khi secret[i]==guess[i]; else tăng count secret digit và guess digit; cows += min(counts) sau pass.",
+  "memoryTip": "Bulls and cows = count bulls direct; hash 0-9 for misplaced pairs.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def getHint(self, secret: str, guess: str) -> str:\n        bulls = 0\n        cnt_s = [0] * 10\n        cnt_g = [0] * 10\n        for a, b in zip(secret, guess):\n            if a == b:\n                bulls += 1\n            else:\n                cnt_s[int(a)] += 1\n                cnt_g[int(b)] += 1\n        cows = sum(min(cnt_s[i], cnt_g[i]) for i in range(10))\n        return f\"{bulls}A{cows}B\"",
+    "cpp": "class Solution {\npublic:\n    string getHint(string secret, string guess) {\n        int bulls = 0, cntS[10] = {}, cntG[10] = {};\n        for (int i = 0; i < (int)secret.size(); i++) {\n            if (secret[i] == guess[i]) bulls++;\n            else { cntS[secret[i]-'0']++; cntG[guess[i]-'0']++; }\n        }\n        int cows = 0;\n        for (int i = 0; i < 10; i++) cows += min(cntS[i], cntG[i]);\n        return to_string(bulls) + \"A\" + to_string(cows) + \"B\";\n    }\n};",
+    "c": "char* getHint(char* secret, char* guess) {\n    int bulls = 0, cntS[10] = {0}, cntG[10] = {0};\n    for (int i = 0; secret[i]; i++) {\n        if (secret[i] == guess[i]) bulls++;\n        else { cntS[secret[i]-'0']++; cntG[guess[i]-'0']++; }\n    }\n    int cows = 0;\n    for (int i = 0; i < 10; i++) cows += cntS[i] < cntG[i] ? cntS[i] : cntG[i];\n    char* out = malloc(16);\n    snprintf(out, 16, \"%dA%dB\", bulls, cows);\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Bulls đếm trực tiếp; cows = tổng min frequency digit không khớp vị trí.",
+    "edgeCases": ["Trùng digit nhiều", "Toàn bulls → nA0B"],
+    "pitfalls": ["Đếm cows gồm bulls", "O(n²) pairwise compare"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

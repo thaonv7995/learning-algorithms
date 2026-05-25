@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #227</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Basic Calculator II</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Basic Calculator II (LeetCode #227) — Medium.</div>
+                        <div class="block-text">Chuỗi s gồm số nguyên không âm và '+', '-', '*', '/' (chia lấy phần nguyên). Không có ngoặc. Tính giá trị biểu thức.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;3+2*2&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>7</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot; 3/2 &quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot; 3+5 / 2 &quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt: num hiện tại; gặp */ tính ngay với last; gặp +- push last vào result, last=±num. Cuối cộng result+last.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,59 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> calculate2(<span class="ty">char</span>* s) {
+    <span class="ty">int</span> num = 0, last = 0, result = 0;
+    <span class="ty">char</span> op = '+';
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; s[i]; i++) {
+        <span class="kw">if</span> (s[i] &gt;= '0' &amp;&amp; s[i] &lt;= '9') num = num * 10 + (s[i] - '0');
+        <span class="kw">if</span> ((!isdigit((<span class="ty">unsigned</span> <span class="ty">char</span>)s[i]) &amp;&amp; !isspace((<span class="ty">unsigned</span> <span class="ty">char</span>)s[i])) || s[i+1]==0) {
+            <span class="kw">if</span> (op == '+') { result += last; last = num; }
+            <span class="kw">else</span> <span class="kw">if</span> (op == '-') { result += last; last = -num; }
+            <span class="kw">else</span> <span class="kw">if</span> (op == '*') last *= num;
+            <span class="kw">else</span> <span class="kw">if</span> (op == '/') last /= num;
+            op = s[i]; num = 0;
+        }
+    }
+    <span class="kw">return</span> result + last;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> calculate(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        s = s.replace(' ', '')
+        n, num, last, result, op = <span class="ty">len</span>(s), 0, 0, 0, '+'
+        <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(s):
+            <span class="kw">if</span> c.isdigit():
+                num = num * 10 + <span class="ty">int</span>(c)
+            <span class="kw">if</span> <span class="kw">not</span> c.isdigit() <span class="kw">or</span> i == n - 1:
+                <span class="kw">if</span> op == '+':
+                    result += last
+                    last = num
+                <span class="kw">elif</span> op == '-':
+                    result += last
+                    last = -num
+                <span class="kw">elif</span> op == '*':
+                    last *= num
+                <span class="kw">elif</span> op == '/':
+                    last = <span class="ty">int</span>(last / num)
+                op = c
+                num = 0
+        <span class="kw">return</span> result + last</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> calculate(<span class="ty">string</span> s) {
+        <span class="ty">int</span> n = s.size(), num = 0, last = 0, result = 0;
+        <span class="ty">char</span> op = '+';
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+            <span class="kw">if</span> (isdigit(s[i])) num = num * 10 + (s[i] - '0');
+            <span class="kw">if</span> (!isdigit(s[i]) &amp;&amp; !isspace(s[i]) || i == n - 1) {
+                <span class="kw">if</span> (op == '+') { result += last; last = num; }
+                <span class="kw">else</span> <span class="kw">if</span> (op == '-') { result += last; last = -num; }
+                <span class="kw">else</span> <span class="kw">if</span> (op == '*') last *= num;
+                <span class="kw">else</span> <span class="kw">if</span> (op == '/') last /= num;
+                op = s[i]; num = 0;
+            }
+        }
+        <span class="kw">return</span> result + last;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +161,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Math</span>
+                        <span class="pattern-chip">Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Duyệt: num hiện tại; gặp */ tính ngay với last; gặp +-…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Cuối cộng result+last.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>*/ gắn với toán hạng trước (last); +- tích lũy result và reset last.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một số</span><span class="analysis-tag edge">Chia 0 không xảy ra theo đề</span><span class="analysis-tag pit">Quên flush số cuối</span><span class="analysis-tag pit">Dùng float thay int division</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Calc II = last number + */ immediate; +- defer to stack/sum.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +190,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Basic%20Calculator%20II&lc_id=227&embed=true"></iframe>

@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Mini Parser (LeetCode #385) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Chuỗi s biểu diễn nested integer list (NestedInteger API). Parse thành cấu trúc lồng nhau.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"324\"", "output": "324" },
+    { "input": "s = \"[123,[456,[789]]]\"", "output": "[123,[456,[789]]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack + recursive/iterative: gặp '[' push NestedInteger mới; số parse digits; ']' pop và add vào parent; ',' skip.",
+  "memoryTip": "DFS iterative — stack NestedInteger* đang build.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def deserialize(self, s: str) -> NestedInteger:\n        if s[0] != '[':\n            return NestedInteger(int(s))\n        st, cur = [], None\n        num = ''\n        for c in s:\n            if c == '[':\n                if cur is not None: st.append(cur)\n                cur = NestedInteger()\n            elif c == ']':\n                if num:\n                    cur.add(NestedInteger(int(num))); num = ''\n                if st:\n                    parent = st.pop(); parent.add(cur); cur = parent\n            elif c == ',':\n                if num:\n                    cur.add(NestedInteger(int(num))); num = ''\n            else:\n                num += c\n        return cur",
+    "cpp": "class Solution {\npublic:\n    NestedInteger deserialize(string s) {\n        if (s.empty()) return NestedInteger();\n        if (s[0] != '[') return NestedInteger(stoi(s));\n        stack<NestedInteger> st;\n        NestedInteger cur;\n        int num = 0; bool neg = false, inNum = false;\n        for (char c : s) {\n            if (c == '[') { if (inNum || !st.empty() || cur.isInteger()==false && !cur.getList().empty()) st.push(cur); cur = NestedInteger(); inNum=false; }\n            else if (c == ']') { if (inNum) { cur.add(NestedInteger(num)); num=0; inNum=false; } if (!st.empty()) { NestedInteger p = st.top(); st.pop(); p.add(cur); cur = p; } }\n            else if (c == ',') { if (inNum) { cur.add(NestedInteger(num)); num=0; inNum=false; } }\n            else if (c == '-') neg = true;\n            else { inNum = true; num = num*10 + (c-'0'); if (neg) { num = -num; neg=false; } }\n        }\n        return cur;\n    }\n};",
+    "c": "struct NestedInteger deserialize(char* s) {\n    struct NestedInteger ni; return ni;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Stack mô phỏng cấu trúc lồng nhau; đóng ']' gắn list con vào cha.",
+    "edgeCases": ["Số đơn không list", "List rỗng []", "Số âm"],
+    "pitfalls": ["Parse digit quên flush trước ]", "Recursive depth sâu"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

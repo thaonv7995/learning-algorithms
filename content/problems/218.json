@@ -3,32 +3,24 @@
   "title": "The Skyline Problem",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "The Skyline Problem (LeetCode #218) — Hard.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Danh sách buildings[i]=[left, right, height]. Trả key points [x, height] mô tả đường skyline khi quét từ trái sang phải (height thay đổi mới ghi).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "buildings = [[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]", "output": "[[2,10],[3,15],[7,12],[12,0],[15,10],[20,8],[24,0]]" },
+    { "input": "buildings = [[0,2,3],[2,5,3]]", "output": "[[0,3],[5,0]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sweep line: events (left, -h), (right, h); sort; multiset max height; khi max đổi push [x, newMax].",
+  "memoryTip": "Skyline = sweep events + max-heap/multiset theo dõi chiều cao active.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:\n        events = []\n        for l, r, h in buildings:\n            events.append((l, -h))\n            events.append((r, h))\n        events.sort()\n        res, heights = [], [0]\n        import bisect\n        for x, h in events:\n            if h < 0:\n                bisect.insort(heights, -h)\n            else:\n                heights.remove(h)\n            cur = heights[-1]\n            if not res or res[-1][1] != cur:\n                res.append([x, cur])\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> getSkyline(vector<vector<int>>& b) {\n        vector<pair<int,int>> ev;\n        for (auto& x : b) { ev.push_back({x[0], -x[2]}); ev.push_back({x[1], x[2]}); }\n        sort(ev.begin(), ev.end());\n        multiset<int> hs = {0};\n        vector<vector<int>> res;\n        for (auto& [x, h] : ev) {\n            if (h < 0) hs.insert(-h);\n            else hs.erase(hs.find(h));\n            int cur = *hs.rbegin();\n            if (res.empty() || res.back()[1] != cur)\n                res.push_back({x, cur});\n        }\n        return res;\n    }\n};",
+    "c": "typedef struct { int x, h; } Ev;\nstatic int cmpEv(const void* a, const void* b) {\n    Ev* ea = (Ev*)a; Ev* eb = (Ev*)b;\n    if (ea->x != eb->x) return ea->x - eb->x;\n    return ea->h - eb->h;\n}\nint** getSkyline(int** b, int bn, int* bc, int* rs, int* rc) {\n    Ev* ev = malloc(bn * 2 * sizeof(Ev));\n    int ec = 0;\n    for (int i = 0; i < bn; i++) {\n        ev[ec++] = (Ev){b[i][0], -b[i][2]};\n        ev[ec++] = (Ev){b[i][1], b[i][2]};\n    }\n    qsort(ev, ec, sizeof(Ev), cmpEv);\n    int* hs = calloc(bn * 2 + 1, sizeof(int)); hs[0] = 0; int hsz = 1;\n    int** out = malloc(bn * 2 * sizeof(int*)); *rs = 0; *rc = 2;\n    for (int i = 0; i < ec; i++) {\n        int h = ev[i].h;\n        if (h < 0) { hs[hsz++] = -h; } else {\n            for (int j = 0; j < hsz; j++) if (hs[j] == h) { hs[j] = hs[--hsz]; break; }\n        }\n        int cur = 0; for (int j = 0; j < hsz; j++) if (hs[j] > cur) cur = hs[j];\n        if (*rs == 0 || out[*rs - 1][1] != cur) {\n            out[*rs] = malloc(2 * sizeof(int));\n            out[*rs][0] = ev[i].x; out[*rs][1] = cur; (*rs)++;\n        }\n    }\n    free(ev); free(hs); return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Max active height tại mỗi x sweep quyết định skyline; chỉ ghi khi max đổi.",
+    "edgeCases": ["Hai tòa cùng cao overlap", "Một tòa"],
+    "pitfalls": ["Sort event cùng x: start trước end", "Quên push [x,0] khi hết building"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

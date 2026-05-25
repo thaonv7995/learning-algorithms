@@ -2,33 +2,25 @@
   "id": 371,
   "title": "Sum of Two Integers",
   "difficulty": "Medium",
-  "category": "Math",
-  "timeComplexity": "O(n)",
+  "category": "Bit Manipulation",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Sum of Two Integers (LeetCode #371) — Medium.",
+  "description": "Cho hai số nguyên a và b. Tính tổng a+b không được dùng toán tử cộng (+) và trừ (-); chỉ dùng phép bit và logic.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "a = 1, b = 2", "output": "3" },
+    { "input": "a = 2, b = 3", "output": "5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "XOR cho sum không carry; AND<<1 cho carry; lặp đến carry=0. Xử lý số âm với mask 32-bit trong Python.",
+  "memoryTip": "a^b = tổng không nhớ; (a&b)<<1 = nhớ sang bit cao.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def getSum(self, a: int, b: int) -> int:\n        mask = 0xFFFFFFFF\n        while b:\n            a, b = (a ^ b) & mask, ((a & b) << 1) & mask\n        return a if a <= 0x7FFFFFFF else ~(a ^ mask)",
+    "cpp": "class Solution {\npublic:\n    int getSum(int a, int b) {\n        while (b) {\n            unsigned carry = (unsigned)(a & b) << 1;\n            a = a ^ b;\n            b = (int)carry;\n        }\n        return a;\n    }\n};",
+    "c": "int getSum(int a, int b) {\n    while (b) {\n        int carry = (a & b) << 1;\n        a = a ^ b;\n        b = carry;\n    }\n    return a;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi vòng tách sum và carry đúng cơ chế cộng nhị phân; dừng khi không còn nhớ.",
+    "edgeCases": ["a=0 hoặc b=0", "Cùng dấu âm", "INT_MIN + INT_MIN overflow C"],
+    "pitfalls": ["Python cần mask 32-bit", "Quên shift carry"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -5,30 +5,22 @@
   "category": "Depth-First Search",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Lexicographical Numbers (LeetCode #386) — Medium.",
+  "description": "Trả mảng số từ 1..n theo thứ tự từ điển (coi số như chuỗi: 1,10,11,...,2,20,...).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 13", "output": "[1,10,11,12,13,2,3,4,5,6,7,8,9]" },
+    { "input": "n = 2", "output": "[1,2]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS trên cây 10-ary ảo: từ cur, thử cur*10 và cur+1 nếu ≤n; không cần stack — vòng while next number.",
+  "memoryTip": "Next lex number: nếu n%10<9 và n+1≤limit thì n++; else while n%10==9 n/=10; n++.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def lexicalOrder(self, n: int) -> List[int]:\n        ans, cur = [], 1\n        for _ in range(n):\n            ans.append(cur)\n            if cur * 10 <= n:\n                cur *= 10\n            elif cur % 10 != 9 and cur + 1 <= n:\n                cur += 1\n            else:\n                cur //= 10\n                while cur % 10 == 9:\n                    cur //= 10\n                cur += 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> lexicalOrder(int n) {\n        vector<int> ans; int cur = 1;\n        for (int i = 0; i < n; i++) {\n            ans.push_back(cur);\n            if (cur * 10 <= n) cur *= 10;\n            else if (cur % 10 != 9 && cur + 1 <= n) cur++;\n            else {\n                cur /= 10;\n                while (cur % 10 == 9) cur /= 10;\n                cur++;\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int* lexicalOrder(int n, int* retSize) {\n    int* ans = malloc(n * sizeof(int)); *retSize = n;\n    int cur = 1;\n    for (int i = 0; i < n; i++) {\n        ans[i] = cur;\n        if (cur * 10 <= n) cur *= 10;\n        else if (cur % 10 != 9 && cur + 1 <= n) cur++;\n        else { cur /= 10; while (cur % 10 == 9) cur /= 10; cur++; }\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Thứ tự DFS preorder trên cây số prefix; next pointer mô phỏng DFS không đệ quy.",
+    "edgeCases": ["n=1", "n=9", "Chuyển 9→10 lex"],
+    "pitfalls": ["Sort string O(n log n)", "Quên backtrack qua 9"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

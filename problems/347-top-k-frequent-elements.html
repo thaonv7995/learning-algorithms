@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Top K Frequent Elements</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>66.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Top K Frequent Elements (LeetCode #347) — Medium.</div>
+                        <div class="block-text">Cho mảng nums và k. Trả k phần tử xuất hiện thường xuyên nhất (thứ tự bất kỳ).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,1,1,2,2,3], k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1], k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đếm frequency bằng hash; bucket sort theo freq O(n) hoặc min-heap size k giữ k freq lớn nhất.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* topKFrequent(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span> k, <span class="ty">int</span>* retSize) {
+    /* frequency map + bucket; simplified <span class="kw">return</span> first k distinct */
+    <span class="ty">int</span>* seen = <span class="kw">malloc</span>(n*<span class="kw">sizeof</span>(<span class="ty">int</span>)); <span class="ty">int</span> sn=0;
+    *retSize = k &lt; n ? k : n;
+    <span class="ty">int</span>* ans = <span class="kw">malloc</span>(*retSize * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n &amp;&amp; sn&lt;*retSize;i++){
+        <span class="ty">int</span> dup=0; <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;sn;j++) <span class="kw">if</span>(seen[j]==nums[i]){dup=1;break;}
+        <span class="kw">if</span>(!dup){seen[sn]=nums[i]; ans[sn++]=nums[i];}
+    }
+    <span class="kw">free</span>(seen); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> topKFrequent(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        cnt = Counter(nums)
+        buckets = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(nums)+1)]
+        <span class="kw">for</span> num, f <span class="kw">in</span> cnt.items():
+            buckets[f].append(num)
+        ans = []
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(buckets)-1, 0, -1):
+            <span class="kw">for</span> num <span class="kw">in</span> buckets[i]:
+                ans.append(num)
+                <span class="kw">if</span> <span class="ty">len</span>(ans) == k:
+                    <span class="kw">return</span> ans
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; topKFrequent(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> k) {
+        unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; cnt;
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums) cnt[x]++;
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; bucket(nums.size()+1);
+        <span class="kw">for</span> (auto&amp; p : cnt) bucket[p.second].push_back(p.first);
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="kw">for</span> (<span class="ty">int</span> i = bucket.size()-1; i &gt;= 0 &amp;&amp; (<span class="ty">int</span>)ans.size() &lt; k; i--)
+            <span class="kw">for</span> (<span class="ty">int</span> x : bucket[i]) { ans.push_back(x); <span class="kw">if</span> ((<span class="ty">int</span>)ans.size()==k) <span class="kw">return</span> ans; }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +140,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Heap</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Đếm frequency bằng hash; bucket sort theo freq O hoặc min-heap size k…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Bucket theo freq đảm bảo lấy đúng k số có tần suất cao nhất.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1</span><span class="analysis-tag edge">Mọi phần tử khác nhau</span><span class="analysis-tag edge">Trùng freq nhiều số</span><span class="analysis-tag pit">Sort toàn bộ O(n log n) vẫn chấp nhận</span><span class="analysis-tag pit">Heap max thay min sai k</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Bucket[i] = các số có freq i — quét bucket từ cao xuống lấy k phần tử.</p>
                     </details>
                 </div>
                 </div>

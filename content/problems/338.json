@@ -4,31 +4,23 @@
   "difficulty": "Easy",
   "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Counting Bits (LeetCode #338) — Easy.",
+  "spaceComplexity": "O(1) output",
+  "description": "Cho n, trả mảng ans độ dài n+1 với ans[i] = số bit 1 trong biểu diễn nhị phân của i.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 2", "output": "[0,1,1]" },
+    { "input": "n = 5", "output": "[0,1,1,2,1,2]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP: ans[i] = ans[i >> 1] + (i & 1) — bỏ bit cuối, thêm 1 nếu lẻ. Hoặc ans[i] = ans[i & (i-1)] + 1.",
+  "memoryTip": "i>>1 chia 2 — bit count tăng thêm i%2.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countBits(self, n: int) -> List[int]:\n        ans = [0] * (n + 1)\n        for i in range(1, n + 1):\n            ans[i] = ans[i >> 1] + (i & 1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> countBits(int n) {\n        vector<int> ans(n + 1, 0);\n        for (int i = 1; i <= n; i++) ans[i] = ans[i >> 1] + (i & 1);\n        return ans;\n    }\n};",
+    "c": "int* countBits(int n, int* retSize) {\n    *retSize = n + 1;\n    int* ans = malloc((n + 1) * sizeof(int));\n    ans[0] = 0;\n    for (int i = 1; i <= n; i++) ans[i] = ans[i >> 1] + (i & 1);\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi i kế thừa popcount của i/2 cộng bit cuối — đúng định nghĩa nhị phân.",
+    "edgeCases": ["n=0", "n=1", "n lớn"],
+    "pitfalls": ["__builtin_popcount từng i O(n log n)", "Quên ans[0]=0"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

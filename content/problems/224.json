@@ -2,33 +2,26 @@
   "id": 224,
   "title": "Basic Calculator",
   "difficulty": "Hard",
-  "category": "Math",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Basic Calculator (LeetCode #224) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Chuỗi s biểu diễn biểu thức với số nguyên không âm, '+', '-', '(', ')' và khoảng trắng. Tính giá trị (phép + - và ngoặc).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"1 + 1\"", "output": "2" },
+    { "input": "s = \" 2-1 + 2 \"", "output": "3" },
+    { "input": "s = \"(1+(4+5+2)-3)+(6+8)\"", "output": "23" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack lưu (result, sign) trước ngoặc; num và sign hiện tại; gặp '(' push, ')' pop cộng, '+/-' cập nhật sign.",
+  "memoryTip": "Basic Calculator I = stack (result, sign) + running num/sign.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def calculate(self, s: str) -> int:\n        stack, result, num, sign = [], 0, 0, 1\n        for c in s:\n            if c.isdigit():\n                num = num * 10 + int(c)\n            elif c in '+-':\n                result += sign * num\n                num = 0\n                sign = 1 if c == '+' else -1\n            elif c == '(':\n                stack.append(result)\n                stack.append(sign)\n                result, sign, num = 0, 1, 0\n            elif c == ')':\n                result += sign * num\n                num = 0\n                result *= stack.pop()\n                result += stack.pop()\n        return result + sign * num",
+    "cpp": "class Solution {\npublic:\n    int calculate(string s) {\n        stack<int> st;\n        int result = 0, num = 0, sign = 1;\n        for (char c : s) {\n            if (isdigit(c)) num = num * 10 + (c - '0');\n            else if (c == '+' || c == '-') {\n                result += sign * num; num = 0; sign = (c == '+') ? 1 : -1;\n            } else if (c == '(') {\n                st.push(result); st.push(sign);\n                result = 0; sign = 1; num = 0;\n            } else if (c == ')') {\n                result += sign * num; num = 0;\n                result *= st.top(); st.pop();\n                result += st.top(); st.pop();\n            }\n        }\n        return result + sign * num;\n    }\n};",
+    "c": "int calculate(char* s) {\n    int stack[1000], top = 0, result = 0, num = 0, sign = 1;\n    for (int i = 0; s[i]; i++) {\n        char c = s[i];\n        if (c >= '0' && c <= '9') num = num * 10 + (c - '0');\n        else if (c == '+' || c == '-') {\n            result += sign * num; num = 0; sign = (c == '+') ? 1 : -1;\n        } else if (c == '(') {\n            stack[top++] = result; stack[top++] = sign;\n            result = 0; sign = 1; num = 0;\n        } else if (c == ')') {\n            result += sign * num; num = 0;\n            result *= stack[--top];\n            result += stack[--top];\n        }\n    }\n    return result + sign * num;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Stack lưu ngữ cảnh ngoặc; mỗi số được cộng với sign hiện tại trước operator mới.",
+    "edgeCases": ["Một số", "Lồng ngoặc sâu"],
+    "pitfalls": ["Quên flush num cuối chuỗi", "Không push sign khi '('"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

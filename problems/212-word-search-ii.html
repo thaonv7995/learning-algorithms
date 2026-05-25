@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #212</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Word Search II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn·4^L)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>38.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Word Search II (LeetCode #212) — Hard.</div>
+                        <div class="block-text">Lưới ký tự board và danh sách words. Trả mọi từ trong words xuất hiện trên board (nối liền kề 4 hướng, không tái dùng ô trong cùng một đường).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>board = [[&quot;o&quot;,&quot;a&quot;,&quot;a&quot;,&quot;n&quot;],[&quot;e&quot;,&quot;t&quot;,&quot;a&quot;,&quot;e&quot;],[&quot;i&quot;,&quot;h&quot;,&quot;k&quot;,&quot;r&quot;],[&quot;i&quot;,&quot;f&quot;,&quot;l&quot;,&quot;v&quot;]], words = [&quot;oath&quot;,&quot;pea&quot;,&quot;eat&quot;,&quot;rain&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;eat&quot;,&quot;oath&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>board = [[&quot;a&quot;,&quot;b&quot;],[&quot;c&quot;,&quot;d&quot;]], words = [&quot;abcb&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Build Trie từ words; DFS từ mỗi ô board theo Trie, đánh dấu visited, khi node.isEnd thì thu từ và cắt nhánh (xóa end) để tránh trùng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,97 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> WNode { <span class="ty">struct</span> WNode* ch[26]; <span class="ty">char</span>* word; } WNode;
+static <span class="ty">void</span> wFree(WNode* n) { <span class="kw">if</span> (!n) <span class="kw">return</span>; <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; 26; i++) wFree(n-&gt;ch[i]); <span class="kw">free</span>(n-&gt;word); <span class="kw">free</span>(n); }
+static <span class="ty">void</span> wInsert(WNode* r, <span class="ty">char</span>* w) {
+    WNode* cur = r;
+    <span class="kw">for</span> (; *w; w++) { <span class="ty">int</span> k = *w - 'a'; <span class="kw">if</span> (!cur-&gt;ch[k]) cur-&gt;ch[k] = <span class="kw">calloc</span>(1, <span class="kw">sizeof</span>(WNode)); cur = cur-&gt;ch[k]; }
+    cur-&gt;word = strdup(w);
+}
+static <span class="ty">void</span> dfs212(<span class="ty">char</span>** b, <span class="ty">int</span> m, <span class="ty">int</span> n, <span class="ty">int</span> i, <span class="ty">int</span> j, WNode* node, <span class="ty">char</span>** ans, <span class="ty">int</span>* asz, <span class="ty">int</span>* acap) {
+    <span class="kw">if</span> (i &lt; 0 || j &lt; 0 || i &gt;= m || j &gt;= n) <span class="kw">return</span>;
+    <span class="ty">char</span> c = b[i][j];
+    <span class="kw">if</span> (c == '#') <span class="kw">return</span>;
+    <span class="ty">int</span> k = c - 'a';
+    <span class="kw">if</span> (!node-&gt;ch[k]) <span class="kw">return</span>;
+    WNode* nxt = node-&gt;ch[k];
+    <span class="kw">if</span> (nxt-&gt;word) { <span class="kw">if</span> (*asz &gt;= *acap) { *acap *= 2; ans[0] = realloc(ans[0], *acap * <span class="kw">sizeof</span>(<span class="ty">char</span>*)); } ((<span class="ty">char</span>**)ans)[(*asz)++] = strdup(nxt-&gt;word); <span class="kw">free</span>(nxt-&gt;word); nxt-&gt;word = NULL; }
+    b[i][j] = '#';
+    <span class="ty">int</span> d[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+    <span class="kw">for</span> (<span class="ty">int</span> t = 0; t &lt; 4; t++) dfs212(b, m, n, i + d[t][0], j + d[t][1], nxt, ans, asz, acap);
+    b[i][j] = c;
+}
+<span class="ty">char</span>** findWords(<span class="ty">char</span>** board, <span class="ty">int</span> m, <span class="ty">char</span>** words, <span class="ty">int</span> wn, <span class="ty">int</span>* rs) {
+    WNode root = {0};
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; wn; i++) wInsert(&amp;root, words[i]);
+    <span class="ty">char</span>** ans = <span class="kw">malloc</span>(16 * <span class="kw">sizeof</span>(<span class="ty">char</span>*)); <span class="ty">int</span> asz = 0, acap = 16;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++) <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; (<span class="ty">int</span>)strlen(board[i]); j++) dfs212(board, m, (<span class="ty">int</span>)strlen(board[0]), i, j, &amp;root, &amp;ans, &amp;asz, &amp;acap);
+    wFree(&amp;root); *rs = asz; <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findWords(<span class="ty">self</span>, board: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]], words: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        root = {}
+        <span class="kw">for</span> w <span class="kw">in</span> words:
+            node = root
+            <span class="kw">for</span> c <span class="kw">in</span> w:
+                node = node.setdefault(c, {})
+            node['<span class="cm">#'] = w</span>
+        m, n = <span class="ty">len</span>(board), <span class="ty">len</span>(board[0])
+        ans = []
+        <span class="kw">def</span> dfs(i, j, node):
+            c = board[i][j]
+            <span class="kw">if</span> c <span class="kw">not</span> <span class="kw">in</span> node:
+                <span class="kw">return</span>
+            nxt = node[c]
+            <span class="kw">if</span> '<span class="cm">#' <span class="kw">in</span> nxt:</span>
+                ans.append(nxt['<span class="cm">#'])</span>
+                del nxt['<span class="cm">#']</span>
+            board[i][j] = '<span class="cm">#'</span>
+            <span class="kw">for</span> di, dj <span class="kw">in</span> ((1,0),(-1,0),(0,1),(0,-1)):
+                ni, nj = i + di, j + dj
+                <span class="kw">if</span> 0 &lt;= ni &lt; m <span class="kw">and</span> 0 &lt;= nj &lt; n <span class="kw">and</span> board[ni][nj] != '<span class="cm">#':</span>
+                    dfs(ni, nj, nxt)
+            board[i][j] = c
+            <span class="kw">if</span> <span class="kw">not</span> nxt:
+                del node[c]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+                dfs(i, j, root)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">struct</span> Node { unordered_map&lt;<span class="ty">char</span>, Node*&gt; ch; <span class="ty">string</span>* word=<span class="kw">nullptr</span>; };
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; ans;
+    <span class="ty">void</span> dfs(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; b, <span class="ty">int</span> i, <span class="ty">int</span> j, Node* node) {
+        <span class="ty">char</span> c = b[i][j];
+        <span class="kw">if</span> (!node-&gt;ch.count(c)) <span class="kw">return</span>;
+        Node* nxt = node-&gt;ch[c];
+        <span class="kw">if</span> (nxt-&gt;word) { ans.push_back(*nxt-&gt;word); <span class="kw">delete</span> nxt-&gt;word; nxt-&gt;word = <span class="kw">nullptr</span>; }
+        b[i][j] = '#';
+        <span class="ty">int</span> d[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+        <span class="kw">for</span> (auto&amp; x : d) {
+            <span class="ty">int</span> ni = i + x[0], nj = j + x[1];
+            <span class="kw">if</span> (ni&gt;=0 &amp;&amp; nj&gt;=0 &amp;&amp; ni&lt;(<span class="ty">int</span>)b.size() &amp;&amp; nj&lt;(<span class="ty">int</span>)b[0].size() &amp;&amp; b[ni][nj]!='#')
+                dfs(b, ni, nj, nxt);
+        }
+        b[i][j] = c;
+        <span class="kw">if</span> (nxt-&gt;ch.empty() &amp;&amp; !nxt-&gt;word) { <span class="kw">delete</span> nxt; node-&gt;ch.erase(c); }
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; findWords(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; board, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; words) {
+        Node root;
+        <span class="kw">for</span> (<span class="ty">string</span>&amp; w : words) {
+            Node* cur = &amp;root;
+            <span class="kw">for</span> (<span class="ty">char</span> c : w) {
+                <span class="kw">if</span> (!cur-&gt;ch.count(c)) cur-&gt;ch[c] = <span class="kw">new</span> Node();
+                cur = cur-&gt;ch[c];
+            }
+            cur-&gt;word = <span class="kw">new</span> <span class="ty">string</span>(w);
+        }
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)board.size(); i++)
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; (<span class="ty">int</span>)board[0].size(); j++)
+                dfs(board, i, j, &amp;root);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +195,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn·4^L)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Build Trie từ words; DFS từ mỗi ô board theo Trie, đánh dấu visited,…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DFS chỉ theo nhánh Trie hợp lệ; prune giảm tìm kiếm lặp; mỗi từ thu đúng một lần.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">words rỗng</span><span class="analysis-tag edge">Không match → []</span><span class="analysis-tag edge">Từ ngắn lặp nhiều path</span><span class="analysis-tag pit">Word Search I cho từng word → TLE</span><span class="analysis-tag pit">Không restore board[i][j] sau DFS</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Word Search II = Trie + grid DFS; prune Trie khi tìm thấy từ.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +223,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=13&problem=Word%20Search%20II&lc_id=212&embed=true"></iframe>

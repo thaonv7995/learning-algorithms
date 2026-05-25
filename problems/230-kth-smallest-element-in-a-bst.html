@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #230</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Kth Smallest Element in a BST</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(h+k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>76.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Kth Smallest Element in a BST (LeetCode #230) — Medium.</div>
+                        <div class="block-text">Cho BST root và k. Trả giá trị node nhỏ thứ k (1-indexed) trong thứ tự inorder tăng dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [3,1,4,null,2], k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [5,3,6,2,4,null,null,1], k = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Inorder iterative: stack push left chain; pop, k--; k==0 return val; sang right.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,44 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> kthSmallest(<span class="ty">struct</span> TreeNode* root, <span class="ty">int</span> k) {
+    <span class="ty">struct</span> TreeNode* stack[1000];
+    <span class="ty">int</span> top = 0;
+    <span class="ty">struct</span> TreeNode* cur = root;
+    <span class="kw">while</span> (cur || top) {
+        <span class="kw">while</span> (cur) { stack[top++] = cur; cur = cur-&gt;left; }
+        cur = stack[--top];
+        <span class="kw">if</span> (--k == 0) <span class="kw">return</span> cur-&gt;val;
+        cur = cur-&gt;right;
+    }
+    <span class="kw">return</span> -1;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> kthSmallest(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        stack = []
+        cur = root
+        <span class="kw">while</span> cur <span class="kw">or</span> stack:
+            <span class="kw">while</span> cur:
+                stack.append(cur)
+                cur = cur.left
+            cur = stack.pop()
+            k -= 1
+            <span class="kw">if</span> k == 0:
+                <span class="kw">return</span> cur.val
+            cur = cur.right</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> kthSmallest(TreeNode* root, <span class="ty">int</span> k) {
+        stack&lt;TreeNode*&gt; st;
+        TreeNode* cur = root;
+        <span class="kw">while</span> (cur || !st.empty()) {
+            <span class="kw">while</span> (cur) { st.push(cur); cur = cur-&gt;left; }
+            cur = st.top(); st.pop();
+            <span class="kw">if</span> (--k == 0) <span class="kw">return</span> cur-&gt;val;
+            cur = cur-&gt;right;
+        }
+        <span class="kw">return</span> -1;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +142,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(h+k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Inorder iterative: stack push left chain; pop, k--; k==0 return val;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Inorder BST cho thứ tự tăng; dừng ở lần pop thứ k.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1 → min</span><span class="analysis-tag edge">Right-skew tree vẫn O(n)</span><span class="analysis-tag pit">DFS thu mảng O(n) space</span><span class="analysis-tag pit">Quên push left trước pop</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Kth smallest BST = inorder stop at k — không cần sort cả tree.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Kth%20Smallest%20Element%20in%20a%20BST&lc_id=230&embed=true"></iframe>

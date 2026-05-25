@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #391</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Perfect Rectangle</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>38% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Perfect Rectangle (LeetCode #391) — Hard.</div>
+                        <div class="block-text">Cho các hình chữ nhật axis-aligned [x1,y1,x2,y2]. Kiểm tra chúng ghép thành một hình chữ nhật lớn không overlap, không gap.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>rectangles = [[1,1,3,3],[3,1,4,2],[3,2,4,4],[1,3,2,4],[2,3,3,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>rectangles = [[1,1,2,3],[1,3,2,4],[3,1,4,2],[3,2,4,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">XOR corner points: góc trong xuất hiện 4 lần cancel; góc ngoài 1 lần; cạnh trong 2 lần. Kiểm tra area tổng = (maxX-minX)*(maxY-minY) và set size=4.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> isRectangleCover(<span class="ty">int</span>** rectangles, <span class="ty">int</span> n, <span class="ty">int</span>* cs) {
+    <span class="ty">long</span> <span class="ty">long</span> area=0; <span class="ty">int</span> minx=INT_MAX,miny=INT_MAX,maxx=INT_MIN,maxy=INT_MIN;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){
+        <span class="ty">int</span> x1=rectangles[i][0],y1=rectangles[i][1],x2=rectangles[i][2],y2=rectangles[i][3];
+        area+=(<span class="ty">long</span> <span class="ty">long</span>)(x2-x1)*(y2-y1);
+        <span class="kw">if</span>(x1&lt;minx)minx=x1; <span class="kw">if</span>(y1&lt;miny)miny=y1; <span class="kw">if</span>(x2&gt;maxx)maxx=x2; <span class="kw">if</span>(y2&gt;maxy)maxy=y2;
+    }
+    <span class="kw">return</span> area==(<span class="ty">long</span> <span class="ty">long</span>)(maxx-minx)*(maxy-miny);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isRectangleCover(<span class="ty">self</span>, rectangles: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; bool:
+        corners = <span class="ty">set</span>()
+        area, minx, miny, maxx, maxy = 0, inf, inf, -inf, -inf
+        <span class="kw">for</span> x1,y1,x2,y2 <span class="kw">in</span> rectangles:
+            area += (x2-x1)*(y2-y1)
+            minx, miny = <span class="ty">min</span>(minx,x1), <span class="ty">min</span>(miny,y1)
+            maxx, maxy = <span class="ty">max</span>(maxx,x2), <span class="ty">max</span>(maxy,y2)
+            <span class="kw">for</span> p <span class="kw">in</span> ((x1,y1),(x1,y2),(x2,y1),(x2,y2)):
+                corners.symmetric_difference_update({p})
+        <span class="kw">if</span> area != (maxx-minx)*(maxy-miny): <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">return</span> <span class="ty">len</span>(corners) == 4</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isRectangleCover(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; r) {
+        set&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; c;
+        <span class="ty">long</span> <span class="ty">long</span> area = 0;
+        <span class="ty">int</span> minx=INT_MAX,miny=INT_MAX,maxx=INT_MIN,maxy=INT_MIN;
+        <span class="kw">for</span> (auto&amp; x : r) {
+            area += 1LL*(x[2]-x[0])*(x[3]-x[1]);
+            minx=min(minx,x[0]); miny=min(miny,x[1]);
+            maxx=max(maxx,x[2]); maxy=max(maxy,x[3]);
+            auto toggle = [&amp;](<span class="ty">int</span> a,<span class="ty">int</span> b){ <span class="kw">if</span>(c.count({a,b})) c.erase({a,b}); <span class="kw">else</span> c.insert({a,b}); };
+            toggle(x[0],x[1]); toggle(x[0],x[3]); toggle(x[2],x[1]); toggle(x[2],x[3]);
+        }
+        <span class="kw">if</span> (area != 1LL*(maxx-minx)*(maxy-miny)) <span class="kw">return</span> false;
+        <span class="kw">return</span> c.size() == 4;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +142,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — XOR corner points: góc trong xuất hiện 4 lần cancel; góc…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Kiểm tra area tổng = * và set size=4.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Perfect cover iff tổng diện tích khớp bounding box và đúng 4 góc ngoài lẻ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một hình</span><span class="analysis-tag edge">Gap hoặc overlap</span><span class="analysis-tag edge">Touch edge</span><span class="analysis-tag pit">Chỉ check area thiếu corner</span><span class="analysis-tag pit">int overflow area</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Corner counting + area sum — O thay vì merge hình.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Perfect%20Rectangle&lc_id=391&embed=true"></iframe>

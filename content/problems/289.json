@@ -3,32 +3,24 @@
   "title": "Game of Life",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(mn)",
   "spaceComplexity": "O(1)",
-  "description": "Game of Life (LeetCode #289) — Medium.",
+  "description": "Conway Game of Life trên lưới m×n: 0 dead, 1 live. Quy tắc: live với 2-3 live neighbors giữ; dead với 3 neighbors sống; còn lại chết. Cập nhật in-place.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "board = [[0,1,0],[0,0,1],[1,1,1],[0,0,0]]", "output": "[[0,0,1],[1,0,1],[0,1,1],[0,1,0]]" },
+    { "input": "board = [[1,1],[1,0]]", "output": "[[1,1],[1,1]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Encode trạng thái mới vào bit cao: 2=was dead→live, 3=was live→live; pass 2 decode 0/1.",
+  "memoryTip": "Game of Life in-place = use second bit for next state, then shift.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def gameOfLife(self, board: List[List[int]]) -> None:\n        m, n = len(board), len(board[0])\n        dirs = [(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]\n        for i in range(m):\n            for j in range(n):\n                live = 0\n                for di, dj in dirs:\n                    ni, nj = i + di, j + dj\n                    if 0 <= ni < m and 0 <= nj < n and board[ni][nj] & 1:\n                        live += 1\n                if board[i][j] & 1:\n                    if live in (2, 3):\n                        board[i][j] |= 2\n                else:\n                    if live == 3:\n                        board[i][j] |= 2\n        for i in range(m):\n            for j in range(n):\n                board[i][j] >>= 1",
+    "cpp": "class Solution {\npublic:\n    void gameOfLife(vector<vector<int>>& board) {\n        int m = board.size(), n = board[0].size();\n        int d[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};\n        for (int i = 0; i < m; i++)\n            for (int j = 0; j < n; j++) {\n                int live = 0;\n                for (auto& x : d) {\n                    int ni = i + x[0], nj = j + x[1];\n                    if (ni >= 0 && nj >= 0 && ni < m && nj < n && (board[ni][nj] & 1)) live++;\n                }\n                if ((board[i][j] & 1) && (live == 2 || live == 3)) board[i][j] |= 2;\n                if (!(board[i][j] & 1) && live == 3) board[i][j] |= 2;\n            }\n        for (int i = 0; i < m; i++)\n            for (int j = 0; j < n; j++) board[i][j] >>= 1;\n    }\n};",
+    "c": "void gameOfLife(int** board, int m, int* cs) {\n    int n = cs[0];\n    int d[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};\n    for (int i=0;i<m;i++) for (int j=0;j<n;j++) {\n        int live=0;\n        for (int k=0;k<8;k++) {\n            int ni=i+d[k][0], nj=j+d[k][1];\n            if (ni>=0&&nj>=0&&ni<m&&nj<n&&(board[ni][nj]&1)) live++;\n        }\n        if ((board[i][j]&1)&&(live==2||live==3)) board[i][j]|=2;\n        if (!(board[i][j]&1)&&live==3) board[i][j]|=2;\n    }\n    for (int i=0;i<m;i++) for (int j=0;j<n;j++) board[i][j]>>=1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Bit 0 = hiện tại, bit 1 = live next; đếm neighbor dùng &1 nên thấy cả old state.",
+    "edgeCases": ["1x1 grid", "All live / all dead"],
+    "pitfalls": ["Copy board O(mn) space", "Đếm neighbor 8 hướng thiếu góc"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

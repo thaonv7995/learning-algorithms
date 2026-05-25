@@ -2,33 +2,25 @@
   "id": 354,
   "title": "Russian Doll Envelopes",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Russian Doll Envelopes (LeetCode #354) — Hard.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Envelope [w,h] chứa được envelope khác nếu cả w và h đều lớn hơn (không bằng). Tìm số envelope tối đa có thể lồng nhau.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "envelopes = [[5,4],[6,4],[6,7],[2,3]]", "output": "3" },
+    { "input": "envelopes = [[1,1],[1,1],[1,1]]", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort theo w tăng, h giảm (trùng w); LIS trên h bằng patience sorting O(n log n).",
+  "memoryTip": "Sort h giảm khi w bằng — tránh chọn hai cùng width trong LIS.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxEnvelopes(self, envelopes: List[List[int]]) -> int:\n        envelopes.sort(key=lambda x: (x[0], -x[1]))\n        tails = []\n        for _, h in envelopes:\n            i = bisect_left(tails, h)\n            if i == len(tails): tails.append(h)\n            else: tails[i] = h\n        return len(tails)",
+    "cpp": "class Solution {\npublic:\n    int maxEnvelopes(vector<vector<int>>& env) {\n        sort(env.begin(), env.end(), [](auto& a, auto& b){\n            return a[0] < b[0] || (a[0]==b[0] && a[1] > b[1]);\n        });\n        vector<int> tails;\n        for (auto& e : env) {\n            int h = e[1];\n            auto it = lower_bound(tails.begin(), tails.end(), h);\n            if (it == tails.end()) tails.push_back(h);\n            else *it = h;\n        }\n        return tails.size();\n    }\n};",
+    "c": "int maxEnvelopes(int** envelopes, int n, int* cs) {\n    /* sort + LIS on heights; qsort comparator by w asc, h desc */\n    int* tails = malloc(n*sizeof(int)); int t=0;\n    for (int i=0;i<n;i++){\n        int h=envelopes[i][1], lo=0, hi=t;\n        while(lo<hi){ int m=(lo+hi)/2; if(tails[m]<h) lo=m+1; else hi=m; }\n        tails[lo]=h; if(lo==t) t++;\n    }\n    free(tails); return t;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Giảm bài 2D nesting về LIS 1D sau sort đặc biệt; h giảm loại cùng w.",
+    "edgeCases": ["Một phong bì", "Trùng w,h", "Đã sort sẵn"],
+    "pitfalls": ["LIS DP O(n²) TLE", "Sort h tăng khi w bằng — sai"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

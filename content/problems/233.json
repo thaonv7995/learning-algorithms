@@ -3,32 +3,24 @@
   "title": "Number of Digit One",
   "difficulty": "Hard",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Number of Digit One (LeetCode #233) — Hard.",
+  "description": "Đếm số lần chữ số '1' xuất hiện khi viết mọi số nguyên từ 1 đến n (bao gồm n).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 13", "output": "6" },
+    { "input": "n = 0", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Digit DP / math từng vị trí: factor=1,10,100...; higher, cur, lower từ n; cộng count tại mỗi digit.",
+  "memoryTip": "Count digit 1 in 1..n = per-digit formula with higher/cur/lower.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countDigitOne(self, n: int) -> int:\n        if n <= 0:\n            return 0\n        count, factor = 0, 1\n        while factor <= n:\n            lower = n - n // factor * factor\n            cur = n // factor % 10\n            higher = n // (factor * 10)\n            if cur == 0:\n                count += higher * factor\n            elif cur == 1:\n                count += higher * factor + lower + 1\n            else:\n                count += (higher + 1) * factor\n            factor *= 10\n        return count",
+    "cpp": "class Solution {\npublic:\n    int countDigitOne(int n) {\n        if (n <= 0) return 0;\n        long long count = 0, factor = 1;\n        while (factor <= n) {\n            long long lower = n - n / factor * factor;\n            int cur = n / factor % 10;\n            long long higher = n / (factor * 10);\n            if (cur == 0) count += higher * factor;\n            else if (cur == 1) count += higher * factor + lower + 1;\n            else count += (higher + 1) * factor;\n            factor *= 10;\n        }\n        return (int)count;\n    }\n};",
+    "c": "int countDigitOne(int n) {\n    if (n <= 0) return 0;\n    long long count = 0, factor = 1;\n    while (factor <= n) {\n        long long lower = n - n / factor * factor;\n        int cur = n / factor % 10;\n        long long higher = n / (factor * 10);\n        if (cur == 0) count += higher * factor;\n        else if (cur == 1) count += higher * factor + lower + 1;\n        else count += (higher + 1) * factor;\n        factor *= 10;\n    }\n    return (int)count;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi digit position đóng góp số lần xuất hiện 1 độc lập theo higher/cur/lower.",
+    "edgeCases": ["n=0 → 0", "n=10 → đếm 1 ở 1 và 10"],
+    "pitfalls": ["Brute loop 1..n TLE", "Overflow factor — dùng long long"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

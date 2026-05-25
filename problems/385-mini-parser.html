@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #385</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Mini Parser</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>42.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Mini Parser (LeetCode #385) — Medium.</div>
+                        <div class="block-text">Chuỗi s biểu diễn nested integer list (NestedInteger API). Parse thành cấu trúc lồng nhau.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;324&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>324</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;[123,[456,[789]]]&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[123,[456,[789]]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Stack + recursive/iterative: gặp '[' push NestedInteger mới; số parse digits; ']' pop và add vào parent; ',' skip.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> NestedInteger deserialize(<span class="ty">char</span>* s) {
+    <span class="ty">struct</span> NestedInteger ni; <span class="kw">return</span> ni;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> deserialize(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; NestedInteger:
+        <span class="kw">if</span> s[0] != '[':
+            <span class="kw">return</span> NestedInteger(<span class="ty">int</span>(s))
+        st, cur = [], <span class="kw">None</span>
+        num = ''
+        <span class="kw">for</span> c <span class="kw">in</span> s:
+            <span class="kw">if</span> c == '[':
+                <span class="kw">if</span> cur is <span class="kw">not</span> <span class="kw">None</span>: st.append(cur)
+                cur = NestedInteger()
+            <span class="kw">elif</span> c == ']':
+                <span class="kw">if</span> num:
+                    cur.add(NestedInteger(<span class="ty">int</span>(num))); num = ''
+                <span class="kw">if</span> st:
+                    parent = st.pop(); parent.add(cur); cur = parent
+            <span class="kw">elif</span> c == ',':
+                <span class="kw">if</span> num:
+                    cur.add(NestedInteger(<span class="ty">int</span>(num))); num = ''
+            <span class="kw">else</span>:
+                num += c
+        <span class="kw">return</span> cur</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    NestedInteger deserialize(<span class="ty">string</span> s) {
+        <span class="kw">if</span> (s.empty()) <span class="kw">return</span> NestedInteger();
+        <span class="kw">if</span> (s[0] != '[') <span class="kw">return</span> NestedInteger(stoi(s));
+        stack&lt;NestedInteger&gt; st;
+        NestedInteger cur;
+        <span class="ty">int</span> num = 0; <span class="ty">bool</span> neg = false, inNum = false;
+        <span class="kw">for</span> (<span class="ty">char</span> c : s) {
+            <span class="kw">if</span> (c == '[') { <span class="kw">if</span> (inNum || !st.empty() || cur.isInteger()==false &amp;&amp; !cur.getList().empty()) st.push(cur); cur = NestedInteger(); inNum=false; }
+            <span class="kw">else</span> <span class="kw">if</span> (c == ']') { <span class="kw">if</span> (inNum) { cur.add(NestedInteger(num)); num=0; inNum=false; } <span class="kw">if</span> (!st.empty()) { NestedInteger p = st.top(); st.pop(); p.add(cur); cur = p; } }
+            <span class="kw">else</span> <span class="kw">if</span> (c == ',') { <span class="kw">if</span> (inNum) { cur.add(NestedInteger(num)); num=0; inNum=false; } }
+            <span class="kw">else</span> <span class="kw">if</span> (c == '-') neg = true;
+            <span class="kw">else</span> { inNum = true; num = num*10 + (c-'0'); <span class="kw">if</span> (neg) { num = -num; neg=false; } }
+        }
+        <span class="kw">return</span> cur;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +146,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Stack + recursive/iterative: gặp '[' push NestedInteger mới; số parse…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack mô phỏng cấu trúc lồng nhau; đóng ']' gắn list con vào cha.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Số đơn không list</span><span class="analysis-tag edge">List rỗng []</span><span class="analysis-tag edge">Số âm</span><span class="analysis-tag pit">Parse digit quên flush trước ]</span><span class="analysis-tag pit">Recursive depth sâu</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>DFS iterative — stack NestedInteger* đang build.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Mini%20Parser&lc_id=385&embed=true"></iframe>

@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #201</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Bit Manipulation</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Bitwise AND of Numbers Range</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Bitwise AND of Numbers Range (LeetCode #201) — Medium.</div>
+                        <div class="block-text">Cho hai số nguyên left và right. Tính AND bit của mọi số trong đoạn [left, right] (bao gồm hai đầu). Kết quả là phần bit chung cố định trên toàn dải.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>left = 5, right = 7</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>left = 0, right = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>left = 1, right = 2147483647</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Dịch cả left và right sang phải cùng số bước cho đến khi bằng nhau — các bit khác nhau ở phía thấp sẽ thành 0 khi AND. Trả left &lt;&lt; shift.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,34 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> rangeBitwiseAnd(<span class="ty">int</span> left, <span class="ty">int</span> right) {
+    <span class="ty">int</span> shift = 0;
+    <span class="kw">while</span> (left &lt; right) {
+        left &gt;&gt;= 1;
+        right &gt;&gt;= 1;
+        shift++;
+    }
+    <span class="kw">return</span> left &lt;&lt; shift;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> rangeBitwiseAnd(<span class="ty">self</span>, left: <span class="ty">int</span>, right: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        shift = 0
+        <span class="kw">while</span> left &lt; right:
+            left &gt;&gt;= 1
+            right &gt;&gt;= 1
+            shift += 1
+        <span class="kw">return</span> left &lt;&lt; shift</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> rangeBitwiseAnd(<span class="ty">int</span> left, <span class="ty">int</span> right) {
+        <span class="ty">int</span> shift = 0;
+        <span class="kw">while</span> (left &lt; right) {
+            left &gt;&gt;= 1;
+            right &gt;&gt;= 1;
+            shift++;
+        }
+        <span class="kw">return</span> left &lt;&lt; shift;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +137,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Bit Manipulation</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dịch cả left và right sang phải cùng số bước cho đến khi…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Trả left &lt;&lt; shift.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Bit khác nhau ở vị trí thấp nhất khiến mọi số trong dải có ít nhất một số với bit 0 tại đó → AND = 0 tại bit đó.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">left == right → trả chính nó</span><span class="analysis-tag edge">Dải rất rộng → 0</span><span class="analysis-tag pit">Loop từng số O(n) TLE</span><span class="analysis-tag pit">Quên dịch trái kết quả cuối</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Range AND = dịch phải đến khi m==n, rồi m &lt;&lt; số bước dịch.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +165,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Bitwise%20AND%20of%20Numbers%20Range&lc_id=201&embed=true"></iframe>

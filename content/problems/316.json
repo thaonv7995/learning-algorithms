@@ -5,30 +5,22 @@
   "category": "String",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Remove Duplicate Letters (LeetCode #316) — Medium.",
+  "description": "Cho chuỗi s chỉ chữ thường. Xóa ký tự trùng sao mỗi chữ còn đúng một lần và chuỗi kết quả nhỏ nhất theo thứ tự từ điển.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"bcabc\"", "output": "\"abc\"" },
+    { "input": "s = \"cbacdcbc\"", "output": "\"acdb\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Monotonic stack + count còn lại: duyệt s, giảm count[c]; nếu c chưa trong stack và stack.top()>c còn xuất hiện sau thì pop; push c.",
+  "memoryTip": "Chỉ pop khi ký tự lớn hơn c vẫn còn ở phía sau — đảm bảo vẫn ghép được đủ chữ cái.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def removeDuplicateLetters(self, s: str) -> str:\n        last = {c: i for i, c in enumerate(s)}\n        stack, in_stack = [], set()\n        for i, c in enumerate(s):\n            if c in in_stack:\n                continue\n            while stack and stack[-1] > c and last[stack[-1]] > i:\n                in_stack.remove(stack.pop())\n            stack.append(c); in_stack.add(c)\n        return ''.join(stack)",
+    "cpp": "class Solution {\npublic:\n    string removeDuplicateLetters(string s) {\n        vector<int> last(26, -1), cnt(26, 0);\n        for (int i = 0; i < (int)s.size(); i++) { last[s[i]-'a'] = i; cnt[s[i]-'a']++; }\n        string st; vector<bool> used(26, false);\n        for (int i = 0; i < (int)s.size(); i++) {\n            int c = s[i]-'a'; if (--cnt[c] < 0) continue;\n            if (used[c]) continue;\n            while (!st.empty() && st.back() > s[i] && cnt[st.back()-'a'] > 0) {\n                used[st.back()-'a'] = false; st.pop_back();\n            }\n            st.push_back(s[i]); used[c] = true;\n        }\n        return st;\n    }\n};",
+    "c": "char* removeDuplicateLetters(char* s) {\n    int n = strlen(s), last[26], cnt[26]={0}, used[26]={0};\n    for (int i=0;i<26;i++) last[i]=-1;\n    for (int i=0;i<n;i++){last[s[i]-'a']=i;cnt[s[i]-'a']++;}\n    char st[256]; int top=0;\n    for (int i=0;i<n;i++){\n        int c=s[i]-'a'; if (--cnt[c]<0) continue;\n        if (used[c]) continue;\n        while (top>0 && st[top-1]>s[i] && cnt[st[top-1]-'a']>0){used[st[--top]-'a']=0;}\n        st[top++]=s[i]; used[c]=1;\n    }\n    st[top]=0; return strdup(st);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Stack giữ prefix tối ưu từ điển; pop chỉ khi ký tự lớn hơn còn dư phía sau.",
+    "edgeCases": ["Đã không trùng", "Một ký tự", "Thứ tự đã sorted"],
+    "pitfalls": ["Pop khi ký tự không còn sau", "Quên đánh dấu in_stack/used"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

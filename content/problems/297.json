@@ -4,31 +4,23 @@
   "difficulty": "Hard",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Serialize and Deserialize Binary Tree (LeetCode #297) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế thuật toán serialize binary tree thành chuỗi và deserialize ngược lại. Cấu trúc tree không cố định.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,2,3,null,null,4,5]", "output": "serialized then deserialized equals original" },
+    { "input": "root = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS/preorder với marker null: '1,2,3,null,null,4,5'. Deserialize queue/list build level order hoặc recursive preorder.",
+  "memoryTip": "Serialize tree = preorder/BFS with 'null' tokens, comma-separated.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Codec:\n    def serialize(self, root: Optional[TreeNode]) -> str:\n        if not root:\n            return \"\"\n        out = []\n        q = deque([root])\n        while q:\n            node = q.popleft()\n            if node:\n                out.append(str(node.val))\n                q.append(node.left)\n                q.append(node.right)\n            else:\n                out.append('null')\n        while out and out[-1] == 'null':\n            out.pop()\n        return ','.join(out)\n    def deserialize(self, data: str) -> Optional[TreeNode]:\n        if not data:\n            return None\n        vals = data.split(',')\n        root = TreeNode(int(vals[0]))\n        q = deque([root])\n        i = 1\n        while q and i < len(vals):\n            node = q.popleft()\n            if vals[i] != 'null':\n                node.left = TreeNode(int(vals[i]))\n                q.append(node.left)\n            i += 1\n            if i < len(vals) and vals[i] != 'null':\n                node.right = TreeNode(int(vals[i]))\n                q.append(node.right)\n            i += 1\n        return root",
+    "cpp": "class Codec {\npublic:\n    string serialize(TreeNode* root) {\n        if (!root) return \"\";\n        string res;\n        queue<TreeNode*> q;\n        q.push(root);\n        while (!q.empty()) {\n            TreeNode* node = q.front(); q.pop();\n            if (node) {\n                res += to_string(node->val) + \",\";\n                q.push(node->left);\n                q.push(node->right);\n            } else res += \"null,\";\n        }\n        while (!res.empty() && res.back() == ',') res.pop_back();\n        if (res.size() >= 5 && res.substr(res.size()-5) == \",null\") { /* trim trailing nulls optional */ }\n        return res;\n    }\n    TreeNode* deserialize(string data) {\n        if (data.empty()) return nullptr;\n        vector<string> vals;\n        stringstream ss(data);\n        string v;\n        while (getline(ss, v, ',')) vals.push_back(v);\n        TreeNode* root = new TreeNode(stoi(vals[0]));\n        queue<TreeNode*> q;\n        q.push(root);\n        int i = 1;\n        while (!q.empty() && i < (int)vals.size()) {\n            TreeNode* node = q.front(); q.pop();\n            if (vals[i] != \"null\") { node->left = new TreeNode(stoi(vals[i])); q.push(node->left); }\n            i++;\n            if (i < (int)vals.size() && vals[i] != \"null\") { node->right = new TreeNode(stoi(vals[i])); q.push(node->right); }\n            i++;\n        }\n        return root;\n    }\n};",
+    "c": "char* serializeTree(struct TreeNode* root) {\n    if (!root) return strdup(\"\");\n    char* out = calloc(4096, 1);\n    struct TreeNode** q = malloc(4096 * sizeof(struct TreeNode*));\n    int h = 0, t = 0;\n    q[t++] = root;\n    while (h < t) {\n        struct TreeNode* node = q[h++];\n        if (node) {\n            char buf[32]; snprintf(buf, sizeof(buf), \"%d,\", node->val);\n            strcat(out, buf);\n            q[t++] = node->left; q[t++] = node->right;\n        } else strcat(out, \"null,\");\n    }\n    int len = (int)strlen(out);\n    if (len && out[len - 1] == ',') out[len - 1] = 0;\n    free(q); return out;\n}\nstruct TreeNode* deserializeTree(char* data) {\n    if (!data || !data[0]) return NULL;\n    char* copy = strdup(data);\n    char* tok = strtok(copy, \",\");\n    struct TreeNode* root = malloc(sizeof(struct TreeNode));\n    root->val = atoi(tok); root->left = root->right = NULL;\n    struct TreeNode** q = malloc(4096 * sizeof(struct TreeNode*));\n    int h = 0, t = 0; q[t++] = root;\n    while (h < t && (tok = strtok(NULL, \",\"))) {\n        struct TreeNode* node = q[h++];\n        if (strcmp(tok, \"null\")) { node->left = malloc(sizeof(struct TreeNode)); node->left->val = atoi(tok); node->left->left = node->left->right = NULL; q[t++] = node->left; }\n        if (!(tok = strtok(NULL, \",\"))) break;\n        if (strcmp(tok, \"null\")) { node->right = malloc(sizeof(struct TreeNode)); node->right->val = atoi(tok); node->right->left = node->right->right = NULL; q[t++] = node->right; }\n    }\n    free(copy); free(q); return root;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Level-order với null giữ cấu trúc; deserialize tái tạo cùng topology.",
+    "edgeCases": ["Empty tree → empty string", "Skewed tree nhiều null"],
+    "pitfalls": ["Preorder cần null marker rõ", "Trim trailing nulls phải nhất quán"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

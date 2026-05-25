@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #368</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Largest Divisible Subset</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Largest Divisible Subset (LeetCode #368) — Medium.</div>
+                        <div class="block-text">Cho mảng nums số nguyên dương distinct. Trả subset lớn nhất sao mọi cặp phần tử có một chia hết cho cái kia.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,4,8]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2,4,8]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sort nums; dp[i]=max size subset ending i; dp[i]=max(dp[j]+1) nếu nums[i]%nums[j]==0. Trace parent để rebuild.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* largestDivisibleSubset(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span>* retSize) {
+    /* sort + dp O(n^2); <span class="kw">return</span> longest chain */
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span> (<span class="ty">int</span> j=i+1;j&lt;n;j++) <span class="kw">if</span>(nums[i]&gt;nums[j]){<span class="ty">int</span> t=nums[i];nums[i]=nums[j];nums[j]=t;}
+    <span class="ty">int</span>* dp=<span class="kw">malloc</span>(n*4); <span class="ty">int</span>* prev=<span class="kw">malloc</span>(n*4);
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){dp[i]=1;prev[i]=-1;}
+    <span class="ty">int</span> best=1,idx=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;i;j++) <span class="kw">if</span>(nums[i]%nums[j]==0&amp;&amp;dp[j]+1&gt;dp[i]){dp[i]=dp[j]+1;prev[i]=j;}
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">if</span>(dp[i]&gt;best){best=dp[i];idx=i;}
+    <span class="ty">int</span>* ans=<span class="kw">malloc</span>(best*4); *retSize=0;
+    <span class="kw">while</span>(idx!=-1){ans[(*retSize)++]=nums[idx]; idx=prev[idx];}
+    <span class="kw">free</span>(dp); <span class="kw">free</span>(prev); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> largestDivisibleSubset(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        nums.sort()
+        n = <span class="ty">len</span>(nums)
+        dp, prev = [1]*n, [-1]*n
+        best, idx = 1, 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i):
+                <span class="kw">if</span> nums[i] % nums[j] == 0 <span class="kw">and</span> dp[j] + 1 &gt; dp[i]:
+                    dp[i] = dp[j] + 1; prev[i] = j
+            <span class="kw">if</span> dp[i] &gt; best: best, idx = dp[i], i
+        ans = []
+        <span class="kw">while</span> idx != -1: ans.append(nums[idx]); idx = prev[idx]
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; largestDivisibleSubset(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        sort(nums.begin(), nums.end());
+        <span class="ty">int</span> n = nums.size();
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dp(n,1), prev(n,-1);
+        <span class="ty">int</span> best = 1, idx = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; i; j++)
+                <span class="kw">if</span> (nums[i] % nums[j] == 0 &amp;&amp; dp[j]+1 &gt; dp[i]) { dp[i]=dp[j]+1; prev[i]=j; }
+            <span class="kw">if</span> (dp[i] &gt; best) { best = dp[i]; idx = i; }
+        }
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="kw">while</span> (idx != -1) { ans.push_back(nums[idx]); idx = prev[idx]; }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +145,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Sort nums; dp[i]=max size subset ending i; dp[i]=max nếu…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Trace parent để rebuild.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Sau sort, divisible chain chỉ mở rộng về phía số lớn; LIS-style DP cho max chain.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Toàn bộ chia nhau</span><span class="analysis-tag edge">Primes cùng size 1</span><span class="analysis-tag pit">Không sort</span><span class="analysis-tag pit">Quên rebuild từ prev</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Sort trước — chỉ cần check nums[i]%nums[j]==0 với j&lt;i.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +174,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Largest%20Divisible%20Subset&lc_id=368&embed=true"></iframe>

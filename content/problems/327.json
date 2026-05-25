@@ -3,32 +3,24 @@
   "title": "Count of Range Sum",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Count of Range Sum (LeetCode #327) — Hard.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums và lower, upper. Đếm số cặp (i,j) với i≤j sao lower ≤ tổng nums[i..j] ≤ upper.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [-2,5,-1], lower = -2, upper = 2", "output": "3" },
+    { "input": "nums = [0], lower = 0, upper = 0", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix sum + merge sort đếm: trong merge, với mỗi prefix trái t, đếm prefix phải trong [t-upper, t-lower] bằng two pointers trên mảng sorted.",
+  "memoryTip": "Biến đổi: tổng(i,j)=P[j]-P[i-1] ∈ [L,U] ⇔ P[j]∈[P[i-1]+L, P[i-1]+U].",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countRangeSum(self, nums: List[int], lower: int, upper: int) -> int:\n        pre = [0]\n        for x in nums: pre.append(pre[-1] + x)\n        ans = 0\n        def mergeSort(arr):\n            nonlocal ans\n            if len(arr) <= 1: return arr\n            m = len(arr)//2\n            L, R = mergeSort(arr[:m]), mergeSort(arr[m:])\n            i = j = 0\n            for x in L:\n                while j < len(R) and R[j] < x + lower: j += 1\n                k = j\n                while k < len(R) and R[k] <= x + upper: k += 1\n                ans += k - j\n            return sorted(L + R)\n        mergeSort(pre)\n        return ans",
+    "cpp": "class Solution {\n    long long ans = 0;\n    void mergeCount(vector<long long>& v, int l, int m, int r, int lo, int hi) {\n        int j = m+1, k = m+1;\n        for (int i = l; i <= m; i++) {\n            while (j <= r && v[j] < v[i] + lo) j++;\n            while (k <= r && v[k] <= v[i] + hi) k++;\n            ans += k - j;\n        }\n        inplace_merge(v.begin()+l, v.begin()+m+1, v.begin()+r+1);\n    }\n    void sort(vector<long long>& v, int l, int r, int lo, int hi) {\n        if (l >= r) return;\n        int m = (l + r) / 2;\n        sort(v, l, m, lo, hi); sort(v, m+1, r, lo, hi);\n        mergeCount(v, l, m, r, lo, hi);\n    }\npublic:\n    int countRangeSum(vector<int>& nums, int lower, int upper) {\n        vector<long long> pre = {0};\n        for (int x : nums) pre.push_back(pre.back() + x);\n        sort(pre, 0, pre.size()-1, lower, upper);\n        return (int)ans;\n    }\n};",
+    "c": "int countRangeSum(int* nums, int n, int lower, int upper) {\n    long long* pre = malloc((n+1)*sizeof(long long)); pre[0]=0;\n    for (int i=0;i<n;i++) pre[i+1]=pre[i]+nums[i];\n    int ans=0;\n    for (int i=0;i<=n;i++) for (int j=i;j<=n;j++) {\n        long long s=pre[j]-pre[i];\n        if (s>=lower && s<=upper) ans++;\n    }\n    free(pre); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Merge sort trên prefix đếm cặp thỏa biên trong O(n log n); brute O(n²) chỉ cho n nhỏ.",
+    "edgeCases": ["Một phần tử", "lower=upper", "Số âm lớn"],
+    "pitfalls": ["int overflow trên prefix", "Two pointers sai thứ tự merge"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

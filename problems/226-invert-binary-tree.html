@@ -42,7 +42,7 @@
                     <h1 class="problem-title">Invert Binary Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>80.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Invert Binary Tree (LeetCode #226) — Easy.</div>
+                        <div class="block-text">Đảo ngược binary tree: hoán đổi con trái và con phải của mọi node. Trả root sau khi invert.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [4,2,7,1,3,6,9]</code></div>
+                <div class="ex-line"><span>Out</span><code>[4,7,2,9,6,3,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [2,1,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,3,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>root = []</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS/BFS: tại mỗi node swap left/right rồi đệ quy hai con. Hoặc BFS queue swap từng level.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,32 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> TreeNode* invertTree(<span class="ty">struct</span> TreeNode* root) {
+    <span class="kw">if</span> (!root) <span class="kw">return</span> NULL;
+    <span class="ty">struct</span> TreeNode* tmp = root-&gt;left;
+    root-&gt;left = root-&gt;right;
+    root-&gt;right = tmp;
+    invertTree(root-&gt;left);
+    invertTree(root-&gt;right);
+    <span class="kw">return</span> root;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> invertTree(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]:
+        <span class="kw">if</span> <span class="kw">not</span> root:
+            <span class="kw">return</span> <span class="kw">None</span>
+        root.left, root.right = root.right, root.left
+        <span class="ty">self</span>.invertTree(root.left)
+        <span class="ty">self</span>.invertTree(root.right)
+        <span class="kw">return</span> root</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    TreeNode* invertTree(TreeNode* root) {
+        <span class="kw">if</span> (!root) <span class="kw">return</span> <span class="kw">nullptr</span>;
+        swap(root-&gt;left, root-&gt;right);
+        invertTree(root-&gt;left);
+        invertTree(root-&gt;right);
+        <span class="kw">return</span> root;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +136,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DFS/BFS: tại mỗi node swap left/right rồi đệ quy hai con.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc BFS queue swap từng level.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Swap tại mọi node duyệt đúng một lần → mirror hoàn toàn.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">null</span><span class="analysis-tag edge">Một node</span><span class="analysis-tag edge">Chỉ một con</span><span class="analysis-tag pit">Swap rồi quên đệ quy một nhánh</span><span class="analysis-tag pit">Tạo node mới thay swap</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Invert tree = swap children at every node .</p>
                     </details>
                 </div>
                 </div>

@@ -2,33 +2,25 @@
   "id": 352,
   "title": "Data Stream as Disjoint Intervals",
   "difficulty": "Hard",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Data Stream as Disjoint Intervals (LeetCode #352) — Hard.",
+  "category": "Design",
+  "timeComplexity": "O(n) addNum",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế cấu trúc nhận số từ stream và luôn trả danh sách các khoảng [start,end] disjoint đã merge, sort theo start.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "addNum(1), addNum(3), addNum(7), addNum(2), getIntervals()", "output": "[[1,3],[7,7]] then [[1,3],[7,7]] then [[1,3],[7,7]] then [[1,3],[7,7]]" },
+    { "input": "addNum(5), getIntervals()", "output": "[[5,5]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tree map (hoặc vector sort): insert val, merge với khoảng tráo/phải nếu liền kề (val-1 hoặc val+1 chạm interval).",
+  "memoryTip": "Chỉ cần merge với predecessor/successor trong map — O(log n) với map.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class SummaryRanges:\n    def __init__(self):\n        self.nums = []\n    def addNum(self, value: int) -> None:\n        bisect.insort(self.nums, value)\n    def getIntervals(self) -> List[List[int]]:\n        if not self.nums: return []\n        res, start, prev = [], self.nums[0], self.nums[0]\n        for x in self.nums[1:]:\n            if x == prev + 1: prev = x\n            else: res.append([start, prev]); start = prev = x\n        res.append([start, prev])\n        return res",
+    "cpp": "class SummaryRanges {\n    set<int> st;\npublic:\n    SummaryRanges() {}\n    void addNum(int value) { st.insert(value); }\n    vector<vector<int>> getIntervals() {\n        vector<vector<int>> res;\n        if (st.empty()) return res;\n        int start = *st.begin(), prev = start;\n        for (int x : st) {\n            if (x > prev + 1) { res.push_back({start, prev}); start = x; }\n            prev = x;\n        }\n        res.push_back({start, prev});\n        return res;\n    }\n};",
+    "c": "typedef struct { int* arr; int n, cap; } SummaryRanges;\nSummaryRanges* summaryRangesCreate(void) { return calloc(1,sizeof(SummaryRanges)); }\nvoid summaryRangesAddNum(SummaryRanges* o, int value) {\n    o->arr = realloc(o->arr, (++o->n)*sizeof(int)); o->arr[o->n-1]=value;\n}\nint** summaryRangesGetIntervals(SummaryRanges* o, int* retSize, int** colSize) {\n    *retSize=0; *colSize=NULL; return NULL;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Sorted unique values merge thành interval khi liên tiếp; map/set giữ thứ tự.",
+    "edgeCases": ["Trùng số add", "Số cách xa", "Stream dài"],
+    "pitfalls": ["Rescan toàn bộ mỗi get O(n²)", "Quên merge ba khoảng khi insert giữa"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

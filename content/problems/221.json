@@ -2,33 +2,26 @@
   "id": 221,
   "title": "Maximal Square",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Maximal Square (LeetCode #221) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(mn)",
+  "spaceComplexity": "O(mn)",
+  "description": "Ma trận matrix gồm '0' và '1'. Tìm diện tích hình vuông lớn nhất chỉ gồm '1'. Trả diện tích (side²).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "matrix = [[\"1\",\"0\",\"1\",\"0\",\"0\"],[\"1\",\"0\",\"1\",\"1\",\"1\"],[\"1\",\"1\",\"1\",\"1\",\"1\"],[\"1\",\"0\",\"0\",\"1\",\"0\"]]", "output": "4" },
+    { "input": "matrix = [[\"0\",\"1\"],[\"1\",\"0\"]]", "output": "1" },
+    { "input": "matrix = [[\"0\"]]", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[i][j] = cạnh vuông lớn nhất góc dưới-phải (i,j): nếu '1' thì 1+min(top,left,diag); cập nhật max side.",
+  "memoryTip": "Maximal square DP = min(up, left, diag)+1 tại ô '1'.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maximalSquare(self, matrix: List[List[str]]) -> int:\n        if not matrix:\n            return 0\n        m, n = len(matrix), len(matrix[0])\n        dp = [[0]*n for _ in range(m)]\n        best = 0\n        for i in range(m):\n            for j in range(n):\n                if matrix[i][j] == '1':\n                    if i == 0 or j == 0:\n                        dp[i][j] = 1\n                    else:\n                        dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])\n                    best = max(best, dp[i][j])\n        return best * best",
+    "cpp": "class Solution {\npublic:\n    int maximalSquare(vector<vector<char>>& matrix) {\n        if (matrix.empty()) return 0;\n        int m = matrix.size(), n = matrix[0].size(), best = 0;\n        vector<vector<int>> dp(m, vector<int>(n));\n        for (int i = 0; i < m; i++)\n            for (int j = 0; j < n; j++)\n                if (matrix[i][j] == '1') {\n                    if (!i || !j) dp[i][j] = 1;\n                    else dp[i][j] = 1 + min({dp[i-1][j], dp[i][j-1], dp[i-1][j-1]});\n                    best = max(best, dp[i][j]);\n                }\n        return best * best;\n    }\n};",
+    "c": "int maximalSquare(char** matrix, int m, int* cs) {\n    if (!m) return 0;\n    int n = cs[0], best = 0;\n    int* dp = calloc(m*n, sizeof(int));\n    for (int i=0;i<m;i++) for (int j=0;j<n;j++)\n        if (matrix[i][j]=='1') {\n            int v = 1;\n            if (i && j) {\n                int a=dp[(i-1)*n+j], b=dp[i*n+j-1], c=dp[(i-1)*n+j-1];\n                v = 1 + (a < b ? (a < c ? a : c) : (b < c ? b : c));\n            }\n            dp[i*n+j]=v;\n            if (v>best) best=v;\n        }\n    free(dp);\n    return best*best;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "DP side tại (i,j) phụ thuộc 3 neighbor; best lưu cạnh max.",
+    "edgeCases": ["Toàn '0' → 0", "Một ô '1'"],
+    "pitfalls": ["Trả cạnh thay vì diện tích", "O(mn) space có thể roll 1 hàng"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

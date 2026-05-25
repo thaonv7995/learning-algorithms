@@ -3,32 +3,24 @@
   "title": "Implement Stack using Queues",
   "difficulty": "Easy",
   "category": "Stack",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Implement Stack using Queues (LeetCode #225) — Easy.",
+  "timeComplexity": "O(n) push",
+  "spaceComplexity": "O(n)",
+  "description": "Cài đặt stack LIFO chỉ dùng hai queue (hoặc một queue). Hỗ trợ push, pop, top, empty.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "push(1); push(2); top() → 2; pop() → 2; empty() → false", "output": "2, 2, false" },
+    { "input": "push(1); pop(); empty()", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Một queue: push x thì enqueue x rồi rotate size-1 lần (dequeue→enqueue) để x ở đầu — top/pop O(1).",
+  "memoryTip": "Stack via 1 queue = enqueue then rotate n-1 moves front to top.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyStack:\n    def __init__(self):\n        self.q = deque()\n    def push(self, x: int) -> None:\n        self.q.append(x)\n        for _ in range(len(self.q) - 1):\n            self.q.append(self.q.popleft())\n    def pop(self) -> int:\n        return self.q.popleft()\n    def top(self) -> int:\n        return self.q[0]\n    def empty(self) -> bool:\n        return not self.q",
+    "cpp": "class MyStack {\n    queue<int> q;\npublic:\n    void push(int x) {\n        q.push(x);\n        for (int i = q.size() - 1; i > 0; i--) {\n            q.push(q.front()); q.pop();\n        }\n    }\n    int pop() { int t = q.front(); q.pop(); return t; }\n    int top() { return q.front(); }\n    bool empty() { return q.empty(); }\n};",
+    "c": "typedef struct { int* a; int h, t, cap; } Q;\nstatic void qPush(Q* q, int x) { if (q->h==q->t) { q->cap=q->cap? q->cap*2:4; q->a=realloc(q->a,q->cap*sizeof(int));} q->a[q->t++]=x; if(q->t==q->cap) q->t=0; }\nstatic int qPop(Q* q) { int v=q->a[q->h++]; if(q->h==q->cap) q->h=0; return v; }\nstatic int qFront(Q* q) { return q->a[q->h]; }\nstatic int qSize(Q* q) { return q->t>=q->h? q->t-q->h : q->cap-q->h+q->t; }\nvoid stackPush(Q* s, int x) { qPush(s,x); for(int i=qSize(s)-1;i>0;i--){ qPush(s,qPop(s)); } }\nint stackPop(Q* s) { return qPop(s); }\nint stackTop(Q* s) { return qFront(s); }\nint stackEmpty(Q* s) { return qSize(s)==0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Rotate sau push đặt phần tử mới ở front = stack top.",
+    "edgeCases": ["Pop stack rỗng (undefined theo đề)", "Nhiều push liên tiếp"],
+    "pitfalls": ["Hai queue không rotate → pop O(n)", "Quên rotate đủ n-1 lần"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #221</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Maximal Square</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(mn)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>50.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Maximal Square (LeetCode #221) — Medium.</div>
+                        <div class="block-text">Ma trận matrix gồm '0' và '1'. Tìm diện tích hình vuông lớn nhất chỉ gồm '1'. Trả diện tích (side²).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>matrix = [[&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;],[&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;],[&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;],[&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>matrix = [[&quot;0&quot;,&quot;1&quot;],[&quot;1&quot;,&quot;0&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>matrix = [[&quot;0&quot;]]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[i][j] = cạnh vuông lớn nhất góc dưới-phải (i,j): nếu '1' thì 1+min(top,left,diag); cập nhật max side.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,54 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maximalSquare(<span class="ty">char</span>** matrix, <span class="ty">int</span> m, <span class="ty">int</span>* cs) {
+    <span class="kw">if</span> (!m) <span class="kw">return</span> 0;
+    <span class="ty">int</span> n = cs[0], best = 0;
+    <span class="ty">int</span>* dp = <span class="kw">calloc</span>(m*n, <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;m;i++) <span class="kw">for</span> (<span class="ty">int</span> j=0;j&lt;n;j++)
+        <span class="kw">if</span> (matrix[i][j]=='1') {
+            <span class="ty">int</span> v = 1;
+            <span class="kw">if</span> (i &amp;&amp; j) {
+                <span class="ty">int</span> a=dp[(i-1)*n+j], b=dp[i*n+j-1], c=dp[(i-1)*n+j-1];
+                v = 1 + (a &lt; b ? (a &lt; c ? a : c) : (b &lt; c ? b : c));
+            }
+            dp[i*n+j]=v;
+            <span class="kw">if</span> (v&gt;best) best=v;
+        }
+    <span class="kw">free</span>(dp);
+    <span class="kw">return</span> best*best;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maximalSquare(<span class="ty">self</span>, matrix: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> <span class="kw">not</span> matrix:
+            <span class="kw">return</span> 0
+        m, n = <span class="ty">len</span>(matrix), <span class="ty">len</span>(matrix[0])
+        dp = [[0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m)]
+        best = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+                <span class="kw">if</span> matrix[i][j] == '1':
+                    <span class="kw">if</span> i == 0 <span class="kw">or</span> j == 0:
+                        dp[i][j] = 1
+                    <span class="kw">else</span>:
+                        dp[i][j] = 1 + <span class="ty">min</span>(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
+                    best = <span class="ty">max</span>(best, dp[i][j])
+        <span class="kw">return</span> best * best</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> maximalSquare(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; matrix) {
+        <span class="kw">if</span> (matrix.empty()) <span class="kw">return</span> 0;
+        <span class="ty">int</span> m = matrix.size(), n = matrix[0].size(), best = 0;
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(m, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n));
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++)
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; n; j++)
+                <span class="kw">if</span> (matrix[i][j] == '1') {
+                    <span class="kw">if</span> (!i || !j) dp[i][j] = 1;
+                    <span class="kw">else</span> dp[i][j] = 1 + min({dp[i-1][j], dp[i][j-1], dp[i-1][j-1]});
+                    best = max(best, dp[i][j]);
+                }
+        <span class="kw">return</span> best * best;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +156,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(mn)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP[i][j] = cạnh vuông lớn nhất góc dưới-phải : nếu '1' thì 1+min; cập…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DP side tại (i,j) phụ thuộc 3 neighbor; best lưu cạnh max.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Toàn '0' → 0</span><span class="analysis-tag edge">Một ô '1'</span><span class="analysis-tag pit">Trả cạnh thay vì diện tích</span><span class="analysis-tag pit">O(mn) space có thể roll 1 hàng</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Maximal square DP = min+1 tại ô '1'.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +185,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Maximal%20Square&lc_id=221&embed=true"></iframe>

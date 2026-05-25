@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #284</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Peeking Iterator</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>61.5% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Peeking Iterator (LeetCode #284) — Medium.</div>
+                        <div class="block-text">Thiết kế Iterator hỗ trợ peek(): trả phần tử kế tiếp mà không advance; next() trả và tiến; hasNext() kiểm tra còn phần tử.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>Iterator [1,2,3]; peek→1; next→1; next→2; hasNext→true</code></div>
+                <div class="ex-line"><span>Out</span><code>1, 1, 2, true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>peek called multiple times before next</code></div>
+                <div class="ex-line"><span>Out</span><code>same value each peek</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Cache nextVal và hasNextFlag từ underlying iterator; peek trả cache; next consume cache và prefetch lại.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,54 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span>* a; <span class="ty">int</span> i, n; <span class="ty">int</span> buf; <span class="ty">int</span> hasBuf; } PeekIter;
+<span class="ty">void</span> peekInit(PeekIter* p, <span class="ty">int</span>* a, <span class="ty">int</span> n) {
+    p-&gt;a=a; p-&gt;i=0; p-&gt;n=n; p-&gt;hasBuf=0;
+    <span class="kw">if</span> (n) { p-&gt;buf=a[0]; p-&gt;i=1; p-&gt;hasBuf=1; }
+}
+<span class="ty">int</span> peek(PeekIter* p) { <span class="kw">return</span> p-&gt;buf; }
+<span class="ty">int</span> peekNext(PeekIter* p) {
+    <span class="ty">int</span> v = p-&gt;buf;
+    <span class="kw">if</span> (p-&gt;i &lt; p-&gt;n) { p-&gt;buf = p-&gt;a[p-&gt;i++]; p-&gt;hasBuf = 1; }
+    <span class="kw">else</span> p-&gt;hasBuf = 0;
+    <span class="kw">return</span> v;
+}
+<span class="ty">int</span> peekHasNext(PeekIter* p) { <span class="kw">return</span> p-&gt;hasBuf; }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> PeekingIterator:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, iterator):
+        <span class="ty">self</span>.it = iterator
+        <span class="ty">self</span>.buf = <span class="kw">None</span>
+        <span class="ty">self</span>.has_buf = <span class="kw">False</span>
+        <span class="ty">self</span>._fill()
+    <span class="kw">def</span> _fill(<span class="ty">self</span>):
+        <span class="kw">if</span> <span class="kw">not</span> <span class="ty">self</span>.has_buf <span class="kw">and</span> <span class="ty">self</span>.it.hasNext():
+            <span class="ty">self</span>.buf = <span class="ty">self</span>.it.next()
+            <span class="ty">self</span>.has_buf = <span class="kw">True</span>
+    <span class="kw">def</span> peek(<span class="ty">self</span>):
+        <span class="ty">self</span>._fill()
+        <span class="kw">return</span> <span class="ty">self</span>.buf
+    <span class="kw">def</span> next(<span class="ty">self</span>):
+        <span class="ty">self</span>._fill()
+        val = <span class="ty">self</span>.buf
+        <span class="ty">self</span>.has_buf = <span class="kw">False</span>
+        <span class="ty">self</span>._fill()
+        <span class="kw">return</span> val
+    <span class="kw">def</span> hasNext(<span class="ty">self</span>):
+        <span class="kw">return</span> <span class="ty">self</span>.has_buf</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> PeekingIterator : <span class="ty">public</span> Iterator {
+    <span class="ty">int</span> buf;
+    <span class="ty">bool</span> hasBuf = false;
+    <span class="ty">void</span> fill() {
+        <span class="kw">if</span> (!hasBuf &amp;&amp; Iterator::hasNext()) {
+            buf = Iterator::next();
+            hasBuf = true;
+        }
+    }
 <span class="ty">public</span>:
+    PeekingIterator(Iterator* it) : Iterator(*it) { fill(); }
+    <span class="ty">int</span> peek() { fill(); <span class="kw">return</span> buf; }
+    <span class="ty">int</span> next() { fill(); hasBuf = false; <span class="ty">int</span> v = buf; fill(); <span class="kw">return</span> v; }
+    <span class="ty">bool</span> hasNext() <span class="ty">const</span> { <span class="kw">return</span> hasBuf; }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +151,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Cache nextVal và hasNextFlag từ underlying iterator; peek trả cache;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Buffer luôn giữ phần tử kế tiếp nếu có; peek không tăng underlying index.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Empty iterator</span><span class="analysis-tag edge">peek nhiều lần liên tiếp</span><span class="analysis-tag pit">Gọi next underlying trực tiếp mất sync</span><span class="analysis-tag pit">hasNext sau last next → false</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Peeking iterator = always buffer one element ahead.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +180,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Peeking%20Iterator&lc_id=284&embed=true"></iframe>

@@ -3,32 +3,24 @@
   "title": "Contains Duplicate III",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Contains Duplicate III (LeetCode #220) — Hard.",
+  "timeComplexity": "O(n log k)",
+  "spaceComplexity": "O(k)",
+  "description": "Cho nums, indexDiff k và valueDiff t. Trả true nếu có i≠j với |i-j|≤k và |nums[i]-nums[j]|≤t.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3,1], k = 3, t = 0", "output": "true" },
+    { "input": "nums = [1,5,9,1,5,9], k = 2, t = 3", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sliding window sorted container (TreeSet/multiset): với nums[i], tìm floor/ceil trong window; nếu |x-nums[i]|≤t → true.",
+  "memoryTip": "Duplicate III = window k + sorted set; check neighbor of nums[i].",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def containsNearbyAlmostDuplicate(self, nums: List[int], k: int, t: int) -> bool:\n        if t < 0:\n            return False\n        from sortedcontainers import SortedList\n        window = SortedList()\n        for i, x in enumerate(nums):\n            j = window.bisect_left(x - t)\n            if j < len(window) and window[j] - x <= t:\n                return True\n            window.add(x)\n            if len(window) > k:\n                window.remove(nums[i - k])\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {\n        if (k < 1 || t < 0) return false;\n        set<long long> window;\n        for (int i = 0; i < (int)nums.size(); i++) {\n            auto it = window.lower_bound((long long)nums[i] - t);\n            if (it != window.end() && *it - nums[i] <= t) return true;\n            window.insert(nums[i]);\n            if ((int)window.size() > k) window.erase(nums[i - k]);\n        }\n        return false;\n    }\n};",
+    "c": "bool containsNearbyAlmostDuplicate(int* nums, int n, int k, int t) {\n    if (k < 1 || t < 0) return false;\n    for (int i = 0; i < n; i++)\n        for (int j = i + 1; j <= i + k && j < n; j++) {\n            long long d = (long long)nums[i] - nums[j];\n            if (d < 0) d = -d;\n            if (d <= t) return true;\n        }\n    return false;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Trong window k, tồn tại x với |x-nums[i]|≤t iff lower_bound(nums[i]-t) trong khoảng.",
+    "edgeCases": ["t<0 → false", "k=0 → false"],
+    "pitfalls": ["Overflow int khi |a-b| lớn → dùng long long", "Bucket O(n) cần t>0"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

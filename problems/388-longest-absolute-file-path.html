@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #388</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Longest Absolute File Path</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(d)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Longest Absolute File Path (LeetCode #388) — Medium.</div>
+                        <div class="block-text">Input mô tả cấu trúc file ảo: mỗi dòng có depth (số tab) + tên. Trả độ dài đường dẫn tuyệt đối dài nhất tới file (không thư mục).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>input = &quot;dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>20</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>input = &quot;dir\n\ta\n\t\tb\n\t\t\tc\n\t\t\tx.txt&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>32</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Stack lưu độ dài path tại mỗi depth: đếm tab depth; stack[depth]=stack[depth-1]+len(name)+1; nếu có '.' cập nhật max.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,51 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> lengthLongestPath(<span class="ty">char</span>* input) {
+    <span class="ty">int</span> stack[128] = {0}, top = 1, ans = 0;
+    <span class="ty">char</span>* line = strtok(input, &quot;\n&quot;);
+    <span class="kw">while</span> (line) {
+        <span class="ty">int</span> depth = 0;
+        <span class="kw">while</span> (line[depth] == '\t') depth++;
+        <span class="ty">char</span>* name = line + depth;
+        <span class="ty">int</span> len = stack[depth] + strlen(name) + (depth ? 1 : 0);
+        stack[depth + 1] = len;
+        <span class="kw">if</span> (strchr(name, '.')) <span class="kw">if</span> (len &gt; ans) ans = len;
+        line = strtok(NULL, &quot;\n&quot;);
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> lengthLongestPath(<span class="ty">self</span>, input: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        stack, ans = [0], 0
+        <span class="kw">for</span> line <span class="kw">in</span> input.split('\n'):
+            depth = line.count('\t')
+            name = line[depth:]
+            length = stack[depth] + <span class="ty">len</span>(name) + (1 <span class="kw">if</span> depth <span class="kw">else</span> 0)
+            <span class="kw">if</span> depth + 1 == <span class="ty">len</span>(stack): stack.append(length)
+            <span class="kw">else</span>: stack[depth + 1] = length
+            <span class="kw">if</span> '.' <span class="kw">in</span> name:
+                ans = <span class="ty">max</span>(ans, length)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> lengthLongestPath(<span class="ty">string</span> input) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; stack = {0}; <span class="ty">int</span> ans = 0;
+        <span class="ty">string</span> line;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt;= (<span class="ty">int</span>)input.size(); i++) {
+            <span class="kw">if</span> (i == input.size() || input[i] == '\n') {
+                <span class="ty">int</span> depth = 0;
+                <span class="kw">while</span> (depth &lt; (<span class="ty">int</span>)line.size() &amp;&amp; line[depth] == '\t') depth++;
+                <span class="ty">string</span> name = line.substr(depth);
+                <span class="ty">int</span> len = stack[depth] + (<span class="ty">int</span>)name.size() + (depth ? 1 : 0);
+                <span class="kw">if</span> (depth + 1 &gt;= (<span class="ty">int</span>)stack.size()) stack.push_back(len);
+                <span class="kw">else</span> stack[depth + 1] = len;
+                <span class="kw">if</span> (name.find('.') != <span class="ty">string</span>::npos) ans = max(ans, len);
+                line.clear();
+            } <span class="kw">else</span> line.push_back(input[i]);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +150,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(d)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Stack lưu độ dài path tại mỗi depth: đếm tab depth;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack depth lưu path length prefix; file cập nhật global max.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chỉ thư mục → 0</span><span class="analysis-tag edge">Một file root</span><span class="analysis-tag edge">Depth sâu</span><span class="analysis-tag pit">Cộng slash sai depth 0</span><span class="analysis-tag pit">Coi mọi dòng là file</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Chỉ file có dấu chấm — cộng path prefix từ depth-1 + '/' + tên.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +177,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Longest%20Absolute%20File%20Path&lc_id=388&embed=true"></iframe>

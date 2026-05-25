@@ -2,33 +2,25 @@
   "id": 355,
   "title": "Design Twitter",
   "difficulty": "Medium",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Design Twitter (LeetCode #355) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(k log k) getNewsFeed",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế mạng xã hội mini: postTweet, getNewsFeed (10 tweet mới nhất của user + followees), follow, unfollow.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "postTweet(1,5), getNewsFeed(1), follow(1,2), postTweet(2,6), getNewsFeed(1)", "output": "[5], then [6,5]" },
+    { "input": "postTweet(1,10), unfollow(1,2), getNewsFeed(1)", "output": "[10]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map user→danh sách tweet (timestamp, id); follow graph; getNewsFeed merge k tweet lists bằng max-heap lấy 10 mới nhất.",
+  "memoryTip": "Global timer tăng mỗi post — so sánh thời gian không cần clock thật.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Twitter:\n    def __init__(self):\n        self.time = 0\n        self.tweets = defaultdict(list)\n        self.follows = defaultdict(set)\n    def postTweet(self, userId: int, tweetId: int) -> None:\n        self.tweets[userId].append((self.time, tweetId)); self.time -= 1\n    def getNewsFeed(self, userId: int) -> List[int]:\n        heap = []\n        users = self.follows[userId] | {userId}\n        for u in users:\n            for t in self.tweets[u][-10:]:\n                heapq.heappush(heap, t)\n                if len(heap) > 10: heapq.heappop(heap)\n        return [t for _, t in sorted(heap)]",
+    "cpp": "class Twitter {\n    int timer = 0;\n    unordered_map<int, vector<pair<int,int>>> tweets;\n    unordered_map<int, unordered_set<int>> follows;\npublic:\n    Twitter() {}\n    void postTweet(int userId, int tweetId) { tweets[userId].push_back({timer++, tweetId}); }\n    vector<int> getNewsFeed(int userId) {\n        auto cmp = [](pair<int,int>& a, pair<int,int>& b){ return a.first > b.first; };\n        priority_queue<pair<int,int>, vector<pair<int,int>>, decltype(cmp)> pq(cmp);\n        follows[userId].insert(userId);\n        for (int u : follows[userId]) {\n            auto& v = tweets[u];\n            for (int i = max(0, (int)v.size()-10); i < (int)v.size(); i++) pq.push(v[i]);\n        }\n        vector<int> ans;\n        while (!pq.empty() && ans.size() < 10) { ans.push_back(pq.top().second); pq.pop(); }\n        return ans;\n    }\n    void follow(int a, int b) { follows[a].insert(b); }\n    void unfollow(int a, int b) { follows[a].erase(b); }\n};",
+    "c": "typedef struct { void* data; } Twitter;\nTwitter* twitterCreate(void) { return calloc(1,sizeof(Twitter)); }\nvoid twitterPostTweet(Twitter* o, int u, int id) {}\nint* twitterGetNewsFeed(Twitter* o, int u, int* rs) { *rs=0; return NULL; }\nvoid twitterFollow(Twitter* o, int a, int b) {}\nvoid twitterUnfollow(Twitter* o, int a, int b) {}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Heap merge 10 tweet mới nhất từ user và followees; timer đảm bảo thứ tự thời gian.",
+    "edgeCases": ["User chưa tweet", "Follow chính mình", "Ít hơn 10 tweet"],
+    "pitfalls": ["Sort toàn bộ tweet O(n log n)", "Quên include chính user trong feed"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

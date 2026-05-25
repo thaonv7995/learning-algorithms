@@ -3,32 +3,24 @@
   "title": "Nth Digit",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Nth Digit (LeetCode #400) — Medium.",
+  "description": "Dãy số 123456789101112... ghép liên tiếp. Trả chữ số thứ n (1-indexed) trong dãy vô hạn.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 3", "output": "3" },
+    { "input": "n = 11", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Xác định số chữ số d: bắt đầu count=9, len=1; trừ d*len*9; tìm số start và offset trong số; trả digit.",
+  "memoryTip": "Nhóm theo 1-digit, 2-digit,... — O(log n) không materialize dãy.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findNthDigit(self, n: int) -> int:\n        length, count, start = 1, 9, 1\n        while n > length * count:\n            n -= length * count\n            length += 1\n            count *= 10\n            start *= 10\n        num = start + (n - 1) // length\n        idx = (n - 1) % length\n        return int(str(num)[idx])",
+    "cpp": "class Solution {\npublic:\n    int findNthDigit(int n) {\n        long long length = 1, count = 9, start = 1;\n        while (n > length * count) {\n            n -= length * count;\n            length++; count *= 10; start *= 10;\n        }\n        long long num = start + (n - 1) / length;\n        int idx = (n - 1) % length;\n        string s = to_string(num);\n        return s[idx] - '0';\n    }\n};",
+    "c": "int findNthDigit(int n) {\n    long long length = 1, count = 9, start = 1;\n    while (n > length * count) {\n        n -= length * count;\n        length++; count *= 10; start *= 10;\n    }\n    long long num = start + (n - 1) / length;\n    int idx = (n - 1) % length;\n    char buf[32]; snprintf(buf, sizeof(buf), \"%lld\", num);\n    return buf[idx] - '0';\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Trừ từng block digit-length; digit thứ n nằm trong số xác định tại index cục bộ.",
+    "edgeCases": ["n=1 → 1", "Biên block 9→10", "n lớn"],
+    "pitfalls": ["Build string dãy TLE", "int overflow trên count — dùng long"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

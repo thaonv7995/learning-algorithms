@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #220</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Contains Duplicate III</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>24.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Contains Duplicate III (LeetCode #220) — Hard.</div>
+                        <div class="block-text">Cho nums, indexDiff k và valueDiff t. Trả true nếu có i≠j với |i-j|≤k và |nums[i]-nums[j]|≤t.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,1], k = 3, t = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,5,9,1,5,9], k = 2, t = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sliding window sorted container (TreeSet/multiset): với nums[i], tìm floor/ceil trong window; nếu |x-nums[i]|≤t → true.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> containsNearbyAlmostDuplicate(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span> k, <span class="ty">int</span> t) {
+    <span class="kw">if</span> (k &lt; 1 || t &lt; 0) <span class="kw">return</span> false;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++)
+        <span class="kw">for</span> (<span class="ty">int</span> j = i + 1; j &lt;= i + k &amp;&amp; j &lt; n; j++) {
+            <span class="ty">long</span> <span class="ty">long</span> d = (<span class="ty">long</span> <span class="ty">long</span>)nums[i] - nums[j];
+            <span class="kw">if</span> (d &lt; 0) d = -d;
+            <span class="kw">if</span> (d &lt;= t) <span class="kw">return</span> true;
+        }
+    <span class="kw">return</span> false;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> containsNearbyAlmostDuplicate(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>, t: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">if</span> t &lt; 0:
+            <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">from</span> sortedcontainers <span class="kw">import</span> SortedList
+        window = SortedList()
+        <span class="kw">for</span> i, x <span class="kw">in</span> enumerate(nums):
+            j = window.bisect_left(x - t)
+            <span class="kw">if</span> j &lt; <span class="ty">len</span>(window) <span class="kw">and</span> window[j] - x &lt;= t:
+                <span class="kw">return</span> <span class="kw">True</span>
+            window.add(x)
+            <span class="kw">if</span> <span class="ty">len</span>(window) &gt; k:
+                window.remove(nums[i - k])
+        <span class="kw">return</span> <span class="kw">False</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> containsNearbyAlmostDuplicate(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> k, <span class="ty">int</span> t) {
+        <span class="kw">if</span> (k &lt; 1 || t &lt; 0) <span class="kw">return</span> false;
+        set&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; window;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)nums.size(); i++) {
+            auto it = window.lower_bound((<span class="ty">long</span> <span class="ty">long</span>)nums[i] - t);
+            <span class="kw">if</span> (it != window.end() &amp;&amp; *it - nums[i] &lt;= t) <span class="kw">return</span> true;
+            window.insert(nums[i]);
+            <span class="kw">if</span> ((<span class="ty">int</span>)window.size() &gt; k) window.erase(nums[i - k]);
+        }
+        <span class="kw">return</span> false;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +141,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sliding window sorted container : với nums[i], tìm floor/ceil trong…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Trong window k, tồn tại x với |x-nums[i]|≤t iff lower_bound(nums[i]-t) trong khoảng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">t&lt;0 → false</span><span class="analysis-tag edge">k=0 → false</span><span class="analysis-tag pit">Overflow int khi |a-b| lớn → dùng long long</span><span class="analysis-tag pit">Bucket O(n) cần t&gt;0</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Duplicate III = window k + sorted set; check neighbor of nums[i].</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Contains%20Duplicate%20III&lc_id=220&embed=true"></iframe>

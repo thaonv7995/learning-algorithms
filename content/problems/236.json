@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Lowest Common Ancestor of a Binary Tree (LeetCode #236) — Medium.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho binary tree (không nhất thiết BST) và hai node p, q. Trả LCA của chúng. Mọi node val unique; p,q luôn tồn tại.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1", "output": "3" },
+    { "input": "root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4", "output": "5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Postorder DFS: nếu node null hoặc ==p hoặc ==q return node; left,right = dfs con; nếu cả hai có → node hiện tại là LCA.",
+  "memoryTip": "LCA binary tree = postorder: both subtrees return non-null → current is LCA.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def lowestCommonAncestor(self, root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode:\n        if not root or root == p or root == q:\n            return root\n        left = self.lowestCommonAncestor(root.left, p, q)\n        right = self.lowestCommonAncestor(root.right, p, q)\n        if left and right:\n            return root\n        return left or right",
+    "cpp": "class Solution {\npublic:\n    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {\n        if (!root || root == p || root == q) return root;\n        TreeNode* left = lowestCommonAncestor(root->left, p, q);\n        TreeNode* right = lowestCommonAncestor(root->right, p, q);\n        if (left && right) return root;\n        return left ? left : right;\n    }\n};",
+    "c": "struct TreeNode* lowestCommonAncestor(struct TreeNode* root, struct TreeNode* p, struct TreeNode* q) {\n    if (!root || root == p || root == q) return root;\n    struct TreeNode* left = lowestCommonAncestor(root->left, p, q);\n    struct TreeNode* right = lowestCommonAncestor(root->right, p, q);\n    if (left && right) return root;\n    return left ? left : right;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Trả node đầu tiên (postorder) nơi p,q nằm khác subtree — đó là LCA.",
+    "edgeCases": ["p ancestor of q → trả p", "Root là LCA"],
+    "pitfalls": ["Parent pointer O(h) cần preprocess", "So sánh val thay pointer nếu trùng val"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

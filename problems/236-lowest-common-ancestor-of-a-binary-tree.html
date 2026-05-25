@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #236</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Lowest Common Ancestor of a Binary Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>69.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Lowest Common Ancestor of a Binary Tree (LeetCode #236) — Medium.</div>
+                        <div class="block-text">Cho binary tree (không nhất thiết BST) và hai node p, q. Trả LCA của chúng. Mọi node val unique; p,q luôn tồn tại.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Postorder DFS: nếu node null hoặc ==p hoặc ==q return node; left,right = dfs con; nếu cả hai có → node hiện tại là LCA.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,31 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> TreeNode* lowestCommonAncestor(<span class="ty">struct</span> TreeNode* root, <span class="ty">struct</span> TreeNode* p, <span class="ty">struct</span> TreeNode* q) {
+    <span class="kw">if</span> (!root || root == p || root == q) <span class="kw">return</span> root;
+    <span class="ty">struct</span> TreeNode* left = lowestCommonAncestor(root-&gt;left, p, q);
+    <span class="ty">struct</span> TreeNode* right = lowestCommonAncestor(root-&gt;right, p, q);
+    <span class="kw">if</span> (left &amp;&amp; right) <span class="kw">return</span> root;
+    <span class="kw">return</span> left ? left : right;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> lowestCommonAncestor(<span class="ty">self</span>, root: <span class="ty">TreeNode</span>, p: <span class="ty">TreeNode</span>, q: <span class="ty">TreeNode</span>) -&gt; <span class="ty">TreeNode</span>:
+        <span class="kw">if</span> <span class="kw">not</span> root <span class="kw">or</span> root == p <span class="kw">or</span> root == q:
+            <span class="kw">return</span> root
+        left = <span class="ty">self</span>.lowestCommonAncestor(root.left, p, q)
+        right = <span class="ty">self</span>.lowestCommonAncestor(root.right, p, q)
+        <span class="kw">if</span> left <span class="kw">and</span> right:
+            <span class="kw">return</span> root
+        <span class="kw">return</span> left <span class="kw">or</span> right</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        <span class="kw">if</span> (!root || root == p || root == q) <span class="kw">return</span> root;
+        TreeNode* left = lowestCommonAncestor(root-&gt;left, p, q);
+        TreeNode* right = lowestCommonAncestor(root-&gt;right, p, q);
+        <span class="kw">if</span> (left &amp;&amp; right) <span class="kw">return</span> root;
+        <span class="kw">return</span> left ? left : right;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +130,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Postorder DFS: nếu node null hoặc ==p hoặc ==q return node; left,right…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Trả node đầu tiên (postorder) nơi p,q nằm khác subtree — đó là LCA.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">p ancestor of q → trả p</span><span class="analysis-tag edge">Root là LCA</span><span class="analysis-tag pit">Parent pointer O(h) cần preprocess</span><span class="analysis-tag pit">So sánh val thay pointer nếu trùng val</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>LCA binary tree = postorder: both subtrees return non-null → current is LCA.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +157,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Lowest%20Common%20Ancestor%20of%20a%20Binary%20Tree&lc_id=236&embed=true"></iframe>

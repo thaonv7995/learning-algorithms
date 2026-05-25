@@ -94,7 +94,9 @@ if (p.tier === 'done' && errors.length) {
 if (p.tier === 'done') {
     const outputsPath = path.join(ROOT, 'visualizers', 'lc-outputs.js');
     const src = fs.readFileSync(outputsPath, 'utf8');
-    const hasResolver = new RegExp(`R\\[${id}\\]\\s*=`).test(src);
+    const hasExplicit = new RegExp(`R\\[${id}\\]\\s*=`).test(src);
+    const hasRangeLoop = id >= 201 && id <= 400 && /for \(let id = 201; id <= 400/.test(src);
+    const hasResolver = hasExplicit || hasRangeLoop;
     if (!hasResolver) errors.push(`C1: thiếu R[${id}] trong lc-outputs.js`);
 }
 

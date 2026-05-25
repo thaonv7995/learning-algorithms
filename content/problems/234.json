@@ -5,30 +5,22 @@
   "category": "Linked List",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Palindrome Linked List (LeetCode #234) — Easy.",
+  "description": "Kiểm tra linked list có palindrome không (đọc xuôi ngược giống nhau). Yêu cầu O(n) thời gian và O(1) bộ nhớ phụ nếu có thể.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [1,2,2,1]", "output": "true" },
+    { "input": "head = [1,2]", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Slow/fast tìm giữa; reverse nửa sau; so sánh hai nửa; (optional) restore list.",
+  "memoryTip": "Palindrome list = find mid + reverse second half + compare.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isPalindrome(self, head: Optional[ListNode]) -> bool:\n        slow = fast = head\n        while fast and fast.next:\n            slow = slow.next\n            fast = fast.next.next\n        prev = None\n        while slow:\n            nxt = slow.next\n            slow.next = prev\n            prev = slow\n            slow = nxt\n        left, right = head, prev\n        while right:\n            if left.val != right.val:\n                return False\n            left = left.next\n            right = right.next\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool isPalindrome(ListNode* head) {\n        ListNode *slow = head, *fast = head;\n        while (fast && fast->next) { slow = slow->next; fast = fast->next->next; }\n        ListNode* prev = nullptr;\n        while (slow) { ListNode* nxt = slow->next; slow->next = prev; prev = slow; slow = nxt; }\n        for (ListNode *l = head, *r = prev; r; l = l->next, r = r->next)\n            if (l->val != r->val) return false;\n        return true;\n    }\n};",
+    "c": "bool isPalindrome(struct ListNode* head) {\n    struct ListNode *slow=head,*fast=head;\n    while (fast && fast->next) { slow=slow->next; fast=fast->next->next; }\n    struct ListNode* prev=NULL;\n    while (slow) { struct ListNode* n=slow->next; slow->next=prev; prev=slow; slow=n; }\n    for (struct ListNode *l=head,*r=prev; r; l=l->next,r=r->next)\n        if (l->val!=r->val) return false;\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Nửa sau đảo so khớp nửa đầu; slow dừng giữa (hoặc sau giữa với len chẵn).",
+    "edgeCases": ["Một node → true", "Hai node khác → false"],
+    "pitfalls": ["Copy vào array O(n) space", "Reverse cả list thay nửa sau"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

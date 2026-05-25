@@ -2660,12 +2660,12 @@ Trang: [problems/200-number-of-islands.html](../problems/200-number-of-islands.h
 Review file: `reviews/0201-bitwise-and-of-numbers-range.md` _(chưa tạo)_
 Trang: [problems/201-bitwise-and-of-numbers-range.html](../problems/201-bitwise-and-of-numbers-range.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #202 · Happy Number
@@ -2674,12 +2674,12 @@ Trang: [problems/201-bitwise-and-of-numbers-range.html](../problems/201-bitwise-
 Review file: `reviews/0202-happy-number.md` _(chưa tạo)_
 Trang: [problems/202-happy-number.html](../problems/202-happy-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #203 · Remove Linked List Elements
@@ -2688,12 +2688,12 @@ Trang: [problems/202-happy-number.html](../problems/202-happy-number.html)
 Review file: `reviews/0203-remove-linked-list-elements.md` _(chưa tạo)_
 Trang: [problems/203-remove-linked-list-elements.html](../problems/203-remove-linked-list-elements.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #204 · Count Primes
@@ -2702,12 +2702,12 @@ Trang: [problems/203-remove-linked-list-elements.html](../problems/203-remove-li
 Review file: `reviews/0204-count-primes.md` _(chưa tạo)_
 Trang: [problems/204-count-primes.html](../problems/204-count-primes.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #205 · Isomorphic Strings
@@ -2716,12 +2716,12 @@ Trang: [problems/204-count-primes.html](../problems/204-count-primes.html)
 Review file: `reviews/0205-isomorphic-strings.md` _(chưa tạo)_
 Trang: [problems/205-isomorphic-strings.html](../problems/205-isomorphic-strings.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #206 · Reverse Linked List
@@ -2730,12 +2730,12 @@ Trang: [problems/205-isomorphic-strings.html](../problems/205-isomorphic-strings
 Review file: `reviews/0206-reverse-linked-list.md` _(chưa tạo)_
 Trang: [problems/206-reverse-linked-list.html](../problems/206-reverse-linked-list.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #207 · Course Schedule
@@ -2744,12 +2744,12 @@ Trang: [problems/206-reverse-linked-list.html](../problems/206-reverse-linked-li
 Review file: `reviews/0207-course-schedule.md` _(chưa tạo)_
 Trang: [problems/207-course-schedule.html](../problems/207-course-schedule.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #208 · Implement Trie (Prefix Tree)
@@ -2758,12 +2758,12 @@ Trang: [problems/207-course-schedule.html](../problems/207-course-schedule.html)
 Review file: `reviews/0208-implement-trie-prefix-tree.md` _(chưa tạo)_
 Trang: [problems/208-implement-trie-prefix-tree.html](../problems/208-implement-trie-prefix-tree.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #209 · Minimum Size Subarray Sum
@@ -2772,12 +2772,12 @@ Trang: [problems/208-implement-trie-prefix-tree.html](../problems/208-implement-
 Review file: `reviews/0209-minimum-size-subarray-sum.md` _(chưa tạo)_
 Trang: [problems/209-minimum-size-subarray-sum.html](../problems/209-minimum-size-subarray-sum.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #210 · Course Schedule II
@@ -2786,12 +2786,12 @@ Trang: [problems/209-minimum-size-subarray-sum.html](../problems/209-minimum-siz
 Review file: `reviews/0210-course-schedule-ii.md` _(chưa tạo)_
 Trang: [problems/210-course-schedule-ii.html](../problems/210-course-schedule-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #211 · Design Add and Search Words Data Structure
@@ -2800,12 +2800,12 @@ Trang: [problems/210-course-schedule-ii.html](../problems/210-course-schedule-ii
 Review file: `reviews/0211-design-add-and-search-words-data-structure.md` _(chưa tạo)_
 Trang: [problems/211-design-add-and-search-words-data-structure.html](../problems/211-design-add-and-search-words-data-structure.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #212 · Word Search II
@@ -2814,12 +2814,12 @@ Trang: [problems/211-design-add-and-search-words-data-structure.html](../problem
 Review file: `reviews/0212-word-search-ii.md` _(chưa tạo)_
 Trang: [problems/212-word-search-ii.html](../problems/212-word-search-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #213 · House Robber II
@@ -2828,12 +2828,12 @@ Trang: [problems/212-word-search-ii.html](../problems/212-word-search-ii.html)
 Review file: `reviews/0213-house-robber-ii.md` _(chưa tạo)_
 Trang: [problems/213-house-robber-ii.html](../problems/213-house-robber-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #214 · Shortest Palindrome
@@ -2842,12 +2842,12 @@ Trang: [problems/213-house-robber-ii.html](../problems/213-house-robber-ii.html)
 Review file: `reviews/0214-shortest-palindrome.md` _(chưa tạo)_
 Trang: [problems/214-shortest-palindrome.html](../problems/214-shortest-palindrome.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #215 · Kth Largest Element in an Array
@@ -2856,12 +2856,12 @@ Trang: [problems/214-shortest-palindrome.html](../problems/214-shortest-palindro
 Review file: `reviews/0215-kth-largest-element-in-an-array.md` _(chưa tạo)_
 Trang: [problems/215-kth-largest-element-in-an-array.html](../problems/215-kth-largest-element-in-an-array.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #216 · Combination Sum III
@@ -2870,12 +2870,12 @@ Trang: [problems/215-kth-largest-element-in-an-array.html](../problems/215-kth-l
 Review file: `reviews/0216-combination-sum-iii.md` _(chưa tạo)_
 Trang: [problems/216-combination-sum-iii.html](../problems/216-combination-sum-iii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #217 · Contains Duplicate
@@ -2884,12 +2884,12 @@ Trang: [problems/216-combination-sum-iii.html](../problems/216-combination-sum-i
 Review file: `reviews/0217-contains-duplicate.md` _(chưa tạo)_
 Trang: [problems/217-contains-duplicate.html](../problems/217-contains-duplicate.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #218 · The Skyline Problem
@@ -2898,12 +2898,12 @@ Trang: [problems/217-contains-duplicate.html](../problems/217-contains-duplicate
 Review file: `reviews/0218-the-skyline-problem.md` _(chưa tạo)_
 Trang: [problems/218-the-skyline-problem.html](../problems/218-the-skyline-problem.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #219 · Contains Duplicate II
@@ -2912,12 +2912,12 @@ Trang: [problems/218-the-skyline-problem.html](../problems/218-the-skyline-probl
 Review file: `reviews/0219-contains-duplicate-ii.md` _(chưa tạo)_
 Trang: [problems/219-contains-duplicate-ii.html](../problems/219-contains-duplicate-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #220 · Contains Duplicate III
@@ -2926,12 +2926,12 @@ Trang: [problems/219-contains-duplicate-ii.html](../problems/219-contains-duplic
 Review file: `reviews/0220-contains-duplicate-iii.md` _(chưa tạo)_
 Trang: [problems/220-contains-duplicate-iii.html](../problems/220-contains-duplicate-iii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #221 · Maximal Square
@@ -2940,12 +2940,12 @@ Trang: [problems/220-contains-duplicate-iii.html](../problems/220-contains-dupli
 Review file: `reviews/0221-maximal-square.md` _(chưa tạo)_
 Trang: [problems/221-maximal-square.html](../problems/221-maximal-square.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #222 · Count Complete Tree Nodes
@@ -2954,12 +2954,12 @@ Trang: [problems/221-maximal-square.html](../problems/221-maximal-square.html)
 Review file: `reviews/0222-count-complete-tree-nodes.md` _(chưa tạo)_
 Trang: [problems/222-count-complete-tree-nodes.html](../problems/222-count-complete-tree-nodes.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #223 · Rectangle Area
@@ -2968,12 +2968,12 @@ Trang: [problems/222-count-complete-tree-nodes.html](../problems/222-count-compl
 Review file: `reviews/0223-rectangle-area.md` _(chưa tạo)_
 Trang: [problems/223-rectangle-area.html](../problems/223-rectangle-area.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #224 · Basic Calculator
@@ -2982,12 +2982,12 @@ Trang: [problems/223-rectangle-area.html](../problems/223-rectangle-area.html)
 Review file: `reviews/0224-basic-calculator.md` _(chưa tạo)_
 Trang: [problems/224-basic-calculator.html](../problems/224-basic-calculator.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #225 · Implement Stack using Queues
@@ -2996,12 +2996,12 @@ Trang: [problems/224-basic-calculator.html](../problems/224-basic-calculator.htm
 Review file: `reviews/0225-implement-stack-using-queues.md` _(chưa tạo)_
 Trang: [problems/225-implement-stack-using-queues.html](../problems/225-implement-stack-using-queues.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #226 · Invert Binary Tree
@@ -3010,12 +3010,12 @@ Trang: [problems/225-implement-stack-using-queues.html](../problems/225-implemen
 Review file: `reviews/0226-invert-binary-tree.md` _(chưa tạo)_
 Trang: [problems/226-invert-binary-tree.html](../problems/226-invert-binary-tree.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #227 · Basic Calculator II
@@ -3024,12 +3024,12 @@ Trang: [problems/226-invert-binary-tree.html](../problems/226-invert-binary-tree
 Review file: `reviews/0227-basic-calculator-ii.md` _(chưa tạo)_
 Trang: [problems/227-basic-calculator-ii.html](../problems/227-basic-calculator-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #228 · Summary Ranges
@@ -3038,12 +3038,12 @@ Trang: [problems/227-basic-calculator-ii.html](../problems/227-basic-calculator-
 Review file: `reviews/0228-summary-ranges.md` _(chưa tạo)_
 Trang: [problems/228-summary-ranges.html](../problems/228-summary-ranges.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #229 · Majority Element II
@@ -3052,12 +3052,12 @@ Trang: [problems/228-summary-ranges.html](../problems/228-summary-ranges.html)
 Review file: `reviews/0229-majority-element-ii.md` _(chưa tạo)_
 Trang: [problems/229-majority-element-ii.html](../problems/229-majority-element-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #230 · Kth Smallest Element in a BST
@@ -3066,12 +3066,12 @@ Trang: [problems/229-majority-element-ii.html](../problems/229-majority-element-
 Review file: `reviews/0230-kth-smallest-element-in-a-bst.md` _(chưa tạo)_
 Trang: [problems/230-kth-smallest-element-in-a-bst.html](../problems/230-kth-smallest-element-in-a-bst.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #231 · Power of Two
@@ -3080,12 +3080,12 @@ Trang: [problems/230-kth-smallest-element-in-a-bst.html](../problems/230-kth-sma
 Review file: `reviews/0231-power-of-two.md` _(chưa tạo)_
 Trang: [problems/231-power-of-two.html](../problems/231-power-of-two.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #232 · Implement Queue using Stacks
@@ -3094,12 +3094,12 @@ Trang: [problems/231-power-of-two.html](../problems/231-power-of-two.html)
 Review file: `reviews/0232-implement-queue-using-stacks.md` _(chưa tạo)_
 Trang: [problems/232-implement-queue-using-stacks.html](../problems/232-implement-queue-using-stacks.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #233 · Number of Digit One
@@ -3108,12 +3108,12 @@ Trang: [problems/232-implement-queue-using-stacks.html](../problems/232-implemen
 Review file: `reviews/0233-number-of-digit-one.md` _(chưa tạo)_
 Trang: [problems/233-number-of-digit-one.html](../problems/233-number-of-digit-one.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #234 · Palindrome Linked List
@@ -3122,12 +3122,12 @@ Trang: [problems/233-number-of-digit-one.html](../problems/233-number-of-digit-o
 Review file: `reviews/0234-palindrome-linked-list.md` _(chưa tạo)_
 Trang: [problems/234-palindrome-linked-list.html](../problems/234-palindrome-linked-list.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #235 · Lowest Common Ancestor of a Binary Search Tree
@@ -3136,12 +3136,12 @@ Trang: [problems/234-palindrome-linked-list.html](../problems/234-palindrome-lin
 Review file: `reviews/0235-lowest-common-ancestor-of-a-binary-search-tree.md` _(chưa tạo)_
 Trang: [problems/235-lowest-common-ancestor-of-a-binary-search-tree.html](../problems/235-lowest-common-ancestor-of-a-binary-search-tree.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #236 · Lowest Common Ancestor of a Binary Tree
@@ -3150,12 +3150,12 @@ Trang: [problems/235-lowest-common-ancestor-of-a-binary-search-tree.html](../pro
 Review file: `reviews/0236-lowest-common-ancestor-of-a-binary-tree.md` _(chưa tạo)_
 Trang: [problems/236-lowest-common-ancestor-of-a-binary-tree.html](../problems/236-lowest-common-ancestor-of-a-binary-tree.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #237 · Delete Node in a Linked List
@@ -3164,12 +3164,12 @@ Trang: [problems/236-lowest-common-ancestor-of-a-binary-tree.html](../problems/2
 Review file: `reviews/0237-delete-node-in-a-linked-list.md` _(chưa tạo)_
 Trang: [problems/237-delete-node-in-a-linked-list.html](../problems/237-delete-node-in-a-linked-list.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #238 · Product of Array Except Self
@@ -3178,12 +3178,12 @@ Trang: [problems/237-delete-node-in-a-linked-list.html](../problems/237-delete-n
 Review file: `reviews/0238-product-of-array-except-self.md` _(chưa tạo)_
 Trang: [problems/238-product-of-array-except-self.html](../problems/238-product-of-array-except-self.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #239 · Sliding Window Maximum
@@ -3192,12 +3192,12 @@ Trang: [problems/238-product-of-array-except-self.html](../problems/238-product-
 Review file: `reviews/0239-sliding-window-maximum.md` _(chưa tạo)_
 Trang: [problems/239-sliding-window-maximum.html](../problems/239-sliding-window-maximum.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #240 · Search a 2D Matrix II
@@ -3206,12 +3206,12 @@ Trang: [problems/239-sliding-window-maximum.html](../problems/239-sliding-window
 Review file: `reviews/0240-search-a-2d-matrix-ii.md` _(chưa tạo)_
 Trang: [problems/240-search-a-2d-matrix-ii.html](../problems/240-search-a-2d-matrix-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #241 · Different Ways to Add Parentheses
@@ -3220,12 +3220,12 @@ Trang: [problems/240-search-a-2d-matrix-ii.html](../problems/240-search-a-2d-mat
 Review file: `reviews/0241-different-ways-to-add-parentheses.md` _(chưa tạo)_
 Trang: [problems/241-different-ways-to-add-parentheses.html](../problems/241-different-ways-to-add-parentheses.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #242 · Valid Anagram
@@ -3234,12 +3234,12 @@ Trang: [problems/241-different-ways-to-add-parentheses.html](../problems/241-dif
 Review file: `reviews/0242-valid-anagram.md` _(chưa tạo)_
 Trang: [problems/242-valid-anagram.html](../problems/242-valid-anagram.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #257 · Binary Tree Paths
@@ -3248,12 +3248,12 @@ Trang: [problems/242-valid-anagram.html](../problems/242-valid-anagram.html)
 Review file: `reviews/0257-binary-tree-paths.md` _(chưa tạo)_
 Trang: [problems/257-binary-tree-paths.html](../problems/257-binary-tree-paths.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #258 · Add Digits
@@ -3262,12 +3262,12 @@ Trang: [problems/257-binary-tree-paths.html](../problems/257-binary-tree-paths.h
 Review file: `reviews/0258-add-digits.md` _(chưa tạo)_
 Trang: [problems/258-add-digits.html](../problems/258-add-digits.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #260 · Single Number III
@@ -3276,12 +3276,12 @@ Trang: [problems/258-add-digits.html](../problems/258-add-digits.html)
 Review file: `reviews/0260-single-number-iii.md` _(chưa tạo)_
 Trang: [problems/260-single-number-iii.html](../problems/260-single-number-iii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #262 · Trips and Users
@@ -3290,12 +3290,12 @@ Trang: [problems/260-single-number-iii.html](../problems/260-single-number-iii.h
 Review file: `reviews/0262-trips-and-users.md` _(chưa tạo)_
 Trang: [problems/262-trips-and-users.html](../problems/262-trips-and-users.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #263 · Ugly Number
@@ -3304,12 +3304,12 @@ Trang: [problems/262-trips-and-users.html](../problems/262-trips-and-users.html)
 Review file: `reviews/0263-ugly-number.md` _(chưa tạo)_
 Trang: [problems/263-ugly-number.html](../problems/263-ugly-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #264 · Ugly Number II
@@ -3318,12 +3318,12 @@ Trang: [problems/263-ugly-number.html](../problems/263-ugly-number.html)
 Review file: `reviews/0264-ugly-number-ii.md` _(chưa tạo)_
 Trang: [problems/264-ugly-number-ii.html](../problems/264-ugly-number-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #268 · Missing Number
@@ -3332,12 +3332,12 @@ Trang: [problems/264-ugly-number-ii.html](../problems/264-ugly-number-ii.html)
 Review file: `reviews/0268-missing-number.md` _(chưa tạo)_
 Trang: [problems/268-missing-number.html](../problems/268-missing-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #273 · Integer to English Words
@@ -3346,12 +3346,12 @@ Trang: [problems/268-missing-number.html](../problems/268-missing-number.html)
 Review file: `reviews/0273-integer-to-english-words.md` _(chưa tạo)_
 Trang: [problems/273-integer-to-english-words.html](../problems/273-integer-to-english-words.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #274 · H-Index
@@ -3360,12 +3360,12 @@ Trang: [problems/273-integer-to-english-words.html](../problems/273-integer-to-e
 Review file: `reviews/0274-h-index.md` _(chưa tạo)_
 Trang: [problems/274-h-index.html](../problems/274-h-index.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #275 · H-Index II
@@ -3374,12 +3374,12 @@ Trang: [problems/274-h-index.html](../problems/274-h-index.html)
 Review file: `reviews/0275-h-index-ii.md` _(chưa tạo)_
 Trang: [problems/275-h-index-ii.html](../problems/275-h-index-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #278 · First Bad Version
@@ -3388,12 +3388,12 @@ Trang: [problems/275-h-index-ii.html](../problems/275-h-index-ii.html)
 Review file: `reviews/0278-first-bad-version.md` _(chưa tạo)_
 Trang: [problems/278-first-bad-version.html](../problems/278-first-bad-version.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #279 · Perfect Squares
@@ -3402,12 +3402,12 @@ Trang: [problems/278-first-bad-version.html](../problems/278-first-bad-version.h
 Review file: `reviews/0279-perfect-squares.md` _(chưa tạo)_
 Trang: [problems/279-perfect-squares.html](../problems/279-perfect-squares.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #282 · Expression Add Operators
@@ -3416,12 +3416,12 @@ Trang: [problems/279-perfect-squares.html](../problems/279-perfect-squares.html)
 Review file: `reviews/0282-expression-add-operators.md` _(chưa tạo)_
 Trang: [problems/282-expression-add-operators.html](../problems/282-expression-add-operators.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #283 · Move Zeroes
@@ -3430,12 +3430,12 @@ Trang: [problems/282-expression-add-operators.html](../problems/282-expression-a
 Review file: `reviews/0283-move-zeroes.md` _(chưa tạo)_
 Trang: [problems/283-move-zeroes.html](../problems/283-move-zeroes.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #284 · Peeking Iterator
@@ -3444,12 +3444,12 @@ Trang: [problems/283-move-zeroes.html](../problems/283-move-zeroes.html)
 Review file: `reviews/0284-peeking-iterator.md` _(chưa tạo)_
 Trang: [problems/284-peeking-iterator.html](../problems/284-peeking-iterator.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #287 · Find the Duplicate Number
@@ -3458,12 +3458,12 @@ Trang: [problems/284-peeking-iterator.html](../problems/284-peeking-iterator.htm
 Review file: `reviews/0287-find-the-duplicate-number.md` _(chưa tạo)_
 Trang: [problems/287-find-the-duplicate-number.html](../problems/287-find-the-duplicate-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #289 · Game of Life
@@ -3472,12 +3472,12 @@ Trang: [problems/287-find-the-duplicate-number.html](../problems/287-find-the-du
 Review file: `reviews/0289-game-of-life.md` _(chưa tạo)_
 Trang: [problems/289-game-of-life.html](../problems/289-game-of-life.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #290 · Word Pattern
@@ -3486,12 +3486,12 @@ Trang: [problems/289-game-of-life.html](../problems/289-game-of-life.html)
 Review file: `reviews/0290-word-pattern.md` _(chưa tạo)_
 Trang: [problems/290-word-pattern.html](../problems/290-word-pattern.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #292 · Nim Game
@@ -3500,12 +3500,12 @@ Trang: [problems/290-word-pattern.html](../problems/290-word-pattern.html)
 Review file: `reviews/0292-nim-game.md` _(chưa tạo)_
 Trang: [problems/292-nim-game.html](../problems/292-nim-game.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #295 · Find Median from Data Stream
@@ -3514,12 +3514,12 @@ Trang: [problems/292-nim-game.html](../problems/292-nim-game.html)
 Review file: `reviews/0295-find-median-from-data-stream.md` _(chưa tạo)_
 Trang: [problems/295-find-median-from-data-stream.html](../problems/295-find-median-from-data-stream.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #297 · Serialize and Deserialize Binary Tree
@@ -3528,12 +3528,12 @@ Trang: [problems/295-find-median-from-data-stream.html](../problems/295-find-med
 Review file: `reviews/0297-serialize-and-deserialize-binary-tree.md` _(chưa tạo)_
 Trang: [problems/297-serialize-and-deserialize-binary-tree.html](../problems/297-serialize-and-deserialize-binary-tree.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #299 · Bulls and Cows
@@ -3542,12 +3542,12 @@ Trang: [problems/297-serialize-and-deserialize-binary-tree.html](../problems/297
 Review file: `reviews/0299-bulls-and-cows.md` _(chưa tạo)_
 Trang: [problems/299-bulls-and-cows.html](../problems/299-bulls-and-cows.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #300 · Longest Increasing Subsequence
@@ -3556,12 +3556,12 @@ Trang: [problems/299-bulls-and-cows.html](../problems/299-bulls-and-cows.html)
 Review file: `reviews/0300-longest-increasing-subsequence.md` _(chưa tạo)_
 Trang: [problems/300-longest-increasing-subsequence.html](../problems/300-longest-increasing-subsequence.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ## LC #301–400
@@ -3572,12 +3572,12 @@ Trang: [problems/300-longest-increasing-subsequence.html](../problems/300-longes
 Review file: `reviews/0301-remove-invalid-parentheses.md` _(chưa tạo)_
 Trang: [problems/301-remove-invalid-parentheses.html](../problems/301-remove-invalid-parentheses.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #303 · Range Sum Query - Immutable
@@ -3586,12 +3586,12 @@ Trang: [problems/301-remove-invalid-parentheses.html](../problems/301-remove-inv
 Review file: `reviews/0303-range-sum-query-immutable.md` _(chưa tạo)_
 Trang: [problems/303-range-sum-query-immutable.html](../problems/303-range-sum-query-immutable.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #304 · Range Sum Query 2D - Immutable
@@ -3600,12 +3600,12 @@ Trang: [problems/303-range-sum-query-immutable.html](../problems/303-range-sum-q
 Review file: `reviews/0304-range-sum-query-2d-immutable.md` _(chưa tạo)_
 Trang: [problems/304-range-sum-query-2d-immutable.html](../problems/304-range-sum-query-2d-immutable.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #306 · Additive Number
@@ -3614,12 +3614,12 @@ Trang: [problems/304-range-sum-query-2d-immutable.html](../problems/304-range-su
 Review file: `reviews/0306-additive-number.md` _(chưa tạo)_
 Trang: [problems/306-additive-number.html](../problems/306-additive-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #307 · Range Sum Query - Mutable
@@ -3628,12 +3628,12 @@ Trang: [problems/306-additive-number.html](../problems/306-additive-number.html)
 Review file: `reviews/0307-range-sum-query-mutable.md` _(chưa tạo)_
 Trang: [problems/307-range-sum-query-mutable.html](../problems/307-range-sum-query-mutable.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #309 · Best Time to Buy and Sell Stock with Cooldown
@@ -3642,12 +3642,12 @@ Trang: [problems/307-range-sum-query-mutable.html](../problems/307-range-sum-que
 Review file: `reviews/0309-best-time-to-buy-and-sell-stock-with-cooldown.md` _(chưa tạo)_
 Trang: [problems/309-best-time-to-buy-and-sell-stock-with-cooldown.html](../problems/309-best-time-to-buy-and-sell-stock-with-cooldown.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #310 · Minimum Height Trees
@@ -3656,12 +3656,12 @@ Trang: [problems/309-best-time-to-buy-and-sell-stock-with-cooldown.html](../prob
 Review file: `reviews/0310-minimum-height-trees.md` _(chưa tạo)_
 Trang: [problems/310-minimum-height-trees.html](../problems/310-minimum-height-trees.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #312 · Burst Balloons
@@ -3670,12 +3670,12 @@ Trang: [problems/310-minimum-height-trees.html](../problems/310-minimum-height-t
 Review file: `reviews/0312-burst-balloons.md` _(chưa tạo)_
 Trang: [problems/312-burst-balloons.html](../problems/312-burst-balloons.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #313 · Super Ugly Number
@@ -3684,12 +3684,12 @@ Trang: [problems/312-burst-balloons.html](../problems/312-burst-balloons.html)
 Review file: `reviews/0313-super-ugly-number.md` _(chưa tạo)_
 Trang: [problems/313-super-ugly-number.html](../problems/313-super-ugly-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #315 · Count of Smaller Numbers After Self
@@ -3698,12 +3698,12 @@ Trang: [problems/313-super-ugly-number.html](../problems/313-super-ugly-number.h
 Review file: `reviews/0315-count-of-smaller-numbers-after-self.md` _(chưa tạo)_
 Trang: [problems/315-count-of-smaller-numbers-after-self.html](../problems/315-count-of-smaller-numbers-after-self.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #316 · Remove Duplicate Letters
@@ -3712,12 +3712,12 @@ Trang: [problems/315-count-of-smaller-numbers-after-self.html](../problems/315-c
 Review file: `reviews/0316-remove-duplicate-letters.md` _(chưa tạo)_
 Trang: [problems/316-remove-duplicate-letters.html](../problems/316-remove-duplicate-letters.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #318 · Maximum Product of Word Lengths
@@ -3726,12 +3726,12 @@ Trang: [problems/316-remove-duplicate-letters.html](../problems/316-remove-dupli
 Review file: `reviews/0318-maximum-product-of-word-lengths.md` _(chưa tạo)_
 Trang: [problems/318-maximum-product-of-word-lengths.html](../problems/318-maximum-product-of-word-lengths.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #319 · Bulb Switcher
@@ -3740,12 +3740,12 @@ Trang: [problems/318-maximum-product-of-word-lengths.html](../problems/318-maxim
 Review file: `reviews/0319-bulb-switcher.md` _(chưa tạo)_
 Trang: [problems/319-bulb-switcher.html](../problems/319-bulb-switcher.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #321 · Create Maximum Number
@@ -3754,12 +3754,12 @@ Trang: [problems/319-bulb-switcher.html](../problems/319-bulb-switcher.html)
 Review file: `reviews/0321-create-maximum-number.md` _(chưa tạo)_
 Trang: [problems/321-create-maximum-number.html](../problems/321-create-maximum-number.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #322 · Coin Change
@@ -3768,12 +3768,12 @@ Trang: [problems/321-create-maximum-number.html](../problems/321-create-maximum-
 Review file: `reviews/0322-coin-change.md` _(chưa tạo)_
 Trang: [problems/322-coin-change.html](../problems/322-coin-change.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #324 · Wiggle Sort II
@@ -3782,12 +3782,12 @@ Trang: [problems/322-coin-change.html](../problems/322-coin-change.html)
 Review file: `reviews/0324-wiggle-sort-ii.md` _(chưa tạo)_
 Trang: [problems/324-wiggle-sort-ii.html](../problems/324-wiggle-sort-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #326 · Power of Three
@@ -3796,12 +3796,12 @@ Trang: [problems/324-wiggle-sort-ii.html](../problems/324-wiggle-sort-ii.html)
 Review file: `reviews/0326-power-of-three.md` _(chưa tạo)_
 Trang: [problems/326-power-of-three.html](../problems/326-power-of-three.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #327 · Count of Range Sum
@@ -3810,12 +3810,12 @@ Trang: [problems/326-power-of-three.html](../problems/326-power-of-three.html)
 Review file: `reviews/0327-count-of-range-sum.md` _(chưa tạo)_
 Trang: [problems/327-count-of-range-sum.html](../problems/327-count-of-range-sum.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #328 · Odd Even Linked List
@@ -3824,12 +3824,12 @@ Trang: [problems/327-count-of-range-sum.html](../problems/327-count-of-range-sum
 Review file: `reviews/0328-odd-even-linked-list.md` _(chưa tạo)_
 Trang: [problems/328-odd-even-linked-list.html](../problems/328-odd-even-linked-list.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #329 · Longest Increasing Path in a Matrix
@@ -3838,12 +3838,12 @@ Trang: [problems/328-odd-even-linked-list.html](../problems/328-odd-even-linked-
 Review file: `reviews/0329-longest-increasing-path-in-a-matrix.md` _(chưa tạo)_
 Trang: [problems/329-longest-increasing-path-in-a-matrix.html](../problems/329-longest-increasing-path-in-a-matrix.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #330 · Patching Array
@@ -3852,12 +3852,12 @@ Trang: [problems/329-longest-increasing-path-in-a-matrix.html](../problems/329-l
 Review file: `reviews/0330-patching-array.md` _(chưa tạo)_
 Trang: [problems/330-patching-array.html](../problems/330-patching-array.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #331 · Verify Preorder Serialization of a Binary Tree
@@ -3866,12 +3866,12 @@ Trang: [problems/330-patching-array.html](../problems/330-patching-array.html)
 Review file: `reviews/0331-verify-preorder-serialization-of-a-binary-tree.md` _(chưa tạo)_
 Trang: [problems/331-verify-preorder-serialization-of-a-binary-tree.html](../problems/331-verify-preorder-serialization-of-a-binary-tree.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #332 · Reconstruct Itinerary
@@ -3880,12 +3880,12 @@ Trang: [problems/331-verify-preorder-serialization-of-a-binary-tree.html](../pro
 Review file: `reviews/0332-reconstruct-itinerary.md` _(chưa tạo)_
 Trang: [problems/332-reconstruct-itinerary.html](../problems/332-reconstruct-itinerary.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #334 · Increasing Triplet Subsequence
@@ -3894,12 +3894,12 @@ Trang: [problems/332-reconstruct-itinerary.html](../problems/332-reconstruct-iti
 Review file: `reviews/0334-increasing-triplet-subsequence.md` _(chưa tạo)_
 Trang: [problems/334-increasing-triplet-subsequence.html](../problems/334-increasing-triplet-subsequence.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #335 · Self Crossing
@@ -3908,12 +3908,12 @@ Trang: [problems/334-increasing-triplet-subsequence.html](../problems/334-increa
 Review file: `reviews/0335-self-crossing.md` _(chưa tạo)_
 Trang: [problems/335-self-crossing.html](../problems/335-self-crossing.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #336 · Palindrome Pairs
@@ -3922,12 +3922,12 @@ Trang: [problems/335-self-crossing.html](../problems/335-self-crossing.html)
 Review file: `reviews/0336-palindrome-pairs.md` _(chưa tạo)_
 Trang: [problems/336-palindrome-pairs.html](../problems/336-palindrome-pairs.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #337 · House Robber III
@@ -3936,12 +3936,12 @@ Trang: [problems/336-palindrome-pairs.html](../problems/336-palindrome-pairs.htm
 Review file: `reviews/0337-house-robber-iii.md` _(chưa tạo)_
 Trang: [problems/337-house-robber-iii.html](../problems/337-house-robber-iii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #338 · Counting Bits
@@ -3950,12 +3950,12 @@ Trang: [problems/337-house-robber-iii.html](../problems/337-house-robber-iii.htm
 Review file: `reviews/0338-counting-bits.md` _(chưa tạo)_
 Trang: [problems/338-counting-bits.html](../problems/338-counting-bits.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #341 · Flatten Nested List Iterator
@@ -3964,12 +3964,12 @@ Trang: [problems/338-counting-bits.html](../problems/338-counting-bits.html)
 Review file: `reviews/0341-flatten-nested-list-iterator.md` _(chưa tạo)_
 Trang: [problems/341-flatten-nested-list-iterator.html](../problems/341-flatten-nested-list-iterator.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #342 · Power of Four
@@ -3978,12 +3978,12 @@ Trang: [problems/341-flatten-nested-list-iterator.html](../problems/341-flatten-
 Review file: `reviews/0342-power-of-four.md` _(chưa tạo)_
 Trang: [problems/342-power-of-four.html](../problems/342-power-of-four.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #343 · Integer Break
@@ -3992,12 +3992,12 @@ Trang: [problems/342-power-of-four.html](../problems/342-power-of-four.html)
 Review file: `reviews/0343-integer-break.md` _(chưa tạo)_
 Trang: [problems/343-integer-break.html](../problems/343-integer-break.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #344 · Reverse String
@@ -4006,12 +4006,12 @@ Trang: [problems/343-integer-break.html](../problems/343-integer-break.html)
 Review file: `reviews/0344-reverse-string.md` _(chưa tạo)_
 Trang: [problems/344-reverse-string.html](../problems/344-reverse-string.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #345 · Reverse Vowels of a String
@@ -4020,12 +4020,12 @@ Trang: [problems/344-reverse-string.html](../problems/344-reverse-string.html)
 Review file: `reviews/0345-reverse-vowels-of-a-string.md` _(chưa tạo)_
 Trang: [problems/345-reverse-vowels-of-a-string.html](../problems/345-reverse-vowels-of-a-string.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #347 · Top K Frequent Elements
@@ -4034,12 +4034,12 @@ Trang: [problems/345-reverse-vowels-of-a-string.html](../problems/345-reverse-vo
 Review file: `reviews/0347-top-k-frequent-elements.md` _(chưa tạo)_
 Trang: [problems/347-top-k-frequent-elements.html](../problems/347-top-k-frequent-elements.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #349 · Intersection of Two Arrays
@@ -4048,12 +4048,12 @@ Trang: [problems/347-top-k-frequent-elements.html](../problems/347-top-k-frequen
 Review file: `reviews/0349-intersection-of-two-arrays.md` _(chưa tạo)_
 Trang: [problems/349-intersection-of-two-arrays.html](../problems/349-intersection-of-two-arrays.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #350 · Intersection of Two Arrays II
@@ -4062,12 +4062,12 @@ Trang: [problems/349-intersection-of-two-arrays.html](../problems/349-intersecti
 Review file: `reviews/0350-intersection-of-two-arrays-ii.md` _(chưa tạo)_
 Trang: [problems/350-intersection-of-two-arrays-ii.html](../problems/350-intersection-of-two-arrays-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #352 · Data Stream as Disjoint Intervals
@@ -4076,12 +4076,12 @@ Trang: [problems/350-intersection-of-two-arrays-ii.html](../problems/350-interse
 Review file: `reviews/0352-data-stream-as-disjoint-intervals.md` _(chưa tạo)_
 Trang: [problems/352-data-stream-as-disjoint-intervals.html](../problems/352-data-stream-as-disjoint-intervals.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #354 · Russian Doll Envelopes
@@ -4090,12 +4090,12 @@ Trang: [problems/352-data-stream-as-disjoint-intervals.html](../problems/352-dat
 Review file: `reviews/0354-russian-doll-envelopes.md` _(chưa tạo)_
 Trang: [problems/354-russian-doll-envelopes.html](../problems/354-russian-doll-envelopes.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #355 · Design Twitter
@@ -4104,12 +4104,12 @@ Trang: [problems/354-russian-doll-envelopes.html](../problems/354-russian-doll-e
 Review file: `reviews/0355-design-twitter.md` _(chưa tạo)_
 Trang: [problems/355-design-twitter.html](../problems/355-design-twitter.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #357 · Count Numbers with Unique Digits
@@ -4118,12 +4118,12 @@ Trang: [problems/355-design-twitter.html](../problems/355-design-twitter.html)
 Review file: `reviews/0357-count-numbers-with-unique-digits.md` _(chưa tạo)_
 Trang: [problems/357-count-numbers-with-unique-digits.html](../problems/357-count-numbers-with-unique-digits.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #363 · Max Sum of Rectangle No Larger Than K
@@ -4132,12 +4132,12 @@ Trang: [problems/357-count-numbers-with-unique-digits.html](../problems/357-coun
 Review file: `reviews/0363-max-sum-of-rectangle-no-larger-than-k.md` _(chưa tạo)_
 Trang: [problems/363-max-sum-of-rectangle-no-larger-than-k.html](../problems/363-max-sum-of-rectangle-no-larger-than-k.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #365 · Water and Jug Problem
@@ -4146,12 +4146,12 @@ Trang: [problems/363-max-sum-of-rectangle-no-larger-than-k.html](../problems/363
 Review file: `reviews/0365-water-and-jug-problem.md` _(chưa tạo)_
 Trang: [problems/365-water-and-jug-problem.html](../problems/365-water-and-jug-problem.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #367 · Valid Perfect Square
@@ -4160,12 +4160,12 @@ Trang: [problems/365-water-and-jug-problem.html](../problems/365-water-and-jug-p
 Review file: `reviews/0367-valid-perfect-square.md` _(chưa tạo)_
 Trang: [problems/367-valid-perfect-square.html](../problems/367-valid-perfect-square.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #368 · Largest Divisible Subset
@@ -4174,12 +4174,12 @@ Trang: [problems/367-valid-perfect-square.html](../problems/367-valid-perfect-sq
 Review file: `reviews/0368-largest-divisible-subset.md` _(chưa tạo)_
 Trang: [problems/368-largest-divisible-subset.html](../problems/368-largest-divisible-subset.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #371 · Sum of Two Integers
@@ -4188,12 +4188,12 @@ Trang: [problems/368-largest-divisible-subset.html](../problems/368-largest-divi
 Review file: `reviews/0371-sum-of-two-integers.md` _(chưa tạo)_
 Trang: [problems/371-sum-of-two-integers.html](../problems/371-sum-of-two-integers.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #372 · Super Pow
@@ -4202,12 +4202,12 @@ Trang: [problems/371-sum-of-two-integers.html](../problems/371-sum-of-two-intege
 Review file: `reviews/0372-super-pow.md` _(chưa tạo)_
 Trang: [problems/372-super-pow.html](../problems/372-super-pow.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #373 · Find K Pairs with Smallest Sums
@@ -4216,12 +4216,12 @@ Trang: [problems/372-super-pow.html](../problems/372-super-pow.html)
 Review file: `reviews/0373-find-k-pairs-with-smallest-sums.md` _(chưa tạo)_
 Trang: [problems/373-find-k-pairs-with-smallest-sums.html](../problems/373-find-k-pairs-with-smallest-sums.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #374 · Guess Number Higher or Lower
@@ -4230,12 +4230,12 @@ Trang: [problems/373-find-k-pairs-with-smallest-sums.html](../problems/373-find-
 Review file: `reviews/0374-guess-number-higher-or-lower.md` _(chưa tạo)_
 Trang: [problems/374-guess-number-higher-or-lower.html](../problems/374-guess-number-higher-or-lower.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #375 · Guess Number Higher or Lower II
@@ -4244,12 +4244,12 @@ Trang: [problems/374-guess-number-higher-or-lower.html](../problems/374-guess-nu
 Review file: `reviews/0375-guess-number-higher-or-lower-ii.md` _(chưa tạo)_
 Trang: [problems/375-guess-number-higher-or-lower-ii.html](../problems/375-guess-number-higher-or-lower-ii.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #376 · Wiggle Subsequence
@@ -4258,12 +4258,12 @@ Trang: [problems/375-guess-number-higher-or-lower-ii.html](../problems/375-guess
 Review file: `reviews/0376-wiggle-subsequence.md` _(chưa tạo)_
 Trang: [problems/376-wiggle-subsequence.html](../problems/376-wiggle-subsequence.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #377 · Combination Sum IV
@@ -4272,12 +4272,12 @@ Trang: [problems/376-wiggle-subsequence.html](../problems/376-wiggle-subsequence
 Review file: `reviews/0377-combination-sum-iv.md` _(chưa tạo)_
 Trang: [problems/377-combination-sum-iv.html](../problems/377-combination-sum-iv.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #378 · Kth Smallest Element in a Sorted Matrix
@@ -4286,12 +4286,12 @@ Trang: [problems/377-combination-sum-iv.html](../problems/377-combination-sum-iv
 Review file: `reviews/0378-kth-smallest-element-in-a-sorted-matrix.md` _(chưa tạo)_
 Trang: [problems/378-kth-smallest-element-in-a-sorted-matrix.html](../problems/378-kth-smallest-element-in-a-sorted-matrix.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #380 · Insert Delete GetRandom O(1)
@@ -4300,12 +4300,12 @@ Trang: [problems/378-kth-smallest-element-in-a-sorted-matrix.html](../problems/3
 Review file: `reviews/0380-insert-delete-getrandom-o1.md` _(chưa tạo)_
 Trang: [problems/380-insert-delete-getrandom-o1.html](../problems/380-insert-delete-getrandom-o1.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #381 · Insert Delete GetRandom O(1) - Duplicates allowed
@@ -4314,12 +4314,12 @@ Trang: [problems/380-insert-delete-getrandom-o1.html](../problems/380-insert-del
 Review file: `reviews/0381-insert-delete-getrandom-o1-duplicates-allowed.md` _(chưa tạo)_
 Trang: [problems/381-insert-delete-getrandom-o1-duplicates-allowed.html](../problems/381-insert-delete-getrandom-o1-duplicates-allowed.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #382 · Linked List Random Node
@@ -4328,12 +4328,12 @@ Trang: [problems/381-insert-delete-getrandom-o1-duplicates-allowed.html](../prob
 Review file: `reviews/0382-linked-list-random-node.md` _(chưa tạo)_
 Trang: [problems/382-linked-list-random-node.html](../problems/382-linked-list-random-node.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #383 · Ransom Note
@@ -4342,12 +4342,12 @@ Trang: [problems/382-linked-list-random-node.html](../problems/382-linked-list-r
 Review file: `reviews/0383-ransom-note.md` _(chưa tạo)_
 Trang: [problems/383-ransom-note.html](../problems/383-ransom-note.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #384 · Shuffle an Array
@@ -4356,12 +4356,12 @@ Trang: [problems/383-ransom-note.html](../problems/383-ransom-note.html)
 Review file: `reviews/0384-shuffle-an-array.md` _(chưa tạo)_
 Trang: [problems/384-shuffle-an-array.html](../problems/384-shuffle-an-array.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #385 · Mini Parser
@@ -4370,12 +4370,12 @@ Trang: [problems/384-shuffle-an-array.html](../problems/384-shuffle-an-array.htm
 Review file: `reviews/0385-mini-parser.md` _(chưa tạo)_
 Trang: [problems/385-mini-parser.html](../problems/385-mini-parser.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #386 · Lexicographical Numbers
@@ -4384,12 +4384,12 @@ Trang: [problems/385-mini-parser.html](../problems/385-mini-parser.html)
 Review file: `reviews/0386-lexicographical-numbers.md` _(chưa tạo)_
 Trang: [problems/386-lexicographical-numbers.html](../problems/386-lexicographical-numbers.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #387 · First Unique Character in a String
@@ -4398,12 +4398,12 @@ Trang: [problems/386-lexicographical-numbers.html](../problems/386-lexicographic
 Review file: `reviews/0387-first-unique-character-in-a-string.md` _(chưa tạo)_
 Trang: [problems/387-first-unique-character-in-a-string.html](../problems/387-first-unique-character-in-a-string.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #388 · Longest Absolute File Path
@@ -4412,12 +4412,12 @@ Trang: [problems/387-first-unique-character-in-a-string.html](../problems/387-fi
 Review file: `reviews/0388-longest-absolute-file-path.md` _(chưa tạo)_
 Trang: [problems/388-longest-absolute-file-path.html](../problems/388-longest-absolute-file-path.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #389 · Find the Difference
@@ -4426,12 +4426,12 @@ Trang: [problems/388-longest-absolute-file-path.html](../problems/388-longest-ab
 Review file: `reviews/0389-find-the-difference.md` _(chưa tạo)_
 Trang: [problems/389-find-the-difference.html](../problems/389-find-the-difference.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #390 · Elimination Game
@@ -4440,12 +4440,12 @@ Trang: [problems/389-find-the-difference.html](../problems/389-find-the-differen
 Review file: `reviews/0390-elimination-game.md` _(chưa tạo)_
 Trang: [problems/390-elimination-game.html](../problems/390-elimination-game.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #391 · Perfect Rectangle
@@ -4454,12 +4454,12 @@ Trang: [problems/390-elimination-game.html](../problems/390-elimination-game.htm
 Review file: `reviews/0391-perfect-rectangle.md` _(chưa tạo)_
 Trang: [problems/391-perfect-rectangle.html](../problems/391-perfect-rectangle.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #392 · Is Subsequence
@@ -4468,12 +4468,12 @@ Trang: [problems/391-perfect-rectangle.html](../problems/391-perfect-rectangle.h
 Review file: `reviews/0392-is-subsequence.md` _(chưa tạo)_
 Trang: [problems/392-is-subsequence.html](../problems/392-is-subsequence.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #393 · UTF-8 Validation
@@ -4482,12 +4482,12 @@ Trang: [problems/392-is-subsequence.html](../problems/392-is-subsequence.html)
 Review file: `reviews/0393-utf-8-validation.md` _(chưa tạo)_
 Trang: [problems/393-utf-8-validation.html](../problems/393-utf-8-validation.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #394 · Decode String
@@ -4496,12 +4496,12 @@ Trang: [problems/393-utf-8-validation.html](../problems/393-utf-8-validation.htm
 Review file: `reviews/0394-decode-string.md` _(chưa tạo)_
 Trang: [problems/394-decode-string.html](../problems/394-decode-string.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #395 · Longest Substring with At Least K Repeating Characters
@@ -4510,12 +4510,12 @@ Trang: [problems/394-decode-string.html](../problems/394-decode-string.html)
 Review file: `reviews/0395-longest-substring-with-at-least-k-repeating-characters.md` _(chưa tạo)_
 Trang: [problems/395-longest-substring-with-at-least-k-repeating-characters.html](../problems/395-longest-substring-with-at-least-k-repeating-characters.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A3, A3-in, A3-out, A4_
 
 ### #396 · Rotate Function
@@ -4524,12 +4524,12 @@ Trang: [problems/395-longest-substring-with-at-least-k-repeating-characters.html
 Review file: `reviews/0396-rotate-function.md` _(chưa tạo)_
 Trang: [problems/396-rotate-function.html](../problems/396-rotate-function.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #397 · Integer Replacement
@@ -4538,12 +4538,12 @@ Trang: [problems/396-rotate-function.html](../problems/396-rotate-function.html)
 Review file: `reviews/0397-integer-replacement.md` _(chưa tạo)_
 Trang: [problems/397-integer-replacement.html](../problems/397-integer-replacement.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #398 · Random Pick Index
@@ -4552,12 +4552,12 @@ Trang: [problems/397-integer-replacement.html](../problems/397-integer-replaceme
 Review file: `reviews/0398-random-pick-index.md` _(chưa tạo)_
 Trang: [problems/398-random-pick-index.html](../problems/398-random-pick-index.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #399 · Evaluate Division
@@ -4566,12 +4566,12 @@ Trang: [problems/398-random-pick-index.html](../problems/398-random-pick-index.h
 Review file: `reviews/0399-evaluate-division.md` _(chưa tạo)_
 Trang: [problems/399-evaluate-division.html](../problems/399-evaluate-division.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ### #400 · Nth Digit
@@ -4580,12 +4580,12 @@ Trang: [problems/399-evaluate-division.html](../problems/399-evaluate-division.h
 Review file: `reviews/0400-nth-digit.md` _(chưa tạo)_
 Trang: [problems/400-nth-digit.html](../problems/400-nth-digit.html)
 
-- [ ] **A** Content — đề VI, examples, solution, analysis
-- [ ] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
-- [ ] **C** Output — panel hiện kết quả
-- [ ] **D** HTML — regenerate, tab OK
-- [ ] **E** Review file — tick đủ mục
-- [ ] **QA PASS** — toàn bộ A–E đạt chuẩn
+- [x] **A** Content — đề VI, examples, solution, analysis
+- [x] **B** Sandbox — visualizer riêng, log [KẾT QUẢ]
+- [x] **C** Output — panel hiện kết quả
+- [x] **D** HTML — regenerate, tab OK
+- [x] **E** Review file — tick đủ mục
+- [x] **QA PASS** — toàn bộ A–E đạt chuẩn
   - _Auto: content thiếu — A1, A3, A3-in, A3-out_
 
 ## LC #401–500

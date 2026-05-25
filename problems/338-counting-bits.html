@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #338</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Dynamic Programming</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Counting Bits</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1) output</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>80.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Counting Bits (LeetCode #338) — Easy.</div>
+                        <div class="block-text">Cho n, trả mảng ans độ dài n+1 với ans[i] = số bit 1 trong biểu diễn nhị phân của i.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>[0,1,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>[0,1,1,2,1,2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP: ans[i] = ans[i &gt;&gt; 1] + (i &amp; 1) — bỏ bit cuối, thêm 1 nếu lẻ. Hoặc ans[i] = ans[i &amp; (i-1)] + 1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,26 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* countBits(<span class="ty">int</span> n, <span class="ty">int</span>* retSize) {
+    *retSize = n + 1;
+    <span class="ty">int</span>* ans = <span class="kw">malloc</span>((n + 1) * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    ans[0] = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt;= n; i++) ans[i] = ans[i &gt;&gt; 1] + (i &amp; 1);
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> countBits(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        ans = [0] * (n + 1)
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, n + 1):
+            ans[i] = ans[i &gt;&gt; 1] + (i &amp; 1)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; countBits(<span class="ty">int</span> n) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans(n + 1, 0);
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt;= n; i++) ans[i] = ans[i &gt;&gt; 1] + (i &amp; 1);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +128,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP: ans[i] = ans[i &gt;&gt; 1] + — bỏ bit cuối, thêm 1 nếu lẻ.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc ans[i] = ans[i &amp; ] + 1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi i kế thừa popcount của i/2 cộng bit cuối — đúng định nghĩa nhị phân.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=0</span><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">n lớn</span><span class="analysis-tag pit">__builtin_popcount từng i O(n log n)</span><span class="analysis-tag pit">Quên ans[0]=0</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>i&gt;&gt;1 chia 2 — bit count tăng thêm i%2.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +152,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Counting%20Bits&lc_id=338&embed=true"></iframe>

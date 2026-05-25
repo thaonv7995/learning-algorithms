@@ -2,33 +2,25 @@
   "id": 211,
   "title": "Design Add and Search Words Data Structure",
   "difficulty": "Medium",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Design Add and Search Words Data Structure (LeetCode #211) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(m)",
+  "spaceComplexity": "O(N)",
+  "description": "Thiết kế cấu trúc WordDictionary: addWord(word) thêm từ; search(word) tìm từ — ký tự '.' khớp bất kỳ chữ cái nào một lần.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "add \"bad\",\"dad\",\"mad\"; search \"pad\" → false; search \"bad\" → true; search \".ad\" → true; search \"b..\" → true", "output": "false, true, true, true" },
+    { "input": "add \"a\"; search \".\"", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Trie lưu từ; search DFS tại node hiện tại: nếu '.' thì thử mọi con 26 nhánh, else đi theo ký tự cụ thể.",
+  "memoryTip": "WordDictionary = Trie + DFS backtrack khi gặp '.'.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class WordDictionary:\n    def __init__(self):\n        self.root = {}\n    def addWord(self, word: str) -> None:\n        node = self.root\n        for c in word:\n            node = node.setdefault(c, {})\n        node['#'] = True\n    def search(self, word: str) -> bool:\n        def dfs(node, i):\n            if i == len(word):\n                return node.get('#', False)\n            c = word[i]\n            if c == '.':\n                return any(dfs(child, i + 1) for k, child in node.items() if k != '#')\n            if c not in node:\n                return False\n            return dfs(node[c], i + 1)\n        return dfs(self.root, 0)",
+    "cpp": "class WordDictionary {\n    struct Node { unordered_map<char, Node*> ch; bool end=false; }* root;\n    bool dfs(Node* node, const string& w, int i) {\n        if (i == (int)w.size()) return node->end;\n        if (w[i] == '.') {\n            for (auto& [c, child] : node->ch)\n                if (dfs(child, w, i + 1)) return true;\n            return false;\n        }\n        auto it = node->ch.find(w[i]);\n        return it != node->ch.end() && dfs(it->second, w, i + 1);\n    }\npublic:\n    WordDictionary() { root = new Node(); }\n    void addWord(string word) {\n        Node* cur = root;\n        for (char c : word) {\n            if (!cur->ch.count(c)) cur->ch[c] = new Node();\n            cur = cur->ch[c];\n        }\n        cur->end = true;\n    }\n    bool search(string word) { return dfs(root, word, 0); }\n};",
+    "c": "typedef struct WNode { struct WNode* ch[26]; int end; } WNode;\n\nstatic int wSearch(WNode* node, const char* w, int i) {\n    if (!w[i]) return node->end;\n    if (w[i] == '.') {\n        for (int k = 0; k < 26; k++)\n            if (node->ch[k] && wSearch(node->ch[k], w, i + 1)) return 1;\n        return 0;\n    }\n    int k = w[i] - 'a';\n    return node->ch[k] && wSearch(node->ch[k], w, i + 1);\n}\n\nvoid wAdd(WNode* root, const char* word) {\n    WNode* cur = root;\n    for (; *word; word++) {\n        int k = *word - 'a';\n        if (!cur->ch[k]) cur->ch[k] = calloc(1, sizeof(WNode));\n        cur = cur->ch[k];\n    }\n    cur->end = 1;\n}\n\nint wFind(WNode* root, const char* word) { return wSearch(root, word, 0); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Trie đảm bảo prefix chung; DFS thử đủ nhánh khi '.' nên không bỏ sót match.",
+    "edgeCases": ["Từ rỗng (nếu có) → isEnd root", "Nhiều '.' liên tiếp"],
+    "pitfalls": ["Linear scan all words → TLE", "Quên backtrack khi '.' thất bại một nhánh"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

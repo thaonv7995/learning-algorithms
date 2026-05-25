@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #295</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Two Pointers</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Find Median from Data Stream</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>54.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Find Median from Data Stream (LeetCode #295) — Hard.</div>
+                        <div class="block-text">Thiết kế cấu trúc nhận số từ stream: addNum(num) thêm số; findMedian() trả median (trung vị) hiện tại.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>addNum(1); addNum(2); findMedian()→1.5; addNum(3); findMedian()→2</code></div>
+                <div class="ex-line"><span>Out</span><code>1.5, 2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>addNum(5); findMedian()→5</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hai heap: max-heap nửa thấp (lo), min-heap nửa cao (hi); cân |lo|≥|hi| và |lo|-|hi|≤1; median từ top.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,56 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span>* lo; <span class="ty">int</span>* hi; <span class="ty">int</span> loN, hiN, loCap, hiCap; } MedianFinder;
+static <span class="ty">void</span> pushLo(MedianFinder* m, <span class="ty">int</span> v) {
+    <span class="kw">if</span> (m-&gt;loN == m-&gt;loCap) { m-&gt;loCap = m-&gt;loCap ? m-&gt;loCap * 2 : 4; m-&gt;lo = realloc(m-&gt;lo, m-&gt;loCap * 4); }
+    m-&gt;lo[m-&gt;loN++] = v;
+    <span class="kw">for</span> (<span class="ty">int</span> i = m-&gt;loN - 1; i &gt; 0 &amp;&amp; m-&gt;lo[i] &gt; m-&gt;lo[i - 1]; i--) { <span class="ty">int</span> t = m-&gt;lo[i]; m-&gt;lo[i] = m-&gt;lo[i - 1]; m-&gt;lo[i - 1] = t; }
+}
+static <span class="ty">int</span> popLo(MedianFinder* m) { <span class="kw">return</span> m-&gt;lo[--m-&gt;loN]; }
+static <span class="ty">int</span> topLo(MedianFinder* m) { <span class="kw">return</span> m-&gt;lo[m-&gt;loN - 1]; }
+static <span class="ty">void</span> pushHi(MedianFinder* m, <span class="ty">int</span> v) {
+    <span class="kw">if</span> (m-&gt;hiN == m-&gt;hiCap) { m-&gt;hiCap = m-&gt;hiCap ? m-&gt;hiCap * 2 : 4; m-&gt;hi = realloc(m-&gt;hi, m-&gt;hiCap * 4); }
+    m-&gt;hi[m-&gt;hiN++] = v;
+    <span class="kw">for</span> (<span class="ty">int</span> i = m-&gt;hiN - 1; i &gt; 0 &amp;&amp; m-&gt;hi[i] &lt; m-&gt;hi[i - 1]; i--) { <span class="ty">int</span> t = m-&gt;hi[i]; m-&gt;hi[i] = m-&gt;hi[i - 1]; m-&gt;hi[i - 1] = t; }
+}
+static <span class="ty">int</span> popHi(MedianFinder* m) { <span class="kw">return</span> m-&gt;hi[--m-&gt;hiN]; }
+static <span class="ty">int</span> topHi(MedianFinder* m) { <span class="kw">return</span> m-&gt;hi[m-&gt;hiN - 1]; }
+<span class="ty">void</span> mfAdd(MedianFinder* m, <span class="ty">int</span> num) {
+    pushLo(m, num);
+    pushHi(m, popLo(m));
+    <span class="kw">if</span> (m-&gt;loN &lt; m-&gt;hiN) pushLo(m, popHi(m));
+}
+<span class="ty">double</span> mfMedian(MedianFinder* m) {
+    <span class="kw">if</span> (m-&gt;loN &gt; m-&gt;hiN) <span class="kw">return</span> topLo(m);
+    <span class="kw">return</span> (topLo(m) + topHi(m)) / 2.0;
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> MedianFinder:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.lo = []  <span class="cm"># <span class="ty">max</span>-heap via negate</span>
+        <span class="ty">self</span>.hi = []  <span class="cm"># <span class="ty">min</span>-heap</span>
+    <span class="kw">def</span> addNum(<span class="ty">self</span>, num: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        heapq.heappush(<span class="ty">self</span>.lo, -num)
+        heapq.heappush(<span class="ty">self</span>.hi, -heapq.heappop(<span class="ty">self</span>.lo))
+        <span class="kw">if</span> <span class="ty">len</span>(<span class="ty">self</span>.lo) &lt; <span class="ty">len</span>(<span class="ty">self</span>.hi):
+            heapq.heappush(<span class="ty">self</span>.lo, -heapq.heappop(<span class="ty">self</span>.hi))
+    <span class="kw">def</span> findMedian(<span class="ty">self</span>) -&gt; float:
+        <span class="kw">if</span> <span class="ty">len</span>(<span class="ty">self</span>.lo) &gt; <span class="ty">len</span>(<span class="ty">self</span>.hi):
+            <span class="kw">return</span> -<span class="ty">self</span>.lo[0]
+        <span class="kw">return</span> (-<span class="ty">self</span>.lo[0] + <span class="ty">self</span>.hi[0]) / 2</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> MedianFinder {
+    priority_queue&lt;<span class="ty">int</span>&gt; lo;
+    priority_queue&lt;<span class="ty">int</span>, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;, greater&lt;<span class="ty">int</span>&gt;&gt; hi;
 <span class="ty">public</span>:
+    <span class="ty">void</span> addNum(<span class="ty">int</span> num) {
+        lo.push(num);
+        hi.push(lo.top()); lo.pop();
+        <span class="kw">if</span> (lo.size() &lt; hi.size()) { lo.push(hi.top()); hi.pop(); }
+    }
+    <span class="ty">double</span> findMedian() {
+        <span class="kw">if</span> (lo.size() &gt; hi.size()) <span class="kw">return</span> lo.top();
+        <span class="kw">return</span> (lo.top() + hi.top()) / 2.0;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +153,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Two Pointers</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Hai heap: max-heap nửa thấp , min-heap nửa cao ; cân |lo|≥|hi| và…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>lo chứa nửa dưới max, hi nửa trên min; invariant median từ heap tops.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một số → chính nó</span><span class="analysis-tag edge">Chẵn lẻ phần tử average hai tops</span><span class="analysis-tag pit">Sort mỗi query O(n log n)</span><span class="analysis-tag pit">Quên balance sau mỗi add</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Stream median = max-heap lower half + min-heap upper half, balance sizes.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +182,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Find%20Median%20from%20Data%20Stream&lc_id=295&embed=true"></iframe>

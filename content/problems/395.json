@@ -2,33 +2,25 @@
   "id": 395,
   "title": "Longest Substring with At Least K Repeating Characters",
   "difficulty": "Medium",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
+  "category": "String",
+  "timeComplexity": "O(n×26)",
   "spaceComplexity": "O(1)",
-  "description": "Longest Substring with At Least K Repeating Characters (LeetCode #395) — Medium.",
+  "description": "Cho chuỗi s chỉ chữ thường và số k. Tìm substring dài nhất sao mỗi ký tự trong substring xuất hiện ≥ k lần.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"aaabb\", k = 3", "output": "3" },
+    { "input": "s = \"ababbc\", k = 2", "output": "5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Divide & conquer: nếu có chữ count<k tại i thì split tại i; max(left, right). Base: nếu unique≤26 thử mọi số unique t từ 1..26 — sliding window giữ đúng t distinct và all≥k.",
+  "memoryTip": "Split at invalid char — hoặc iterate unique count t with fixed window.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def longestSubstring(self, s: str, k: int) -> int:\n        def solve(l, r):\n            if r - l < k: return 0\n            cnt = Counter(s[l:r])\n            for i in range(l, r):\n                if cnt[s[i]] < k:\n                    return max(solve(l, i), solve(i+1, r))\n            return r - l\n        return solve(0, len(s))",
+    "cpp": "class Solution {\n    int solve(string& s, int l, int r, int k) {\n        if (r - l < k) return 0;\n        int cnt[26] = {};\n        for (int i = l; i < r; i++) cnt[s[i]-'a']++;\n        for (int i = l; i < r; i++)\n            if (cnt[s[i]-'a'] < k)\n                return max(solve(s, l, i, k), solve(s, i+1, r, k));\n        return r - l;\n    }\npublic:\n    int longestSubstring(string s, int k) {\n        return solve(s, 0, s.size(), k);\n    }\n};",
+    "c": "static int solve(char* s, int l, int r, int k) {\n    if (r-l < k) return 0;\n    int cnt[26]={0};\n    for (int i=l;i<r;i++) cnt[s[i]-'a']++;\n    for (int i=l;i<r;i++) if (cnt[s[i]-'a']<k)\n        return (solve(s,l,i,k) > solve(s,i+1,r,k) ? solve(s,l,i,k) : solve(s,i+1,r,k));\n    return r-l;\n}\nint longestSubstring(char* s, int k) { return solve(s, 0, strlen(s), k); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Ký tự không đạt k không nằm trong đáp án — split loại bỏ; đệ quy trên đoạn hợp lệ.",
+    "edgeCases": ["k=1 → len(s)", "Không có substring", "Một ký tự"],
+    "pitfalls": ["Sliding window một pass không đủ chung", "Quên base r-l<k"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

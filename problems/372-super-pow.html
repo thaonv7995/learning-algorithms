@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #372</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Super Pow</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Super Pow (LeetCode #372) — Medium.</div>
+                        <div class="block-text">Tính a^b mod 1337 với b là mảng chữ số (số rất lớn).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>a = 2, b = [3]</code></div>
+                <div class="ex-line"><span>Out</span><code>8</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>a = 2, b = [1,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>1024</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Modular exponentiation kết hợp xử lý b từng digit: result = pow(result, 10, mod) * pow(a, digit, mod) % mod.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">long</span> <span class="ty">long</span> modPow(<span class="ty">long</span> <span class="ty">long</span> a, <span class="ty">long</span> <span class="ty">long</span> e, <span class="ty">int</span> mod) {
+    <span class="ty">long</span> <span class="ty">long</span> r = 1; a %= mod;
+    <span class="kw">while</span> (e) { <span class="kw">if</span> (e &amp; 1) r = r * a % mod; a = a * a % mod; e &gt;&gt;= 1; }
+    <span class="kw">return</span> r;
+}
+<span class="ty">int</span> superPow(<span class="ty">int</span> a, <span class="ty">int</span>* b, <span class="ty">int</span> bSize) {
+    <span class="ty">const</span> <span class="ty">int</span> mod = 1337;
+    <span class="ty">long</span> <span class="ty">long</span> ans = 1; a %= mod;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; bSize; i++) ans = modPow(ans, 10, mod) * modPow(a, b[i], mod) % mod;
+    <span class="kw">return</span> (<span class="ty">int</span>)ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> superPow(<span class="ty">self</span>, a: <span class="ty">int</span>, b: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        mod = 1337
+        a %= mod
+        ans = 1
+        <span class="kw">for</span> d <span class="kw">in</span> b:
+            ans = pow(ans, 10, mod) * pow(a, d, mod) % mod
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">long</span> <span class="ty">long</span> modPow(<span class="ty">long</span> <span class="ty">long</span> a, <span class="ty">long</span> <span class="ty">long</span> e, <span class="ty">int</span> mod) {
+        <span class="ty">long</span> <span class="ty">long</span> r = 1; a %= mod;
+        <span class="kw">while</span> (e) { <span class="kw">if</span> (e &amp; 1) r = r * a % mod; a = a * a % mod; e &gt;&gt;= 1; }
+        <span class="kw">return</span> r;
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> superPow(<span class="ty">int</span> a, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; b) {
+        <span class="ty">const</span> <span class="ty">int</span> mod = 1337;
+        <span class="ty">long</span> <span class="ty">long</span> ans = 1;
+        a %= mod;
+        <span class="kw">for</span> (<span class="ty">int</span> d : b) ans = modPow(ans, 10, mod) * modPow(a, d, mod) % mod;
+        <span class="kw">return</span> (<span class="ty">int</span>)ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +141,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Modular exponentiation kết hợp xử lý b từng digit: result = pow * pow %…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Horner trên exponent digits tương đương a^b mod m; mỗi bước mod giữ giá trị nhỏ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">b=[0] → 1</span><span class="analysis-tag edge">a=0</span><span class="analysis-tag edge">Digit lớn</span><span class="analysis-tag pit">Tính b thành int overflow</span><span class="analysis-tag pit">Quên mod từng bước</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>b dạng mảng = b = b_prev*10 + digit — cập nhật lũy thừa từng chữ số.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +165,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Super%20Pow&lc_id=372&embed=true"></iframe>

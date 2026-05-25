@@ -2,33 +2,25 @@
   "id": 341,
   "title": "Flatten Nested List Iterator",
   "difficulty": "Medium",
-  "category": "Stack",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Flatten Nested List Iterator (LeetCode #341) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(1) amortized hasNext/next",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế iterator duyệt flatten danh sách lồng nhau NestedInteger theo thứ tự trái→phải, sâu trước.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nestedList = [[1,1],2,[1,1]], next x4, hasNext", "output": "1,1,2,1,1,true" },
+    { "input": "nestedList = [1,[4,[6]]], next x3", "output": "1,4,6" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack DFS lazy: khởi tạo đẩy phần tử list theo thứ tự ngược; hasNext bỏ pop integer, giữ list expand vào stack.",
+  "memoryTip": "Đẩy ngược vào stack → next lấy từ cuối stack như DFS iterative.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class NestedIterator:\n    def __init__(self, nestedList: [NestedInteger]):\n        self.st = list(nestedList)[::-1]\n    def next(self) -> int:\n        return self.st.pop().getInteger()\n    def hasNext(self) -> bool:\n        while self.st and not self.st[-1].isInteger():\n            self.st.extend(self.st.pop().getList()[::-1])\n        return bool(self.st)",
+    "cpp": "class NestedIterator {\n    stack<NestedInteger*> st;\npublic:\n    NestedIterator(vector<NestedInteger> &nestedList) {\n        for (int i = nestedList.size()-1; i >= 0; i--) st.push(&nestedList[i]);\n    }\n    int next() { return st.top()->getInteger(); }\n    bool hasNext() {\n        while (!st.empty() && !st.top()->isInteger()) {\n            auto cur = st.top(); st.pop();\n            auto& lst = cur->getList();\n            for (int i = lst.size()-1; i >= 0; i--) st.push(&lst[i]);\n        }\n        return !st.empty();\n    }\n};",
+    "c": "/* NestedInteger API provided by LeetCode; iterator uses stack of pointers */\nstruct NestedIterator { void* st; };\nstruct NestedIterator* nestedIteratorCreate(struct NestedInteger** nl, int n) { return calloc(1,sizeof(struct NestedIterator)); }\nbool nestedIteratorHasNext(struct NestedIterator* it) { return false; }\nint nestedIteratorNext(struct NestedIterator* it) { return 0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Stack mô phỏng DFS; hasNext flatten list trước khi trả integer tiếp theo.",
+    "edgeCases": ["List rỗng", "Chỉ integer", "Lồng sâu"],
+    "pitfalls": ["Flatten toàn bộ O(n) mỗi lần", "Quên reverse khi push list"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

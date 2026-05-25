@@ -3,32 +3,24 @@
   "title": "Range Sum Query - Immutable",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Range Sum Query - Immutable (LeetCode #303) — Easy.",
+  "timeComplexity": "O(n) khởi tạo, O(1) truy vấn",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng số nguyên nums. Thiết kế cấu trúc trả lời nhanh tổng nums[left..right] inclusive cho nhiều truy vấn sumRange(left, right).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [-2,0,3,-5,2,-1], sumRange(0,2), sumRange(2,5), sumRange(0,5)", "output": "1, -1, -3" },
+    { "input": "nums = [1,2,3], sumRange(0,0), sumRange(1,2)", "output": "1, 5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix sum: pre[i+1] = pre[i] + nums[i]. Truy vấn sumRange(l,r) = pre[r+1] - pre[l] trong O(1).",
+  "memoryTip": "pre có độ dài n+1; pre[0]=0 → công thức luôn pre[r+1]-pre[l].",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class NumArray:\n    def __init__(self, nums: List[int]):\n        self.pre = [0]\n        for x in nums:\n            self.pre.append(self.pre[-1] + x)\n    def sumRange(self, left: int, right: int) -> int:\n        return self.pre[right + 1] - self.pre[left]",
+    "cpp": "class NumArray {\n    vector<long long> pre;\npublic:\n    NumArray(vector<int>& nums) {\n        pre.push_back(0);\n        for (int x : nums) pre.push_back(pre.back() + x);\n    }\n    int sumRange(int left, int right) {\n        return pre[right + 1] - pre[left];\n    }\n};",
+    "c": "typedef struct {\n    long long* pre;\n    int n;\n} NumArray;\nNumArray* numArrayCreate(int* nums, int n) {\n    NumArray* obj = malloc(sizeof(NumArray));\n    obj->n = n;\n    obj->pre = malloc((n + 1) * sizeof(long long));\n    obj->pre[0] = 0;\n    for (int i = 0; i < n; i++) obj->pre[i + 1] = obj->pre[i] + nums[i];\n    return obj;\n}\nint numArraySumRange(NumArray* obj, int left, int right) {\n    return (int)(obj->pre[right + 1] - obj->pre[left]);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Prefix sum tích lũy đúng mọi phần tử; hiệu hai prefix cho tổng đoạn [l,r].",
+    "edgeCases": ["Một phần tử", "left=right", "Số âm lớn → dùng long long"],
+    "pitfalls": ["pre[i] gán nums[i] thay vì tích lũy", "Nhầm pre[r]-pre[l] thiếu +1 index"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

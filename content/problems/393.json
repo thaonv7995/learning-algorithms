@@ -2,33 +2,25 @@
   "id": 393,
   "title": "UTF-8 Validation",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Bit Manipulation",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "UTF-8 Validation (LeetCode #393) — Medium.",
+  "description": "Cho mảng byte data. Kiểm tra có phải chuỗi UTF-8 hợp lệ không theo quy tắc encoding 1–4 byte.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "data = [197,130,1]", "output": "true" },
+    { "input": "data = [235,140,4]", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt i: đếm số byte follow từ prefix (1110xxxx → 3 byte total); mỗi follow phải 10xxxxxx; validate range 1–4 byte.",
+  "memoryTip": "Lead byte pattern: 0xxxxxxx, 110xxxxx, 1110xxxx, 11110xxx — count n follow 10xxxxxx.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def validUtf8(self, data: List[int]) -> bool:\n        i, n = 0, len(data)\n        while i < n:\n            b = data[i]\n            if b >> 7 == 0: i += 1\n            elif b >> 5 == 0b110: need, i = 1, i+1\n            elif b >> 4 == 0b1110: need, i = 2, i+1\n            elif b >> 3 == 0b11110: need, i = 3, i+1\n            else: return False\n            for _ in range(need):\n                if i >= n or data[i] >> 6 != 0b10: return False\n                i += 1\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool validUtf8(vector<int>& data) {\n        int i = 0, n = data.size();\n        while (i < n) {\n            int need = 0;\n            if ((data[i] >> 7) == 0) i++;\n            else if ((data[i] >> 5) == 0b110) { need = 1; i++; }\n            else if ((data[i] >> 4) == 0b1110) { need = 2; i++; }\n            else if ((data[i] >> 3) == 0b11110) { need = 3; i++; }\n            else return false;\n            for (int k = 0; k < need; k++, i++)\n                if (i >= n || (data[i] >> 6) != 0b10) return false;\n        }\n        return true;\n    }\n};",
+    "c": "bool validUtf8(int* data, int n) {\n    int i = 0;\n    while (i < n) {\n        int need = 0;\n        if ((data[i] >> 7) == 0) i++;\n        else if ((data[i] >> 5) == 0b110) { need = 1; i++; }\n        else if ((data[i] >> 4) == 0b1110) { need = 2; i++; }\n        else if ((data[i] >> 3) == 0b11110) { need = 3; i++; }\n        else return false;\n        for (int k = 0; k < need; k++, i++)\n            if (i >= n || (data[i] >> 6) != 0b10) return false;\n    }\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi lead byte xác định số follow; validate prefix và continuation 10xxxxxx.",
+    "edgeCases": ["Một byte ASCII", "Thiếu continuation", "Lead 11111xxx invalid"],
+    "pitfalls": ["Không mask &0xFF cho int âm", "Overlong encoding edge (đề thường bỏ qua)"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

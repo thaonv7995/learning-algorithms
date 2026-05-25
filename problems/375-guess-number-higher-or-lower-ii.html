@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #375</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Guess Number Higher or Lower II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n²)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>52.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Guess Number Higher or Lower II (LeetCode #375) — Medium.</div>
+                        <div class="block-text">Game: đoán số bí mật [1,n]; mỗi lần đoán sai trả phí = số vừa đoán. Tìm số tiền tối thiểu trong worst case để chắc chắn thắng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 10</code></div>
+                <div class="ex-line"><span>Out</span><code>16</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Interval DP: dp[l][r]=min cost đoán trong [l,r]; thử guess k: k + max(dp[l][k-1], dp[k+1][r]).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> getMoneyAmount(<span class="ty">int</span> n) {
+    <span class="ty">int</span>** dp = <span class="kw">malloc</span>((n+2)*<span class="kw">sizeof</span>(<span class="ty">int</span>*));
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;=n+1;i++){dp[i]=<span class="kw">calloc</span>(n+2,<span class="kw">sizeof</span>(<span class="ty">int</span>));}
+    <span class="kw">for</span> (<span class="ty">int</span> len=2; len&lt;=n; len++)
+        <span class="kw">for</span> (<span class="ty">int</span> l=1; l+len-1&lt;=n; l++) {
+            <span class="ty">int</span> r=l+len-1; dp[l][r]=INT_MAX;
+            <span class="kw">for</span> (<span class="ty">int</span> k=l;k&lt;=r;k++){
+                <span class="ty">int</span> c=k; <span class="ty">int</span> L=dp[l][k-1], R=dp[k+1][r];
+                c += L&gt;R?L:R;
+                <span class="kw">if</span>(c&lt;dp[l][r]) dp[l][r]=c;
+            }
+        }
+    <span class="ty">int</span> ans=dp[1][n];
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;=n+1;i++) <span class="kw">free</span>(dp[i]); <span class="kw">free</span>(dp); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> getMoneyAmount(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        dp = [[0]*(n+2) <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n+2)]
+        <span class="kw">for</span> length <span class="kw">in</span> <span class="ty">range</span>(2, n+1):
+            <span class="kw">for</span> l <span class="kw">in</span> <span class="ty">range</span>(1, n-length+2):
+                r = l + length - 1
+                dp[l][r] = float('inf')
+                <span class="kw">for</span> k <span class="kw">in</span> <span class="ty">range</span>(l, r+1):
+                    cost = k + <span class="ty">max</span>(dp[l][k-1], dp[k+1][r])
+                    dp[l][r] = <span class="ty">min</span>(dp[l][r], cost)
+        <span class="kw">return</span> dp[1][n]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> getMoneyAmount(<span class="ty">int</span> n) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(n+2, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n+2, 0));
+        <span class="kw">for</span> (<span class="ty">int</span> len = 2; len &lt;= n; len++)
+            <span class="kw">for</span> (<span class="ty">int</span> l = 1; l + len - 1 &lt;= n; l++) {
+                <span class="ty">int</span> r = l + len - 1;
+                dp[l][r] = INT_MAX;
+                <span class="kw">for</span> (<span class="ty">int</span> k = l; k &lt;= r; k++) {
+                    <span class="ty">int</span> cost = k + max(dp[l][k-1], dp[k+1][r]);
+                    dp[l][r] = min(dp[l][r], cost);
+                }
+            }
+        <span class="kw">return</span> dp[1][n];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +144,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n²)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Interval DP: dp[l][r]=min cost đoán trong [l,r]; thử guess k: k + max.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DP interval cho minimax cost; adversary chọn nhánh tệ hơn sau guess sai.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1 → 0</span><span class="analysis-tag edge">n=2</span><span class="analysis-tag edge">n lớn</span><span class="analysis-tag pit">Greedy guess giữa không optimal</span><span class="analysis-tag pit">Quên base dp[i][i]=0</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Minimax trên đoạn — chi phí guess k cộng nhánh xấu nhất con.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Guess%20Number%20Higher%20or%20Lower%20II&lc_id=375&embed=true"></iframe>

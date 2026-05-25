@@ -2,33 +2,25 @@
   "id": 312,
   "title": "Burst Balloons",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Burst Balloons (LeetCode #312) — Hard.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^3)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Cho mảng nums gồm n bóng bay có số. Nếu nổ bóng i cuối cùng trong đoạn, điểm = nums[left]*nums[i]*nums[right]. Trả điểm tối đa khi nổ hết bóng.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [3,1,5,8]", "output": "167" },
+    { "input": "nums = [1,5]", "output": "10" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Interval DP: thêm nums[0]=nums[n+1]=1. dp[l][r] = max điểm trong (l,r) exclusive. Thử bóng k nổ cuối: dp[l][r]=max(dp[l][k]+dp[k][r]+a[l]*a[k]*a[r]).",
+  "memoryTip": "Nổ k cuối tách đoạn độc lập — nhân với a[l]*a[k]*a[r] vì hai bên đã xử lý xong.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxCoins(self, nums: List[int]) -> int:\n        a = [1] + nums + [1]\n        n = len(a)\n        dp = [[0]*n for _ in range(n)]\n        for length in range(3, n+1):\n            for l in range(0, n-length+1):\n                r = l + length - 1\n                for k in range(l+1, r):\n                    dp[l][r] = max(dp[l][r], dp[l][k] + dp[k][r] + a[l]*a[k]*a[r])\n        return dp[0][n-1]",
+    "cpp": "class Solution {\npublic:\n    int maxCoins(vector<int>& nums) {\n        vector<int> a = {1};\n        a.insert(a.end(), nums.begin(), nums.end());\n        a.push_back(1);\n        int n = a.size();\n        vector<vector<int>> dp(n, vector<int>(n, 0));\n        for (int len = 3; len <= n; len++)\n            for (int l = 0; l + len - 1 < n; l++) {\n                int r = l + len - 1;\n                for (int k = l + 1; k < r; k++)\n                    dp[l][r] = max(dp[l][r], dp[l][k] + dp[k][r] + a[l]*a[k]*a[r]);\n            }\n        return dp[0][n-1];\n    }\n};",
+    "c": "int maxCoins(int* nums, int numsSize) {\n    int n = numsSize + 2;\n    int* a = malloc(n * sizeof(int));\n    a[0] = a[n-1] = 1;\n    for (int i = 0; i < numsSize; i++) a[i+1] = nums[i];\n    int** dp = malloc(n * sizeof(int*));\n    for (int i = 0; i < n; i++) { dp[i] = calloc(n, sizeof(int)); }\n    for (int len = 3; len <= n; len++)\n        for (int l = 0; l + len - 1 < n; l++) {\n            int r = l + len - 1;\n            for (int k = l + 1; k < r; k++) {\n                int v = dp[l][k] + dp[k][r] + a[l]*a[k]*a[r];\n                if (v > dp[l][r]) dp[l][r] = v;\n            }\n        }\n    int ans = dp[0][n-1];\n    for (int i = 0; i < n; i++) free(dp[i]);\n    free(dp); free(a);\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Chọn bóng nổ cuối trong đoạn tách bài toán con; biên ảo 1 tránh edge đặc biệt.",
+    "edgeCases": ["Một bóng", "Hai bóng", "Giá trị lớn → long long"],
+    "pitfalls": ["DP theo thứ tự nổ trực tiếp", "Quên padding 1 hai đầu"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

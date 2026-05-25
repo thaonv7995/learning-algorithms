@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Product of Array Except Self (LeetCode #238) — Medium.</div>
+                        <div class="block-text">Cho mảng nums. Trả mảng answer cùng độ dài: answer[i] = tích mọi phần tử nums trừ nums[i]. Không dùng phép chia; output array không tính extra space.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>[24,12,8,6]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [-1,1,0,-3,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[0,0,9,0,0]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Pass trái: answer[i]=prefix product; pass phải nhân suffix vào answer. Hoặc dùng answer làm prefix rồi biến suffix.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* productExceptSelf(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span>* rs) {
+    <span class="ty">int</span>* ans = <span class="kw">malloc</span>(n * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="ty">int</span> prefix = 1;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) { ans[i] = prefix; prefix *= nums[i]; }
+    <span class="ty">int</span> suffix = 1;
+    <span class="kw">for</span> (<span class="ty">int</span> i = n - 1; i &gt;= 0; i--) { ans[i] *= suffix; suffix *= nums[i]; }
+    *rs = n;
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> productExceptSelf(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        n = <span class="ty">len</span>(nums)
+        ans = [1] * n
+        prefix = 1
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            ans[i] = prefix
+            prefix *= nums[i]
+        suffix = 1
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n - 1, -1, -1):
+            ans[i] *= suffix
+            suffix *= nums[i]
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; productExceptSelf(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> n = nums.size();
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans(n, 1);
+        <span class="ty">int</span> prefix = 1;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) { ans[i] = prefix; prefix *= nums[i]; }
+        <span class="ty">int</span> suffix = 1;
+        <span class="kw">for</span> (<span class="ty">int</span> i = n - 1; i &gt;= 0; i--) { ans[i] *= suffix; suffix *= nums[i]; }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +141,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Pass trái: answer[i]=prefix product; pass phải nhân…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc dùng answer làm prefix rồi biến suffix.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>ans[i] nhận tích trái rồi nhân tích phải — đúng tích loại trừ i.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Có 0 → hầu hết 0</span><span class="analysis-tag edge">Một phần tử không áp dụng theo đề</span><span class="analysis-tag pit">Dùng chia khi có 0</span><span class="analysis-tag pit">Tách prefix/suffix array O(n) extra</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Product except self = prefix left × suffix right, O extra.</p>
                     </details>
                 </div>
                 </div>

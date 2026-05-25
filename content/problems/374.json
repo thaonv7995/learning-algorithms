@@ -3,32 +3,24 @@
   "title": "Guess Number Higher or Lower",
   "difficulty": "Easy",
   "category": "Binary Search",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Guess Number Higher or Lower (LeetCode #374) — Easy.",
+  "description": "API guess(pick) trả -1 nếu pick > secret, 1 nếu pick < secret, 0 nếu đúng. Đoán số secret trong [1,n].",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 10, pick = 6", "output": "6" },
+    { "input": "n = 1, pick = 1", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search: mid = (lo+hi)/2; nếu guess(mid)==0 return mid; nếu -1 thì hi=mid-1 else lo=mid+1.",
+  "memoryTip": "Classic BS trên [1,n] — O(log n) lần gọi guess.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def guessNumber(self, n: int) -> int:\n        lo, hi = 1, n\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            g = guess(mid)\n            if g == 0: return mid\n            if g < 0: hi = mid - 1\n            else: lo = mid + 1\n        return lo",
+    "cpp": "class Solution {\npublic:\n    int guessNumber(int n) {\n        int lo = 1, hi = n;\n        while (lo <= hi) {\n            int mid = lo + (hi - lo) / 2;\n            int g = guess(mid);\n            if (g == 0) return mid;\n            if (g < 0) hi = mid - 1;\n            else lo = mid + 1;\n        }\n        return lo;\n    }\n};",
+    "c": "int guessNumber(int n) {\n    int lo = 1, hi = n;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;\n        int g = guess(mid);\n        if (g == 0) return mid;\n        if (g < 0) hi = mid - 1;\n        else lo = mid + 1;\n    }\n    return lo;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "BS thu hẹp không gian chứa secret theo phản hồi guess.",
+    "edgeCases": ["n=1", "Secret ở biên", "Mid overflow — dùng lo+(hi-lo)/2"],
+    "pitfalls": ["Linear scan TLE", "Nhầm dấu guess -1/1"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

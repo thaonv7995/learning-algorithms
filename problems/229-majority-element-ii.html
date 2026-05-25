@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #229</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Majority Element II</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Majority Element II (LeetCode #229) — Medium.</div>
+                        <div class="block-text">Cho mảng nums kích thước n. Trả mọi phần tử xuất hiện hơn ⌊n/3⌋ lần (tối đa 2 phần tử). Kết quả theo thứ tự bất kỳ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [3,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[3]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Boyer-Moore k=2: giữ c1,c2 và count; pass 2 verify count &gt; n/3.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,64 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* majorityElement229(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span>* rs) {
+    <span class="ty">int</span> c1=0,c2=1,cnt1=0,cnt2=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++) {
+        <span class="ty">int</span> x=nums[i];
+        <span class="kw">if</span> (x==c1) cnt1++;
+        <span class="kw">else</span> <span class="kw">if</span> (x==c2) cnt2++;
+        <span class="kw">else</span> <span class="kw">if</span> (!cnt1) { c1=x; cnt1=1; }
+        <span class="kw">else</span> <span class="kw">if</span> (!cnt2) { c2=x; cnt2=1; }
+        <span class="kw">else</span> { cnt1--; cnt2--; }
+    }
+    cnt1=cnt2=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++) { <span class="kw">if</span> (nums[i]==c1) cnt1++; <span class="kw">else</span> <span class="kw">if</span> (nums[i]==c2) cnt2++; }
+    <span class="ty">int</span>* out=<span class="kw">malloc</span>(2*<span class="kw">sizeof</span>(<span class="ty">int</span>)); *rs=0;
+    <span class="kw">if</span> (cnt1&gt;n/3) out[(*rs)++]=c1;
+    <span class="kw">if</span> (cnt2&gt;n/3 &amp;&amp; c2!=c1) out[(*rs)++]=c2;
+    <span class="kw">return</span> out;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> majorityElement(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        c1 = c2 = <span class="kw">None</span>
+        cnt1 = cnt2 = 0
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">if</span> c1 == x:
+                cnt1 += 1
+            <span class="kw">elif</span> c2 == x:
+                cnt2 += 1
+            <span class="kw">elif</span> cnt1 == 0:
+                c1, cnt1 = x, 1
+            <span class="kw">elif</span> cnt2 == 0:
+                c2, cnt2 = x, 1
+            <span class="kw">else</span>:
+                cnt1 -= 1
+                cnt2 -= 1
+        n = <span class="ty">len</span>(nums)
+        res = []
+        <span class="kw">for</span> c <span class="kw">in</span> (c1, c2):
+            <span class="kw">if</span> c is <span class="kw">not</span> <span class="kw">None</span> <span class="kw">and</span> nums.count(c) &gt; n // 3:
+                res.append(c)
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; majorityElement(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> c1 = 0, c2 = 1, cnt1 = 0, cnt2 = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums) {
+            <span class="kw">if</span> (x == c1) cnt1++;
+            <span class="kw">else</span> <span class="kw">if</span> (x == c2) cnt2++;
+            <span class="kw">else</span> <span class="kw">if</span> (!cnt1) { c1 = x; cnt1 = 1; }
+            <span class="kw">else</span> <span class="kw">if</span> (!cnt2) { c2 = x; cnt2 = 1; }
+            <span class="kw">else</span> { cnt1--; cnt2--; }
+        }
+        cnt1 = cnt2 = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums) { <span class="kw">if</span> (x == c1) cnt1++; <span class="kw">else</span> <span class="kw">if</span> (x == c2) cnt2++; }
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; res;
+        <span class="ty">int</span> n = nums.size();
+        <span class="kw">if</span> (cnt1 &gt; n / 3) res.push_back(c1);
+        <span class="kw">if</span> (cnt2 &gt; n / 3 &amp;&amp; c2 != c1) res.push_back(c2);
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +171,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Boyer-Moore k=2: giữ c1,c2 và count; pass 2 verify count &gt; n/3.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Định lý: tối đa 2 phần tử &gt; n/3; Boyer-Moore mở rộng tìm ứng viên, verify bắt buộc.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Không có majority → []</span><span class="analysis-tag pit">Quên pass verify</span><span class="analysis-tag pit">Hash map O(n) space cũng OK</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Elements &gt; n/3 = Boyer-Moore with 2 slots + verification pass.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +195,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Majority%20Element%20II&lc_id=229&embed=true"></iframe>

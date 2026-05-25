@@ -5,30 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Find the Duplicate Number (LeetCode #287) — Medium.",
+  "description": "Mảng nums length n+1, giá trị trong [1,n], đúng một số lặp (có thể lặp nhiều lần). Tìm số trùng. Không sửa mảng; O(1) extra space.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,3,4,2,2]", "output": "2" },
+    { "input": "nums = [3,1,3,4,2]", "output": "3" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Floyd cycle: coi i→nums[i] như linked list; duplicate = entry point of cycle. Phase1 slow/fast; phase2 reset slow=0.",
+  "memoryTip": "Duplicate number = Floyd on index graph nums[i] -> nums[nums[i]].",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findDuplicate(self, nums: List[int]) -> int:\n        slow = fast = nums[0]\n        while True:\n            slow = nums[slow]\n            fast = nums[nums[fast]]\n            if slow == fast:\n                break\n        slow = nums[0]\n        while slow != fast:\n            slow = nums[slow]\n            fast = nums[fast]\n        return slow",
+    "cpp": "class Solution {\npublic:\n    int findDuplicate(vector<int>& nums) {\n        int slow = nums[0], fast = nums[0];\n        do {\n            slow = nums[slow];\n            fast = nums[nums[fast]];\n        } while (slow != fast);\n        slow = nums[0];\n        while (slow != fast) {\n            slow = nums[slow];\n            fast = nums[fast];\n        }\n        return slow;\n    }\n};",
+    "c": "int findDuplicate(int* nums, int n) {\n    int slow = nums[0], fast = nums[0];\n    do {\n        slow = nums[slow];\n        fast = nums[nums[fast]];\n    } while (slow != fast);\n    slow = nums[0];\n    while (slow != fast) {\n        slow = nums[slow];\n        fast = nums[fast];\n    }\n    return slow;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Index mapping tạo cycle tại node duplicate; Floyd entry = duplicate value.",
+    "edgeCases": ["Duplicate nhiều lần vẫn một entry", "nums[0] duplicate"],
+    "pitfalls": ["Binary search on value range O(n log n)", "Mark negative phá nums"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

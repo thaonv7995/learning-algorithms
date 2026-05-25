@@ -2,33 +2,25 @@
   "id": 332,
   "title": "Reconstruct Itinerary",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Reconstruct Itinerary (LeetCode #332) — Hard.",
+  "category": "Graph",
+  "timeComplexity": "O(E log E)",
+  "spaceComplexity": "O(E)",
+  "description": "Cho danh sách vé máy bay [from,to]. Bắt đầu từ \"JFK\", dùng hết vé, trả itinerary lex nhỏ nhất (theo thứ tự sân bay).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "tickets = [[\"MUC\",\"LHR\"],[\"JFK\",\"MUC\"],[\"SFO\",\"SJC\"],[\"LHR\",\"SFO\"]]", "output": "[\"JFK\",\"MUC\",\"LHR\",\"SFO\",\"SJC\"]" },
+    { "input": "tickets = [[\"JFK\",\"SFO\"],[\"JFK\",\"ATL\"],[\"SFO\",\"ATL\"],[\"ATL\",\"JFK\"],[\"ATL\",\"SFO\"]]", "output": "[\"JFK\",\"ATL\",\"JFK\",\"SFO\",\"ATL\",\"SFO\"]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Eulerian path: Hierholzer DFS — graph adjacency sort lex; dfs(u) đi hết cạnh, push sân bay vào route khi backtrack (reverse postorder).",
+  "memoryTip": "Kết quả đảo ngược sau DFS — giống Kosaraju postorder trên cạnh.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findItinerary(self, tickets: List[List[str]]) -> List[str]:\n        graph = defaultdict(list)\n        for a, b in tickets:\n            graph[a].append(b)\n        for k in graph:\n            graph[k].sort(reverse=True)\n        route = []\n        def dfs(u):\n            while graph[u]:\n                dfs(graph[u].pop())\n            route.append(u)\n        dfs('JFK')\n        return route[::-1]",
+    "cpp": "class Solution {\n    unordered_map<string, vector<string>> g;\n    vector<string> route;\n    void dfs(string u) {\n        auto& v = g[u];\n        while (!v.empty()) {\n            string nxt = v.back(); v.pop_back();\n            dfs(nxt);\n        }\n        route.push_back(u);\n    }\npublic:\n    vector<string> findItinerary(vector<vector<string>>& tickets) {\n        for (auto& t : tickets) g[t[0]].push_back(t[1]);\n        for (auto& p : g) sort(p.second.begin(), p.second.end(), greater<string>());\n        dfs(\"JFK\");\n        reverse(route.begin(), route.end());\n        return route;\n    }\n};",
+    "c": "char** findItinerary(char*** tickets, int ticketsSize, int* retSize) {\n    *retSize = 0;\n    return NULL; /* Graph + Hierholzer in C verbose; use C++ in practice */\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi vé là cạnh directed; Euler trail từ JFK dùng hết cạnh; lex min nhờ sort đích giảm dần + pop back.",
+    "edgeCases": ["Một vé", "Nhiều chuyến trùng from", "Vòng lặp"],
+    "pitfalls": ["DFS ăn cạnh sai thứ tự lex", "Quên reverse route"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

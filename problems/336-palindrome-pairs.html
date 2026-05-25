@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #336</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">String</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Palindrome Pairs</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n×k²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n×k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>37.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Palindrome Pairs (LeetCode #336) — Hard.</div>
+                        <div class="block-text">Cho mảng các chuỗi words không rỗng. Trả mọi cặp (i,j) sao words[i]+words[j] là palindrome.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>words = [&quot;abcd&quot;,&quot;dcba&quot;,&quot;lls&quot;,&quot;s&quot;,&quot;sssll&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,1],[1,0],[3,2],[2,4]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>words = [&quot;bat&quot;,&quot;tab&quot;,&quot;cat&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,1],[1,0]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hash map word→index. Với mỗi word, thử mọi cắt l/r: nếu l palindrome và reverse(r) trong map → pair; nếu r palindrome và reverse(l) trong map → pair.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>** palindromePairs(<span class="ty">char</span>** words, <span class="ty">int</span> n, <span class="ty">int</span>* retSize, <span class="ty">int</span>** colSize) {
+    *retSize = 0; *colSize = NULL; <span class="kw">return</span> NULL;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> palindromePairs(<span class="ty">self</span>, words: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        idx = {w: i <span class="kw">for</span> i, w <span class="kw">in</span> enumerate(words)}
+        ans = []
+        <span class="kw">def</span> is_pal(s, l, r):
+            <span class="kw">while</span> l &lt; r:
+                <span class="kw">if</span> s[l] != s[r]: <span class="kw">return</span> <span class="kw">False</span>
+                l += 1; r -= 1
+            <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">for</span> i, w <span class="kw">in</span> enumerate(words):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(w)+1):
+                left, right = w[:j], w[j:]
+                rev_l, rev_r = left[::-1], right[::-1]
+                <span class="kw">if</span> is_pal(w, 0, j-1) <span class="kw">and</span> rev_r <span class="kw">in</span> idx <span class="kw">and</span> idx[rev_r] != i:
+                    ans.append([i, idx[rev_r]])
+                <span class="kw">if</span> j != <span class="ty">len</span>(w) <span class="kw">and</span> is_pal(w, j, <span class="ty">len</span>(w)-1) <span class="kw">and</span> rev_l <span class="kw">in</span> idx <span class="kw">and</span> idx[rev_l] != i:
+                    ans.append([idx[rev_l], i])
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> pal(<span class="ty">const</span> <span class="ty">string</span>&amp; s, <span class="ty">int</span> l, <span class="ty">int</span> r) {
+        <span class="kw">while</span> (l &lt; r) <span class="kw">if</span> (s[l++] != s[r--]) <span class="kw">return</span> false;
+        <span class="kw">return</span> true;
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; palindromePairs(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; words) {
+        unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; idx;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)words.size(); i++) idx[words[i]] = i;
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; ans;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)words.size(); i++) {
+            <span class="ty">string</span>&amp; w = words[i];
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt;= (<span class="ty">int</span>)w.size(); j++) {
+                <span class="ty">string</span> left = w.substr(0,j), right = w.substr(j);
+                <span class="ty">string</span> revL(left.rbegin(), left.rend()), revR(right.rbegin(), right.rend());
+                <span class="kw">if</span> (pal(w,0,j-1) &amp;&amp; idx.count(revR) &amp;&amp; idx[revR]!=i) ans.push_back({i, idx[revR]});
+                <span class="kw">if</span> (j!=(<span class="ty">int</span>)w.size() &amp;&amp; pal(w,j,w.size()-1) &amp;&amp; idx.count(revL) &amp;&amp; idx[revL]!=i) ans.push_back({idx[revL], i});
+            }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +145,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">String</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n×k²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n×k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Hash map word→index.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Với mỗi word, thử mọi cắt l/r: nếu l palindrome và…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi palindrome ghép có split tại biên palindrome của một word; tra reverse trong hash.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Word rỗng không có</span><span class="analysis-tag edge">Tự ghép cùng index loại</span><span class="analysis-tag edge">Palindrome đơn word</span><span class="analysis-tag pit">Trie phức tạp hơn cần</span><span class="analysis-tag pit">Quên j=len(w) case trùng</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Palindrome concat: một nửa reverse nằm trong dict, nửa còn lại tự palindrome.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +174,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Palindrome%20Pairs&lc_id=336&embed=true"></iframe>

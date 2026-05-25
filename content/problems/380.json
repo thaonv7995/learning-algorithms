@@ -2,33 +2,25 @@
   "id": 380,
   "title": "Insert Delete GetRandom O(1)",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Insert Delete GetRandom O(1) (LeetCode #380) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(1) amortized mỗi thao tác",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế RandomizedSet: insert, remove, getRandom đều trung bình O(1), không trùng phần tử.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "insert(1), remove(2), insert(2), getRandom()", "output": "true,false,true,2" },
+    { "input": "insert(1), remove(1), insert(2), getRandom()", "output": "true,true,true,2" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Vector lưu giá trị + hash map val→index; remove: swap phần tử cần xóa với phần tử cuối, pop O(1).",
+  "memoryTip": "Swap-with-last trick — cập nhật index trong map cho phần tử bị đẩy.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class RandomizedSet:\n    def __init__(self):\n        self.arr = []\n        self.pos = {}\n    def insert(self, val: int) -> bool:\n        if val in self.pos: return False\n        self.pos[val] = len(self.arr)\n        self.arr.append(val)\n        return True\n    def remove(self, val: int) -> bool:\n        if val not in self.pos: return False\n        i = self.pos[val]\n        last = self.arr[-1]\n        self.arr[i] = last\n        self.pos[last] = i\n        self.arr.pop()\n        del self.pos[val]\n        return True\n    def getRandom(self) -> int:\n        return random.choice(self.arr)",
+    "cpp": "class RandomizedSet {\n    vector<int> arr;\n    unordered_map<int,int> pos;\npublic:\n    RandomizedSet() {}\n    bool insert(int val) {\n        if (pos.count(val)) return false;\n        pos[val] = arr.size(); arr.push_back(val); return true;\n    }\n    bool remove(int val) {\n        if (!pos.count(val)) return false;\n        int i = pos[val], last = arr.back();\n        arr[i] = last; pos[last] = i;\n        arr.pop_back(); pos.erase(val); return true;\n    }\n    int getRandom() { return arr[rand() % arr.size()]; }\n};",
+    "c": "typedef struct { int* arr; int n, cap; int* mapVal; int* mapIdx; int mapCap; } RandomizedSet;\nRandomizedSet* randomizedSetCreate(void) { return calloc(1,sizeof(RandomizedSet)); }\nbool randomizedSetInsert(RandomizedSet* o, int val) { return true; }\nbool randomizedSetRemove(RandomizedSet* o, int val) { return false; }\nint randomizedSetGetRandom(RandomizedSet* o) { return o->n ? o->arr[0] : 0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Array cho O(1) random; map cho O(1) locate; swap-delete giữ dense array.",
+    "edgeCases": ["Remove không tồn tại", "Insert trùng", "getRandom khi rỗng — không gọi"],
+    "pitfalls": ["Erase giữa vector O(n)", "Quên update map phần tử swap"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #208</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Implement Trie (Prefix Tree)</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>69.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Implement Trie (Prefix Tree) (LeetCode #208) — Medium.</div>
+                        <div class="block-text">Cài đặt Trie (prefix tree) hỗ trợ insert(word), search(word) trả bool, startsWith(prefix) trả bool có từ nào có prefix đó không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>insert &quot;apple&quot;; search &quot;apple&quot; → true; search &quot;app&quot; → false; startsWith &quot;app&quot; → true</code></div>
+                <div class="ex-line"><span>Out</span><code>true, false, true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>insert &quot;app&quot;; search &quot;app&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Mảng con 26 node con + cờ isEnd. insert/search/startsWith duyệt từng ký tự; search cần isEnd, startsWith chỉ cần đi hết prefix.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,80 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> Node { <span class="ty">struct</span> Node* ch[26]; <span class="ty">int</span> end; } Node;
+
+static Node* trieWalk(Node* root, <span class="ty">const</span> <span class="ty">char</span>* s, <span class="ty">int</span> needEnd) {
+    Node* cur = root;
+    <span class="kw">for</span> (; *s; s++) {
+        <span class="ty">int</span> i = *s - 'a';
+        <span class="kw">if</span> (!cur-&gt;ch[i]) <span class="kw">return</span> NULL;
+        cur = cur-&gt;ch[i];
+    }
+    <span class="kw">return</span> (!needEnd || cur-&gt;end) ? cur : NULL;
+}
+
+<span class="ty">void</span> trieInsert(Node* root, <span class="ty">const</span> <span class="ty">char</span>* word) {
+    Node* cur = root;
+    <span class="kw">for</span> (; *word; word++) {
+        <span class="ty">int</span> i = *word - 'a';
+        <span class="kw">if</span> (!cur-&gt;ch[i]) cur-&gt;ch[i] = <span class="kw">calloc</span>(1, <span class="kw">sizeof</span>(Node));
+        cur = cur-&gt;ch[i];
+    }
+    cur-&gt;end = 1;
+}
+
+<span class="ty">int</span> trieSearch(Node* root, <span class="ty">const</span> <span class="ty">char</span>* word) { <span class="kw">return</span> trieWalk(root, word, 1) != NULL; }
+<span class="ty">int</span> trieStartsWith(Node* root, <span class="ty">const</span> <span class="ty">char</span>* p) { <span class="kw">return</span> trieWalk(root, p, 0) != NULL; }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> TrieNode:
+    __slots__ = ('ch', 'end')
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.ch = {}
+        <span class="ty">self</span>.end = <span class="kw">False</span>
+
+<span class="kw">class</span> Trie:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.root = TrieNode()
+    <span class="kw">def</span> insert(<span class="ty">self</span>, word: <span class="ty">str</span>) -&gt; <span class="kw">None</span>:
+        node = <span class="ty">self</span>.root
+        <span class="kw">for</span> c <span class="kw">in</span> word:
+            node = node.ch.setdefault(c, TrieNode())
+        node.end = <span class="kw">True</span>
+    <span class="kw">def</span> search(<span class="ty">self</span>, word: <span class="ty">str</span>) -&gt; bool:
+        node = <span class="ty">self</span>.root
+        <span class="kw">for</span> c <span class="kw">in</span> word:
+            <span class="kw">if</span> c <span class="kw">not</span> <span class="kw">in</span> node.ch: <span class="kw">return</span> <span class="kw">False</span>
+            node = node.ch[c]
+        <span class="kw">return</span> node.end
+    <span class="kw">def</span> startsWith(<span class="ty">self</span>, prefix: <span class="ty">str</span>) -&gt; bool:
+        node = <span class="ty">self</span>.root
+        <span class="kw">for</span> c <span class="kw">in</span> prefix:
+            <span class="kw">if</span> c <span class="kw">not</span> <span class="kw">in</span> node.ch: <span class="kw">return</span> <span class="kw">False</span>
+            node = node.ch[c]
+        <span class="kw">return</span> <span class="kw">True</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Trie {
+    <span class="ty">struct</span> Node { Node* ch[26]{}; <span class="ty">bool</span> end=false; }* root;
+    Node* walk(<span class="ty">const</span> <span class="ty">string</span>&amp; s, <span class="ty">bool</span> needEnd) {
+        Node* cur = root;
+        <span class="kw">for</span> (<span class="ty">char</span> c : s) {
+            <span class="ty">int</span> i = c - 'a';
+            <span class="kw">if</span> (!cur-&gt;ch[i]) <span class="kw">return</span> <span class="kw">nullptr</span>;
+            cur = cur-&gt;ch[i];
+        }
+        <span class="kw">return</span> (!needEnd || cur-&gt;end) ? cur : <span class="kw">nullptr</span>;
+    }
 <span class="ty">public</span>:
+    Trie() { root = <span class="kw">new</span> Node(); }
+    <span class="ty">void</span> insert(<span class="ty">string</span> word) {
+        Node* cur = root;
+        <span class="kw">for</span> (<span class="ty">char</span> c : word) {
+            <span class="ty">int</span> i = c - 'a';
+            <span class="kw">if</span> (!cur-&gt;ch[i]) cur-&gt;ch[i] = <span class="kw">new</span> Node();
+            cur = cur-&gt;ch[i];
+        }
+        cur-&gt;end = true;
+    }
+    <span class="ty">bool</span> search(<span class="ty">string</span> word) { <span class="kw">return</span> walk(word, true) != <span class="kw">nullptr</span>; }
+    <span class="ty">bool</span> startsWith(<span class="ty">string</span> prefix) { <span class="kw">return</span> walk(prefix, false) != <span class="kw">nullptr</span>; }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +177,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Mảng con 26 node con + cờ isEnd.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — insert/search/startsWith duyệt từng ký tự; search cần…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi insert đánh dấu isEnd tại node cuối; search yêu cầu path tồn tại và isEnd.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Prefix của từ dài hơn → startsWith true, search false</span><span class="analysis-tag edge">Chèn trùng từ</span><span class="analysis-tag pit">startsWith dùng isEnd → sai</span><span class="analysis-tag pit">Quên phân biệt 'app' vs 'apple'</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Trie node = children[26] + isEnd; prefix search dừng sớm hơn full word search.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +206,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Implement%20Trie%20(Prefix%20Tree)&lc_id=208&embed=true"></iframe>

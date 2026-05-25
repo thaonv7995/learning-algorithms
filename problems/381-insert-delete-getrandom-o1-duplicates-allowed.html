@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #381</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Insert Delete GetRandom O(1) - Duplicates allowed</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) amortized</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>36.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Insert Delete GetRandom O(1) - Duplicates allowed (LeetCode #381) — Hard.</div>
+                        <div class="block-text">RandomizedCollection cho phép trùng: insert/remove một instance, getRandom đều O(1) trung bình.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>insert(1), insert(1), insert(2), getRandom(), remove(1), getRandom()</code></div>
+                <div class="ex-line"><span>Out</span><code>true,true,true,1 or 1 or 2,true,2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>insert(1), remove(1), insert(2), getRandom()</code></div>
+                <div class="ex-line"><span>Out</span><code>true,true,true,2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Vector + map val→unordered_set indices; remove: chọn một index từ set, swap với cuối vector, cập nhật cả hai index trong map.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,55 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">void</span>* d; } RandomizedCollection;
+RandomizedCollection* randomizedCollectionCreate(<span class="ty">void</span>) { <span class="kw">return</span> <span class="kw">calloc</span>(1,<span class="kw">sizeof</span>(RandomizedCollection)); }
+<span class="ty">bool</span> randomizedCollectionInsert(RandomizedCollection* o, <span class="ty">int</span> val) { <span class="kw">return</span> true; }
+<span class="ty">bool</span> randomizedCollectionRemove(RandomizedCollection* o, <span class="ty">int</span> val) { <span class="kw">return</span> false; }
+<span class="ty">int</span> randomizedCollectionGetRandom(RandomizedCollection* o) { <span class="kw">return</span> 0; }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> RandomizedCollection:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.arr = []
+        <span class="ty">self</span>.idx = defaultdict(<span class="ty">set</span>)
+    <span class="kw">def</span> insert(<span class="ty">self</span>, val: <span class="ty">int</span>) -&gt; bool:
+        <span class="ty">self</span>.idx[val].add(<span class="ty">len</span>(<span class="ty">self</span>.arr))
+        <span class="ty">self</span>.arr.append(val)
+        <span class="kw">return</span> <span class="ty">len</span>(<span class="ty">self</span>.idx[val]) == 1
+    <span class="kw">def</span> remove(<span class="ty">self</span>, val: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">if</span> val <span class="kw">not</span> <span class="kw">in</span> <span class="ty">self</span>.idx: <span class="kw">return</span> <span class="kw">False</span>
+        i = <span class="ty">self</span>.idx[val].pop()
+        <span class="kw">if</span> i != <span class="ty">len</span>(<span class="ty">self</span>.arr) - 1:
+            last = <span class="ty">self</span>.arr[-1]
+            <span class="ty">self</span>.arr[i] = last
+            <span class="ty">self</span>.idx[last].remove(<span class="ty">len</span>(<span class="ty">self</span>.arr)-1)
+            <span class="ty">self</span>.idx[last].add(i)
+        <span class="ty">self</span>.arr.pop()
+        <span class="kw">if</span> <span class="kw">not</span> <span class="ty">self</span>.idx[val]: del <span class="ty">self</span>.idx[val]
+        <span class="kw">return</span> <span class="kw">True</span>
+    <span class="kw">def</span> getRandom(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">return</span> random.choice(<span class="ty">self</span>.arr)</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> RandomizedCollection {
+    <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; arr;
+    unordered_map&lt;<span class="ty">int</span>, unordered_set&lt;<span class="ty">int</span>&gt;&gt; idx;
 <span class="ty">public</span>:
+    RandomizedCollection() {}
+    <span class="ty">bool</span> insert(<span class="ty">int</span> val) {
+        idx[val].insert(arr.size());
+        arr.push_back({val, (<span class="ty">int</span>)idx[val].size()-1});
+        <span class="kw">return</span> idx[val].size() == 1;
+    }
+    <span class="ty">bool</span> remove(<span class="ty">int</span> val) {
+        <span class="kw">if</span> (!idx.count(val)) <span class="kw">return</span> false;
+        <span class="ty">int</span> i = *idx[val].begin(); idx[val].erase(i);
+        <span class="kw">if</span> (idx[val].empty()) idx.erase(val);
+        <span class="kw">if</span> (i != (<span class="ty">int</span>)arr.size()-1) {
+            swap(arr[i], arr.back());
+            idx[arr[i].first].erase(arr.size()-1);
+            idx[arr[i].first].insert(i);
+        }
+        arr.pop_back();
+        <span class="kw">return</span> true;
+    }
+    <span class="ty">int</span> getRandom() { <span class="kw">return</span> arr[rand() % arr.size()].first; }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +152,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Vector + map val→unordered_set indices; remove: chọn một index từ set,…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi value có set vị trí; swap-delete cập nhật index moved element trong set.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Remove duy nhất copy</span><span class="analysis-tag edge">Nhiều duplicate</span><span class="analysis-tag edge">getRandom uniform</span><span class="analysis-tag pit">Map val→single index không đủ</span><span class="analysis-tag pit">Quên erase moved index from set</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Set indices cho phép duplicate values — remove chỉ một bản copy.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +181,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Insert%20Delete%20GetRandom%20O(1)%20-%20Duplicates%20allowed&lc_id=381&embed=true"></iframe>

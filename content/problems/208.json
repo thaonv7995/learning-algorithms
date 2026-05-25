@@ -2,33 +2,25 @@
   "id": 208,
   "title": "Implement Trie (Prefix Tree)",
   "difficulty": "Medium",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Implement Trie (Prefix Tree) (LeetCode #208) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(m)",
+  "spaceComplexity": "O(N)",
+  "description": "Cài đặt Trie (prefix tree) hỗ trợ insert(word), search(word) trả bool, startsWith(prefix) trả bool có từ nào có prefix đó không.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "insert \"apple\"; search \"apple\" → true; search \"app\" → false; startsWith \"app\" → true", "output": "true, false, true" },
+    { "input": "insert \"app\"; search \"app\"", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mảng con 26 node con + cờ isEnd. insert/search/startsWith duyệt từng ký tự; search cần isEnd, startsWith chỉ cần đi hết prefix.",
+  "memoryTip": "Trie node = children[26] + isEnd; prefix search dừng sớm hơn full word search.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class TrieNode:\n    __slots__ = ('ch', 'end')\n    def __init__(self):\n        self.ch = {}\n        self.end = False\n\nclass Trie:\n    def __init__(self):\n        self.root = TrieNode()\n    def insert(self, word: str) -> None:\n        node = self.root\n        for c in word:\n            node = node.ch.setdefault(c, TrieNode())\n        node.end = True\n    def search(self, word: str) -> bool:\n        node = self.root\n        for c in word:\n            if c not in node.ch: return False\n            node = node.ch[c]\n        return node.end\n    def startsWith(self, prefix: str) -> bool:\n        node = self.root\n        for c in prefix:\n            if c not in node.ch: return False\n            node = node.ch[c]\n        return True",
+    "cpp": "class Trie {\n    struct Node { Node* ch[26]{}; bool end=false; }* root;\n    Node* walk(const string& s, bool needEnd) {\n        Node* cur = root;\n        for (char c : s) {\n            int i = c - 'a';\n            if (!cur->ch[i]) return nullptr;\n            cur = cur->ch[i];\n        }\n        return (!needEnd || cur->end) ? cur : nullptr;\n    }\npublic:\n    Trie() { root = new Node(); }\n    void insert(string word) {\n        Node* cur = root;\n        for (char c : word) {\n            int i = c - 'a';\n            if (!cur->ch[i]) cur->ch[i] = new Node();\n            cur = cur->ch[i];\n        }\n        cur->end = true;\n    }\n    bool search(string word) { return walk(word, true) != nullptr; }\n    bool startsWith(string prefix) { return walk(prefix, false) != nullptr; }\n};",
+    "c": "typedef struct Node { struct Node* ch[26]; int end; } Node;\n\nstatic Node* trieWalk(Node* root, const char* s, int needEnd) {\n    Node* cur = root;\n    for (; *s; s++) {\n        int i = *s - 'a';\n        if (!cur->ch[i]) return NULL;\n        cur = cur->ch[i];\n    }\n    return (!needEnd || cur->end) ? cur : NULL;\n}\n\nvoid trieInsert(Node* root, const char* word) {\n    Node* cur = root;\n    for (; *word; word++) {\n        int i = *word - 'a';\n        if (!cur->ch[i]) cur->ch[i] = calloc(1, sizeof(Node));\n        cur = cur->ch[i];\n    }\n    cur->end = 1;\n}\n\nint trieSearch(Node* root, const char* word) { return trieWalk(root, word, 1) != NULL; }\nint trieStartsWith(Node* root, const char* p) { return trieWalk(root, p, 0) != NULL; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi insert đánh dấu isEnd tại node cuối; search yêu cầu path tồn tại và isEnd.",
+    "edgeCases": ["Prefix của từ dài hơn → startsWith true, search false", "Chèn trùng từ"],
+    "pitfalls": ["startsWith dùng isEnd → sai", "Quên phân biệt 'app' vs 'apple'"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -5,30 +5,22 @@
   "category": "Math",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Super Pow (LeetCode #372) — Medium.",
+  "description": "Tính a^b mod 1337 với b là mảng chữ số (số rất lớn).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "a = 2, b = [3]", "output": "8" },
+    { "input": "a = 2, b = [1,0]", "output": "1024" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Modular exponentiation kết hợp xử lý b từng digit: result = pow(result, 10, mod) * pow(a, digit, mod) % mod.",
+  "memoryTip": "b dạng mảng = b = b_prev*10 + digit — cập nhật lũy thừa từng chữ số.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def superPow(self, a: int, b: List[int]) -> int:\n        mod = 1337\n        a %= mod\n        ans = 1\n        for d in b:\n            ans = pow(ans, 10, mod) * pow(a, d, mod) % mod\n        return ans",
+    "cpp": "class Solution {\n    long long modPow(long long a, long long e, int mod) {\n        long long r = 1; a %= mod;\n        while (e) { if (e & 1) r = r * a % mod; a = a * a % mod; e >>= 1; }\n        return r;\n    }\npublic:\n    int superPow(int a, vector<int>& b) {\n        const int mod = 1337;\n        long long ans = 1;\n        a %= mod;\n        for (int d : b) ans = modPow(ans, 10, mod) * modPow(a, d, mod) % mod;\n        return (int)ans;\n    }\n};",
+    "c": "static long long modPow(long long a, long long e, int mod) {\n    long long r = 1; a %= mod;\n    while (e) { if (e & 1) r = r * a % mod; a = a * a % mod; e >>= 1; }\n    return r;\n}\nint superPow(int a, int* b, int bSize) {\n    const int mod = 1337;\n    long long ans = 1; a %= mod;\n    for (int i = 0; i < bSize; i++) ans = modPow(ans, 10, mod) * modPow(a, b[i], mod) % mod;\n    return (int)ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Horner trên exponent digits tương đương a^b mod m; mỗi bước mod giữ giá trị nhỏ.",
+    "edgeCases": ["b=[0] → 1", "a=0", "Digit lớn"],
+    "pitfalls": ["Tính b thành int overflow", "Quên mod từng bước"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

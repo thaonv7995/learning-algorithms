@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Longest Absolute File Path (LeetCode #388) — Medium.",
+  "spaceComplexity": "O(d)",
+  "description": "Input mô tả cấu trúc file ảo: mỗi dòng có depth (số tab) + tên. Trả độ dài đường dẫn tuyệt đối dài nhất tới file (không thư mục).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "input = \"dir\\n\\tsubdir1\\n\\tsubdir2\\n\\t\\tfile.ext\"", "output": "20" },
+    { "input": "input = \"dir\\n\\ta\\n\\t\\tb\\n\\t\\t\\tc\\n\\t\\t\\tx.txt\"", "output": "32" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack lưu độ dài path tại mỗi depth: đếm tab depth; stack[depth]=stack[depth-1]+len(name)+1; nếu có '.' cập nhật max.",
+  "memoryTip": "Chỉ file có dấu chấm — cộng path prefix từ depth-1 + '/' + tên.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def lengthLongestPath(self, input: str) -> int:\n        stack, ans = [0], 0\n        for line in input.split('\\n'):\n            depth = line.count('\\t')\n            name = line[depth:]\n            length = stack[depth] + len(name) + (1 if depth else 0)\n            if depth + 1 == len(stack): stack.append(length)\n            else: stack[depth + 1] = length\n            if '.' in name:\n                ans = max(ans, length)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int lengthLongestPath(string input) {\n        vector<int> stack = {0}; int ans = 0;\n        string line;\n        for (int i = 0; i <= (int)input.size(); i++) {\n            if (i == input.size() || input[i] == '\\n') {\n                int depth = 0;\n                while (depth < (int)line.size() && line[depth] == '\\t') depth++;\n                string name = line.substr(depth);\n                int len = stack[depth] + (int)name.size() + (depth ? 1 : 0);\n                if (depth + 1 >= (int)stack.size()) stack.push_back(len);\n                else stack[depth + 1] = len;\n                if (name.find('.') != string::npos) ans = max(ans, len);\n                line.clear();\n            } else line.push_back(input[i]);\n        }\n        return ans;\n    }\n};",
+    "c": "int lengthLongestPath(char* input) {\n    int stack[128] = {0}, top = 1, ans = 0;\n    char* line = strtok(input, \"\\n\");\n    while (line) {\n        int depth = 0;\n        while (line[depth] == '\\t') depth++;\n        char* name = line + depth;\n        int len = stack[depth] + strlen(name) + (depth ? 1 : 0);\n        stack[depth + 1] = len;\n        if (strchr(name, '.')) if (len > ans) ans = len;\n        line = strtok(NULL, \"\\n\");\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Stack depth lưu path length prefix; file cập nhật global max.",
+    "edgeCases": ["Chỉ thư mục → 0", "Một file root", "Depth sâu"],
+    "pitfalls": ["Cộng slash sai depth 0", "Coi mọi dòng là file"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

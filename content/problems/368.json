@@ -2,33 +2,25 @@
   "id": 368,
   "title": "Largest Divisible Subset",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Largest Divisible Subset (LeetCode #368) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n²)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums số nguyên dương distinct. Trả subset lớn nhất sao mọi cặp phần tử có một chia hết cho cái kia.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3]", "output": "[1,2]" },
+    { "input": "nums = [1,2,4,8]", "output": "[1,2,4,8]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort nums; dp[i]=max size subset ending i; dp[i]=max(dp[j]+1) nếu nums[i]%nums[j]==0. Trace parent để rebuild.",
+  "memoryTip": "Sort trước — chỉ cần check nums[i]%nums[j]==0 với j<i.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def largestDivisibleSubset(self, nums: List[int]) -> List[int]:\n        nums.sort()\n        n = len(nums)\n        dp, prev = [1]*n, [-1]*n\n        best, idx = 1, 0\n        for i in range(n):\n            for j in range(i):\n                if nums[i] % nums[j] == 0 and dp[j] + 1 > dp[i]:\n                    dp[i] = dp[j] + 1; prev[i] = j\n            if dp[i] > best: best, idx = dp[i], i\n        ans = []\n        while idx != -1: ans.append(nums[idx]); idx = prev[idx]\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> largestDivisibleSubset(vector<int>& nums) {\n        sort(nums.begin(), nums.end());\n        int n = nums.size();\n        vector<int> dp(n,1), prev(n,-1);\n        int best = 1, idx = 0;\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < i; j++)\n                if (nums[i] % nums[j] == 0 && dp[j]+1 > dp[i]) { dp[i]=dp[j]+1; prev[i]=j; }\n            if (dp[i] > best) { best = dp[i]; idx = i; }\n        }\n        vector<int> ans;\n        while (idx != -1) { ans.push_back(nums[idx]); idx = prev[idx]; }\n        return ans;\n    }\n};",
+    "c": "int* largestDivisibleSubset(int* nums, int n, int* retSize) {\n    /* sort + dp O(n^2); return longest chain */\n    for (int i=0;i<n;i++) for (int j=i+1;j<n;j++) if(nums[i]>nums[j]){int t=nums[i];nums[i]=nums[j];nums[j]=t;}\n    int* dp=malloc(n*4); int* prev=malloc(n*4);\n    for(int i=0;i<n;i++){dp[i]=1;prev[i]=-1;}\n    int best=1,idx=0;\n    for(int i=0;i<n;i++) for(int j=0;j<i;j++) if(nums[i]%nums[j]==0&&dp[j]+1>dp[i]){dp[i]=dp[j]+1;prev[i]=j;}\n    for(int i=0;i<n;i++) if(dp[i]>best){best=dp[i];idx=i;}\n    int* ans=malloc(best*4); *retSize=0;\n    while(idx!=-1){ans[(*retSize)++]=nums[idx]; idx=prev[idx];}\n    free(dp); free(prev); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Sau sort, divisible chain chỉ mở rộng về phía số lớn; LIS-style DP cho max chain.",
+    "edgeCases": ["Một phần tử", "Toàn bộ chia nhau", "Primes cùng size 1"],
+    "pitfalls": ["Không sort", "Quên rebuild từ prev"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

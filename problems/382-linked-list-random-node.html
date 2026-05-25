@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #382</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Linked List</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Linked List Random Node</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n) getRandom</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>64.8% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Linked List Random Node (LeetCode #382) — Medium.</div>
+                        <div class="block-text">Cho linked list có thể rất dài không biết trước độ dài. getRandom trả nút ngẫu nhiên, mỗi nút xác suất bằng nhau.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>list = [1,2,3], getRandom() x3</code></div>
+                <div class="ex-line"><span>Out</span><code>1,2,3 each with prob 1/3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>list = [0], getRandom()</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Reservoir sampling: duyệt list lần 1, nút thứ i chọn với xác suất 1/i thay cho pick hiện tại.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">struct</span> ListNode* head; } Solution;
+Solution* solutionCreate(<span class="ty">struct</span> ListNode* head) {
+    Solution* s = <span class="kw">malloc</span>(<span class="kw">sizeof</span>(Solution)); s-&gt;head = head; <span class="kw">return</span> s;
+}
+<span class="ty">int</span> solutionGetRandom(Solution* obj) {
+    <span class="ty">int</span> ans = 0, i = 0;
+    <span class="kw">for</span> (<span class="ty">struct</span> ListNode* p = obj-&gt;head; p; p = p-&gt;next) {
+        i++;
+        <span class="kw">if</span> (rand() % i == 0) ans = p-&gt;val;
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]):
+        <span class="ty">self</span>.head = head
+    <span class="kw">def</span> getRandom(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
+        node = <span class="ty">self</span>.head
+        ans, i = 0, 0
+        <span class="kw">while</span> node:
+            i += 1
+            <span class="kw">if</span> random.randint(1, i) == i:
+                ans = node.val
+            node = node.next
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    ListNode* head;
 <span class="ty">public</span>:
+    Solution(ListNode* h) : head(h) {}
+    <span class="ty">int</span> getRandom() {
+        <span class="ty">int</span> ans = 0, i = 0;
+        <span class="kw">for</span> (ListNode* p = head; p; p = p-&gt;next) {
+            i++;
+            <span class="kw">if</span> (rand() % i == 0) ans = p-&gt;val;
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +144,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Reservoir sampling: duyệt list lần 1, nút thứ i chọn với xác suất 1/i…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Reservoir sampling đảm bảo mỗi phần tử xác suất 1/n sau một pass.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút</span><span class="analysis-tag edge">List dài</span><span class="analysis-tag edge">Nhiều lần getRandom độc lập</span><span class="analysis-tag pit">Copy list vào array O(n) space</span><span class="analysis-tag pit">rand()%i off-by-one sai</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Reservoir size 1 — tại bước i chọn i với prob 1/i.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=3&problem=Linked%20List%20Random%20Node&lc_id=382&embed=true"></iframe>

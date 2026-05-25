@@ -4,31 +4,24 @@
   "difficulty": "Easy",
   "category": "Hash Table",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Word Pattern (LeetCode #290) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho pattern (chữ cái) và chuỗi s (từ cách nhau bởi space). Kiểm tra tồn tại song ánh pattern→word và word→pattern.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "pattern = \"abba\", s = \"dog cat cat dog\"", "output": "true" },
+    { "input": "pattern = \"abba\", s = \"dog cat cat fish\"", "output": "false" },
+    { "input": "pattern = \"aaaa\", s = \"dog cat cat dog\"", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Split s; nếu len khác return false; hai map char↔word; mỗi cặp phải khớp map hiện có.",
+  "memoryTip": "Word pattern = bijection check like isomorphic strings with words.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def wordPattern(self, pattern: str, s: str) -> bool:\n        words = s.split()\n        if len(words) != len(pattern):\n            return False\n        p2w, w2p = {}, {}\n        for ch, w in zip(pattern, words):\n            if p2w.get(ch, w) != w or w2p.get(w, ch) != ch:\n                return False\n            p2w[ch] = w\n            w2p[w] = ch\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool wordPattern(string pattern, string s) {\n        vector<string> words;\n        stringstream ss(s);\n        string w;\n        while (ss >> w) words.push_back(w);\n        if (words.size() != pattern.size()) return false;\n        unordered_map<char, string> p2w;\n        unordered_map<string, char> w2p;\n        for (int i = 0; i < (int)pattern.size(); i++) {\n            char c = pattern[i];\n            if (p2w.count(c) && p2w[c] != words[i]) return false;\n            if (w2p.count(words[i]) && w2p[words[i]] != c) return false;\n            p2w[c] = words[i];\n            w2p[words[i]] = c;\n        }\n        return true;\n    }\n};",
+    "c": "bool wordPattern(char* pattern, char* s) {\n    char* words[256]; int n = 0;\n    char* tok = strtok(s, \" \");\n    while (tok) { words[n++] = tok; tok = strtok(NULL, \" \"); }\n    int plen = (int)strlen(pattern);\n    if (n != plen) return false;\n    char p2w[256][64] = {{0}}; char w2p[256][2] = {{0}};\n    for (int i = 0; i < plen; i++) {\n        char c = pattern[i];\n        int idx = (unsigned char)c;\n        if (p2w[idx][0] && strcmp(p2w[idx], words[i])) return false;\n        int widx = words[i][0];\n        if (w2p[widx][0] && w2p[widx][0] != c) return false;\n        strcpy(p2w[idx], words[i]);\n        w2p[widx][0] = c;\n    }\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Hai chiều map đảm bảo mỗi char map một word và ngược lại.",
+    "edgeCases": ["Một char một word", "Pattern dài hơn words"],
+    "pitfalls": ["Chỉ map pattern→word", "Split s sai (nhiều space)"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

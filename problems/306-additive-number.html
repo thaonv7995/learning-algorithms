@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #306</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Additive Number</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^3)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>33.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Additive Number (LeetCode #306) — Medium.</div>
+                        <div class="block-text">Chuỗi s chỉ gồm chữ số. Kiểm tra có thể tách thành dãy additive không: mỗi số (trừ hai số đầu) bằng tổng hai số liền trước, và không có số 0 đứng đầu trừ khi số đó là &quot;0&quot;.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;112358&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;199100199&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;101&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Thử mọi cặp số đầu (i,j cắt chuỗi). Dùng big-int string add: nếu s[k..] bắt đầu bằng a+b thì tiếp tục với (b, a+b). Thành công khi ăn hết chuỗi.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,86 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> startsWith(<span class="ty">const</span> <span class="ty">char</span>* s, <span class="ty">int</span> k, <span class="ty">const</span> <span class="ty">char</span>* pref) {
+    <span class="kw">return</span> strncmp(s + k, pref, strlen(pref)) == 0;
+}
+<span class="ty">bool</span> isAdditiveNumber(<span class="ty">char</span>* s) {
+    <span class="ty">int</span> n = strlen(s);
+    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; n; i++)
+        <span class="kw">for</span> (<span class="ty">int</span> j = i + 1; j &lt; n; j++) {
+            <span class="kw">if</span> ((i &gt; 1 &amp;&amp; s[0] == '0') || (j - i &gt; 1 &amp;&amp; s[i] == '0')) continue;
+            <span class="ty">int</span> k = j; <span class="ty">char</span> a[32], b[32], c[32];
+            strncpy(a, s, i); a[i] = 0;
+            strncpy(b, s + i, j - i); b[j - i] = 0;
+            <span class="kw">while</span> (k &lt; n) {
+                <span class="ty">long</span> <span class="ty">long</span> x = atoll(a) + atoll(b);
+                snprintf(c, <span class="kw">sizeof</span>(c), &quot;%lld&quot;, x);
+                <span class="kw">if</span> (!startsWith(s, k, c)) break;
+                strcpy(a, b); strcpy(b, c); k += strlen(c);
+            }
+            <span class="kw">if</span> (k == n) <span class="kw">return</span> true;
+        }
+    <span class="kw">return</span> false;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isAdditiveNumber(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; bool:
+        <span class="kw">def</span> add(a, b):
+            res, carry, i, j = [], 0, <span class="ty">len</span>(a)-1, <span class="ty">len</span>(b)-1
+            <span class="kw">while</span> i &gt;= 0 <span class="kw">or</span> j &gt;= 0 <span class="kw">or</span> carry:
+                x = <span class="ty">int</span>(a[i]) <span class="kw">if</span> i &gt;= 0 <span class="kw">else</span> 0
+                y = <span class="ty">int</span>(b[j]) <span class="kw">if</span> j &gt;= 0 <span class="kw">else</span> 0
+                t = x + y + carry
+                res.append(<span class="ty">str</span>(t % 10)); carry = t // 10
+                i -= 1; j -= 1
+            <span class="kw">return</span> ''.join(reversed(res))
+        <span class="kw">def</span> ok(i, j):
+            a, b = s[:i], s[i:j]
+            <span class="kw">if</span> (<span class="ty">len</span>(a) &gt; 1 <span class="kw">and</span> a[0] == '0') <span class="kw">or</span> (<span class="ty">len</span>(b) &gt; 1 <span class="kw">and</span> b[0] == '0'):
+                <span class="kw">return</span> <span class="kw">False</span>
+            k = j
+            <span class="kw">while</span> k &lt; <span class="ty">len</span>(s):
+                c = add(a, b)
+                <span class="kw">if</span> <span class="kw">not</span> s.startswith(c, k):
+                    <span class="kw">return</span> <span class="kw">False</span>
+                a, b, k = b, c, k + <span class="ty">len</span>(c)
+            <span class="kw">return</span> <span class="kw">True</span>
+        n = <span class="ty">len</span>(s)
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, n):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i + 1, n):
+                <span class="kw">if</span> ok(i, j):
+                    <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">return</span> <span class="kw">False</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">string</span> add(<span class="ty">string</span> a, <span class="ty">string</span> b) {
+        <span class="ty">string</span> res; <span class="ty">int</span> i = a.size()-1, j = b.size()-1, carry = 0;
+        <span class="kw">while</span> (i &gt;= 0 || j &gt;= 0 || carry) {
+            <span class="ty">int</span> x = i &gt;= 0 ? a[i--]-'0' : 0;
+            <span class="ty">int</span> y = j &gt;= 0 ? b[j--]-'0' : 0;
+            <span class="ty">int</span> t = x + y + carry;
+            res.push_back('0' + t % 10); carry = t / 10;
+        }
+        reverse(res.begin(), res.end());
+        <span class="kw">return</span> res;
+    }
+    <span class="ty">bool</span> ok(<span class="ty">const</span> <span class="ty">string</span>&amp; s, <span class="ty">int</span> i, <span class="ty">int</span> j) {
+        <span class="ty">string</span> a = s.substr(0, i), b = s.substr(i, j - i);
+        <span class="kw">if</span> ((a.size() &gt; 1 &amp;&amp; a[0] == '0') || (b.size() &gt; 1 &amp;&amp; b[0] == '0')) <span class="kw">return</span> false;
+        <span class="ty">int</span> k = j;
+        <span class="kw">while</span> (k &lt; (<span class="ty">int</span>)s.size()) {
+            <span class="ty">string</span> c = add(a, b);
+            <span class="kw">if</span> (s.compare(k, c.size(), c) != 0) <span class="kw">return</span> false;
+            a = b; b = c; k += c.size();
+        }
+        <span class="kw">return</span> true;
+    }
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isAdditiveNumber(<span class="ty">string</span> s) {
+        <span class="ty">int</span> n = s.size();
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; n; i++)
+            <span class="kw">for</span> (<span class="ty">int</span> j = i + 1; j &lt; n; j++)
+                <span class="kw">if</span> (ok(s, i, j)) <span class="kw">return</span> true;
+        <span class="kw">return</span> false;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +189,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^3)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Thử mọi cặp số đầu .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Dùng big-int string add: nếu s[k..] bắt đầu bằng a+b thì…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Thành công khi ăn hết chuỗi.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi dãy additive xác định bởi hai số đầu; thử hết cặp cắt và kiểm tra mở rộng duy nhất.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">&quot;0&quot; đơn lẻ false</span><span class="analysis-tag edge">Số lớn cần string add</span><span class="analysis-tag edge">Leading zero ở num1/num2</span><span class="analysis-tag pit">Dùng int overflow với chuỗi dài</span><span class="analysis-tag pit">Chỉ thử một cặp đầu</span><span class="analysis-tag pit">Quên rule leading zero</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Hai vòng for chọn num1, num2; vòng while so khớp prefix tổng — giống Fibonacci trên chuỗi.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +217,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Additive%20Number&lc_id=306&embed=true"></iframe>

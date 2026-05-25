@@ -2,33 +2,25 @@
   "id": 399,
   "title": "Evaluate Division",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Evaluate Division (LeetCode #399) — Medium.",
+  "category": "Graph",
+  "timeComplexity": "O(q×(V+E))",
+  "spaceComplexity": "O(V+E)",
+  "description": "Cho equations [a,b] và values a/b. Trả lời queries c/b; nếu không suy ra trả -1.0.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "equations = [[\"a\",\"b\"],[\"b\",\"c\"]], values = [2.0,3.0], queries = [[\"a\",\"c\"],[\"b\",\"a\"],[\"a\",\"e\"],[\"a\",\"a\"],[\"x\",\"x\"]]", "output": "[6.0,0.5,-1.0,1.0,-1.0]" },
+    { "input": "equations = [[\"a\",\"b\"],[\"c\",\"d\"]], values = [1.0,1.0], queries = [[\"a\",\"c\"],[\"c\",\"c\"]]", "output": "[-1.0,1.0]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Weighted graph: a→b weight val, b→a 1/val. DFS/BFS từ query num tìm den nhân cạnh; a/a=1; biến lạ -1.",
+  "memoryTip": "Division graph — product weights along path = quotient.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:\n        graph = defaultdict(dict)\n        for (a,b), v in zip(equations, values):\n            graph[a][b] = v; graph[b][a] = 1/v\n        def dfs(src, dst, seen):\n            if src not in graph or dst not in graph: return -1.0\n            if src == dst: return 1.0\n            seen.add(src)\n            for nei, w in graph[src].items():\n                if nei in seen: continue\n                sub = dfs(nei, dst, seen)\n                if sub != -1.0: return w * sub\n            return -1.0\n        return [dfs(a, b, set()) for a, b in queries]",
+    "cpp": "class Solution {\n    unordered_map<string, unordered_map<string,double>> g;\n    double dfs(string& src, string& dst, unordered_set<string>& vis) {\n        if (!g.count(src) || !g.count(dst)) return -1.0;\n        if (src == dst) return 1.0;\n        vis.insert(src);\n        for (auto& [nei, w] : g[src]) {\n            if (vis.count(nei)) continue;\n            double sub = dfs(nei, dst, vis);\n            if (sub >= 0) return w * sub;\n        }\n        return -1.0;\n    }\npublic:\n    vector<double> calcEquation(vector<vector<string>>& eq, vector<double>& val, vector<vector<string>>& q) {\n        for (int i = 0; i < (int)eq.size(); i++) {\n            g[eq[i][0]][eq[i][1]] = val[i];\n            g[eq[i][1]][eq[i][0]] = 1.0 / val[i];\n        }\n        vector<double> ans;\n        for (auto& query : q) {\n            unordered_set<string> vis;\n            ans.push_back(dfs(query[0], query[1], vis));\n        }\n        return ans;\n    }\n};",
+    "c": "double* calcEquation(char*** equations, int eqSize, int* eqColSize, double* values, int valSize, char*** queries, int qSize, int* qColSize, int* retSize) {\n    *retSize = qSize;\n    double* ans = malloc(qSize * sizeof(double));\n    for (int i = 0; i < qSize; i++) ans[i] = -1.0;\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Path product weights cho tỷ số; DFS tìm đường num→den; disconnected trả -1.",
+    "edgeCases": ["a/a=1", "Biến không trong graph", "Nhiều đường — một đủ"],
+    "pitfalls": ["Union-Find với weight phức tạp hơn", "Nhầm -1.0 với valid zero"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

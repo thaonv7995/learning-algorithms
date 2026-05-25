@@ -3,32 +3,24 @@
   "title": "Count of Smaller Numbers After Self",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Count of Smaller Numbers After Self (LeetCode #315) — Hard.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums. Với mỗi nums[i], đếm số phần tử bên phải i nhỏ hơn nums[i]. Trả mảng kết quả cùng độ dài.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [5,2,6,1]", "output": "[2,1,1,0]" },
+    { "input": "nums = [-1]", "output": "[0]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Merge sort đếm nghịch: duyệt từ phải, merge vào sorted; với mỗi x tìm vị trí lower_bound trong sorted → số nhỏ hơn bên phải.",
+  "memoryTip": "Đếm nghịch khi merge: phần tử từ nửa phải nhỏ hơn tăng count cho phần tử nửa trái tương ứng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countSmaller(self, nums: List[int]) -> List[int]:\n        ans = [0] * len(nums)\n        arr = [(v, i) for i, v in enumerate(nums)]\n        def merge(a):\n            if len(a) <= 1:\n                return a\n            m = len(a) // 2\n            left, right = merge(a[:m]), merge(a[m:])\n            out, i, j = [], 0, 0\n            while i < len(left) and j < len(right):\n                if left[i][0] <= right[j][0]:\n                    out.append(left[i]); i += 1\n                else:\n                    ans[left[i][1]] += len(right) - j\n                    out.append(right[j]); j += 1\n            out.extend(left[i:]); out.extend(right[j:])\n            return out\n        merge(arr)\n        return ans",
+    "cpp": "class Solution {\n    vector<int> ans;\n    void merge(vector<pair<int,int>>& a, int l, int m, int r) {\n        vector<pair<int,int>> tmp;\n        int i = l, j = m;\n        while (i < m && j < r) {\n            if (a[i].second <= a[j].second) tmp.push_back(a[i++]);\n            else { ans[a[i].first] += r - j; tmp.push_back(a[j++]); }\n        }\n        while (i < m) tmp.push_back(a[i++]);\n        while (j < r) tmp.push_back(a[j++]);\n        for (int k = l; k < r; k++) a[k] = tmp[k-l];\n    }\n    void sort(vector<pair<int,int>>& a, int l, int r) {\n        if (r - l <= 1) return;\n        int m = (l + r) / 2;\n        sort(a, l, m); sort(a, m, r); merge(a, l, m, r);\n    }\npublic:\n    vector<int> countSmaller(vector<int>& nums) {\n        ans.assign(nums.size(), 0);\n        vector<pair<int,int>> a;\n        for (int i = 0; i < (int)nums.size(); i++) a.push_back({i, nums[i]});\n        sort(a, 0, a.size());\n        return ans;\n    }\n};",
+    "c": "typedef struct { int v, i; } Pair;\nstatic void mergePairs(Pair* a, int l, int m, int r, int* ans) {\n    Pair* tmp = malloc((r-l)*sizeof(Pair));\n    int i=l, j=m, k=0;\n    while (i<m && j<r) {\n        if (a[i].v <= a[j].v) tmp[k++] = a[i++];\n        else { ans[a[i].i] += r-j; tmp[k++] = a[j++]; }\n    }\n    while (i<m) tmp[k++] = a[i++];\n    while (j<r) tmp[k++] = a[j++];\n    for (int t=0;t<r-l;t++) a[l+t]=tmp[t];\n    free(tmp);\n}\nstatic void sortPairs(Pair* a, int l, int r, int* ans) {\n    if (r-l<=1) return;\n    int m=(l+r)/2; sortPairs(a,l,m,ans); sortPairs(a,m,r,ans); mergePairs(a,l,m,r,ans);\n}\nint* countSmaller(int* nums, int n, int* retSize) {\n    *retSize = n; int* ans = calloc(n,sizeof(int));\n    Pair* a = malloc(n*sizeof(Pair));\n    for (int i=0;i<n;i++){a[i].v=nums[i];a[i].i=i;}\n    sortPairs(a,0,n,ans); free(a); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Merge sort đếm nghịch: khi phần tử phải nhỏ hơn phần tử trái, mọi phần tử phải còn lại cũng nhỏ hơn trái.",
+    "edgeCases": ["Một phần tử", "Trùng giá trị", "Toàn giảm dần"],
+    "pitfalls": ["Fenwick cần nén tọa độ", "Nhầm <= và < khi merge"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

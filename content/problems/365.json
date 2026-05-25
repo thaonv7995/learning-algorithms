@@ -3,32 +3,24 @@
   "title": "Water and Jug Problem",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log max(x,y))",
   "spaceComplexity": "O(1)",
-  "description": "Water and Jug Problem (LeetCode #365) — Medium.",
+  "description": "Hai bình x và y gallon, có vòi nước vô hạn. Có thể fill, empty, pour giữa hai bình. Có đo được z gallon ở một bình không?",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "x = 3, y = 5, z = 4", "output": "true" },
+    { "input": "x = 2, y = 6, z = 5", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Khả thi iff z=0 hoặc z≤max(x,y) và z chia hết gcd(x,y) (Bezout — tổ hợp tuyến tính ax+by).",
+  "memoryTip": "GCD lemma — mọi lượng đo được là bội của gcd(x,y).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canMeasureWater(self, x: int, y: int, target: int) -> bool:\n        if target == 0: return True\n        g = gcd(x, y)\n        return target <= max(x, y) and target % g == 0",
+    "cpp": "class Solution {\n    int gcd(int a, int b) { return b ? gcd(b, a % b) : a; }\npublic:\n    bool canMeasureWater(int x, int y, int target) {\n        if (target == 0) return true;\n        int g = gcd(x, y);\n        return target <= max(x, y) && target % g == 0;\n    }\n};",
+    "c": "static int gcdInt(int a, int b) { while (b) { int t=a%b; a=b; b=t; } return a; }\nbool canMeasureWater(int x, int y, int target) {\n    if (target == 0) return true;\n    int g = gcdInt(x, y);\n    return target <= (x > y ? x : y) && target % g == 0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Các trạng thái reachable ⇔ lượng nước là ax+by; điều kiện gcd chia target.",
+    "edgeCases": ["target=0", "x=y", "target > max(x,y)"],
+    "pitfalls": ["BFS trạng thái chậm không cần", "Quên check target ≤ max jug"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

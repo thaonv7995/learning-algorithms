@@ -3,32 +3,24 @@
   "title": "First Bad Version",
   "difficulty": "Easy",
   "category": "Binary Search",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "First Bad Version (LeetCode #278) — Easy.",
+  "description": "Có n phiên bản [1..n], phiên bản bad trở đi đều bad. API isBadVersion(v). Tìm bad version đầu tiên tối thiểu số lần gọi API.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 5, bad = 4", "output": "4" },
+    { "input": "n = 1, bad = 1", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search: mid; nếu isBadVersion(mid) thì bad ở mid hoặc trái → hi=mid; else lo=mid+1.",
+  "memoryTip": "First bad version = lower bound binary search on isBadVersion.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def firstBadVersion(self, n: int) -> int:\n        lo, hi = 1, n\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if isBadVersion(mid):\n                hi = mid\n            else:\n                lo = mid + 1\n        return lo",
+    "cpp": "class Solution {\npublic:\n    int firstBadVersion(int n) {\n        int lo = 1, hi = n;\n        while (lo < hi) {\n            int mid = lo + (hi - lo) / 2;\n            if (isBadVersion(mid)) hi = mid;\n            else lo = mid + 1;\n        }\n        return lo;\n    }\n};",
+    "c": "int firstBadVersion(int n) {\n    int lo = 1, hi = n;\n    while (lo < hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (isBadVersion(mid)) hi = mid;\n        else lo = mid + 1;\n    }\n    return lo;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Monotone bad: BS tìm leftmost index bad.",
+    "edgeCases": ["n=1", "bad=1 tất cả bad"],
+    "pitfalls": ["Linear scan TLE", "mid overflow — dùng lo+(hi-lo)/2"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -3,32 +3,24 @@
   "title": "Ransom Note",
   "difficulty": "Easy",
   "category": "Hash Table",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(m+n)",
   "spaceComplexity": "O(1)",
-  "description": "Ransom Note (LeetCode #383) — Easy.",
+  "description": "Cho chuỗi ransomNote và magazine. Có ghép ransomNote từ các chữ trong magazine (mỗi chữ dùng một lần) không?",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "ransomNote = \"a\", magazine = \"b\"", "output": "false" },
+    { "input": "ransomNote = \"aa\", magazine = \"aab\"", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm frequency magazine; duyệt ransomNote, giảm count, nếu âm return false.",
+  "memoryTip": "Multiset check — mảng 26 hoặc Counter.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canConstruct(self, ransomNote: str, magazine: str) -> bool:\n        cnt = Counter(magazine)\n        for c in ransomNote:\n            cnt[c] -= 1\n            if cnt[c] < 0:\n                return False\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool canConstruct(string ransomNote, string magazine) {\n        int cnt[26] = {};\n        for (char c : magazine) cnt[c-'a']++;\n        for (char c : ransomNote) if (--cnt[c-'a'] < 0) return false;\n        return true;\n    }\n};",
+    "c": "bool canConstruct(char* ransomNote, char* magazine) {\n    int cnt[26] = {0};\n    for (int i = 0; magazine[i]; i++) cnt[magazine[i]-'a']++;\n    for (int i = 0; ransomNote[i]; i++) if (--cnt[ransomNote[i]-'a'] < 0) return false;\n    return true;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Đủ ký tự iff count magazine ≥ count ransom cho mọi chữ cái.",
+    "edgeCases": ["ransom rỗng → true", "magazine ngắn hơn", "Trùng ký tự nhiều"],
+    "pitfalls": ["Sort merge thay count", "Quên case-sensitive chỉ chữ thường"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -5,30 +5,23 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Missing Number (LeetCode #268) — Easy.",
+  "description": "Mảng nums gồm n số distinct trong [0, n] (thiếu đúng một). Tìm số bị thiếu.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [3,0,1]", "output": "2" },
+    { "input": "nums = [0,1]", "output": "2" },
+    { "input": "nums = [9,6,4,2,3,5,7,0,1]", "output": "8" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "XOR tất cả i=0..n với mọi nums[i]; cặp giống triệt tiêu, còn lại số thiếu. Hoặc sum n*(n+1)/2 - sum(nums).",
+  "memoryTip": "Missing number = XOR index 0..n with all nums.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def missingNumber(self, nums: List[int]) -> int:\n        xor = len(nums)\n        for i, x in enumerate(nums):\n            xor ^= i ^ x\n        return xor",
+    "cpp": "class Solution {\npublic:\n    int missingNumber(vector<int>& nums) {\n        int xorAll = nums.size();\n        for (int i = 0; i < (int)nums.size(); i++) xorAll ^= i ^ nums[i];\n        return xorAll;\n    }\n};",
+    "c": "int missingNumber(int* nums, int n) {\n    int xorAll = n;\n    for (int i = 0; i < n; i++) xorAll ^= i ^ nums[i];\n    return xorAll;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "XOR i và nums[i] triệt tiêu mọi số có mặt; chỉ số thiếu còn lại.",
+    "edgeCases": ["Thiếu 0", "Thiếu n"],
+    "pitfalls": ["Sort O(n log n)", "Hash set O(n) space"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

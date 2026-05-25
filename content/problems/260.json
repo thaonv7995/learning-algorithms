@@ -2,33 +2,25 @@
   "id": 260,
   "title": "Single Number III",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Bit Manipulation",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Single Number III (LeetCode #260) — Medium.",
+  "description": "Mảng nums: mọi phần tử xuất hiện đúng hai lần trừ đúng hai phần tử distinct xuất hiện một lần. Trả hai số đó (thứ tự bất kỳ).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,1,3,2,5]", "output": "[3,5]" },
+    { "input": "nums = [-1,0]", "output": "[-1,0]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "XOR cả mảng → xor=a^b; bit phân tách (xor & -xor); chia nums theo bit đó XOR riêng → a và b.",
+  "memoryTip": "Two singles = XOR all, then split by any set bit of xor.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def singleNumber(self, nums: List[int]) -> List[int]:\n        xor = 0\n        for x in nums:\n            xor ^= x\n        bit = xor & -xor\n        a = b = 0\n        for x in nums:\n            if x & bit:\n                a ^= x\n            else:\n                b ^= x\n        return [a, b]",
+    "cpp": "class Solution {\npublic:\n    vector<int> singleNumber(vector<int>& nums) {\n        long long xorAll = 0;\n        for (int x : nums) xorAll ^= x;\n        long long bit = xorAll & -xorAll;\n        int a = 0, b = 0;\n        for (int x : nums)\n            (x & bit) ? a ^= x : b ^= x;\n        return {a, b};\n    }\n};",
+    "c": "int* singleNumber260(int* nums, int n, int* rs) {\n    long long xorAll = 0;\n    for (int i = 0; i < n; i++) xorAll ^= nums[i];\n    long long bit = xorAll & -xorAll;\n    int a = 0, b = 0;\n    for (int i = 0; i < n; i++)\n        (nums[i] & bit) ? (a ^= nums[i]) : (b ^= nums[i]);\n    int* out = malloc(2 * sizeof(int));\n    out[0] = a; out[1] = b; *rs = 2;\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "xor=a^b; bit tách nums thành hai nhóm XOR độc lập cho a và b.",
+    "edgeCases": ["Hai phần tử duy nhất", "Số âm — XOR vẫn đúng"],
+    "pitfalls": ["Hash map O(n) space", "bit = xor & (xor-1) sai — cần xor & -xor"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

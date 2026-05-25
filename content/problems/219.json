@@ -2,33 +2,26 @@
   "id": 219,
   "title": "Contains Duplicate II",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Hash Table",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Contains Duplicate II (LeetCode #219) — Easy.",
+  "spaceComplexity": "O(min(n,k))",
+  "description": "Cho mảng nums và số nguyên k. Trả true nếu tồn tại hai chỉ số i≠j với |i-j|≤k và nums[i]==nums[j].",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3,1], k = 3", "output": "true" },
+    { "input": "nums = [1,0,1,1], k = 1", "output": "true" },
+    { "input": "nums = [1,2,3,1,2,3], k = 2", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sliding window hash map value→last index: nếu value đã có và i - last ≤ k → true; cập nhật index mỗi bước.",
+  "memoryTip": "Duplicate within k = map last index + kiểm tra khoảng cách.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:\n        last = {}\n        for i, x in enumerate(nums):\n            if x in last and i - last[x] <= k:\n                return True\n            last[x] = i\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool containsNearbyDuplicate(vector<int>& nums, int k) {\n        unordered_map<int,int> last;\n        for (int i = 0; i < (int)nums.size(); i++) {\n            if (last.count(nums[i]) && i - last[nums[i]] <= k) return true;\n            last[nums[i]] = i;\n        }\n        return false;\n    }\n};",
+    "c": "bool containsNearbyDuplicate(int* nums, int n, int k) {\n    /* value -> last index; linear scan with small open hash or sort pairs */\n    for (int i = 0; i < n; i++)\n        for (int j = i + 1; j <= i + k && j < n; j++)\n            if (nums[i] == nums[j]) return true;\n    return false;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Chỉ cần cặp gần nhất cùng value trong window k; last index đủ.",
+    "edgeCases": ["k=0 → false (i≠j)", "k≥n → như Contains Duplicate"],
+    "pitfalls": ["Set window size quên xóa phần tử cũ", "So sánh mọi cặp O(nk) k lớn TLE"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

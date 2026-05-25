@@ -3,32 +3,24 @@
   "title": "Max Sum of Rectangle No Larger Than K",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Max Sum of Rectangle No Larger Than K (LeetCode #363) — Hard.",
+  "timeComplexity": "O(m²n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho ma trận matrix và số k. Tìm tổng lớn nhất của vùng chữ nhật con sao tổng ≤ k.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "matrix = [[1,0,1],[0,-2,3]], k = 2", "output": "2" },
+    { "input": "matrix = [[2,2,-1]], k = 3", "output": "3" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Fix cột trái/phải, tính tổng từng hàng → mảng 1D; trên prefix sum dùng TreeSet tìm prefix ≥ sum-k (max subarray ≤ k).",
+  "memoryTip": "2D → 1D kadans biến thể: sorted set + lower_bound trên prefix.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxSumSubmatrix(self, matrix: List[List[int]], k: int) -> int:\n        m, n = len(matrix), len(matrix[0])\n        ans = -10**18\n        for left in range(n):\n            row = [0]*m\n            for right in range(left, n):\n                for i in range(m): row[i] += matrix[i][right]\n                curr, prefixes = 0, [0]\n                for x in row:\n                    curr += x\n                    idx = bisect.bisect_left(prefixes, curr - k)\n                    if idx < len(prefixes): ans = max(ans, curr - prefixes[idx])\n                    bisect.insort(prefixes, curr)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int maxSumSubmatrix(vector<vector<int>>& matrix, int k) {\n        int m = matrix.size(), n = matrix[0].size(), ans = INT_MIN;\n        for (int l = 0; l < n; l++) {\n            vector<int> row(m, 0);\n            for (int r = l; r < n; r++) {\n                for (int i = 0; i < m; i++) row[i] += matrix[i][r];\n                set<int> st; st.insert(0);\n                int sum = 0;\n                for (int x : row) {\n                    sum += x;\n                    auto it = st.lower_bound(sum - k);\n                    if (it != st.end()) ans = max(ans, sum - *it);\n                    st.insert(sum);\n                }\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int maxSumSubmatrix(int** matrix, int m, int* cs, int k) {\n    int n=cs[0], ans=INT_MIN;\n    for(int l=0;l<n;l++){\n        int* row=calloc(m,sizeof(int));\n        for(int r=l;r<n;r++){\n            for(int i=0;i<m;i++) row[i]+=matrix[i][r];\n            int sum=0; int* pref=malloc(100000*sizeof(int)); int ps=0; pref[ps++]=0;\n            for(int i=0;i<m;i++){\n                sum+=row[i];\n                for(int j=0;j<ps;j++) if(sum-pref[j]<=k && sum-pref[j]>ans) ans=sum-pref[j];\n                pref[ps++]=sum;\n            }\n            free(pref);\n        }\n        free(row);\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi hình chữ nhật xác định bởi cột l,r; bài 1D max subarray ≤ k bằng prefix + set.",
+    "edgeCases": ["Một ô", "Toàn số âm", "k nhỏ hơn mọi tổng"],
+    "pitfalls": ["Kadane thuần không áp dụng cap k", "Quên init ans INT_MIN"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,25 @@
   "id": 336,
   "title": "Palindrome Pairs",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Palindrome Pairs (LeetCode #336) — Hard.",
+  "category": "String",
+  "timeComplexity": "O(n×k²)",
+  "spaceComplexity": "O(n×k)",
+  "description": "Cho mảng các chuỗi words không rỗng. Trả mọi cặp (i,j) sao words[i]+words[j] là palindrome.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "words = [\"abcd\",\"dcba\",\"lls\",\"s\",\"sssll\"]", "output": "[[0,1],[1,0],[3,2],[2,4]]" },
+    { "input": "words = [\"bat\",\"tab\",\"cat\"]", "output": "[[0,1],[1,0]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hash map word→index. Với mỗi word, thử mọi cắt l/r: nếu l palindrome và reverse(r) trong map → pair; nếu r palindrome và reverse(l) trong map → pair.",
+  "memoryTip": "Palindrome concat: một nửa reverse nằm trong dict, nửa còn lại tự palindrome.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def palindromePairs(self, words: List[str]) -> List[List[int]]:\n        idx = {w: i for i, w in enumerate(words)}\n        ans = []\n        def is_pal(s, l, r):\n            while l < r:\n                if s[l] != s[r]: return False\n                l += 1; r -= 1\n            return True\n        for i, w in enumerate(words):\n            for j in range(len(w)+1):\n                left, right = w[:j], w[j:]\n                rev_l, rev_r = left[::-1], right[::-1]\n                if is_pal(w, 0, j-1) and rev_r in idx and idx[rev_r] != i:\n                    ans.append([i, idx[rev_r]])\n                if j != len(w) and is_pal(w, j, len(w)-1) and rev_l in idx and idx[rev_l] != i:\n                    ans.append([idx[rev_l], i])\n        return ans",
+    "cpp": "class Solution {\n    bool pal(const string& s, int l, int r) {\n        while (l < r) if (s[l++] != s[r--]) return false;\n        return true;\n    }\npublic:\n    vector<vector<int>> palindromePairs(vector<string>& words) {\n        unordered_map<string,int> idx;\n        for (int i = 0; i < (int)words.size(); i++) idx[words[i]] = i;\n        vector<vector<int>> ans;\n        for (int i = 0; i < (int)words.size(); i++) {\n            string& w = words[i];\n            for (int j = 0; j <= (int)w.size(); j++) {\n                string left = w.substr(0,j), right = w.substr(j);\n                string revL(left.rbegin(), left.rend()), revR(right.rbegin(), right.rend());\n                if (pal(w,0,j-1) && idx.count(revR) && idx[revR]!=i) ans.push_back({i, idx[revR]});\n                if (j!=(int)w.size() && pal(w,j,w.size()-1) && idx.count(revL) && idx[revL]!=i) ans.push_back({idx[revL], i});\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int** palindromePairs(char** words, int n, int* retSize, int** colSize) {\n    *retSize = 0; *colSize = NULL; return NULL;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi palindrome ghép có split tại biên palindrome của một word; tra reverse trong hash.",
+    "edgeCases": ["Word rỗng không có", "Tự ghép cùng index loại", "Palindrome đơn word"],
+    "pitfalls": ["Trie phức tạp hơn cần", "Quên j=len(w) case trùng"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

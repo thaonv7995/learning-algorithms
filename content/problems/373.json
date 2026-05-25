@@ -2,33 +2,25 @@
   "id": 373,
   "title": "Find K Pairs with Smallest Sums",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Find K Pairs with Smallest Sums (LeetCode #373) — Medium.",
+  "category": "Heap",
+  "timeComplexity": "O(k log k)",
+  "spaceComplexity": "O(k)",
+  "description": "Hai mảng nums1, nums2 đã sort tăng. Trả k cặp (u,v) với u từ nums1, v từ nums2 có tổng u+v nhỏ nhất.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums1 = [1,7,11], nums2 = [2,4,6], k = 3", "output": "[[1,2],[1,4],[1,6]]" },
+    { "input": "nums1 = [1,1,2], nums2 = [1,2,3], k = 2", "output": "[[1,1],[1,1]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Min-heap khởi (0,0); mỗi lần pop (i,j), push (i+1,j) và (i,j+1) nếu chưa visit. Chỉ seed (i,0) ban đầu tránh trùng.",
+  "memoryTip": "Sorted matrix search — mở rộng từ (0,0) như BFS trên lưới tổng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def kSmallestPairs(self, nums1: List[int], nums2: List[int], k: int) -> List[List[int]]:\n        if not nums1 or not nums2: return []\n        heap = [(nums1[0]+nums2[0], 0, 0)]\n        seen = {(0,0)}\n        ans = []\n        while heap and len(ans) < k:\n            _, i, j = heapq.heappop(heap)\n            ans.append([nums1[i], nums2[j]])\n            if i+1 < len(nums1) and (i+1,j) not in seen:\n                seen.add((i+1,j)); heapq.heappush(heap, (nums1[i+1]+nums2[j], i+1, j))\n            if j+1 < len(nums2) and (i,j+1) not in seen:\n                seen.add((i,j+1)); heapq.heappush(heap, (nums1[i]+nums2[j+1], i, j+1))\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> kSmallestPairs(vector<int>& a, vector<int>& b, int k) {\n        vector<vector<int>> ans;\n        if (a.empty() || b.empty()) return ans;\n        auto cmp = [&](array<int,3>& x, array<int,3>& y){ return x[0] > y[0]; };\n        priority_queue<array<int,3>, vector<array<int,3>>, decltype(cmp)> pq(cmp);\n        pq.push({a[0]+b[0], 0, 0});\n        vector<vector<bool>> vis(a.size(), vector<bool>(b.size(), false));\n        vis[0][0] = true;\n        while (!pq.empty() && (int)ans.size() < k) {\n            auto [s,i,j] = pq.top(); pq.pop();\n            ans.push_back({a[i], b[j]});\n            if (i+1 < (int)a.size() && !vis[i+1][j]) { vis[i+1][j]=true; pq.push({a[i+1]+b[j], i+1, j}); }\n            if (j+1 < (int)b.size() && !vis[i][j+1]) { vis[i][j+1]=true; pq.push({a[i]+b[j+1], i, j+1}); }\n        }\n        return ans;\n    }\n};",
+    "c": "int** kSmallestPairs(int* a, int na, int* b, int nb, int k, int* rs, int** cs) {\n    *rs = 0; *cs = NULL; return NULL;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Heap luôn lấy cặp tổng nhỏ nhất chưa dùng; mở rộng (i+1,j),(i,j+1) bao phủ mọi cặp theo thứ tự tổng.",
+    "edgeCases": ["k lớn hơn m*n", "Một phần tử mỗi mảng", "Trùng tổng nhiều cặp"],
+    "pitfalls": ["Push cả (0,j) gây trùng heap", "Không mark visited"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

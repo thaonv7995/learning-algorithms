@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #213</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">House Robber II</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">House Robber II (LeetCode #213) — Medium.</div>
+                        <div class="block-text">Mảng nums biểu diễn tiền tại mỗi nhà xếp vòng tròn — nhà đầu và cuối kề nhau. Cướp tối đa không cướp hai nhà liền kề. Trả số tiền lớn nhất.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [2,3,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Chia hai case House Robber I: rob(nums[1:]) và rob(nums[:-1]); lấy max. Một nhà thì trả nums[0].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> robLine(<span class="ty">int</span>* a, <span class="ty">int</span> l, <span class="ty">int</span> r) {
+    <span class="ty">int</span> prev = 0, cur = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = l; i &lt;= r; i++) {
+        <span class="ty">int</span> nxt = cur &gt; prev + a[i] ? cur : prev + a[i];
+        prev = cur; cur = nxt;
+    }
+    <span class="kw">return</span> cur;
+}
+<span class="ty">int</span> rob(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="kw">if</span> (n == 1) <span class="kw">return</span> nums[0];
+    <span class="ty">int</span> a = robLine(nums, 0, n - 2);
+    <span class="ty">int</span> b = robLine(nums, 1, n - 1);
+    <span class="kw">return</span> a &gt; b ? a : b;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> rob(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        <span class="kw">def</span> line(a):
+            prev, cur = 0, 0
+            <span class="kw">for</span> x <span class="kw">in</span> a:
+                prev, cur = cur, <span class="ty">max</span>(cur, prev + x)
+            <span class="kw">return</span> cur
+        <span class="kw">if</span> <span class="ty">len</span>(nums) == 1:
+            <span class="kw">return</span> nums[0]
+        <span class="kw">return</span> <span class="ty">max</span>(line(nums[1:]), line(nums[:-1]))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> robLine(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">int</span> l, <span class="ty">int</span> r) {
+        <span class="ty">int</span> prev = 0, cur = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = l; i &lt;= r; i++) {
+            <span class="ty">int</span> nxt = max(cur, prev + a[i]);
+            prev = cur; cur = nxt;
+        }
+        <span class="kw">return</span> cur;
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> rob(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> n = nums.size();
+        <span class="kw">if</span> (n == 1) <span class="kw">return</span> nums[0];
+        <span class="kw">return</span> max(robLine(nums, 0, n - 2), robLine(nums, 1, n - 1));
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +147,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Chia hai case House Robber I: rob và rob; lấy max.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Một nhà thì trả nums[0].</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Optimal path hoặc bỏ nhà 0 hoặc bỏ nhà n-1; max hai subproblem line đủ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">n=2 → max hai phần tử không cần split phức tạp</span><span class="analysis-tag pit">Rob I trực tiếp trên vòng → vi phạm</span><span class="analysis-tag pit">Quên case một phần tử</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>House Robber II = max.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +176,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=House%20Robber%20II&lc_id=213&embed=true"></iframe>

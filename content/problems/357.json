@@ -3,32 +3,24 @@
   "title": "Count Numbers with Unique Digits",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Count Numbers with Unique Digits (LeetCode #357) — Medium.",
+  "description": "Cho n trong [0,8]. Đếm số x trong [0, 10^n) sao mọi chữ số của x là duy nhất (0 ≤ x < 10^n).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 2", "output": "91" },
+    { "input": "n = 1", "output": "10" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Math: số 1 chữ số = 10; k chữ số (k≥2): 9×9×8×... chọn lần lượt không trùng (hàng chục 1-9, các vị trí sau giảm pool).",
+  "memoryTip": "Leading zero chỉ cho số 0; k-digit số đầu chọn 9 cách (1-9).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countNumbersWithUniqueDigits(self, n: int) -> int:\n        if n == 0: return 1\n        ans, unique = 10, 9\n        for i in range(2, n + 1):\n            unique *= 11 - i\n            ans += unique\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int countNumbersWithUniqueDigits(int n) {\n        if (n == 0) return 1;\n        int ans = 10, unique = 9;\n        for (int i = 2; i <= n; i++) { unique *= 11 - i; ans += unique; }\n        return ans;\n    }\n};",
+    "c": "int countNumbersWithUniqueDigits(int n) {\n    if (n == 0) return 1;\n    int ans = 10, unique = 9;\n    for (int i = 2; i <= n; i++) { unique *= 11 - i; ans += unique; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Cộng số unique-digit có đúng k chữ số; công thức tích cho mỗi vị trí.",
+    "edgeCases": ["n=0 → 1 (chỉ số 0)", "n=1 → 10", "n=8 upper bound"],
+    "pitfalls": ["Backtracking chậm không cần", "Nhầm upper bound 10^n inclusive"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

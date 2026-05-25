@@ -3,32 +3,24 @@
   "title": "Word Search II",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Word Search II (LeetCode #212) — Hard.",
+  "timeComplexity": "O(mn·4^L)",
+  "spaceComplexity": "O(N)",
+  "description": "Lưới ký tự board và danh sách words. Trả mọi từ trong words xuất hiện trên board (nối liền kề 4 hướng, không tái dùng ô trong cùng một đường).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "board = [[\"o\",\"a\",\"a\",\"n\"],[\"e\",\"t\",\"a\",\"e\"],[\"i\",\"h\",\"k\",\"r\"],[\"i\",\"f\",\"l\",\"v\"]], words = [\"oath\",\"pea\",\"eat\",\"rain\"]", "output": "[\"eat\",\"oath\"]" },
+    { "input": "board = [[\"a\",\"b\"],[\"c\",\"d\"]], words = [\"abcb\"]", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Build Trie từ words; DFS từ mỗi ô board theo Trie, đánh dấu visited, khi node.isEnd thì thu từ và cắt nhánh (xóa end) để tránh trùng.",
+  "memoryTip": "Word Search II = Trie + grid DFS; prune Trie khi tìm thấy từ.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:\n        root = {}\n        for w in words:\n            node = root\n            for c in w:\n                node = node.setdefault(c, {})\n            node['#'] = w\n        m, n = len(board), len(board[0])\n        ans = []\n        def dfs(i, j, node):\n            c = board[i][j]\n            if c not in node:\n                return\n            nxt = node[c]\n            if '#' in nxt:\n                ans.append(nxt['#'])\n                del nxt['#']\n            board[i][j] = '#'\n            for di, dj in ((1,0),(-1,0),(0,1),(0,-1)):\n                ni, nj = i + di, j + dj\n                if 0 <= ni < m and 0 <= nj < n and board[ni][nj] != '#':\n                    dfs(ni, nj, nxt)\n            board[i][j] = c\n            if not nxt:\n                del node[c]\n        for i in range(m):\n            for j in range(n):\n                dfs(i, j, root)\n        return ans",
+    "cpp": "class Solution {\n    struct Node { unordered_map<char, Node*> ch; string* word=nullptr; };\n    vector<string> ans;\n    void dfs(vector<vector<char>>& b, int i, int j, Node* node) {\n        char c = b[i][j];\n        if (!node->ch.count(c)) return;\n        Node* nxt = node->ch[c];\n        if (nxt->word) { ans.push_back(*nxt->word); delete nxt->word; nxt->word = nullptr; }\n        b[i][j] = '#';\n        int d[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};\n        for (auto& x : d) {\n            int ni = i + x[0], nj = j + x[1];\n            if (ni>=0 && nj>=0 && ni<(int)b.size() && nj<(int)b[0].size() && b[ni][nj]!='#')\n                dfs(b, ni, nj, nxt);\n        }\n        b[i][j] = c;\n        if (nxt->ch.empty() && !nxt->word) { delete nxt; node->ch.erase(c); }\n    }\npublic:\n    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {\n        Node root;\n        for (string& w : words) {\n            Node* cur = &root;\n            for (char c : w) {\n                if (!cur->ch.count(c)) cur->ch[c] = new Node();\n                cur = cur->ch[c];\n            }\n            cur->word = new string(w);\n        }\n        for (int i = 0; i < (int)board.size(); i++)\n            for (int j = 0; j < (int)board[0].size(); j++)\n                dfs(board, i, j, &root);\n        return ans;\n    }\n};",
+    "c": "typedef struct WNode { struct WNode* ch[26]; char* word; } WNode;\nstatic void wFree(WNode* n) { if (!n) return; for (int i = 0; i < 26; i++) wFree(n->ch[i]); free(n->word); free(n); }\nstatic void wInsert(WNode* r, char* w) {\n    WNode* cur = r;\n    for (; *w; w++) { int k = *w - 'a'; if (!cur->ch[k]) cur->ch[k] = calloc(1, sizeof(WNode)); cur = cur->ch[k]; }\n    cur->word = strdup(w);\n}\nstatic void dfs212(char** b, int m, int n, int i, int j, WNode* node, char** ans, int* asz, int* acap) {\n    if (i < 0 || j < 0 || i >= m || j >= n) return;\n    char c = b[i][j];\n    if (c == '#') return;\n    int k = c - 'a';\n    if (!node->ch[k]) return;\n    WNode* nxt = node->ch[k];\n    if (nxt->word) { if (*asz >= *acap) { *acap *= 2; ans[0] = realloc(ans[0], *acap * sizeof(char*)); } ((char**)ans)[(*asz)++] = strdup(nxt->word); free(nxt->word); nxt->word = NULL; }\n    b[i][j] = '#';\n    int d[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};\n    for (int t = 0; t < 4; t++) dfs212(b, m, n, i + d[t][0], j + d[t][1], nxt, ans, asz, acap);\n    b[i][j] = c;\n}\nchar** findWords(char** board, int m, char** words, int wn, int* rs) {\n    WNode root = {0};\n    for (int i = 0; i < wn; i++) wInsert(&root, words[i]);\n    char** ans = malloc(16 * sizeof(char*)); int asz = 0, acap = 16;\n    for (int i = 0; i < m; i++) for (int j = 0; j < (int)strlen(board[i]); j++) dfs212(board, m, (int)strlen(board[0]), i, j, &root, &ans, &asz, &acap);\n    wFree(&root); *rs = asz; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "DFS chỉ theo nhánh Trie hợp lệ; prune giảm tìm kiếm lặp; mỗi từ thu đúng một lần.",
+    "edgeCases": ["words rỗng", "Không match → []", "Từ ngắn lặp nhiều path"],
+    "pitfalls": ["Word Search I cho từng word → TLE", "Không restore board[i][j] sau DFS"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

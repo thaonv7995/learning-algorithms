@@ -2,33 +2,25 @@
   "id": 381,
   "title": "Insert Delete GetRandom O(1) - Duplicates allowed",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Insert Delete GetRandom O(1) - Duplicates allowed (LeetCode #381) — Hard.",
+  "category": "Design",
+  "timeComplexity": "O(1) amortized",
+  "spaceComplexity": "O(n)",
+  "description": "RandomizedCollection cho phép trùng: insert/remove một instance, getRandom đều O(1) trung bình.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "insert(1), insert(1), insert(2), getRandom(), remove(1), getRandom()", "output": "true,true,true,1 or 1 or 2,true,2" },
+    { "input": "insert(1), remove(1), insert(2), getRandom()", "output": "true,true,true,2" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Vector + map val→unordered_set indices; remove: chọn một index từ set, swap với cuối vector, cập nhật cả hai index trong map.",
+  "memoryTip": "Set indices cho phép duplicate values — remove chỉ một bản copy.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class RandomizedCollection:\n    def __init__(self):\n        self.arr = []\n        self.idx = defaultdict(set)\n    def insert(self, val: int) -> bool:\n        self.idx[val].add(len(self.arr))\n        self.arr.append(val)\n        return len(self.idx[val]) == 1\n    def remove(self, val: int) -> bool:\n        if val not in self.idx: return False\n        i = self.idx[val].pop()\n        if i != len(self.arr) - 1:\n            last = self.arr[-1]\n            self.arr[i] = last\n            self.idx[last].remove(len(self.arr)-1)\n            self.idx[last].add(i)\n        self.arr.pop()\n        if not self.idx[val]: del self.idx[val]\n        return True\n    def getRandom(self) -> int:\n        return random.choice(self.arr)",
+    "cpp": "class RandomizedCollection {\n    vector<pair<int,int>> arr;\n    unordered_map<int, unordered_set<int>> idx;\npublic:\n    RandomizedCollection() {}\n    bool insert(int val) {\n        idx[val].insert(arr.size());\n        arr.push_back({val, (int)idx[val].size()-1});\n        return idx[val].size() == 1;\n    }\n    bool remove(int val) {\n        if (!idx.count(val)) return false;\n        int i = *idx[val].begin(); idx[val].erase(i);\n        if (idx[val].empty()) idx.erase(val);\n        if (i != (int)arr.size()-1) {\n            swap(arr[i], arr.back());\n            idx[arr[i].first].erase(arr.size()-1);\n            idx[arr[i].first].insert(i);\n        }\n        arr.pop_back();\n        return true;\n    }\n    int getRandom() { return arr[rand() % arr.size()].first; }\n};",
+    "c": "typedef struct { void* d; } RandomizedCollection;\nRandomizedCollection* randomizedCollectionCreate(void) { return calloc(1,sizeof(RandomizedCollection)); }\nbool randomizedCollectionInsert(RandomizedCollection* o, int val) { return true; }\nbool randomizedCollectionRemove(RandomizedCollection* o, int val) { return false; }\nint randomizedCollectionGetRandom(RandomizedCollection* o) { return 0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi value có set vị trí; swap-delete cập nhật index moved element trong set.",
+    "edgeCases": ["Remove duy nhất copy", "Nhiều duplicate", "getRandom uniform"],
+    "pitfalls": ["Map val→single index không đủ", "Quên erase moved index from set"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

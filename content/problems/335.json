@@ -2,33 +2,26 @@
   "id": 335,
   "title": "Self Crossing",
   "difficulty": "Hard",
-  "category": "Array",
+  "category": "Geometry",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Self Crossing (LeetCode #335) — Hard.",
+  "description": "Robot đi theo mảng distance: bước 1 hướng B, rồi L, U, R lặp lại, mỗi lần +0 hoặc -1 so với bước cùng hướng trước. Kiểm tra đường đi có tự cắt không.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "distance = [2,1,1,2]", "output": "true" },
+    { "input": "distance = [1,2,3,4]", "output": "false" },
+    { "input": "distance = [1,1,1,2,1]", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Chỉ cần xét 4–6 bước cuối: crossing type I (d[i]>=d[i-2] && d[i-1]<=d[i-3]); type II và III với điều kiện hình học cục bộ.",
+  "memoryTip": "Self-cross chỉ xảy ra khi spiral co — kiểm tra i>=3,4,5 với công thức cố định.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isSelfCrossing(self, distance: List[int]) -> bool:\n        d = distance\n        for i in range(3, len(d)):\n            if d[i] >= d[i-2] and d[i-1] <= d[i-3]:\n                return True\n            if i >= 4 and d[i-1] == d[i-3] and d[i] + d[i-4] >= d[i-2]:\n                return True\n            if i >= 5 and d[i-2] >= d[i-4] and d[i-3] <= d[i-1] and d[i] + d[i-4] >= d[i-2] and d[i-1] - d[i-3] < d[i-5]:\n                return True\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool isSelfCrossing(vector<int>& d) {\n        for (int i = 3; i < (int)d.size(); i++) {\n            if (d[i] >= d[i-2] && d[i-1] <= d[i-3]) return true;\n            if (i >= 4 && d[i-1] == d[i-3] && d[i] + d[i-4] >= d[i-2]) return true;\n            if (i >= 5 && d[i-2] >= d[i-4] && d[i-3] <= d[i-1] && d[i] + d[i-4] >= d[i-2] && d[i-1] - d[i-3] < d[i-5]) return true;\n        }\n        return false;\n    }\n};",
+    "c": "bool isSelfCrossing(int* d, int n) {\n    for (int i = 3; i < n; i++) {\n        if (d[i] >= d[i-2] && d[i-1] <= d[i-3]) return true;\n        if (i >= 4 && d[i-1] == d[i-3] && d[i] + d[i-4] >= d[i-2]) return true;\n        if (i >= 5 && d[i-2] >= d[i-4] && d[i-3] <= d[i-1] && d[i] + d[i-4] >= d[i-2] && d[i-1] - d[i-3] < d[i-5]) return true;\n    }\n    return false;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi self-cross thuộc một trong ba pattern local với ≤6 bước gần nhất.",
+    "edgeCases": ["n<4 → false", "Spiral lớn co lại", "Bước bằng 0"],
+    "pitfalls": ["Mô phỏng tọa độ O(n) space", "Thiếu case type II/III"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

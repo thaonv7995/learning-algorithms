@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #299</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Bulls and Cows</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Bulls and Cows (LeetCode #299) — Medium.</div>
+                        <div class="block-text">Trò Mastermind: secret và guess là chuỗi 4 chữ số. Bulls = đúng vị trí; Cows = đúng digit sai vị trí (không đếm bulls). Trả &quot;xAyB&quot;.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>secret = &quot;1807&quot;, guess = &quot;7810&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;1A3B&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>secret = &quot;1123&quot;, guess = &quot;0111&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;1A1B&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Một pass: bulls khi secret[i]==guess[i]; else tăng count secret digit và guess digit; cows += min(counts) sau pass.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* getHint(<span class="ty">char</span>* secret, <span class="ty">char</span>* guess) {
+    <span class="ty">int</span> bulls = 0, cntS[10] = {0}, cntG[10] = {0};
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; secret[i]; i++) {
+        <span class="kw">if</span> (secret[i] == guess[i]) bulls++;
+        <span class="kw">else</span> { cntS[secret[i]-'0']++; cntG[guess[i]-'0']++; }
+    }
+    <span class="ty">int</span> cows = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; 10; i++) cows += cntS[i] &lt; cntG[i] ? cntS[i] : cntG[i];
+    <span class="ty">char</span>* out = <span class="kw">malloc</span>(16);
+    snprintf(out, 16, &quot;%dA%dB&quot;, bulls, cows);
+    <span class="kw">return</span> out;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> getHint(<span class="ty">self</span>, secret: <span class="ty">str</span>, guess: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        bulls = 0
+        cnt_s = [0] * 10
+        cnt_g = [0] * 10
+        <span class="kw">for</span> a, b <span class="kw">in</span> zip(secret, guess):
+            <span class="kw">if</span> a == b:
+                bulls += 1
+            <span class="kw">else</span>:
+                cnt_s[<span class="ty">int</span>(a)] += 1
+                cnt_g[<span class="ty">int</span>(b)] += 1
+        cows = sum(<span class="ty">min</span>(cnt_s[i], cnt_g[i]) <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(10))
+        <span class="kw">return</span> f&quot;{bulls}A{cows}B&quot;</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> getHint(<span class="ty">string</span> secret, <span class="ty">string</span> guess) {
+        <span class="ty">int</span> bulls = 0, cntS[10] = {}, cntG[10] = {};
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)secret.size(); i++) {
+            <span class="kw">if</span> (secret[i] == guess[i]) bulls++;
+            <span class="kw">else</span> { cntS[secret[i]-'0']++; cntG[guess[i]-'0']++; }
+        }
+        <span class="ty">int</span> cows = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; 10; i++) cows += min(cntS[i], cntG[i]);
+        <span class="kw">return</span> to_string(bulls) + &quot;A&quot; + to_string(cows) + &quot;B&quot;;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +145,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Một pass: bulls khi secret[i]==guess[i]; else tăng count secret digit…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Bulls đếm trực tiếp; cows = tổng min frequency digit không khớp vị trí.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Trùng digit nhiều</span><span class="analysis-tag edge">Toàn bulls → nA0B</span><span class="analysis-tag pit">Đếm cows gồm bulls</span><span class="analysis-tag pit">O(n²) pairwise compare</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Bulls and cows = count bulls direct; hash 0-9 for misplaced pairs.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Bulls%20and%20Cows&lc_id=299&embed=true"></iframe>

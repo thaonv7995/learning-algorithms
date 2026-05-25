@@ -2,33 +2,25 @@
   "id": 207,
   "title": "Course Schedule",
   "difficulty": "Medium",
-  "category": "Graph",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Course Schedule (LeetCode #207) — Medium.",
+  "category": "Graph Theory",
+  "timeComplexity": "O(V+E)",
+  "spaceComplexity": "O(V+E)",
+  "description": "Có numCourses môn (0..n-1) và mảng prerequisites[i]=[a,b] nghĩa phải học b trước a. Trả true nếu có thể hoàn thành tất cả môn (đồ thị không có cycle).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "numCourses = 2, prerequisites = [[1,0]]", "output": "true" },
+    { "input": "numCourses = 2, prerequisites = [[1,0],[0,1]]", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Topological sort Kahn: in-degree, queue các node degree 0, bóc dần cạnh. Nếu đếm được numCourses node → acyclic.",
+  "memoryTip": "Course schedule = topo sort / Kahn BFS; cycle ⇔ không bóc hết node.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:\n        adj = [[] for _ in range(numCourses)]\n        indeg = [0] * numCourses\n        for a, b in prerequisites:\n            adj[b].append(a)\n            indeg[a] += 1\n        q = deque(i for i in range(numCourses) if indeg[i] == 0)\n        seen = 0\n        while q:\n            u = q.popleft()\n            seen += 1\n            for v in adj[u]:\n                indeg[v] -= 1\n                if indeg[v] == 0:\n                    q.append(v)\n        return seen == numCourses",
+    "cpp": "class Solution {\npublic:\n    bool canFinish(int numCourses, vector<vector<int>>& prereq) {\n        vector<vector<int>> adj(numCourses);\n        vector<int> indeg(numCourses);\n        for (auto& e : prereq) { adj[e[1]].push_back(e[0]); indeg[e[0]]++; }\n        queue<int> q;\n        for (int i = 0; i < numCourses; i++) if (indeg[i] == 0) q.push(i);\n        int seen = 0;\n        while (!q.empty()) {\n            int u = q.front(); q.pop(); seen++;\n            for (int v : adj[u]) if (--indeg[v] == 0) q.push(v);\n        }\n        return seen == numCourses;\n    }\n};",
+    "c": "bool canFinish(int n, int** prereq, int pc, int* pcCol) {\n    int* indeg = calloc(n, sizeof(int));\n    int** adj = calloc(n, sizeof(int*));\n    int* deg = calloc(n, sizeof(int));\n    for (int i = 0; i < pc; i++) {\n        int a = prereq[i][0], b = prereq[i][1];\n        adj[b] = realloc(adj[b], (deg[b]+1)*sizeof(int));\n        adj[b][deg[b]++] = a;\n        indeg[a]++;\n    }\n    int* q = malloc(n*sizeof(int)), h=0, t=0, seen=0;\n    for (int i=0;i<n;i++) if (!indeg[i]) q[t++]=i;\n    while (h<t) {\n        int u=q[h++]; seen++;\n        for (int j=0;j<deg[u];j++) if (--indeg[adj[u][j]]==0) q[t++]=adj[u][j];\n    }\n    free(indeg); free(deg); free(q);\n    return seen==n;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Kahn bóc hết node iff DAG; cycle giữ in-degree > 0 cho node trong cycle.",
+    "edgeCases": ["Không prerequisite → true", "Self-loop qua cặp đảo → false"],
+    "pitfalls": ["DFS 3-color phức tạp hơn cần thiết", "Quên tăng indeg đúng hướng cạnh b→a"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

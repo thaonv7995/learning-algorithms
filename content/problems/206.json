@@ -5,30 +5,23 @@
   "category": "Linked List",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Reverse Linked List (LeetCode #206) — Easy.",
+  "description": "Đảo ngược linked list singly-linked đã cho. Trả về head của list sau khi đảo (các node có thể tái sử dụng, không cấp phát mới).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [1,2,3,4,5]", "output": "[5,4,3,2,1]" },
+    { "input": "head = [1,2]", "output": "[2,1]" },
+    { "input": "head = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Iterative: prev=null, cur=head; lưu next, gán cur.next=prev, dịch prev và cur sang phải. Cuối cùng prev là head mới.",
+  "memoryTip": "Reverse linked list = 3 con trỏ prev/cur/next, lật next tại chỗ.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        prev, cur = None, head\n        while cur:\n            nxt = cur.next\n            cur.next = prev\n            prev, cur = cur, nxt\n        return prev",
+    "cpp": "class Solution {\npublic:\n    ListNode* reverseList(ListNode* head) {\n        ListNode* prev = nullptr;\n        while (head) {\n            ListNode* nxt = head->next;\n            head->next = prev;\n            prev = head;\n            head = nxt;\n        }\n        return prev;\n    }\n};",
+    "c": "struct ListNode* reverseList(struct ListNode* head) {\n    struct ListNode* prev = NULL;\n    while (head) {\n        struct ListNode* nxt = head->next;\n        head->next = prev;\n        prev = head;\n        head = nxt;\n    }\n    return prev;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi node được nối ngược đúng một lần; prev cuối là node đầu list mới.",
+    "edgeCases": ["List rỗng → null", "Một node → chính nó"],
+    "pitfalls": ["Mất next trước khi gán → mất list", "Đệ quy O(n) stack khi iterative đủ"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

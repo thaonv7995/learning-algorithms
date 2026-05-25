@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #350</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Intersection of Two Arrays II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n+m)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(min(n,m))</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Intersection of Two Arrays II (LeetCode #350) — Easy.</div>
+                        <div class="block-text">Trả giao hai mảng nums1 và nums2 — mỗi phần tử xuất hiện trong kết quả đúng số lần min(count1, count2).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums1 = [1,2,2,1], nums2 = [2,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums1 = [4,9,5], nums2 = [9,4,9,8,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>[4,9]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hash map đếm nums1; duyệt nums2, nếu count&gt;0 thì push vào ans và giảm count.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* intersect(<span class="ty">int</span>* nums1, <span class="ty">int</span> n1, <span class="ty">int</span>* nums2, <span class="ty">int</span> n2, <span class="ty">int</span>* retSize) {
+    <span class="ty">int</span> map[2001] = {0};
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n1;i++) <span class="kw">if</span>(nums1[i]&gt;=-1000&amp;&amp;nums1[i]&lt;=1000) map[nums1[i]+1000]++;
+    <span class="ty">int</span>* ans = <span class="kw">malloc</span>((n1&lt;n2?n1:n2)*<span class="kw">sizeof</span>(<span class="ty">int</span>)); *retSize=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n2;i++){
+        <span class="ty">int</span> k=nums2[i]+1000;
+        <span class="kw">if</span>(k&gt;=0&amp;&amp;k&lt;=2000&amp;&amp;map[k]&gt;0){ ans[(*retSize)++]=nums2[i]; map[k]--; }
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> intersect(<span class="ty">self</span>, nums1: <span class="ty">List</span>[<span class="ty">int</span>], nums2: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        cnt = Counter(nums1)
+        ans = []
+        <span class="kw">for</span> x <span class="kw">in</span> nums2:
+            <span class="kw">if</span> cnt[x]:
+                ans.append(x)
+                cnt[x] -= 1
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; intersect(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums1, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums2) {
+        <span class="kw">if</span> (nums1.size() &gt; nums2.size()) <span class="kw">return</span> intersect(nums2, nums1);
+        unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; cnt;
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums1) cnt[x]++;
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums2) <span class="kw">if</span> (cnt[x]-- &gt; 0) ans.push_back(x);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +133,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n+m)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(min(n,m)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Hash map đếm nums1; duyệt nums2, nếu count&gt;0 thì push vào ans và giảm…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Map frequency đảm bảo mỗi giá trị lấy đúng min số lần xuất hiện.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một mảng rỗng</span><span class="analysis-tag edge">Toàn trùng</span><span class="analysis-tag edge">Không giao</span><span class="analysis-tag pit">Dùng set như 349</span><span class="analysis-tag pit">Sort merge k khi cần output sorted</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Multiset intersection — frequency map, không dùng set đơn giản.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +161,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Intersection%20of%20Two%20Arrays%20II&lc_id=350&embed=true"></iframe>

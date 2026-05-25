@@ -3,32 +3,25 @@
   "title": "Bitwise AND of Numbers Range",
   "difficulty": "Medium",
   "category": "Bit Manipulation",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Bitwise AND of Numbers Range (LeetCode #201) — Medium.",
+  "description": "Cho hai số nguyên left và right. Tính AND bit của mọi số trong đoạn [left, right] (bao gồm hai đầu). Kết quả là phần bit chung cố định trên toàn dải.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "left = 5, right = 7", "output": "4" },
+    { "input": "left = 0, right = 0", "output": "0" },
+    { "input": "left = 1, right = 2147483647", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Dịch cả left và right sang phải cùng số bước cho đến khi bằng nhau — các bit khác nhau ở phía thấp sẽ thành 0 khi AND. Trả left << shift.",
+  "memoryTip": "Range AND = dịch phải đến khi m==n, rồi m << số bước dịch.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def rangeBitwiseAnd(self, left: int, right: int) -> int:\n        shift = 0\n        while left < right:\n            left >>= 1\n            right >>= 1\n            shift += 1\n        return left << shift",
+    "cpp": "class Solution {\npublic:\n    int rangeBitwiseAnd(int left, int right) {\n        int shift = 0;\n        while (left < right) {\n            left >>= 1;\n            right >>= 1;\n            shift++;\n        }\n        return left << shift;\n    }\n};",
+    "c": "int rangeBitwiseAnd(int left, int right) {\n    int shift = 0;\n    while (left < right) {\n        left >>= 1;\n        right >>= 1;\n        shift++;\n    }\n    return left << shift;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Bit khác nhau ở vị trí thấp nhất khiến mọi số trong dải có ít nhất một số với bit 0 tại đó → AND = 0 tại bit đó.",
+    "edgeCases": ["left == right → trả chính nó", "Dải rất rộng → 0"],
+    "pitfalls": ["Loop từng số O(n) TLE", "Quên dịch trái kết quả cuối"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

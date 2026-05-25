@@ -2,33 +2,26 @@
   "id": 227,
   "title": "Basic Calculator II",
   "difficulty": "Medium",
-  "category": "Math",
+  "category": "Stack",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Basic Calculator II (LeetCode #227) — Medium.",
+  "description": "Chuỗi s gồm số nguyên không âm và '+', '-', '*', '/' (chia lấy phần nguyên). Không có ngoặc. Tính giá trị biểu thức.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"3+2*2\"", "output": "7" },
+    { "input": "s = \" 3/2 \"", "output": "1" },
+    { "input": "s = \" 3+5 / 2 \"", "output": "5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt: num hiện tại; gặp */ tính ngay với last; gặp +- push last vào result, last=±num. Cuối cộng result+last.",
+  "memoryTip": "Calc II = last number + */ immediate; +- defer to stack/sum.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def calculate(self, s: str) -> int:\n        s = s.replace(' ', '')\n        n, num, last, result, op = len(s), 0, 0, 0, '+'\n        for i, c in enumerate(s):\n            if c.isdigit():\n                num = num * 10 + int(c)\n            if not c.isdigit() or i == n - 1:\n                if op == '+':\n                    result += last\n                    last = num\n                elif op == '-':\n                    result += last\n                    last = -num\n                elif op == '*':\n                    last *= num\n                elif op == '/':\n                    last = int(last / num)\n                op = c\n                num = 0\n        return result + last",
+    "cpp": "class Solution {\npublic:\n    int calculate(string s) {\n        int n = s.size(), num = 0, last = 0, result = 0;\n        char op = '+';\n        for (int i = 0; i < n; i++) {\n            if (isdigit(s[i])) num = num * 10 + (s[i] - '0');\n            if (!isdigit(s[i]) && !isspace(s[i]) || i == n - 1) {\n                if (op == '+') { result += last; last = num; }\n                else if (op == '-') { result += last; last = -num; }\n                else if (op == '*') last *= num;\n                else if (op == '/') last /= num;\n                op = s[i]; num = 0;\n            }\n        }\n        return result + last;\n    }\n};",
+    "c": "int calculate2(char* s) {\n    int num = 0, last = 0, result = 0;\n    char op = '+';\n    for (int i = 0; s[i]; i++) {\n        if (s[i] >= '0' && s[i] <= '9') num = num * 10 + (s[i] - '0');\n        if ((!isdigit((unsigned char)s[i]) && !isspace((unsigned char)s[i])) || s[i+1]==0) {\n            if (op == '+') { result += last; last = num; }\n            else if (op == '-') { result += last; last = -num; }\n            else if (op == '*') last *= num;\n            else if (op == '/') last /= num;\n            op = s[i]; num = 0;\n        }\n    }\n    return result + last;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "*/ gắn với toán hạng trước (last); +- tích lũy result và reset last.",
+    "edgeCases": ["Một số", "Chia 0 không xảy ra theo đề"],
+    "pitfalls": ["Quên flush số cuối", "Dùng float thay int division"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

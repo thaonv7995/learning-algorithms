@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #234</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Linked List</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Palindrome Linked List</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Palindrome Linked List (LeetCode #234) — Easy.</div>
+                        <div class="block-text">Kiểm tra linked list có palindrome không (đọc xuôi ngược giống nhau). Yêu cầu O(n) thời gian và O(1) bộ nhớ phụ nếu có thể.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,2,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [1,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Slow/fast tìm giữa; reverse nửa sau; so sánh hai nửa; (optional) restore list.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> isPalindrome(<span class="ty">struct</span> ListNode* head) {
+    <span class="ty">struct</span> ListNode *slow=head,*fast=head;
+    <span class="kw">while</span> (fast &amp;&amp; fast-&gt;next) { slow=slow-&gt;next; fast=fast-&gt;next-&gt;next; }
+    <span class="ty">struct</span> ListNode* prev=NULL;
+    <span class="kw">while</span> (slow) { <span class="ty">struct</span> ListNode* n=slow-&gt;next; slow-&gt;next=prev; prev=slow; slow=n; }
+    <span class="kw">for</span> (<span class="ty">struct</span> ListNode *l=head,*r=prev; r; l=l-&gt;next,r=r-&gt;next)
+        <span class="kw">if</span> (l-&gt;val!=r-&gt;val) <span class="kw">return</span> false;
+    <span class="kw">return</span> true;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isPalindrome(<span class="ty">self</span>, head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]) -&gt; bool:
+        slow = fast = head
+        <span class="kw">while</span> fast <span class="kw">and</span> fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        prev = <span class="kw">None</span>
+        <span class="kw">while</span> slow:
+            nxt = slow.next
+            slow.next = prev
+            prev = slow
+            slow = nxt
+        left, right = head, prev
+        <span class="kw">while</span> right:
+            <span class="kw">if</span> left.val != right.val:
+                <span class="kw">return</span> <span class="kw">False</span>
+            left = left.next
+            right = right.next
+        <span class="kw">return</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isPalindrome(ListNode* head) {
+        ListNode *slow = head, *fast = head;
+        <span class="kw">while</span> (fast &amp;&amp; fast-&gt;next) { slow = slow-&gt;next; fast = fast-&gt;next-&gt;next; }
+        ListNode* prev = <span class="kw">nullptr</span>;
+        <span class="kw">while</span> (slow) { ListNode* nxt = slow-&gt;next; slow-&gt;next = prev; prev = slow; slow = nxt; }
+        <span class="kw">for</span> (ListNode *l = head, *r = prev; r; l = l-&gt;next, r = r-&gt;next)
+            <span class="kw">if</span> (l-&gt;val != r-&gt;val) <span class="kw">return</span> false;
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +147,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Slow/fast tìm giữa; reverse nửa sau; so sánh hai nửa; restore list.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Nửa sau đảo so khớp nửa đầu; slow dừng giữa (hoặc sau giữa với len chẵn).</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một node → true</span><span class="analysis-tag edge">Hai node khác → false</span><span class="analysis-tag pit">Copy vào array O(n) space</span><span class="analysis-tag pit">Reverse cả list thay nửa sau</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Palindrome list = find mid + reverse second half + compare.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Palindrome%20Linked%20List&lc_id=234&embed=true"></iframe>

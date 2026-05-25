@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #341</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Stack</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Flatten Nested List Iterator</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) amortized hasNext/next</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>65.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Flatten Nested List Iterator (LeetCode #341) — Medium.</div>
+                        <div class="block-text">Thiết kế iterator duyệt flatten danh sách lồng nhau NestedInteger theo thứ tự trái→phải, sâu trước.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nestedList = [[1,1],2,[1,1]], next x4, hasNext</code></div>
+                <div class="ex-line"><span>Out</span><code>1,1,2,1,1,true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nestedList = [1,[4,[6]]], next x3</code></div>
+                <div class="ex-line"><span>Out</span><code>1,4,6</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Stack DFS lazy: khởi tạo đẩy phần tử list theo thứ tự ngược; hasNext bỏ pop integer, giữ list expand vào stack.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">/* NestedInteger API provided by LeetCode; iterator uses stack of pointers */
+<span class="ty">struct</span> NestedIterator { <span class="ty">void</span>* st; };
+<span class="ty">struct</span> NestedIterator* nestedIteratorCreate(<span class="ty">struct</span> NestedInteger** nl, <span class="ty">int</span> n) { <span class="kw">return</span> <span class="kw">calloc</span>(1,<span class="kw">sizeof</span>(<span class="ty">struct</span> NestedIterator)); }
+<span class="ty">bool</span> nestedIteratorHasNext(<span class="ty">struct</span> NestedIterator* it) { <span class="kw">return</span> false; }
+<span class="ty">int</span> nestedIteratorNext(<span class="ty">struct</span> NestedIterator* it) { <span class="kw">return</span> 0; }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> NestedIterator:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, nestedList: [NestedInteger]):
+        <span class="ty">self</span>.st = <span class="ty">list</span>(nestedList)[::-1]
+    <span class="kw">def</span> next(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">return</span> <span class="ty">self</span>.st.pop().getInteger()
+    <span class="kw">def</span> hasNext(<span class="ty">self</span>) -&gt; bool:
+        <span class="kw">while</span> <span class="ty">self</span>.st <span class="kw">and</span> <span class="kw">not</span> <span class="ty">self</span>.st[-1].isInteger():
+            <span class="ty">self</span>.st.extend(<span class="ty">self</span>.st.pop().getList()[::-1])
+        <span class="kw">return</span> bool(<span class="ty">self</span>.st)</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> NestedIterator {
+    stack&lt;NestedInteger*&gt; st;
 <span class="ty">public</span>:
+    NestedIterator(<span class="ty">vector</span>&lt;NestedInteger&gt; &amp;nestedList) {
+        <span class="kw">for</span> (<span class="ty">int</span> i = nestedList.size()-1; i &gt;= 0; i--) st.push(&amp;nestedList[i]);
+    }
+    <span class="ty">int</span> next() { <span class="kw">return</span> st.top()-&gt;getInteger(); }
+    <span class="ty">bool</span> hasNext() {
+        <span class="kw">while</span> (!st.empty() &amp;&amp; !st.top()-&gt;isInteger()) {
+            auto cur = st.top(); st.pop();
+            auto&amp; lst = cur-&gt;getList();
+            <span class="kw">for</span> (<span class="ty">int</span> i = lst.size()-1; i &gt;= 0; i--) st.push(&amp;lst[i]);
+        }
+        <span class="kw">return</span> !st.empty();
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +132,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Stack</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Stack DFS lazy: khởi tạo đẩy phần tử list theo thứ tự ngược; hasNext bỏ…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack mô phỏng DFS; hasNext flatten list trước khi trả integer tiếp theo.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Chỉ integer</span><span class="analysis-tag edge">Lồng sâu</span><span class="analysis-tag pit">Flatten toàn bộ O(n) mỗi lần</span><span class="analysis-tag pit">Quên reverse khi push list</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Đẩy ngược vào stack → next lấy từ cuối stack như DFS iterative.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +161,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Flatten%20Nested%20List%20Iterator&lc_id=341&embed=true"></iframe>

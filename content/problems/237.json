@@ -3,32 +3,24 @@
   "title": "Delete Node in a Linked List",
   "difficulty": "Medium",
   "category": "Linked List",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Delete Node in a Linked List (LeetCode #237) — Medium.",
+  "description": "Cho node cần xóa trong singly-linked list (không cho head, node chắc chắn không phải tail). Xóa node đó — không trả về gì.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [4,5,1,9], node = 5", "output": "[4,1,9]" },
+    { "input": "head = [4,5,1,9], node = 1", "output": "[4,5,9]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Copy val từ node.next vào node, rồi node.next = node.next.next — 'xóa' next thay vì node hiện tại.",
+  "memoryTip": "Delete given node (no head) = copy next val + skip next.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def deleteNode(self, node: ListNode) -> None:\n        node.val = node.next.val\n        node.next = node.next.next",
+    "cpp": "class Solution {\npublic:\n    void deleteNode(ListNode* node) {\n        node->val = node->next->val;\n        node->next = node->next->next;\n    }\n};",
+    "c": "void deleteNode(struct ListNode* node) {\n    node->val = node->next->val;\n    node->next = node->next->next;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "List sau thao tác giống như xóa node gốc vì val next được copy lên.",
+    "edgeCases": ["Node trước tail (next là tail)", "List 2 node"],
+    "pitfalls": ["Cố gắng free node không có prev", "Tail không thể xóa theo đề"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,25 @@
   "id": 284,
   "title": "Peeking Iterator",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Design",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Peeking Iterator (LeetCode #284) — Medium.",
+  "description": "Thiết kế Iterator hỗ trợ peek(): trả phần tử kế tiếp mà không advance; next() trả và tiến; hasNext() kiểm tra còn phần tử.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "Iterator [1,2,3]; peek→1; next→1; next→2; hasNext→true", "output": "1, 1, 2, true" },
+    { "input": "peek called multiple times before next", "output": "same value each peek" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Cache nextVal và hasNextFlag từ underlying iterator; peek trả cache; next consume cache và prefetch lại.",
+  "memoryTip": "Peeking iterator = always buffer one element ahead.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class PeekingIterator:\n    def __init__(self, iterator):\n        self.it = iterator\n        self.buf = None\n        self.has_buf = False\n        self._fill()\n    def _fill(self):\n        if not self.has_buf and self.it.hasNext():\n            self.buf = self.it.next()\n            self.has_buf = True\n    def peek(self):\n        self._fill()\n        return self.buf\n    def next(self):\n        self._fill()\n        val = self.buf\n        self.has_buf = False\n        self._fill()\n        return val\n    def hasNext(self):\n        return self.has_buf",
+    "cpp": "class PeekingIterator : public Iterator {\n    int buf;\n    bool hasBuf = false;\n    void fill() {\n        if (!hasBuf && Iterator::hasNext()) {\n            buf = Iterator::next();\n            hasBuf = true;\n        }\n    }\npublic:\n    PeekingIterator(Iterator* it) : Iterator(*it) { fill(); }\n    int peek() { fill(); return buf; }\n    int next() { fill(); hasBuf = false; int v = buf; fill(); return v; }\n    bool hasNext() const { return hasBuf; }\n};",
+    "c": "typedef struct { int* a; int i, n; int buf; int hasBuf; } PeekIter;\nvoid peekInit(PeekIter* p, int* a, int n) {\n    p->a=a; p->i=0; p->n=n; p->hasBuf=0;\n    if (n) { p->buf=a[0]; p->i=1; p->hasBuf=1; }\n}\nint peek(PeekIter* p) { return p->buf; }\nint peekNext(PeekIter* p) {\n    int v = p->buf;\n    if (p->i < p->n) { p->buf = p->a[p->i++]; p->hasBuf = 1; }\n    else p->hasBuf = 0;\n    return v;\n}\nint peekHasNext(PeekIter* p) { return p->hasBuf; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Buffer luôn giữ phần tử kế tiếp nếu có; peek không tăng underlying index.",
+    "edgeCases": ["Empty iterator", "peek nhiều lần liên tiếp"],
+    "pitfalls": ["Gọi next underlying trực tiếp mất sync", "hasNext sau last next → false"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

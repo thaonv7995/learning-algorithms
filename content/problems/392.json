@@ -5,30 +5,22 @@
   "category": "Two Pointers",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Is Subsequence (LeetCode #392) — Easy.",
+  "description": "Kiểm tra s có phải subsequence của t không (giữ thứ tự, không cần liên tiếp).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"abc\", t = \"ahbgdc\"", "output": "true" },
+    { "input": "s = \"ax\", t = \"ahbgdc\"", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers i trên s, j trên t: nếu s[i]==t[j] thì i++; luôn j++; thành công khi i==len(s).",
+  "memoryTip": "Greedy match sớm — subsequence check template.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isSubsequence(self, s: str, t: str) -> bool:\n        i = 0\n        for c in t:\n            if i < len(s) and s[i] == c:\n                i += 1\n        return i == len(s)",
+    "cpp": "class Solution {\npublic:\n    bool isSubsequence(string s, string t) {\n        int i = 0;\n        for (char c : t) if (i < (int)s.size() && s[i] == c) i++;\n        return i == (int)s.size();\n    }\n};",
+    "c": "bool isSubsequence(char* s, char* t) {\n    int i = 0;\n    for (int j = 0; t[j]; j++) if (s[i] && s[i] == t[j]) i++;\n    return s[i] == 0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Greedy lấy match sớm nhất trên t vẫn cho subsequence hợp lệ nếu tồn tại.",
+    "edgeCases": ["s rỗng → true", "s dài hơn t", "Trùng ký tự"],
+    "pitfalls": ["Binary search nhiều lần phức tạp không cần", "Quên i==len(s) không phải j"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

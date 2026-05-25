@@ -2,33 +2,25 @@
   "id": 384,
   "title": "Shuffle an Array",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Shuffle an Array (LeetCode #384) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(n) reset/shuffle",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế Solution nhận mảng nums: reset trả bản gốc, shuffle trả hoán vị ngẫu nhiên đều (Fisher-Yates).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3], reset(), shuffle()", "output": "[1,2,3], random permutation" },
+    { "input": "nums = [1], reset(), shuffle()", "output": "[1], [1]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Lưu bản gốc orig; reset copy orig; shuffle Fisher-Yates trên bản copy từ cuối về đầu swap random j≤i.",
+  "memoryTip": "Fisher-Yates: for i=n-1..1 swap a[i] với a[rand()%(i+1)].",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def __init__(self, nums: List[int]):\n        self.orig = nums[:]\n        self.arr = nums[:]\n    def reset(self) -> List[int]:\n        self.arr = self.orig[:]\n        return self.arr\n    def shuffle(self) -> List[int]:\n        a = self.arr[:]\n        for i in range(len(a)-1, 0, -1):\n            j = random.randint(0, i)\n            a[i], a[j] = a[j], a[i]\n        self.arr = a\n        return a",
+    "cpp": "class Solution {\n    vector<int> orig, arr;\npublic:\n    Solution(vector<int>& nums) : orig(nums), arr(nums) {}\n    vector<int> reset() { arr = orig; return arr; }\n    vector<int> shuffle() {\n        for (int i = arr.size()-1; i > 0; i--) {\n            int j = rand() % (i+1);\n            swap(arr[i], arr[j]);\n        }\n        return arr;\n    }\n};",
+    "c": "typedef struct { int* orig; int* arr; int n; } Solution;\nSolution* solutionCreate(int* nums, int n) {\n    Solution* s = malloc(sizeof(Solution)); s->n = n;\n    s->orig = malloc(n*4); s->arr = malloc(n*4);\n    memcpy(s->orig, nums, n*4); memcpy(s->arr, nums, n*4);\n    return s;\n}\nint* solutionReset(Solution* s, int* rs) { memcpy(s->arr, s->orig, s->n*4); *rs=s->n; return s->arr; }\nint* solutionShuffle(Solution* s, int* rs) {\n    for (int i=s->n-1;i>0;i--){ int j=rand()%(i+1); int t=s->arr[i]; s->arr[i]=s->arr[j]; s->arr[j]=t; }\n    *rs=s->n; return s->arr;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Fisher-Yates tạo hoán vị uniform; reset khôi phục trạng thái ban đầu.",
+    "edgeCases": ["n=1", "Shuffle nhiều lần", "Reset sau shuffle"],
+    "pitfalls": ["Shuffle bản gốc mất reset", "rand() bias nhỏ — chấp nhận"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

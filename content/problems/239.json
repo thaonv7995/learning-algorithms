@@ -2,33 +2,25 @@
   "id": 239,
   "title": "Sliding Window Maximum",
   "difficulty": "Hard",
-  "category": "Sliding Window",
+  "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Sliding Window Maximum (LeetCode #239) — Hard.",
+  "spaceComplexity": "O(k)",
+  "description": "Cho mảng nums và cửa sổ kích thước k. Trả mảng max của mỗi cửa sổ trượt k phần tử liên tiếp.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,3,-1,-3,5,3,6,7], k = 3", "output": "[3,3,5,5,6,7]" },
+    { "input": "nums = [1], k = 1", "output": "[1]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Deque lưu index giảm dần theo nums: pop back nhỏ hơn nums[i]; pop front nếu out of window; front là max.",
+  "memoryTip": "Sliding window max = monotonic deque of indices (decreasing values).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:\n        from collections import deque\n        dq, res = deque(), []\n        for i, x in enumerate(nums):\n            while dq and nums[dq[-1]] <= x:\n                dq.pop()\n            dq.append(i)\n            if dq[0] <= i - k:\n                dq.popleft()\n            if i >= k - 1:\n                res.append(nums[dq[0]])\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<int> maxSlidingWindow(vector<int>& nums, int k) {\n        deque<int> dq;\n        vector<int> res;\n        for (int i = 0; i < (int)nums.size(); i++) {\n            while (!dq.empty() && nums[dq.back()] <= nums[i]) dq.pop_back();\n            dq.push_back(i);\n            if (dq.front() <= i - k) dq.pop_front();\n            if (i >= k - 1) res.push_back(nums[dq.front()]);\n        }\n        return res;\n    }\n};",
+    "c": "int* maxSlidingWindow(int* nums, int n, int k, int* rs) {\n    int* dq = malloc(n * sizeof(int));\n    int* out = malloc(n * sizeof(int));\n    int h = 0, t = 0, o = 0;\n    for (int i = 0; i < n; i++) {\n        while (h < t && nums[dq[t-1]] <= nums[i]) t--;\n        dq[t++] = i;\n        if (dq[h] <= i - k) h++;\n        if (i >= k - 1) out[o++] = nums[dq[h]];\n    }\n    free(dq); *rs = o; return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Deque giữ candidate max theo thứ tự giảm; phần tử cũ ra khỏi window bị loại.",
+    "edgeCases": ["k=1 → nums", "k=n → một max"],
+    "pitfalls": ["Heap O(n log k) chậm hơn", "Quên pop front khi index <= i-k"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,25 @@
   "id": 378,
   "title": "Kth Smallest Element in a Sorted Matrix",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Binary Search",
+  "timeComplexity": "O(n log(max-min))",
   "spaceComplexity": "O(1)",
-  "description": "Kth Smallest Element in a Sorted Matrix (LeetCode #378) — Medium.",
+  "description": "Ma trận n×n sort theo hàng và cột. Trả phần tử nhỏ thứ k (1-indexed).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8", "output": "13" },
+    { "input": "matrix = [[-5]], k = 1", "output": "-5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search trên giá trị mid: đếm số phần tử ≤ mid bằng walk từ góc trên-phải hoặc dưới-trái O(n).",
+  "memoryTip": "Value BS + count ≤ mid — ma trận sorted 2 chiều.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def kthSmallest(self, matrix: List[List[int]], k: int) -> int:\n        n = len(matrix)\n        lo, hi = matrix[0][0], matrix[-1][-1]\n        def count(x):\n            i, j, c = 0, n-1, 0\n            while i < n and j >= 0:\n                if matrix[i][j] <= x:\n                    c += j + 1; i += 1\n                else:\n                    j -= 1\n            return c\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if count(mid) >= k: hi = mid\n            else: lo = mid + 1\n        return lo",
+    "cpp": "class Solution {\n    int count(vector<vector<int>>& m, int x) {\n        int n = m.size(), i = 0, j = n-1, c = 0;\n        while (i < n && j >= 0) {\n            if (m[i][j] <= x) { c += j+1; i++; }\n            else j--;\n        }\n        return c;\n    }\npublic:\n    int kthSmallest(vector<vector<int>>& matrix, int k) {\n        int lo = matrix[0][0], hi = matrix.back().back();\n        while (lo < hi) {\n            int mid = lo + (hi - lo) / 2;\n            if (count(matrix, mid) >= k) hi = mid;\n            else lo = mid + 1;\n        }\n        return lo;\n    }\n};",
+    "c": "int kthSmallest(int** matrix, int n, int* cs, int k) {\n    int lo = matrix[0][0], hi = matrix[n-1][cs[n-1]-1];\n    while (lo < hi) {\n        int mid = lo + (hi - lo) / 2, c = 0, i = 0, j = n - 1;\n        while (i < n && j >= 0) {\n            if (matrix[i][j] <= mid) { c += j + 1; i++; }\n            else j--;\n        }\n        if (c >= k) hi = mid; else lo = mid + 1;\n    }\n    return lo;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Count monotonic theo mid; BS tìm giá trị nhỏ nhất có ≥k phần tử ≤ nó.",
+    "edgeCases": ["n=1", "k=1", "Giá trị âm"],
+    "pitfalls": ["Flatten sort O(n² log n)", "Count walk sai hướng"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

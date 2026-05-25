@@ -2,33 +2,25 @@
   "id": 396,
   "title": "Rotate Function",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Math",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Rotate Function (LeetCode #396) — Medium.",
+  "description": "F(k) = sum i*nums[i] với index xoay vòng k bước. Trả max F(k) với k=0..n-1.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [4,3,2,6]", "output": "26" },
+    { "input": "nums = [100]", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "F(0) tính trực tiếp; F(k+1) = F(k) + sum(nums) - n*nums[n-1-k] (phần tử cuối ra khỏi vị trí cao nhất).",
+  "memoryTip": "Delta rotation — O(1) chuyển F(k)→F(k+1) dùng tổng mảng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxRotateFunction(self, nums: List[int]) -> int:\n        n = len(nums)\n        s = sum(nums)\n        f = sum(i * nums[i] for i in range(n))\n        ans = f\n        for k in range(1, n):\n            f = f + s - n * nums[n - k]\n            ans = max(ans, f)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int maxRotateFunction(vector<int>& nums) {\n        int n = nums.size(), sum = 0, f = 0;\n        for (int i = 0; i < n; i++) { sum += nums[i]; f += i * nums[i]; }\n        int ans = f;\n        for (int k = 1; k < n; k++) {\n            f = f + sum - n * nums[n - k];\n            ans = max(ans, f);\n        }\n        return ans;\n    }\n};",
+    "c": "int maxRotateFunction(int* nums, int n) {\n    long long sum = 0, f = 0;\n    for (int i = 0; i < n; i++) { sum += nums[i]; f += (long long)i * nums[i]; }\n    long long ans = f;\n    for (int k = 1; k < n; k++) {\n        f = f + sum - (long long)n * nums[n - k];\n        if (f > ans) ans = f;\n    }\n    return (int)ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Xoay phải: hệ số index giảm 1 cho mọi phần tử trừ phần tử cuối về 0 — công thức delta đúng.",
+    "edgeCases": ["n=1 → 0", "Toàn bằng nhau", "n lớn"],
+    "pitfalls": ["Tính lại F(k) O(n²)", "Index nums[n-k] off-by-one"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

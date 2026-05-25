@@ -2,33 +2,25 @@
   "id": 318,
   "title": "Maximum Product of Word Lengths",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Maximum Product of Word Lengths (LeetCode #318) — Medium.",
+  "category": "String",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng chuỗi words chỉ gồm chữ thường. Chọn hai chuỗi không chung ký tự, trả tích độ dài lớn nhất.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "words = [\"abcw\",\"baz\",\"foo\",\"bar\",\"xtfn\",\"abcdef\"]", "output": "16" },
+    { "input": "words = [\"a\",\"ab\",\"abc\",\"d\",\"cd\",\"bcd\",\"abcd\"]", "output": "4" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mỗi word → bitmask 26 bit ký tự có mặt. Cặp (i,j): nếu mask[i]&mask[j]==0 thì cập nhật max len[i]*len[j].",
+  "memoryTip": "Bitmask O(1) kiểm tra giao ký tự — nhanh hơn set cho alphabet 26.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxProduct(self, words: List[str]) -> int:\n        masks, lens = [], []\n        for w in words:\n            m = 0\n            for c in w:\n                m |= 1 << (ord(c)-97)\n            masks.append(m); lens.append(len(w))\n        ans = 0\n        for i in range(len(words)):\n            for j in range(i+1, len(words)):\n                if masks[i] & masks[j] == 0:\n                    ans = max(ans, lens[i]*lens[j])\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int maxProduct(vector<string>& words) {\n        vector<int> mask, len;\n        for (auto& w : words) {\n            int m = 0;\n            for (char c : w) m |= 1 << (c-'a');\n            mask.push_back(m); len.push_back(w.size());\n        }\n        int ans = 0;\n        for (int i = 0; i < (int)words.size(); i++)\n            for (int j = i+1; j < (int)words.size(); j++)\n                if ((mask[i] & mask[j]) == 0)\n                    ans = max(ans, len[i]*len[j]);\n        return ans;\n    }\n};",
+    "c": "int maxProduct(char** words, int n) {\n    int* mask = malloc(n*sizeof(int)); int* len = malloc(n*sizeof(int));\n    for (int i=0;i<n;i++){\n        mask[i]=0; len[i]=strlen(words[i]);\n        for (char* p=words[i];*p;p++) mask[i]|=1<<(*p-'a');\n    }\n    int ans=0;\n    for (int i=0;i<n;i++) for (int j=i+1;j<n;j++)\n        if ((mask[i]&mask[j])==0) { int v=len[i]*len[j]; if (v>ans) ans=v; }\n    free(mask); free(len); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Hai chuỗi không chung ký tự iff bitmask không giao; duyệt mọi cặp tìm max tích độ dài.",
+    "edgeCases": ["Một từ", "Mọi cặp đều giao → 0", "Trùng ký tự trong cùng word"],
+    "pitfalls": ["So sánh set chậm", "Quên loại word có ký tự trùng nội bộ khi mask"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

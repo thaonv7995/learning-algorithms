@@ -2,33 +2,25 @@
   "id": 264,
   "title": "Ugly Number II",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Ugly Number II (LeetCode #264) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Trả số ugly thứ n (1-indexed). Ugly number chỉ có thừa số 2, 3, 5. n=1 trả 1.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 10", "output": "12" },
+    { "input": "n = 1", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP ugly[i]: ba con trỏ i2,i3,i5; ugly[i]=min(ugly[i2]*2, ugly[i3]*3, ugly[i5]*5); tăng pointer tương ứng.",
+  "memoryTip": "Ugly II = merge three sequences ×2, ×3, ×5 with pointers.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def nthUglyNumber(self, n: int) -> int:\n        ugly = [1] * n\n        i2 = i3 = i5 = 0\n        for i in range(1, n):\n            ugly[i] = min(ugly[i2] * 2, ugly[i3] * 3, ugly[i5] * 5)\n            if ugly[i] == ugly[i2] * 2:\n                i2 += 1\n            if ugly[i] == ugly[i3] * 3:\n                i3 += 1\n            if ugly[i] == ugly[i5] * 5:\n                i5 += 1\n        return ugly[-1]",
+    "cpp": "class Solution {\npublic:\n    int nthUglyNumber(int n) {\n        vector<long long> ugly(n, 1);\n        int i2 = 0, i3 = 0, i5 = 0;\n        for (int i = 1; i < n; i++) {\n            ugly[i] = min({ugly[i2] * 2, ugly[i3] * 3, ugly[i5] * 5});\n            if (ugly[i] == ugly[i2] * 2) i2++;\n            if (ugly[i] == ugly[i3] * 3) i3++;\n            if (ugly[i] == ugly[i5] * 5) i5++;\n        }\n        return (int)ugly[n - 1];\n    }\n};",
+    "c": "int nthUglyNumber(int n) {\n    long long* ugly = malloc(n * sizeof(long long));\n    ugly[0] = 1;\n    int i2 = 0, i3 = 0, i5 = 0;\n    for (int i = 1; i < n; i++) {\n        long long next = ugly[i2]*2;\n        if (ugly[i3]*3 < next) next = ugly[i3]*3;\n        if (ugly[i5]*5 < next) next = ugly[i5]*5;\n        ugly[i] = next;\n        if (next == ugly[i2]*2) i2++;\n        if (next == ugly[i3]*3) i3++;\n        if (next == ugly[i5]*5) i5++;\n    }\n    int ans = (int)ugly[n-1];\n    free(ugly);\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi ugly mới là min bội tiếp theo của 2,3,5; tăng mọi pointer đạt min tránh trùng.",
+    "edgeCases": ["n=1 → 1", "n lớn cần long long"],
+    "pitfalls": ["Heap O(n log n) chậm hơn", "Chỉ tăng một pointer khi tie → thiếu số"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

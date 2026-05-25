@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #210</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Depth-First Search</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph Theory</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Course Schedule II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(V+E)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(V+E)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>55.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Course Schedule II (LeetCode #210) — Medium.</div>
+                        <div class="block-text">Giống Course Schedule: trả thứ tự học hợp lệ (một topological order) gồm numCourses môn. Nếu không thể hoàn thành, trả mảng rỗng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>numCourses = 2, prerequisites = [[1,0]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[0,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[0,2,1,3] hoặc [0,1,2,3]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>numCourses = 1, prerequisites = []</code></div>
+                <div class="ex-line"><span>Out</span><code>[0]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Kahn topo sort: queue indegree 0, pop vào order, giảm indegree hàng xóm. order.size==numCourses thì trả order, else [].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,60 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* findOrder(<span class="ty">int</span> n, <span class="ty">int</span>** pre, <span class="ty">int</span> pc, <span class="ty">int</span>* pcCol, <span class="ty">int</span>* retSize) {
+    <span class="ty">int</span>* indeg = <span class="kw">calloc</span>(n, <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="ty">int</span>** adj = <span class="kw">calloc</span>(n, <span class="kw">sizeof</span>(<span class="ty">int</span>*));
+    <span class="ty">int</span>* deg = <span class="kw">calloc</span>(n, <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; pc; i++) {
+        <span class="ty">int</span> a = pre[i][0], b = pre[i][1];
+        adj[b] = realloc(adj[b], (++deg[b])*<span class="kw">sizeof</span>(<span class="ty">int</span>));
+        adj[b][deg[b]-1] = a;
+        indeg[a]++;
+    }
+    <span class="ty">int</span>* q = <span class="kw">malloc</span>(n*<span class="kw">sizeof</span>(<span class="ty">int</span>)), h=0, t=0;
+    <span class="ty">int</span>* order = <span class="kw">malloc</span>(n*<span class="kw">sizeof</span>(<span class="ty">int</span>)), k=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">if</span> (!indeg[i]) q[t++]=i;
+    <span class="kw">while</span> (h&lt;t) {
+        <span class="ty">int</span> u=q[h++]; order[k++]=u;
+        <span class="kw">for</span> (<span class="ty">int</span> j=0;j&lt;deg[u];j++) <span class="kw">if</span> (--indeg[adj[u][j]]==0) q[t++]=adj[u][j];
+    }
+    *retSize = k==n ? k : 0;
+    <span class="kw">if</span> (k!=n) { <span class="kw">free</span>(order); order=NULL; }
+    <span class="kw">return</span> order;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findOrder(<span class="ty">self</span>, numCourses: <span class="ty">int</span>, prerequisites: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        adj = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(numCourses)]
+        indeg = [0] * numCourses
+        <span class="kw">for</span> a, b <span class="kw">in</span> prerequisites:
+            adj[b].append(a)
+            indeg[a] += 1
+        q = deque(i <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(numCourses) <span class="kw">if</span> indeg[i] == 0)
+        order = []
+        <span class="kw">while</span> q:
+            u = q.popleft()
+            order.append(u)
+            <span class="kw">for</span> v <span class="kw">in</span> adj[u]:
+                indeg[v] -= 1
+                <span class="kw">if</span> indeg[v] == 0:
+                    q.append(v)
+        <span class="kw">return</span> order <span class="kw">if</span> <span class="ty">len</span>(order) == numCourses <span class="kw">else</span> []</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findOrder(<span class="ty">int</span> n, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; pre) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; adj(n);
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; indeg(n);
+        <span class="kw">for</span> (auto&amp; e : pre) { adj[e[1]].push_back(e[0]); indeg[e[0]]++; }
+        queue&lt;<span class="ty">int</span>&gt; q;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) <span class="kw">if</span> (!indeg[i]) q.push(i);
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; order;
+        <span class="kw">while</span> (!q.empty()) {
+            <span class="ty">int</span> u = q.front(); q.pop();
+            order.push_back(u);
+            <span class="kw">for</span> (<span class="ty">int</span> v : adj[u]) <span class="kw">if</span> (--indeg[v] == 0) q.push(v);
+        }
+        <span class="kw">return</span> order.size() == n ? order : <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;{};
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +162,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Depth-First Search</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Graph Theory</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(V+E)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(V+E)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Kahn topo sort: queue indegree 0, pop vào order, giảm…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — order.size==numCourses thì trả order, else [].</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Thứ tự pop Kahn đảm bảo mọi cạnh b→a: b trước a; thiếu node ⇔ cycle.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không prereq → 0..n-1 bất kỳ</span><span class="analysis-tag edge">Cycle → []</span><span class="analysis-tag pit">Trả order khi chưa đủ n phần tử</span><span class="analysis-tag pit">DFS postorder cần reverse</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Course Schedule II = Kahn + lưu thứ tự pop; thiếu node ⇔ cycle.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +191,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Course%20Schedule%20II&lc_id=210&embed=true"></iframe>

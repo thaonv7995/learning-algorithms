@@ -3,32 +3,24 @@
   "title": "Elimination Game",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Elimination Game (LeetCode #390) — Medium.",
+  "description": "List 1..n; lần lượt xóa mọi số thứ 2 từ trái, rồi phải, trái,... Trả số cuối cùng còn lại.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 9", "output": "6" },
+    { "input": "n = 1", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Recursion/math: f(n, leftToRight): n==1 return 1; half=f(n/2, !dir); n chẵn return half; n lẻ return dir ? half*2 : half*2+1.",
+  "memoryTip": "Mỗi vòng giảm nửa — track hướng và offset head.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def lastRemaining(self, n: int) -> int:\n        def f(n, left):\n            if n == 1: return 1\n            half = f(n // 2, not left)\n            if n % 2 == 0:\n                return half if left else 2 * half\n            return half if left else 2 * half + 1\n        return f(n, True)",
+    "cpp": "class Solution {\n    int f(int n, bool left) {\n        if (n == 1) return 1;\n        int half = f(n/2, !left);\n        if (n % 2 == 0) return left ? half : 2*half;\n        return left ? half : 2*half + 1;\n    }\npublic:\n    int lastRemaining(int n) { return f(n, true); }\n};",
+    "c": "static int f(int n, int left) {\n    if (n == 1) return 1;\n    int half = f(n/2, !left);\n    if (n % 2 == 0) return left ? half : 2*half;\n    return left ? half : 2*half+1;\n}\nint lastRemaining(int n) { return f(n, 1); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Recursion mirror nửa list và hướng xóa; công thức cho số còn lại.",
+    "edgeCases": ["n=1", "n=2", "n lớn — O(log n)"],
+    "pitfalls": ["Mô phỏng list O(n log n) TLE", "Nhầm công thức n lẻ/chẵn"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

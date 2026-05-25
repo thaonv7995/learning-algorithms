@@ -2,33 +2,25 @@
   "id": 295,
   "title": "Find Median from Data Stream",
   "difficulty": "Hard",
-  "category": "Two Pointers",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Find Median from Data Stream (LeetCode #295) — Hard.",
+  "category": "Design",
+  "timeComplexity": "O(log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế cấu trúc nhận số từ stream: addNum(num) thêm số; findMedian() trả median (trung vị) hiện tại.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "addNum(1); addNum(2); findMedian()→1.5; addNum(3); findMedian()→2", "output": "1.5, 2" },
+    { "input": "addNum(5); findMedian()→5", "output": "5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hai heap: max-heap nửa thấp (lo), min-heap nửa cao (hi); cân |lo|≥|hi| và |lo|-|hi|≤1; median từ top.",
+  "memoryTip": "Stream median = max-heap lower half + min-heap upper half, balance sizes.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MedianFinder:\n    def __init__(self):\n        self.lo = []  # max-heap via negate\n        self.hi = []  # min-heap\n    def addNum(self, num: int) -> None:\n        heapq.heappush(self.lo, -num)\n        heapq.heappush(self.hi, -heapq.heappop(self.lo))\n        if len(self.lo) < len(self.hi):\n            heapq.heappush(self.lo, -heapq.heappop(self.hi))\n    def findMedian(self) -> float:\n        if len(self.lo) > len(self.hi):\n            return -self.lo[0]\n        return (-self.lo[0] + self.hi[0]) / 2",
+    "cpp": "class MedianFinder {\n    priority_queue<int> lo;\n    priority_queue<int, vector<int>, greater<int>> hi;\npublic:\n    void addNum(int num) {\n        lo.push(num);\n        hi.push(lo.top()); lo.pop();\n        if (lo.size() < hi.size()) { lo.push(hi.top()); hi.pop(); }\n    }\n    double findMedian() {\n        if (lo.size() > hi.size()) return lo.top();\n        return (lo.top() + hi.top()) / 2.0;\n    }\n};",
+    "c": "typedef struct { int* lo; int* hi; int loN, hiN, loCap, hiCap; } MedianFinder;\nstatic void pushLo(MedianFinder* m, int v) {\n    if (m->loN == m->loCap) { m->loCap = m->loCap ? m->loCap * 2 : 4; m->lo = realloc(m->lo, m->loCap * 4); }\n    m->lo[m->loN++] = v;\n    for (int i = m->loN - 1; i > 0 && m->lo[i] > m->lo[i - 1]; i--) { int t = m->lo[i]; m->lo[i] = m->lo[i - 1]; m->lo[i - 1] = t; }\n}\nstatic int popLo(MedianFinder* m) { return m->lo[--m->loN]; }\nstatic int topLo(MedianFinder* m) { return m->lo[m->loN - 1]; }\nstatic void pushHi(MedianFinder* m, int v) {\n    if (m->hiN == m->hiCap) { m->hiCap = m->hiCap ? m->hiCap * 2 : 4; m->hi = realloc(m->hi, m->hiCap * 4); }\n    m->hi[m->hiN++] = v;\n    for (int i = m->hiN - 1; i > 0 && m->hi[i] < m->hi[i - 1]; i--) { int t = m->hi[i]; m->hi[i] = m->hi[i - 1]; m->hi[i - 1] = t; }\n}\nstatic int popHi(MedianFinder* m) { return m->hi[--m->hiN]; }\nstatic int topHi(MedianFinder* m) { return m->hi[m->hiN - 1]; }\nvoid mfAdd(MedianFinder* m, int num) {\n    pushLo(m, num);\n    pushHi(m, popLo(m));\n    if (m->loN < m->hiN) pushLo(m, popHi(m));\n}\ndouble mfMedian(MedianFinder* m) {\n    if (m->loN > m->hiN) return topLo(m);\n    return (topLo(m) + topHi(m)) / 2.0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "lo chứa nửa dưới max, hi nửa trên min; invariant median từ heap tops.",
+    "edgeCases": ["Một số → chính nó", "Chẵn lẻ phần tử average hai tops"],
+    "pitfalls": ["Sort mỗi query O(n log n)", "Quên balance sau mỗi add"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

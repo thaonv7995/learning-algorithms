@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #394</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Decode String</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>62.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Decode String (LeetCode #394) — Medium.</div>
+                        <div class="block-text">Chuỗi mã hóa dạng k[encoded_string] — lặp encoded_string k lần, có thể lồng nhau. Trả chuỗi decoded.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;3[a]2[bc]&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;aaabcbc&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;3[a2[c]]&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;accaccacc&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Stack: gặp digit tích lũy k; '[' push (curString, k); gặp ']' pop và cur = prev + k*cur; chữ cái append cur.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,50 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* decodeString(<span class="ty">char</span>* s) {
+    <span class="ty">char</span>* cur = <span class="kw">calloc</span>(10000,1); <span class="ty">char</span>* stackStr[100]; <span class="ty">int</span> stackK[100], top=0; <span class="ty">int</span> k=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;s[i];i++){
+        <span class="kw">if</span> (s[i]&gt;='0'&amp;&amp;s[i]&lt;='9') k=k*10+(s[i]-'0');
+        <span class="kw">else</span> <span class="kw">if</span> (s[i]=='['){ stackStr[top]=strdup(cur); stackK[top++]=k; cur[0]=0; k=0; }
+        <span class="kw">else</span> <span class="kw">if</span> (s[i]==']'){
+            <span class="ty">char</span>* prev=stackStr[--top]; <span class="ty">int</span> num=stackK[top];
+            <span class="ty">char</span> rep[10000]={0}; <span class="kw">for</span>(<span class="ty">int</span> t=0;t&lt;num;t++) strcat(rep,cur);
+            strcpy(cur, prev); strcat(cur, rep); <span class="kw">free</span>(prev);
+        } <span class="kw">else</span> { <span class="ty">int</span> len=strlen(cur); cur[len]=s[i]; cur[len+1]=0; }
+    }
+    <span class="kw">return</span> cur;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> decodeString(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        st, cur, k = [], '', 0
+        <span class="kw">for</span> c <span class="kw">in</span> s:
+            <span class="kw">if</span> c.isdigit():
+                k = k * 10 + <span class="ty">int</span>(c)
+            <span class="kw">elif</span> c == '[':
+                st.append((cur, k)); cur, k = '', 0
+            <span class="kw">elif</span> c == ']':
+                prev, num = st.pop()
+                cur = prev + num * cur
+            <span class="kw">else</span>:
+                cur += c
+        <span class="kw">return</span> cur</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> decodeString(<span class="ty">string</span> s) {
+        stack&lt;pair&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt;&gt; st;
+        <span class="ty">string</span> cur; <span class="ty">int</span> k = 0;
+        <span class="kw">for</span> (<span class="ty">char</span> c : s) {
+            <span class="kw">if</span> (isdigit(c)) k = k*10 + (c-'0');
+            <span class="kw">else</span> <span class="kw">if</span> (c == '[') { st.push({cur,k}); cur.clear(); k=0; }
+            <span class="kw">else</span> <span class="kw">if</span> (c == ']') {
+                auto [prev, num] = st.top(); st.pop();
+                <span class="ty">string</span> rep;
+                <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;num;i++) rep += cur;
+                cur = prev + rep;
+            } <span class="kw">else</span> cur.push_back(c);
+        }
+        <span class="kw">return</span> cur;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +149,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Stack: gặp digit tích lũy k; '[' push ; gặp ']' pop và cur = prev +…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack lưu context ngoài khi vào '['; ']' ghép prev + k*inner đúng nested.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không nested</span><span class="analysis-tag edge">k nhiều chữ số</span><span class="analysis-tag edge">Lồng sâu</span><span class="analysis-tag pit">Recursive không giới hạn depth</span><span class="analysis-tag pit">Quên reset k sau '['</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Stack pairs — decode nested như eval brackets.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +176,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Decode%20String&lc_id=394&embed=true"></iframe>

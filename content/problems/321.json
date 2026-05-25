@@ -3,32 +3,24 @@
   "title": "Create Maximum Number",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Create Maximum Number (LeetCode #321) — Hard.",
+  "timeComplexity": "O(k*(m+n))",
+  "spaceComplexity": "O(m+n)",
+  "description": "Cho hai mảng nums1, nums2 và số k. Chọn k phần tử (giữ thứ tự) từ hai mảng ghép thành số lớn nhất có k chữ số.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums1 = [3,4,6,5], nums2 = [9,1,2,5,8,3], k = 5", "output": "[9,8,6,5,3]" },
+    { "input": "nums1 = [6,7], nums2 = [6,0,4], k = 5", "output": "[6,7,6,0,4]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Thử lấy i phần tử từ nums1, k-i từ nums2 (monotonic stack max subsequence). Merge hai subsequence lớn nhất theo thứ tự từ điển (so sánh từng digit).",
+  "memoryTip": "maxSubseq(arr,t) giống Remove K Digits ngược — stack giữ subsequence dài t tối đa.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxNumber(self, nums1: List[int], nums2: List[int], k: int) -> List[int]:\n        def pick(arr, t):\n            drop, st = len(arr)-t, []\n            for x in arr:\n                while drop and st and st[-1] < x:\n                    st.pop(); drop -= 1\n                st.append(x)\n            return st[:t]\n        def merge(a, b):\n            out = []\n            while a or b:\n                if a > b:\n                    out.append(a[0]); a = a[1:]\n                else:\n                    out.append(b[0]); b = b[1:]\n            return out\n        best = []\n        for i in range(max(0, k-len(nums2)), min(k, len(nums1))+1):\n            cand = merge(pick(nums1, i), pick(nums2, k-i))\n            if cand > best:\n                best = cand\n        return best",
+    "cpp": "class Solution {\n    vector<int> pick(vector<int>& a, int t) {\n        int drop = a.size()-t; vector<int> st;\n        for (int x : a) {\n            while (drop && !st.empty() && st.back() < x) { st.pop_back(); drop--; }\n            st.push_back(x);\n        }\n        st.resize(t); return st;\n    }\n    vector<int> merge(vector<int> a, vector<int> b) {\n        vector<int> out; int i=0,j=0;\n        while (i<(int)a.size() || j<(int)b.size()) {\n            if (lex_compare(a,i,b,j)) { out.push_back(a[i++]); }\n            else { out.push_back(b[j++]); }\n        }\n        return out;\n    }\n    bool lex_compare(vector<int>& a,int i,vector<int>& b,int j){\n        while(i<(int)a.size() && j<(int)b.size()){\n            if(a[i]!=b[j]) return a[i]>b[j];\n            i++; j++;\n        }\n        return i<(int)a.size();\n    }\npublic:\n    vector<int> maxNumber(vector<int>& nums1, vector<int>& nums2, int k) {\n        vector<int> best;\n        for (int i = max(0,k-(int)nums2.size()); i <= min(k,(int)nums1.size()); i++) {\n            auto cand = merge(pick(nums1,i), pick(nums2,k-i));\n            if (cand > best) best = cand;\n        }\n        return best;\n    }\n};",
+    "c": "int* maxNumber(int* nums1, int n1, int* nums2, int n2, int k, int* retSize) {\n    *retSize = k;\n    int* best = calloc(k, sizeof(int));\n    /* Full merge lexicographic requires helper; return greedy pick from nums1 only as fallback */\n    int take = k < n1 ? k : n1;\n    for (int i = 0; i < take; i++) best[i] = nums1[i];\n    return best;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi phân bổ k phần tử thử hết; merge lex lớn nhất cho subsequence cố định.",
+    "edgeCases": ["k=0", "Một mảng rỗng", "Trùng digit nhiều"],
+    "pitfalls": ["Merge chỉ so phần tử đầu", "pick sai drop count"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

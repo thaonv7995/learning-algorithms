@@ -3,32 +3,25 @@
   "title": "Ugly Number",
   "difficulty": "Easy",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Ugly Number (LeetCode #263) — Easy.",
+  "description": "Số ugly nếu chỉ có thừa số nguyên tố là 2, 3, và/hoặc 5. Kiểm tra n có phải ugly number không.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 6", "output": "true" },
+    { "input": "n = 1", "output": "true" },
+    { "input": "n = 14", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Lặp chia n cho 2,3,5 hết cỡ; cuối cùng n==1 thì ugly.",
+  "memoryTip": "Ugly check = strip factors 2,3,5 repeatedly; remainder must be 1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isUgly(self, n: int) -> bool:\n        if n <= 0:\n            return False\n        for p in (2, 3, 5):\n            while n % p == 0:\n                n //= p\n        return n == 1",
+    "cpp": "class Solution {\npublic:\n    bool isUgly(int n) {\n        if (n <= 0) return false;\n        for (int p : {2, 3, 5})\n            while (n % p == 0) n /= p;\n        return n == 1;\n    }\n};",
+    "c": "bool isUgly(int n) {\n    if (n <= 0) return false;\n    int primes[] = {2, 3, 5};\n    for (int i = 0; i < 3; i++)\n        while (n % primes[i] == 0) n /= primes[i];\n    return n == 1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Sau khi loại hết 2,3,5 không còn thừa số khác ⇔ ugly.",
+    "edgeCases": ["n=1 → true", "n<=0 → false"],
+    "pitfalls": ["Quên n=1", "Chỉ chia một lần mỗi prime"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

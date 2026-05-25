@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #386</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Depth-First Search</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Lexicographical Numbers</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Lexicographical Numbers (LeetCode #386) — Medium.</div>
+                        <div class="block-text">Trả mảng số từ 1..n theo thứ tự từ điển (coi số như chuỗi: 1,10,11,...,2,20,...).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 13</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,10,11,12,13,2,3,4,5,6,7,8,9]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS trên cây 10-ary ảo: từ cur, thử cur*10 và cur+1 nếu ≤n; không cần stack — vòng while next number.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* lexicalOrder(<span class="ty">int</span> n, <span class="ty">int</span>* retSize) {
+    <span class="ty">int</span>* ans = <span class="kw">malloc</span>(n * <span class="kw">sizeof</span>(<span class="ty">int</span>)); *retSize = n;
+    <span class="ty">int</span> cur = 1;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        ans[i] = cur;
+        <span class="kw">if</span> (cur * 10 &lt;= n) cur *= 10;
+        <span class="kw">else</span> <span class="kw">if</span> (cur % 10 != 9 &amp;&amp; cur + 1 &lt;= n) cur++;
+        <span class="kw">else</span> { cur /= 10; <span class="kw">while</span> (cur % 10 == 9) cur /= 10; cur++; }
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> lexicalOrder(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        ans, cur = [], 1
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n):
+            ans.append(cur)
+            <span class="kw">if</span> cur * 10 &lt;= n:
+                cur *= 10
+            <span class="kw">elif</span> cur % 10 != 9 <span class="kw">and</span> cur + 1 &lt;= n:
+                cur += 1
+            <span class="kw">else</span>:
+                cur //= 10
+                <span class="kw">while</span> cur % 10 == 9:
+                    cur //= 10
+                cur += 1
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; lexicalOrder(<span class="ty">int</span> n) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans; <span class="ty">int</span> cur = 1;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+            ans.push_back(cur);
+            <span class="kw">if</span> (cur * 10 &lt;= n) cur *= 10;
+            <span class="kw">else</span> <span class="kw">if</span> (cur % 10 != 9 &amp;&amp; cur + 1 &lt;= n) cur++;
+            <span class="kw">else</span> {
+                cur /= 10;
+                <span class="kw">while</span> (cur % 10 == 9) cur /= 10;
+                cur++;
+            }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +150,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DFS trên cây 10-ary ảo: từ cur, thử cur*10 và cur+1 nếu ≤n; không cần…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Thứ tự DFS preorder trên cây số prefix; next pointer mô phỏng DFS không đệ quy.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">n=9</span><span class="analysis-tag edge">Chuyển 9→10 lex</span><span class="analysis-tag pit">Sort string O(n log n)</span><span class="analysis-tag pit">Quên backtrack qua 9</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Next lex number: nếu n%10&lt;9 và n+1≤limit thì n++; else while n%10==9 n/=10; n++.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +174,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=13&problem=Lexicographical%20Numbers&lc_id=386&embed=true"></iframe>

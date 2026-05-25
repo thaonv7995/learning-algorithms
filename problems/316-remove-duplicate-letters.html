@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #316</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Remove Duplicate Letters</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Remove Duplicate Letters (LeetCode #316) — Medium.</div>
+                        <div class="block-text">Cho chuỗi s chỉ chữ thường. Xóa ký tự trùng sao mỗi chữ còn đúng một lần và chuỗi kết quả nhỏ nhất theo thứ tự từ điển.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;bcabc&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;abc&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;cbacdcbc&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;acdb&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Monotonic stack + count còn lại: duyệt s, giảm count[c]; nếu c chưa trong stack và stack.top()&gt;c còn xuất hiện sau thì pop; push c.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,46 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* removeDuplicateLetters(<span class="ty">char</span>* s) {
+    <span class="ty">int</span> n = strlen(s), last[26], cnt[26]={0}, used[26]={0};
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;26;i++) last[i]=-1;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++){last[s[i]-'a']=i;cnt[s[i]-'a']++;}
+    <span class="ty">char</span> st[256]; <span class="ty">int</span> top=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++){
+        <span class="ty">int</span> c=s[i]-'a'; <span class="kw">if</span> (--cnt[c]&lt;0) continue;
+        <span class="kw">if</span> (used[c]) continue;
+        <span class="kw">while</span> (top&gt;0 &amp;&amp; st[top-1]&gt;s[i] &amp;&amp; cnt[st[top-1]-'a']&gt;0){used[st[--top]-'a']=0;}
+        st[top++]=s[i]; used[c]=1;
+    }
+    st[top]=0; <span class="kw">return</span> strdup(st);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> removeDuplicateLetters(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        last = {c: i <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(s)}
+        stack, in_stack = [], <span class="ty">set</span>()
+        <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(s):
+            <span class="kw">if</span> c <span class="kw">in</span> in_stack:
+                continue
+            <span class="kw">while</span> stack <span class="kw">and</span> stack[-1] &gt; c <span class="kw">and</span> last[stack[-1]] &gt; i:
+                in_stack.remove(stack.pop())
+            stack.append(c); in_stack.add(c)
+        <span class="kw">return</span> ''.join(stack)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> removeDuplicateLetters(<span class="ty">string</span> s) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; last(26, -1), cnt(26, 0);
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)s.size(); i++) { last[s[i]-'a'] = i; cnt[s[i]-'a']++; }
+        <span class="ty">string</span> st; <span class="ty">vector</span>&lt;<span class="ty">bool</span>&gt; used(26, false);
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)s.size(); i++) {
+            <span class="ty">int</span> c = s[i]-'a'; <span class="kw">if</span> (--cnt[c] &lt; 0) continue;
+            <span class="kw">if</span> (used[c]) continue;
+            <span class="kw">while</span> (!st.empty() &amp;&amp; st.back() &gt; s[i] &amp;&amp; cnt[st.back()-'a'] &gt; 0) {
+                used[st.back()-'a'] = false; st.pop_back();
+            }
+            st.push_back(s[i]); used[c] = true;
+        }
+        <span class="kw">return</span> st;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +148,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Monotonic stack + count còn lại: duyệt s, giảm count[c]; nếu c chưa…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack giữ prefix tối ưu từ điển; pop chỉ khi ký tự lớn hơn còn dư phía sau.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Đã không trùng</span><span class="analysis-tag edge">Một ký tự</span><span class="analysis-tag edge">Thứ tự đã sorted</span><span class="analysis-tag pit">Pop khi ký tự không còn sau</span><span class="analysis-tag pit">Quên đánh dấu in_stack/used</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Chỉ pop khi ký tự lớn hơn c vẫn còn ở phía sau — đảm bảo vẫn ghép được đủ chữ cái.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +172,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Remove%20Duplicate%20Letters&lc_id=316&embed=true"></iframe>

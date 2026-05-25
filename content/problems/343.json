@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Math",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Integer Break (LeetCode #343) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Chia số nguyên n≥2 thành tổng ít nhất hai số nguyên dương. Trả tích các số hạng lớn nhất.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 2", "output": "1" },
+    { "input": "n = 10", "output": "36" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP: dp[i]=max product khi tách i; dp[i]=max(dp[j]*(i-j), j*(i-j)) với j=1..i-1. Hoặc greedy: ưu tiên nhân 3.",
+  "memoryTip": "n≥4: tách thành nhiều 3, phần dư 2 hoặc 4 — classic math trick.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def integerBreak(self, n: int) -> int:\n        dp = [0] * (n + 1)\n        dp[1] = 1\n        for i in range(2, n + 1):\n            for j in range(1, i):\n                dp[i] = max(dp[i], dp[j] * (i - j), j * (i - j))\n        return dp[n]",
+    "cpp": "class Solution {\npublic:\n    int integerBreak(int n) {\n        vector<int> dp(n + 1, 0);\n        dp[1] = 1;\n        for (int i = 2; i <= n; i++)\n            for (int j = 1; j < i; j++)\n                dp[i] = max(dp[i], max(dp[j] * (i - j), j * (i - j)));\n        return dp[n];\n    }\n};",
+    "c": "int integerBreak(int n) {\n    int* dp = calloc(n + 1, sizeof(int)); dp[1] = 1;\n    for (int i = 2; i <= n; i++)\n        for (int j = 1; j < i; j++) {\n            int v1 = dp[j] * (i - j), v2 = j * (i - j);\n            int v = v1 > v2 ? v1 : v2;\n            if (v > dp[i]) dp[i] = v;\n        }\n    int ans = dp[n]; free(dp); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "dp[i] tối ưu trên mọi cách cắt đầu j; bao phủ tách tiếp và tách một lần.",
+    "edgeCases": ["n=2 → 1", "n=3 → 2", "n lớn"],
+    "pitfalls": ["Chỉ tách 2 và 3 thiếu case", "Quên max(dp[j]*(i-j), j*(i-j))"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -3,32 +3,24 @@
   "title": "Range Sum Query 2D - Immutable",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Range Sum Query 2D - Immutable (LeetCode #304) — Medium.",
+  "timeComplexity": "O(mn) khởi tạo, O(1) truy vấn",
+  "spaceComplexity": "O(mn)",
+  "description": "Cho ma trận số nguyên matrix. Thiết kế cấu trúc trả lời nhanh tổng vùng chữ nhật từ (row1,col1) đến (row2,col2) inclusive.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "matrix = [[3,0,1,4,2],[5,6,3,2,1],[1,2,0,1,5],[4,1,0,1,7],[1,0,3,0,5]], sumRegion(2,1,4,3)", "output": "8" },
+    { "input": "matrix = [[3,0,1,4,2],[5,6,3,2,1],[1,2,0,1,5],[4,1,0,1,7],[1,0,3,0,5]], sumRegion(1,1,2,2)", "output": "11" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "2D prefix sum: pre[i+1][j+1] = matrix[i][j] + pre[i][j+1] + pre[i+1][j] - pre[i][j]. Truy vấn dùng inclusion-exclusion 4 góc.",
+  "memoryTip": "Ma trận pre (m+1)×(n+1); công thức vùng: D - B - C + A với 4 prefix tại các góc.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class NumMatrix:\n    def __init__(self, matrix: List[List[int]]):\n        if not matrix or not matrix[0]:\n            self.pre = [[0]]\n            return\n        m, n = len(matrix), len(matrix[0])\n        self.pre = [[0]*(n+1) for _ in range(m+1)]\n        for i in range(m):\n            for j in range(n):\n                self.pre[i+1][j+1] = matrix[i][j] + self.pre[i][j+1] + self.pre[i+1][j] - self.pre[i][j]\n    def sumRegion(self, r1: int, c1: int, r2: int, c2: int) -> int:\n        p = self.pre\n        return p[r2+1][c2+1] - p[r1][c2+1] - p[r2+1][c1] + p[r1][c1]",
+    "cpp": "class NumMatrix {\n    vector<vector<long long>> pre;\npublic:\n    NumMatrix(vector<vector<int>>& matrix) {\n        int m = matrix.size(), n = m ? matrix[0].size() : 0;\n        pre.assign(m + 1, vector<long long>(n + 1, 0));\n        for (int i = 0; i < m; i++)\n            for (int j = 0; j < n; j++)\n                pre[i+1][j+1] = matrix[i][j] + pre[i][j+1] + pre[i+1][j] - pre[i][j];\n    }\n    int sumRegion(int r1, int c1, int r2, int c2) {\n        return pre[r2+1][c2+1] - pre[r1][c2+1] - pre[r2+1][c1] + pre[r1][c1];\n    }\n};",
+    "c": "typedef struct {\n    long long** pre;\n    int m, n;\n} NumMatrix;\nNumMatrix* numMatrixCreate(int** matrix, int m, int* cs) {\n    int n = cs[0];\n    NumMatrix* obj = malloc(sizeof(NumMatrix));\n    obj->m = m; obj->n = n;\n    obj->pre = malloc((m+1)*sizeof(long long*));\n    for (int i = 0; i <= m; i++) {\n        obj->pre[i] = calloc(n+1, sizeof(long long));\n        if (i < m) for (int j = 0; j < n; j++)\n            obj->pre[i+1][j+1] = matrix[i][j] + obj->pre[i][j+1] + obj->pre[i+1][j] - obj->pre[i][j];\n    }\n    return obj;\n}\nint numMatrixSumRegion(NumMatrix* obj, int r1, int c1, int r2, int c2) {\n    return (int)(obj->pre[r2+1][c2+1] - obj->pre[r1][c2+1] - obj->pre[r2+1][c1] + obj->pre[r1][c1]);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Prefix 2D là tổng tích lũy; trừ hai dải ngang/dọc rồi cộng góc trùng khôi phục đúng vùng.",
+    "edgeCases": ["Ma trận rỗng", "Vùng 1×1", "Toàn ma trận"],
+    "pitfalls": ["Index off-by-one trên pre", "Quên trừ góc A khi inclusion-exclusion"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

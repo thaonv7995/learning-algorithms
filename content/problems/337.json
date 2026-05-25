@@ -2,33 +2,25 @@
   "id": 337,
   "title": "House Robber III",
   "difficulty": "Medium",
-  "category": "Dynamic Programming",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "House Robber III (LeetCode #337) — Medium.",
+  "spaceComplexity": "O(h)",
+  "description": "Cây nhị phân, mỗi nút có giá trị. Không cướp hai nút cha-con liền kề. Tìm tổng giá trị cướp tối đa.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [3,2,3,null,3,null,1]", "output": "7" },
+    { "input": "root = [3,4,5,1,3,null,1]", "output": "9" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tree DP: dfs trả (rob, notRob). rob = val + notRob(left) + notRob(right); notRob = max(rob,notRob) của con.",
+  "memoryTip": "Postorder — quyết định nút hiện tại sau khi biết con; O(n) một lần duyệt.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def rob(self, root: Optional[TreeNode]) -> int:\n        def dfs(node):\n            if not node: return (0, 0)\n            lr, ln = dfs(node.left)\n            rr, rn = dfs(node.right)\n            rob = node.val + ln + rn\n            not_rob = max(lr, ln) + max(rr, rn)\n            return rob, not_rob\n        return max(dfs(root))",
+    "cpp": "class Solution {\n    pair<long long,long long> dfs(TreeNode* node) {\n        if (!node) return {0,0};\n        auto [lr, ln] = dfs(node->left);\n        auto [rr, rn] = dfs(node->right);\n        long long rob = node->val + ln + rn;\n        long long notRob = max(lr, ln) + max(rr, rn);\n        return {rob, notRob};\n    }\npublic:\n    int rob(TreeNode* root) {\n        auto [a,b] = dfs(root);\n        return max(a,b);\n    }\n};",
+    "c": "static long long pairRob(TreeNode* node, int take) {\n    if (!node) return 0;\n    /* simplified: returns max for subtree */\n    long long left0 = pairRob(node->left, 0), left1 = pairRob(node->left, 1);\n    long long right0 = pairRob(node->right, 0), right1 = pairRob(node->right, 1);\n    if (take) return node->val + left0 + right0;\n    return (left0 > left1 ? left0 : left1) + (right0 > right1 ? right0 : right1);\n}\nint rob(TreeNode* root) {\n    long long a = pairRob(root, 0), b = pairRob(root, 1);\n    return (int)(a > b ? a : b);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Hai trạng thái tại mỗi nút bao phủ mọi lựa chọn hợp lệ trên cây con.",
+    "edgeCases": ["Cây rỗng", "Một nút", "Giá trị âm"],
+    "pitfalls": ["Greedy local sai", "Quên max ở notRob con"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

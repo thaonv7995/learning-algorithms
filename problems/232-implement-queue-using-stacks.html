@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #232</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Stack</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Implement Queue using Stacks</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) amortized</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>69.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Implement Queue using Stacks (LeetCode #232) — Easy.</div>
+                        <div class="block-text">Cài đặt queue FIFO chỉ dùng hai stack. Hỗ trợ push (enqueue), pop, peek, empty.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>push(1); push(2); peek()→1; pop()→1; empty()→false</code></div>
+                <div class="ex-line"><span>Out</span><code>1, 1, false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>push(1); pop(); empty()</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">in stack nhận push; out stack phục vụ pop/peek — khi out rỗng pour in sang out (đảo thứ tự).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,44 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span>* a; <span class="ty">int</span> n, cap; } St;
+static <span class="ty">void</span> stPush(St* s,<span class="ty">int</span> x){<span class="kw">if</span>(s-&gt;n==s-&gt;cap){s-&gt;cap=s-&gt;cap?s-&gt;cap*2:4;s-&gt;a=realloc(s-&gt;a,s-&gt;cap*4);}s-&gt;a[s-&gt;n++]=x;}
+static <span class="ty">int</span> stPop(St* s){<span class="kw">return</span> s-&gt;a[--s-&gt;n];}
+static <span class="ty">int</span> stTop(St* s){<span class="kw">return</span> s-&gt;a[s-&gt;n-1];}
+static <span class="ty">int</span> stEmpty(St* s){<span class="kw">return</span> !s-&gt;n;}
+static <span class="ty">void</span> pour(St* in, St* out){<span class="kw">while</span>(!stEmpty(in)) stPush(out, stPop(in));}
+<span class="ty">void</span> queuePush(St* in, St* out, <span class="ty">int</span> x){stPush(in,x);}
+<span class="ty">int</span> queuePop(St* in, St* out){pour(in,out);<span class="kw">return</span> stPop(out);}
+<span class="ty">int</span> queuePeek(St* in, St* out){pour(in,out);<span class="kw">return</span> stTop(out);}
+<span class="ty">int</span> queueEmpty(St* in, St* out){<span class="kw">return</span> stEmpty(in)&amp;&amp;stEmpty(out);}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> MyQueue:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.in_st, <span class="ty">self</span>.out_st = [], []
+    <span class="kw">def</span> _pour(<span class="ty">self</span>):
+        <span class="kw">if</span> <span class="kw">not</span> <span class="ty">self</span>.out_st:
+            <span class="kw">while</span> <span class="ty">self</span>.in_st:
+                <span class="ty">self</span>.out_st.append(<span class="ty">self</span>.in_st.pop())
+    <span class="kw">def</span> push(<span class="ty">self</span>, x: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        <span class="ty">self</span>.in_st.append(x)
+    <span class="kw">def</span> pop(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
+        <span class="ty">self</span>._pour()
+        <span class="kw">return</span> <span class="ty">self</span>.out_st.pop()
+    <span class="kw">def</span> peek(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
+        <span class="ty">self</span>._pour()
+        <span class="kw">return</span> <span class="ty">self</span>.out_st[-1]
+    <span class="kw">def</span> empty(<span class="ty">self</span>) -&gt; bool:
+        <span class="kw">return</span> <span class="kw">not</span> <span class="ty">self</span>.in_st <span class="kw">and</span> <span class="kw">not</span> <span class="ty">self</span>.out_st</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> MyQueue {
+    stack&lt;<span class="ty">int</span>&gt; inSt, outSt;
+    <span class="ty">void</span> pour() {
+        <span class="kw">if</span> (outSt.empty())
+            <span class="kw">while</span> (!inSt.empty()) { outSt.push(inSt.top()); inSt.pop(); }
+    }
 <span class="ty">public</span>:
+    <span class="ty">void</span> push(<span class="ty">int</span> x) { inSt.push(x); }
+    <span class="ty">int</span> pop() { pour(); <span class="ty">int</span> t = outSt.top(); outSt.pop(); <span class="kw">return</span> t; }
+    <span class="ty">int</span> peek() { pour(); <span class="kw">return</span> outSt.top(); }
+    <span class="ty">bool</span> empty() { <span class="kw">return</span> inSt.empty() &amp;&amp; outSt.empty(); }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +142,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Stack</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — in stack nhận push; out stack phục vụ pop/peek — khi out rỗng pour in…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Pour đảo thứ tự in sang out → FIFO; amortized O(1) mỗi op.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Pop queue rỗng undefined</span><span class="analysis-tag edge">Peek không xóa</span><span class="analysis-tag pit">Pour mỗi pop → vẫn đúng nhưng lãng phí nếu out chưa hết</span><span class="analysis-tag pit">Một stack không đủ</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Queue via 2 stacks = pour in→out when out empty.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Implement%20Queue%20using%20Stacks&lc_id=232&embed=true"></iframe>

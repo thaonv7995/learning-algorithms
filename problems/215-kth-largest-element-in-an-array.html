@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #215</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Kth Largest Element in an Array</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n) avg</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.9% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Kth Largest Element in an Array (LeetCode #215) — Medium.</div>
+                        <div class="block-text">Cho mảng nums không rỗng và số nguyên k. Trả phần tử lớn thứ k trong mảng (1-indexed, không phải thứ tự distinct).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [3,2,1,5,6,4], k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [3,2,3,1,2,4,5,5,6], k = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Quickselect: partition quanh pivot ngẫu nhiên/cuối; nếu pivot index == n-k thì trả; else recurse trái/phải.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,53 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> partition(<span class="ty">int</span>* a, <span class="ty">int</span> l, <span class="ty">int</span> r) {
+    <span class="ty">int</span> pivot = a[r], i = l, tmp;
+    <span class="kw">for</span> (<span class="ty">int</span> j = l; j &lt; r; j++)
+        <span class="kw">if</span> (a[j] &lt;= pivot) { tmp=a[i]; a[i]=a[j]; a[j]=tmp; i++; }
+    tmp=a[i]; a[i]=a[r]; a[r]=tmp;
+    <span class="kw">return</span> i;
+}
+static <span class="ty">int</span> selectK(<span class="ty">int</span>* a, <span class="ty">int</span> l, <span class="ty">int</span> r, <span class="ty">int</span> t) {
+    <span class="ty">int</span> p = partition(a, l, r);
+    <span class="kw">if</span> (p == t) <span class="kw">return</span> a[p];
+    <span class="kw">return</span> p &gt; t ? selectK(a, l, p-1, t) : selectK(a, p+1, r, t);
+}
+<span class="ty">int</span> findKthLargest(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span> k) {
+    <span class="kw">return</span> selectK(nums, 0, n-1, n-k);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findKthLargest(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        target = <span class="ty">len</span>(nums) - k
+        <span class="kw">def</span> select(l, r):
+            pivot = nums[r]
+            i = l
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(l, r):
+                <span class="kw">if</span> nums[j] &lt;= pivot:
+                    nums[i], nums[j] = nums[j], nums[i]
+                    i += 1
+            nums[i], nums[r] = nums[r], nums[i]
+            <span class="kw">if</span> i == target:
+                <span class="kw">return</span> nums[i]
+            <span class="kw">return</span> select(l, i - 1) <span class="kw">if</span> i &gt; target <span class="kw">else</span> select(i + 1, r)
+        <span class="kw">return</span> select(0, <span class="ty">len</span>(nums) - 1)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> partition(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">int</span> l, <span class="ty">int</span> r) {
+        <span class="ty">int</span> pivot = a[r], i = l;
+        <span class="kw">for</span> (<span class="ty">int</span> j = l; j &lt; r; j++)
+            <span class="kw">if</span> (a[j] &lt;= pivot) swap(a[i++], a[j]);
+        swap(a[i], a[r]);
+        <span class="kw">return</span> i;
+    }
+    <span class="ty">int</span> select(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">int</span> l, <span class="ty">int</span> r, <span class="ty">int</span> t) {
+        <span class="ty">int</span> p = partition(a, l, r);
+        <span class="kw">if</span> (p == t) <span class="kw">return</span> a[p];
+        <span class="kw">return</span> p &gt; t ? select(a, l, p - 1, t) : select(a, p + 1, r, t);
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> findKthLargest(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> k) {
+        <span class="kw">return</span> select(nums, 0, nums.size() - 1, (<span class="ty">int</span>)nums.size() - k);
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +155,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Quickselect: partition quanh pivot ngẫu nhiên/cuối; nếu pivot index ==…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Partition đặt phần tử thứ n-k đúng vị trí sorted; quickselect trung bình O(n).</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1 → max</span><span class="analysis-tag edge">k=n → min</span><span class="analysis-tag edge">Trùng lặp nhiều</span><span class="analysis-tag pit">Sort O(n log n) chấp nhận được nhưng không tối ưu</span><span class="analysis-tag pit">Heap O(n log k) cũng OK</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Kth largest = quickselect tìm index n-k sau partition.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +179,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Kth%20Largest%20Element%20in%20an%20Array&lc_id=215&embed=true"></iframe>

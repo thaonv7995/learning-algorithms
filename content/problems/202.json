@@ -3,32 +3,24 @@
   "title": "Happy Number",
   "difficulty": "Easy",
   "category": "Hash Table",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Happy Number (LeetCode #202) — Easy.",
+  "description": "Số \"happy\": lặp thay n bằng tổng bình phương các chữ số cho đến khi n=1 (happy) hoặc lặp vòng (không happy). Kiểm tra n có phải happy number không.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 19", "output": "true" },
+    { "input": "n = 2", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Floyd cycle: slow và fast cùng bước hàm next(n)=tổng bình phương chữ số; nếu gặp 1 → true, nếu slow==fast và !=1 → false.",
+  "memoryTip": "Happy number = Floyd tortoise-hare trên hàm sum-of-squares-of-digits.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isHappy(self, n: int) -> bool:\n        def next(x):\n            s = 0\n            while x:\n                x, d = divmod(x, 10)\n                s += d * d\n            return s\n        slow = fast = n\n        while True:\n            slow = next(slow)\n            fast = next(next(fast))\n            if fast == 1:\n                return True\n            if slow == fast:\n                return slow == 1",
+    "cpp": "class Solution {\n    int next(int x) {\n        int s = 0;\n        while (x) { s += (x % 10) * (x % 10); x /= 10; }\n        return s;\n    }\npublic:\n    bool isHappy(int n) {\n        int slow = n, fast = n;\n        do {\n            slow = next(slow);\n            fast = next(next(fast));\n            if (fast == 1) return true;\n        } while (slow != fast);\n        return slow == 1;\n    }\n};",
+    "c": "static int nextHappy(int x) {\n    int s = 0;\n    while (x) { int d = x % 10; s += d * d; x /= 10; }\n    return s;\n}\nbool isHappy(int n) {\n    int slow = n, fast = n;\n    do {\n        slow = nextHappy(slow);\n        fast = nextHappy(nextHappy(fast));\n        if (fast == 1) return true;\n    } while (slow != fast);\n    return slow == 1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Chu trình trên hàm next hữu hạn; Floyd phát hiện cycle hoặc đạt 1.",
+    "edgeCases": ["n = 1 → true ngay", "Số lớn vẫn rơi vào cycle nhỏ"],
+    "pitfalls": ["Không phát hiện vòng lặp → TLE", "Quên trường hợp fast==1"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

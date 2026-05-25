@@ -5,30 +5,22 @@
   "category": "Hash Table",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Find the Difference (LeetCode #389) — Easy.",
+  "description": "Chuỗi t gồm s cộng thêm đúng một ký tự ngẫu nhiên. Trả ký tự được thêm.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"abcd\", t = \"abcde\"", "output": "\"e\"" },
+    { "input": "s = \"\", t = \"y\"", "output": "\"y\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "XOR tất cả ký tự s và t — ký tự lẻ còn lại là đáp án. Hoặc count frequency.",
+  "memoryTip": "XOR cancel duplicate — O(1) space elegant.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findTheDifference(self, s: str, t: str) -> str:\n        x = 0\n        for c in s + t:\n            x ^= ord(c)\n        return chr(x)",
+    "cpp": "class Solution {\npublic:\n    char findTheDifference(string s, string t) {\n        char x = 0;\n        for (char c : s) x ^= c;\n        for (char c : t) x ^= c;\n        return x;\n    }\n};",
+    "c": "char findTheDifference(char* s, char* t) {\n    char x = 0;\n    for (; *s; s++) x ^= *s;\n    for (; *t; t++) x ^= *t;\n    return x;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "XOR của multiset s∪t chỉ còn ký tự thêm một lần.",
+    "edgeCases": ["s rỗng", "Thêm ở đầu/cuối", "Cùng ký tự nhiều lần"],
+    "pitfalls": ["Sort compare O(n log n)", "Sum ASCII overflow unlikely"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

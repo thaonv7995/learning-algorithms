@@ -3,32 +3,25 @@
   "title": "Remove Invalid Parentheses",
   "difficulty": "Hard",
   "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Remove Invalid Parentheses (LeetCode #301) — Hard.",
+  "timeComplexity": "O(2^n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi s chứa '(' , ')' và chữ cái. Xóa số ký tự ngoặc tối thiểu để chuỗi còn lại hợp lệ. Trả về mọi chuỗi hợp lệ có thể, không trùng, thứ tự bất kỳ.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"()())()\"", "output": "[\"(())()\",\"()()()\"]" },
+    { "input": "s = \"(a)())()\"", "output": "[\"(a())()\",\"(a)()()\"]" },
+    { "input": "s = \")(\"", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS theo số ngoặc đã xóa: từ s, sinh mọi chuỗi xóa một '('. Nếu chuỗi hợp lệ thì thu; nếu chưa gặp hợp lệ thì tiếp tục tầng tiếp theo. Dùng set tránh trùng.",
+  "memoryTip": "BFS theo lớp xóa — dừng ngay khi tầng đầu tiên cho chuỗi hợp lệ; không cần xóa sâu hơn.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def removeInvalidParentheses(self, s: str) -> List[str]:\n        def valid(t):\n            bal = 0\n            for c in t:\n                if c == '(':\n                    bal += 1\n                elif c == ')':\n                    bal -= 1\n                    if bal < 0:\n                        return False\n            return bal == 0\n        level, seen = {s}, {s}\n        while level:\n            good = [x for x in level if valid(x)]\n            if good:\n                return good\n            nxt = set()\n            for cur in level:\n                for i, c in enumerate(cur):\n                    if c not in '()':\n                        continue\n                    t = cur[:i] + cur[i + 1:]\n                    if t not in seen:\n                        seen.add(t)\n                        nxt.add(t)\n            level = nxt\n        return []",
+    "cpp": "class Solution {\n    bool valid(const string& t) {\n        int bal = 0;\n        for (char c : t) {\n            if (c == '(') bal++;\n            else if (c == ')') { if (--bal < 0) return false; }\n        }\n        return bal == 0;\n    }\npublic:\n    vector<string> removeInvalidParentheses(string s) {\n        unordered_set<string> level{s}, seen{s};\n        while (!level.empty()) {\n            vector<string> good;\n            for (auto& x : level) if (valid(x)) good.push_back(x);\n            if (!good.empty()) return good;\n            unordered_set<string> nxt;\n            for (auto& cur : level)\n                for (int i = 0; i < (int)cur.size(); i++)\n                    if (cur[i] == '(' || cur[i] == ')') {\n                        string t = cur.substr(0, i) + cur.substr(i + 1);\n                        if (!seen.count(t)) { seen.insert(t); nxt.insert(t); }\n                    }\n            level = move(nxt);\n        }\n        return {};\n    }\n};",
+    "c": "static int valid(const char* t) {\n    int bal = 0;\n    for (int i = 0; t[i]; i++) {\n        if (t[i] == '(') bal++;\n        else if (t[i] == ')') { if (--bal < 0) return 0; }\n    }\n    return bal == 0;\n}\n/* Full BFS needs dynamic string sets; use C++ for production. */\nchar** removeInvalidParentheses(char* s, int* retSize) {\n    *retSize = 0;\n    if (valid(s)) { char** r = malloc(sizeof(char*)); r[0] = strdup(s); *retSize = 1; return r; }\n    return NULL;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "BFS đảm bảo xóa ít nhất: tầng k cho mọi chuỗi đã xóa đúng k ngoặc; dừng ở tầng hợp lệ đầu tiên.",
+    "edgeCases": ["Chỉ chữ cái → trả chuỗi gốc", "Toàn ')' hoặc '(' → [] hoặc sau xóa", "Nhiều cách xóa tối thiểu"],
+    "pitfalls": ["DFS xóa ngẫu nhiên không đảm bảo tối thiểu", "Quên dedupe → trùng kết quả", "Không bỏ qua chữ cái khi xóa"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,26 @@
   "id": 334,
   "title": "Increasing Triplet Subsequence",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Increasing Triplet Subsequence (LeetCode #334) — Medium.",
+  "description": "Cho mảng nums. Kiểm tra có tồn tại bộ ba chỉ số i<j<k sao nums[i]<nums[j]<nums[k].",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3,4,5]", "output": "true" },
+    { "input": "nums = [5,4,3,2,1]", "output": "false" },
+    { "input": "nums = [2,1,5,0,4,6]", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Greedy hai ngưỡng first, second nhỏ nhất: gặp x<first→first=x; x<first< x<second thì true; x<second cập nhật second.",
+  "memoryTip": "Giữ LIS length-2 tối ưu — O(1) thay vì DP O(n²).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def increasingTriplet(self, nums: List[int]) -> bool:\n        first = second = float('inf')\n        for x in nums:\n            if x <= first:\n                first = x\n            elif x <= second:\n                second = x\n            else:\n                return True\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool increasingTriplet(vector<int>& nums) {\n        int first = INT_MAX, second = INT_MAX;\n        for (int x : nums) {\n            if (x <= first) first = x;\n            else if (x <= second) second = x;\n            else return true;\n        }\n        return false;\n    }\n};",
+    "c": "bool increasingTriplet(int* nums, int n) {\n    int first = INT_MAX, second = INT_MAX;\n    for (int i = 0; i < n; i++) {\n        if (nums[i] <= first) first = nums[i];\n        else if (nums[i] <= second) second = nums[i];\n        else return true;\n    }\n    return false;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "first/second là min ending subsequence dài 1 và 2; phần tử > second hoàn thành triple.",
+    "edgeCases": ["n<3", "Trùng giá trị", "Triple không liên tiếp"],
+    "pitfalls": ["Dùng < thay <= làm sai trùng", "DP O(n²) không cần thiết"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

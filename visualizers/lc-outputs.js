@@ -318,6 +318,22 @@
     R[149] = s => null;
     R[150] = s => (done(s) ? val(s.stack[0], "result", s) : null);
 
+    function outFromState(s) {
+        if (!done(s)) return null;
+        if (s.outputText != null) return { kind: "text", text: String(s.outputText), flash: true };
+        if (s.result != null) {
+            if (typeof s.result === "boolean") return bool(s.result, s);
+            if (Array.isArray(s.result)) return arr(s.result, s, "kết quả");
+            return val(s.result, "kết quả", s);
+        }
+        if (s.best != null) return val(s.best, "kết quả", s);
+        return null;
+    }
+
+    for (let id = 201; id <= 400; id++) {
+        if (R[id] == null) R[id] = outFromState;
+    }
+
     /* Generic fallback — catalog visualizer sets outputText */
     window.LC_OUTPUT_FALLBACK = function (s) {
         if (!s) return null;

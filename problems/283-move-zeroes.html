@@ -36,7 +36,7 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #283</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Two Pointers</span>
+                        <span class="cat-chip">Array</span>
                         <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Move Zeroes</h1>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Move Zeroes (LeetCode #283) — Easy.</div>
+                        <div class="block-text">Di chuyển mọi 0 trong mảng nums về cuối, giữ thứ tự phần tử khác zero. Sửa in-place.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [0,1,0,3,12]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,3,12,0,0]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [0]</code></div>
+                <div class="ex-line"><span>Out</span><code>[0]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Two pointers: write chỉ vị trí ghi non-zero; duyệt i swap/ghi; cuối fill zero phần còn lại.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">void</span> moveZeroes(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> w = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++)
+        <span class="kw">if</span> (nums[i]) nums[w++] = nums[i];
+    <span class="kw">while</span> (w &lt; n) nums[w++] = 0;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> moveZeroes(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="kw">None</span>:
+        w = 0
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">if</span> x != 0:
+                nums[w] = x
+                w += 1
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(w, <span class="ty">len</span>(nums)):
+            nums[i] = 0</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">void</span> moveZeroes(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> w = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums)
+            <span class="kw">if</span> (x) nums[w++] = x;
+        <span class="kw">while</span> (w &lt; (<span class="ty">int</span>)nums.size()) nums[w++] = 0;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +126,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Two Pointers</span>
+                        <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Two pointers: write chỉ vị trí ghi non-zero; duyệt i swap/ghi; cuối…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Thứ tự non-zero giữ nguyên tại [0..w); phần sau toàn 0.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không có 0</span><span class="analysis-tag edge">Toàn 0</span><span class="analysis-tag pit">Swap mọi bước vẫn OK nhưng nhiều write hơn</span><span class="analysis-tag pit">Tạo mảng mới vi phạm in-place</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Move zeroes = write pointer for non-zeros, then pad zeros.</p>
                     </details>
                 </div>
                 </div>

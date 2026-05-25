@@ -3,32 +3,25 @@
   "title": "Expression Add Operators",
   "difficulty": "Hard",
   "category": "Math",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Expression Add Operators (LeetCode #282) — Hard.",
+  "timeComplexity": "O(4^n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi num chỉ chữ số và target. Chèn +, -, hoặc * giữa các chữ số (không đổi thứ tự) để biểu thức = target. Trả mọi biểu thức hợp lệ.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "num = \"123\", target = 6", "output": "[\"1+2+3\", \"1*2*3\"]" },
+    { "input": "num = \"232\", target = 8", "output": "[\"2*3+2\", \"2+3*2\"]" },
+    { "input": "num = \"105\", target = 5", "output": "[\"1*0+5\",\"10-5\"]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Backtracking: track val (tổng signed) và last (operand cuối cho *); * cập nhật val-last+last*num mới.",
+  "memoryTip": "Add operators = backtrack with last operand for multiplication undo.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def addOperators(self, num: str, target: int) -> List[str]:\n        res = []\n        def dfs(i, path, val, last):\n            if i == len(num):\n                if val == target:\n                    res.append(path)\n                return\n            for j in range(i, len(num)):\n                if j > i and num[i] == '0':\n                    break\n                cur = int(num[i:j+1])\n                if i == 0:\n                    dfs(j+1, str(cur), cur, cur)\n                else:\n                    dfs(j+1, path+'+'+str(cur), val+cur, cur)\n                    dfs(j+1, path+'-'+str(cur), val-cur, -cur)\n                    dfs(j+1, path+'*'+str(cur), val-last+last*cur, last*cur)\n        dfs(0, '', 0, 0)\n        return res",
+    "cpp": "class Solution {\n    vector<string> res;\n    void dfs(string& num, int target, int i, string path, long val, long last) {\n        if (i == (int)num.size()) {\n            if (val == target) res.push_back(path);\n            return;\n        }\n        for (int j = i; j < (int)num.size(); j++) {\n            if (j > i && num[i] == '0') break;\n            long cur = stol(num.substr(i, j - i + 1));\n            if (i == 0) dfs(num, target, j + 1, to_string(cur), cur, cur);\n            else {\n                dfs(num, target, j + 1, path + '+' + to_string(cur), val + cur, cur);\n                dfs(num, target, j + 1, path + '-' + to_string(cur), val - cur, -cur);\n                dfs(num, target, j + 1, path + '*' + to_string(cur), val - last + last * cur, last * cur);\n            }\n        }\n    }\npublic:\n    vector<string> addOperators(string num, int target) {\n        dfs(num, target, 0, \"\", 0, 0);\n        return res;\n    }\n};",
+    "c": "static void dfs282(char* num, int target, int i, char* path, int plen, long val, long last, char** out, int* osz, int* ocap) {\n    if (num[i] == 0) {\n        if (val == target) {\n            if (*osz >= *ocap) { *ocap *= 2; out[0] = realloc(out[0], *ocap * sizeof(char*)); }\n            ((char**)out)[(*osz)++] = strdup(path);\n        }\n        return;\n    }\n    for (int j = i; num[j]; j++) {\n        if (j > i && num[i] == '0') break;\n        long cur = 0;\n        for (int k = i; k <= j; k++) cur = cur * 10 + (num[k] - '0');\n        char buf[64];\n        if (i == 0) {\n            snprintf(buf, sizeof(buf), \"%ld\", cur);\n            dfs282(num, target, j + 1, buf, (int)strlen(buf), cur, cur, out, osz, ocap);\n        } else {\n            snprintf(buf, sizeof(buf), \"%s+%ld\", path, cur);\n            dfs282(num, target, j + 1, buf, (int)strlen(buf), val + cur, cur, out, osz, ocap);\n            snprintf(buf, sizeof(buf), \"%s-%ld\", path, cur);\n            dfs282(num, target, j + 1, buf, (int)strlen(buf), val - cur, -cur, out, osz, ocap);\n            snprintf(buf, sizeof(buf), \"%s*%ld\", path, cur);\n            dfs282(num, target, j + 1, buf, (int)strlen(buf), val - last + last * cur, last * cur, out, osz, ocap);\n        }\n    }\n}\nchar** addOperators(char* num, int target, int* rs) {\n    char** out = malloc(8 * sizeof(char*)); int osz = 0, ocap = 8;\n    dfs282(num, target, 0, \"\", 0, 0, 0, &out, &osz, &ocap);\n    *rs = osz; return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "last lưu operand cuối để sửa * (hoàn tác cộng/trừ trước đó); mọi split số hợp lệ.",
+    "edgeCases": ["Leading zero split invalid", "target không đạt → []"],
+    "pitfalls": ["* như eval thường sai precedence", "Overflow — dùng long"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

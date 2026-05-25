@@ -3,32 +3,25 @@
   "title": "Power of Four",
   "difficulty": "Easy",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Power of Four (LeetCode #342) — Easy.",
+  "description": "Kiểm tra số nguyên n có phải lũy thừa của 4 không.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 16", "output": "true" },
+    { "input": "n = 5", "output": "false" },
+    { "input": "n = 1", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "n>0, n là lũy 2 (n&(n-1)==0), và bit 1 ở vị trí lẻ (n & 0x55555555 != 0 hoặc log2(n)%2==0).",
+  "memoryTip": "4^k = 2^(2k) — exponent chẵn; mask 0x555... giữ bit lẻ.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isPowerOfFour(self, n: int) -> bool:\n        return n > 0 and (n & (n - 1)) == 0 and (n & 0x55555555) != 0",
+    "cpp": "class Solution {\npublic:\n    bool isPowerOfFour(int n) {\n        return n > 0 && (n & (n - 1)) == 0 && (n & 0x55555555);\n    }\n};",
+    "c": "bool isPowerOfFour(int n) {\n    return n > 0 && (n & (n - 1)) == 0 && (n & 0x55555555);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Power of 4 ⇔ power of 2 với exponent chẵn; bitmask kiểm tra bit set ở vị trí chẵn (0-index).",
+    "edgeCases": ["n=0", "n=2 (power of 2 not 4)", "INT_MAX power of 4"],
+    "pitfalls": ["Chỉ check power of 2", "Loop divide by 4 chậm nhưng đúng"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #282</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Expression Add Operators</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(4^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>43.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Expression Add Operators (LeetCode #282) — Hard.</div>
+                        <div class="block-text">Cho chuỗi num chỉ chữ số và target. Chèn +, -, hoặc * giữa các chữ số (không đổi thứ tự) để biểu thức = target. Trả mọi biểu thức hợp lệ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>num = &quot;123&quot;, target = 6</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;1+2+3&quot;, &quot;1*2*3&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>num = &quot;232&quot;, target = 8</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;2*3+2&quot;, &quot;2+3*2&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>num = &quot;105&quot;, target = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;1*0+5&quot;,&quot;10-5&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Backtracking: track val (tổng signed) và last (operand cuối cho *); * cập nhật val-last+last*num mới.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,80 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">void</span> dfs282(<span class="ty">char</span>* num, <span class="ty">int</span> target, <span class="ty">int</span> i, <span class="ty">char</span>* path, <span class="ty">int</span> plen, <span class="ty">long</span> val, <span class="ty">long</span> last, <span class="ty">char</span>** out, <span class="ty">int</span>* osz, <span class="ty">int</span>* ocap) {
+    <span class="kw">if</span> (num[i] == 0) {
+        <span class="kw">if</span> (val == target) {
+            <span class="kw">if</span> (*osz &gt;= *ocap) { *ocap *= 2; out[0] = realloc(out[0], *ocap * <span class="kw">sizeof</span>(<span class="ty">char</span>*)); }
+            ((<span class="ty">char</span>**)out)[(*osz)++] = strdup(path);
+        }
+        <span class="kw">return</span>;
+    }
+    <span class="kw">for</span> (<span class="ty">int</span> j = i; num[j]; j++) {
+        <span class="kw">if</span> (j &gt; i &amp;&amp; num[i] == '0') break;
+        <span class="ty">long</span> cur = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> k = i; k &lt;= j; k++) cur = cur * 10 + (num[k] - '0');
+        <span class="ty">char</span> buf[64];
+        <span class="kw">if</span> (i == 0) {
+            snprintf(buf, <span class="kw">sizeof</span>(buf), &quot;%ld&quot;, cur);
+            dfs282(num, target, j + 1, buf, (<span class="ty">int</span>)strlen(buf), cur, cur, out, osz, ocap);
+        } <span class="kw">else</span> {
+            snprintf(buf, <span class="kw">sizeof</span>(buf), &quot;%s+%ld&quot;, path, cur);
+            dfs282(num, target, j + 1, buf, (<span class="ty">int</span>)strlen(buf), val + cur, cur, out, osz, ocap);
+            snprintf(buf, <span class="kw">sizeof</span>(buf), &quot;%s-%ld&quot;, path, cur);
+            dfs282(num, target, j + 1, buf, (<span class="ty">int</span>)strlen(buf), val - cur, -cur, out, osz, ocap);
+            snprintf(buf, <span class="kw">sizeof</span>(buf), &quot;%s*%ld&quot;, path, cur);
+            dfs282(num, target, j + 1, buf, (<span class="ty">int</span>)strlen(buf), val - last + last * cur, last * cur, out, osz, ocap);
+        }
+    }
+}
+<span class="ty">char</span>** addOperators(<span class="ty">char</span>* num, <span class="ty">int</span> target, <span class="ty">int</span>* rs) {
+    <span class="ty">char</span>** out = <span class="kw">malloc</span>(8 * <span class="kw">sizeof</span>(<span class="ty">char</span>*)); <span class="ty">int</span> osz = 0, ocap = 8;
+    dfs282(num, target, 0, &quot;&quot;, 0, 0, 0, &amp;out, &amp;osz, &amp;ocap);
+    *rs = osz; <span class="kw">return</span> out;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> addOperators(<span class="ty">self</span>, num: <span class="ty">str</span>, target: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        res = []
+        <span class="kw">def</span> dfs(i, path, val, last):
+            <span class="kw">if</span> i == <span class="ty">len</span>(num):
+                <span class="kw">if</span> val == target:
+                    res.append(path)
+                <span class="kw">return</span>
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i, <span class="ty">len</span>(num)):
+                <span class="kw">if</span> j &gt; i <span class="kw">and</span> num[i] == '0':
+                    break
+                cur = <span class="ty">int</span>(num[i:j+1])
+                <span class="kw">if</span> i == 0:
+                    dfs(j+1, <span class="ty">str</span>(cur), cur, cur)
+                <span class="kw">else</span>:
+                    dfs(j+1, path+'+'+<span class="ty">str</span>(cur), val+cur, cur)
+                    dfs(j+1, path+'-'+<span class="ty">str</span>(cur), val-cur, -cur)
+                    dfs(j+1, path+'*'+<span class="ty">str</span>(cur), val-last+last*cur, last*cur)
+        dfs(0, '', 0, 0)
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; res;
+    <span class="ty">void</span> dfs(<span class="ty">string</span>&amp; num, <span class="ty">int</span> target, <span class="ty">int</span> i, <span class="ty">string</span> path, <span class="ty">long</span> val, <span class="ty">long</span> last) {
+        <span class="kw">if</span> (i == (<span class="ty">int</span>)num.size()) {
+            <span class="kw">if</span> (val == target) res.push_back(path);
+            <span class="kw">return</span>;
+        }
+        <span class="kw">for</span> (<span class="ty">int</span> j = i; j &lt; (<span class="ty">int</span>)num.size(); j++) {
+            <span class="kw">if</span> (j &gt; i &amp;&amp; num[i] == '0') break;
+            <span class="ty">long</span> cur = stol(num.substr(i, j - i + 1));
+            <span class="kw">if</span> (i == 0) dfs(num, target, j + 1, to_string(cur), cur, cur);
+            <span class="kw">else</span> {
+                dfs(num, target, j + 1, path + '+' + to_string(cur), val + cur, cur);
+                dfs(num, target, j + 1, path + '-' + to_string(cur), val - cur, -cur);
+                dfs(num, target, j + 1, path + '*' + to_string(cur), val - last + last * cur, last * cur);
+            }
+        }
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; addOperators(<span class="ty">string</span> num, <span class="ty">int</span> target) {
+        dfs(num, target, 0, &quot;&quot;, 0, 0);
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +183,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(4^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Backtracking: track val và last ; * cập nhật val-last+last*num mới.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>last lưu operand cuối để sửa * (hoàn tác cộng/trừ trước đó); mọi split số hợp lệ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Leading zero split invalid</span><span class="analysis-tag edge">target không đạt → []</span><span class="analysis-tag pit">* như eval thường sai precedence</span><span class="analysis-tag pit">Overflow — dùng long</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Add operators = backtrack with last operand for multiplication undo.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +211,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Expression%20Add%20Operators&lc_id=282&embed=true"></iframe>

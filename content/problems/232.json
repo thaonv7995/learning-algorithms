@@ -3,32 +3,24 @@
   "title": "Implement Queue using Stacks",
   "difficulty": "Easy",
   "category": "Stack",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Implement Queue using Stacks (LeetCode #232) — Easy.",
+  "timeComplexity": "O(1) amortized",
+  "spaceComplexity": "O(n)",
+  "description": "Cài đặt queue FIFO chỉ dùng hai stack. Hỗ trợ push (enqueue), pop, peek, empty.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "push(1); push(2); peek()→1; pop()→1; empty()→false", "output": "1, 1, false" },
+    { "input": "push(1); pop(); empty()", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "in stack nhận push; out stack phục vụ pop/peek — khi out rỗng pour in sang out (đảo thứ tự).",
+  "memoryTip": "Queue via 2 stacks = pour in→out when out empty.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class MyQueue:\n    def __init__(self):\n        self.in_st, self.out_st = [], []\n    def _pour(self):\n        if not self.out_st:\n            while self.in_st:\n                self.out_st.append(self.in_st.pop())\n    def push(self, x: int) -> None:\n        self.in_st.append(x)\n    def pop(self) -> int:\n        self._pour()\n        return self.out_st.pop()\n    def peek(self) -> int:\n        self._pour()\n        return self.out_st[-1]\n    def empty(self) -> bool:\n        return not self.in_st and not self.out_st",
+    "cpp": "class MyQueue {\n    stack<int> inSt, outSt;\n    void pour() {\n        if (outSt.empty())\n            while (!inSt.empty()) { outSt.push(inSt.top()); inSt.pop(); }\n    }\npublic:\n    void push(int x) { inSt.push(x); }\n    int pop() { pour(); int t = outSt.top(); outSt.pop(); return t; }\n    int peek() { pour(); return outSt.top(); }\n    bool empty() { return inSt.empty() && outSt.empty(); }\n};",
+    "c": "typedef struct { int* a; int n, cap; } St;\nstatic void stPush(St* s,int x){if(s->n==s->cap){s->cap=s->cap?s->cap*2:4;s->a=realloc(s->a,s->cap*4);}s->a[s->n++]=x;}\nstatic int stPop(St* s){return s->a[--s->n];}\nstatic int stTop(St* s){return s->a[s->n-1];}\nstatic int stEmpty(St* s){return !s->n;}\nstatic void pour(St* in, St* out){while(!stEmpty(in)) stPush(out, stPop(in));}\nvoid queuePush(St* in, St* out, int x){stPush(in,x);}\nint queuePop(St* in, St* out){pour(in,out);return stPop(out);}\nint queuePeek(St* in, St* out){pour(in,out);return stTop(out);}\nint queueEmpty(St* in, St* out){return stEmpty(in)&&stEmpty(out);}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Pour đảo thứ tự in sang out → FIFO; amortized O(1) mỗi op.",
+    "edgeCases": ["Pop queue rỗng undefined", "Peek không xóa"],
+    "pitfalls": ["Pour mỗi pop → vẫn đúng nhưng lãng phí nếu out chưa hết", "Một stack không đủ"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

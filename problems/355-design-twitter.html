@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #355</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Design Twitter</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(k log k) getNewsFeed</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>44.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Design Twitter (LeetCode #355) — Medium.</div>
+                        <div class="block-text">Thiết kế mạng xã hội mini: postTweet, getNewsFeed (10 tweet mới nhất của user + followees), follow, unfollow.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>postTweet(1,5), getNewsFeed(1), follow(1,2), postTweet(2,6), getNewsFeed(1)</code></div>
+                <div class="ex-line"><span>Out</span><code>[5], then [6,5]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>postTweet(1,10), unfollow(1,2), getNewsFeed(1)</code></div>
+                <div class="ex-line"><span>Out</span><code>[10]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Map user→danh sách tweet (timestamp, id); follow graph; getNewsFeed merge k tweet lists bằng max-heap lấy 10 mới nhất.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">void</span>* data; } Twitter;
+Twitter* twitterCreate(<span class="ty">void</span>) { <span class="kw">return</span> <span class="kw">calloc</span>(1,<span class="kw">sizeof</span>(Twitter)); }
+<span class="ty">void</span> twitterPostTweet(Twitter* o, <span class="ty">int</span> u, <span class="ty">int</span> id) {}
+<span class="ty">int</span>* twitterGetNewsFeed(Twitter* o, <span class="ty">int</span> u, <span class="ty">int</span>* rs) { *rs=0; <span class="kw">return</span> NULL; }
+<span class="ty">void</span> twitterFollow(Twitter* o, <span class="ty">int</span> a, <span class="ty">int</span> b) {}
+<span class="ty">void</span> twitterUnfollow(Twitter* o, <span class="ty">int</span> a, <span class="ty">int</span> b) {}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Twitter:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.time = 0
+        <span class="ty">self</span>.tweets = defaultdict(<span class="ty">list</span>)
+        <span class="ty">self</span>.follows = defaultdict(<span class="ty">set</span>)
+    <span class="kw">def</span> postTweet(<span class="ty">self</span>, userId: <span class="ty">int</span>, tweetId: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        <span class="ty">self</span>.tweets[userId].append((<span class="ty">self</span>.time, tweetId)); <span class="ty">self</span>.time -= 1
+    <span class="kw">def</span> getNewsFeed(<span class="ty">self</span>, userId: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        heap = []
+        users = <span class="ty">self</span>.follows[userId] | {userId}
+        <span class="kw">for</span> u <span class="kw">in</span> users:
+            <span class="kw">for</span> t <span class="kw">in</span> <span class="ty">self</span>.tweets[u][-10:]:
+                heapq.heappush(heap, t)
+                <span class="kw">if</span> <span class="ty">len</span>(heap) &gt; 10: heapq.heappop(heap)
+        <span class="kw">return</span> [t <span class="kw">for</span> _, t <span class="kw">in</span> sorted(heap)]</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Twitter {
+    <span class="ty">int</span> timer = 0;
+    unordered_map&lt;<span class="ty">int</span>, <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt;&gt; tweets;
+    unordered_map&lt;<span class="ty">int</span>, unordered_set&lt;<span class="ty">int</span>&gt;&gt; follows;
 <span class="ty">public</span>:
+    Twitter() {}
+    <span class="ty">void</span> postTweet(<span class="ty">int</span> userId, <span class="ty">int</span> tweetId) { tweets[userId].push_back({timer++, tweetId}); }
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; getNewsFeed(<span class="ty">int</span> userId) {
+        auto cmp = [](pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&amp; a, pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&amp; b){ <span class="kw">return</span> a.first &gt; b.first; };
+        priority_queue&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;, <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt;, decltype(cmp)&gt; pq(cmp);
+        follows[userId].insert(userId);
+        <span class="kw">for</span> (<span class="ty">int</span> u : follows[userId]) {
+            auto&amp; v = tweets[u];
+            <span class="kw">for</span> (<span class="ty">int</span> i = max(0, (<span class="ty">int</span>)v.size()-10); i &lt; (<span class="ty">int</span>)v.size(); i++) pq.push(v[i]);
+        }
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="kw">while</span> (!pq.empty() &amp;&amp; ans.size() &lt; 10) { ans.push_back(pq.top().second); pq.pop(); }
+        <span class="kw">return</span> ans;
+    }
+    <span class="ty">void</span> follow(<span class="ty">int</span> a, <span class="ty">int</span> b) { follows[a].insert(b); }
+    <span class="ty">void</span> unfollow(<span class="ty">int</span> a, <span class="ty">int</span> b) { follows[a].erase(b); }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +145,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(k log k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Map user→danh sách tweet ; follow graph; getNewsFeed merge k tweet…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Heap merge 10 tweet mới nhất từ user và followees; timer đảm bảo thứ tự thời gian.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">User chưa tweet</span><span class="analysis-tag edge">Follow chính mình</span><span class="analysis-tag edge">Ít hơn 10 tweet</span><span class="analysis-tag pit">Sort toàn bộ tweet O(n log n)</span><span class="analysis-tag pit">Quên include chính user trong feed</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Global timer tăng mỗi post — so sánh thời gian không cần clock thật.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +174,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Design%20Twitter&lc_id=355&embed=true"></iframe>

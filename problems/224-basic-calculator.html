@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #224</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Basic Calculator</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Basic Calculator (LeetCode #224) — Hard.</div>
+                        <div class="block-text">Chuỗi s biểu diễn biểu thức với số nguyên không âm, '+', '-', '(', ')' và khoảng trắng. Tính giá trị (phép + - và ngoặc).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;1 + 1&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot; 2-1 + 2 &quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;(1+(4+5+2)-3)+(6+8)&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>23</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Stack lưu (result, sign) trước ngoặc; num và sign hiện tại; gặp '(' push, ')' pop cộng, '+/-' cập nhật sign.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,64 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> calculate(<span class="ty">char</span>* s) {
+    <span class="ty">int</span> stack[1000], top = 0, result = 0, num = 0, sign = 1;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; s[i]; i++) {
+        <span class="ty">char</span> c = s[i];
+        <span class="kw">if</span> (c &gt;= '0' &amp;&amp; c &lt;= '9') num = num * 10 + (c - '0');
+        <span class="kw">else</span> <span class="kw">if</span> (c == '+' || c == '-') {
+            result += sign * num; num = 0; sign = (c == '+') ? 1 : -1;
+        } <span class="kw">else</span> <span class="kw">if</span> (c == '(') {
+            stack[top++] = result; stack[top++] = sign;
+            result = 0; sign = 1; num = 0;
+        } <span class="kw">else</span> <span class="kw">if</span> (c == ')') {
+            result += sign * num; num = 0;
+            result *= stack[--top];
+            result += stack[--top];
+        }
+    }
+    <span class="kw">return</span> result + sign * num;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> calculate(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        stack, result, num, sign = [], 0, 0, 1
+        <span class="kw">for</span> c <span class="kw">in</span> s:
+            <span class="kw">if</span> c.isdigit():
+                num = num * 10 + <span class="ty">int</span>(c)
+            <span class="kw">elif</span> c <span class="kw">in</span> '+-':
+                result += sign * num
+                num = 0
+                sign = 1 <span class="kw">if</span> c == '+' <span class="kw">else</span> -1
+            <span class="kw">elif</span> c == '(':
+                stack.append(result)
+                stack.append(sign)
+                result, sign, num = 0, 1, 0
+            <span class="kw">elif</span> c == ')':
+                result += sign * num
+                num = 0
+                result *= stack.pop()
+                result += stack.pop()
+        <span class="kw">return</span> result + sign * num</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> calculate(<span class="ty">string</span> s) {
+        stack&lt;<span class="ty">int</span>&gt; st;
+        <span class="ty">int</span> result = 0, num = 0, sign = 1;
+        <span class="kw">for</span> (<span class="ty">char</span> c : s) {
+            <span class="kw">if</span> (isdigit(c)) num = num * 10 + (c - '0');
+            <span class="kw">else</span> <span class="kw">if</span> (c == '+' || c == '-') {
+                result += sign * num; num = 0; sign = (c == '+') ? 1 : -1;
+            } <span class="kw">else</span> <span class="kw">if</span> (c == '(') {
+                st.push(result); st.push(sign);
+                result = 0; sign = 1; num = 0;
+            } <span class="kw">else</span> <span class="kw">if</span> (c == ')') {
+                result += sign * num; num = 0;
+                result *= st.top(); st.pop();
+                result += st.top(); st.pop();
+            }
+        }
+        <span class="kw">return</span> result + sign * num;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +166,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Math</span>
+                        <span class="pattern-chip">Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Stack lưu trước ngoặc; num và sign hiện tại; gặp '' pop cộng, '+/-' cập…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Stack lưu ngữ cảnh ngoặc; mỗi số được cộng với sign hiện tại trước operator mới.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một số</span><span class="analysis-tag edge">Lồng ngoặc sâu</span><span class="analysis-tag pit">Quên flush num cuối chuỗi</span><span class="analysis-tag pit">Không push sign khi '('</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Basic Calculator I = stack + running num/sign.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +195,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Basic%20Calculator&lc_id=224&embed=true"></iframe>

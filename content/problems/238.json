@@ -5,30 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Product of Array Except Self (LeetCode #238) — Medium.",
+  "description": "Cho mảng nums. Trả mảng answer cùng độ dài: answer[i] = tích mọi phần tử nums trừ nums[i]. Không dùng phép chia; output array không tính extra space.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,2,3,4]", "output": "[24,12,8,6]" },
+    { "input": "nums = [-1,1,0,-3,3]", "output": "[0,0,9,0,0]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Pass trái: answer[i]=prefix product; pass phải nhân suffix vào answer. Hoặc dùng answer làm prefix rồi biến suffix.",
+  "memoryTip": "Product except self = prefix left × suffix right, O(1) extra.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def productExceptSelf(self, nums: List[int]) -> List[int]:\n        n = len(nums)\n        ans = [1] * n\n        prefix = 1\n        for i in range(n):\n            ans[i] = prefix\n            prefix *= nums[i]\n        suffix = 1\n        for i in range(n - 1, -1, -1):\n            ans[i] *= suffix\n            suffix *= nums[i]\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> productExceptSelf(vector<int>& nums) {\n        int n = nums.size();\n        vector<int> ans(n, 1);\n        int prefix = 1;\n        for (int i = 0; i < n; i++) { ans[i] = prefix; prefix *= nums[i]; }\n        int suffix = 1;\n        for (int i = n - 1; i >= 0; i--) { ans[i] *= suffix; suffix *= nums[i]; }\n        return ans;\n    }\n};",
+    "c": "int* productExceptSelf(int* nums, int n, int* rs) {\n    int* ans = malloc(n * sizeof(int));\n    int prefix = 1;\n    for (int i = 0; i < n; i++) { ans[i] = prefix; prefix *= nums[i]; }\n    int suffix = 1;\n    for (int i = n - 1; i >= 0; i--) { ans[i] *= suffix; suffix *= nums[i]; }\n    *rs = n;\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "ans[i] nhận tích trái rồi nhân tích phải — đúng tích loại trừ i.",
+    "edgeCases": ["Có 0 → hầu hết 0", "Một phần tử không áp dụng theo đề"],
+    "pitfalls": ["Dùng chia khi có 0", "Tách prefix/suffix array O(n) extra"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

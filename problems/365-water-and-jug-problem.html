@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #365</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Water and Jug Problem</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log max(x,y))</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45.7% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Water and Jug Problem (LeetCode #365) — Medium.</div>
+                        <div class="block-text">Hai bình x và y gallon, có vòi nước vô hạn. Có thể fill, empty, pour giữa hai bình. Có đo được z gallon ở một bình không?</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>x = 3, y = 5, z = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>x = 2, y = 6, z = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Khả thi iff z=0 hoặc z≤max(x,y) và z chia hết gcd(x,y) (Bezout — tổ hợp tuyến tính ax+by).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,25 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> gcdInt(<span class="ty">int</span> a, <span class="ty">int</span> b) { <span class="kw">while</span> (b) { <span class="ty">int</span> t=a%b; a=b; b=t; } <span class="kw">return</span> a; }
+<span class="ty">bool</span> canMeasureWater(<span class="ty">int</span> x, <span class="ty">int</span> y, <span class="ty">int</span> target) {
+    <span class="kw">if</span> (target == 0) <span class="kw">return</span> true;
+    <span class="ty">int</span> g = gcdInt(x, y);
+    <span class="kw">return</span> target &lt;= (x &gt; y ? x : y) &amp;&amp; target % g == 0;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> canMeasureWater(<span class="ty">self</span>, x: <span class="ty">int</span>, y: <span class="ty">int</span>, target: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">if</span> target == 0: <span class="kw">return</span> <span class="kw">True</span>
+        g = gcd(x, y)
+        <span class="kw">return</span> target &lt;= <span class="ty">max</span>(x, y) <span class="kw">and</span> target % g == 0</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> gcd(<span class="ty">int</span> a, <span class="ty">int</span> b) { <span class="kw">return</span> b ? gcd(b, a % b) : a; }
 <span class="ty">public</span>:
+    <span class="ty">bool</span> canMeasureWater(<span class="ty">int</span> x, <span class="ty">int</span> y, <span class="ty">int</span> target) {
+        <span class="kw">if</span> (target == 0) <span class="kw">return</span> true;
+        <span class="ty">int</span> g = gcd(x, y);
+        <span class="kw">return</span> target &lt;= max(x, y) &amp;&amp; target % g == 0;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +123,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log max(x,y)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Khả thi iff z=0 hoặc z≤max và z chia hết gcd .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Các trạng thái reachable ⇔ lượng nước là ax+by; điều kiện gcd chia target.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">target=0</span><span class="analysis-tag edge">x=y</span><span class="analysis-tag edge">target &gt; max(x,y)</span><span class="analysis-tag pit">BFS trạng thái chậm không cần</span><span class="analysis-tag pit">Quên check target ≤ max jug</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>GCD lemma — mọi lượng đo được là bội của gcd.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +151,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Water%20and%20Jug%20Problem&lc_id=365&embed=true"></iframe>

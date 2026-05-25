@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #218</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">The Skyline Problem</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">The Skyline Problem (LeetCode #218) — Hard.</div>
+                        <div class="block-text">Danh sách buildings[i]=[left, right, height]. Trả key points [x, height] mô tả đường skyline khi quét từ trái sang phải (height thay đổi mới ghi).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>buildings = [[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[2,10],[3,15],[7,12],[12,0],[15,10],[20,8],[24,0]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>buildings = [[0,2,3],[2,5,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,3],[5,0]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sweep line: events (left, -h), (right, h); sort; multiset max height; khi max đổi push [x, newMax].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,70 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span> x, h; } Ev;
+static <span class="ty">int</span> cmpEv(<span class="ty">const</span> <span class="ty">void</span>* a, <span class="ty">const</span> <span class="ty">void</span>* b) {
+    Ev* ea = (Ev*)a; Ev* eb = (Ev*)b;
+    <span class="kw">if</span> (ea-&gt;x != eb-&gt;x) <span class="kw">return</span> ea-&gt;x - eb-&gt;x;
+    <span class="kw">return</span> ea-&gt;h - eb-&gt;h;
+}
+<span class="ty">int</span>** getSkyline(<span class="ty">int</span>** b, <span class="ty">int</span> bn, <span class="ty">int</span>* bc, <span class="ty">int</span>* rs, <span class="ty">int</span>* rc) {
+    Ev* ev = <span class="kw">malloc</span>(bn * 2 * <span class="kw">sizeof</span>(Ev));
+    <span class="ty">int</span> ec = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; bn; i++) {
+        ev[ec++] = (Ev){b[i][0], -b[i][2]};
+        ev[ec++] = (Ev){b[i][1], b[i][2]};
+    }
+    qsort(ev, ec, <span class="kw">sizeof</span>(Ev), cmpEv);
+    <span class="ty">int</span>* hs = <span class="kw">calloc</span>(bn * 2 + 1, <span class="kw">sizeof</span>(<span class="ty">int</span>)); hs[0] = 0; <span class="ty">int</span> hsz = 1;
+    <span class="ty">int</span>** out = <span class="kw">malloc</span>(bn * 2 * <span class="kw">sizeof</span>(<span class="ty">int</span>*)); *rs = 0; *rc = 2;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; ec; i++) {
+        <span class="ty">int</span> h = ev[i].h;
+        <span class="kw">if</span> (h &lt; 0) { hs[hsz++] = -h; } <span class="kw">else</span> {
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; hsz; j++) <span class="kw">if</span> (hs[j] == h) { hs[j] = hs[--hsz]; break; }
+        }
+        <span class="ty">int</span> cur = 0; <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; hsz; j++) <span class="kw">if</span> (hs[j] &gt; cur) cur = hs[j];
+        <span class="kw">if</span> (*rs == 0 || out[*rs - 1][1] != cur) {
+            out[*rs] = <span class="kw">malloc</span>(2 * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+            out[*rs][0] = ev[i].x; out[*rs][1] = cur; (*rs)++;
+        }
+    }
+    <span class="kw">free</span>(ev); <span class="kw">free</span>(hs); <span class="kw">return</span> out;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> getSkyline(<span class="ty">self</span>, buildings: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        events = []
+        <span class="kw">for</span> l, r, h <span class="kw">in</span> buildings:
+            events.append((l, -h))
+            events.append((r, h))
+        events.sort()
+        res, heights = [], [0]
+        <span class="kw">import</span> bisect
+        <span class="kw">for</span> x, h <span class="kw">in</span> events:
+            <span class="kw">if</span> h &lt; 0:
+                bisect.insort(heights, -h)
+            <span class="kw">else</span>:
+                heights.remove(h)
+            cur = heights[-1]
+            <span class="kw">if</span> <span class="kw">not</span> res <span class="kw">or</span> res[-1][1] != cur:
+                res.append([x, cur])
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; getSkyline(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; b) {
+        <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; ev;
+        <span class="kw">for</span> (auto&amp; x : b) { ev.push_back({x[0], -x[2]}); ev.push_back({x[1], x[2]}); }
+        sort(ev.begin(), ev.end());
+        multiset&lt;<span class="ty">int</span>&gt; hs = {0};
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+        <span class="kw">for</span> (auto&amp; [x, h] : ev) {
+            <span class="kw">if</span> (h &lt; 0) hs.insert(-h);
+            <span class="kw">else</span> hs.erase(hs.find(h));
+            <span class="ty">int</span> cur = *hs.rbegin();
+            <span class="kw">if</span> (res.empty() || res.back()[1] != cur)
+                res.push_back({x, cur});
+        }
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +168,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sweep line: events , ; sort; multiset max height; khi max đổi push [x,…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Max active height tại mỗi x sweep quyết định skyline; chỉ ghi khi max đổi.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Hai tòa cùng cao overlap</span><span class="analysis-tag edge">Một tòa</span><span class="analysis-tag pit">Sort event cùng x: start trước end</span><span class="analysis-tag pit">Quên push [x,0] khi hết building</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Skyline = sweep events + max-heap/multiset theo dõi chiều cao active.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +196,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=The%20Skyline%20Problem&lc_id=218&embed=true"></iframe>

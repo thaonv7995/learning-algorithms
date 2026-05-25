@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #290</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Word Pattern</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>44.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Word Pattern (LeetCode #290) — Easy.</div>
+                        <div class="block-text">Cho pattern (chữ cái) và chuỗi s (từ cách nhau bởi space). Kiểm tra tồn tại song ánh pattern→word và word→pattern.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>pattern = &quot;abba&quot;, s = &quot;dog cat cat dog&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>pattern = &quot;abba&quot;, s = &quot;dog cat cat fish&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>pattern = &quot;aaaa&quot;, s = &quot;dog cat cat dog&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Split s; nếu len khác return false; hai map char↔word; mỗi cặp phải khớp map hiện có.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,55 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> wordPattern(<span class="ty">char</span>* pattern, <span class="ty">char</span>* s) {
+    <span class="ty">char</span>* words[256]; <span class="ty">int</span> n = 0;
+    <span class="ty">char</span>* tok = strtok(s, &quot; &quot;);
+    <span class="kw">while</span> (tok) { words[n++] = tok; tok = strtok(NULL, &quot; &quot;); }
+    <span class="ty">int</span> plen = (<span class="ty">int</span>)strlen(pattern);
+    <span class="kw">if</span> (n != plen) <span class="kw">return</span> false;
+    <span class="ty">char</span> p2w[256][64] = {{0}}; <span class="ty">char</span> w2p[256][2] = {{0}};
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; plen; i++) {
+        <span class="ty">char</span> c = pattern[i];
+        <span class="ty">int</span> idx = (<span class="ty">unsigned</span> <span class="ty">char</span>)c;
+        <span class="kw">if</span> (p2w[idx][0] &amp;&amp; strcmp(p2w[idx], words[i])) <span class="kw">return</span> false;
+        <span class="ty">int</span> widx = words[i][0];
+        <span class="kw">if</span> (w2p[widx][0] &amp;&amp; w2p[widx][0] != c) <span class="kw">return</span> false;
+        strcpy(p2w[idx], words[i]);
+        w2p[widx][0] = c;
+    }
+    <span class="kw">return</span> true;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> wordPattern(<span class="ty">self</span>, pattern: <span class="ty">str</span>, s: <span class="ty">str</span>) -&gt; bool:
+        words = s.split()
+        <span class="kw">if</span> <span class="ty">len</span>(words) != <span class="ty">len</span>(pattern):
+            <span class="kw">return</span> <span class="kw">False</span>
+        p2w, w2p = {}, {}
+        <span class="kw">for</span> ch, w <span class="kw">in</span> zip(pattern, words):
+            <span class="kw">if</span> p2w.get(ch, w) != w <span class="kw">or</span> w2p.get(w, ch) != ch:
+                <span class="kw">return</span> <span class="kw">False</span>
+            p2w[ch] = w
+            w2p[w] = ch
+        <span class="kw">return</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> wordPattern(<span class="ty">string</span> pattern, <span class="ty">string</span> s) {
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; words;
+        stringstream ss(s);
+        <span class="ty">string</span> w;
+        <span class="kw">while</span> (ss &gt;&gt; w) words.push_back(w);
+        <span class="kw">if</span> (words.size() != pattern.size()) <span class="kw">return</span> false;
+        unordered_map&lt;<span class="ty">char</span>, <span class="ty">string</span>&gt; p2w;
+        unordered_map&lt;<span class="ty">string</span>, <span class="ty">char</span>&gt; w2p;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)pattern.size(); i++) {
+            <span class="ty">char</span> c = pattern[i];
+            <span class="kw">if</span> (p2w.count(c) &amp;&amp; p2w[c] != words[i]) <span class="kw">return</span> false;
+            <span class="kw">if</span> (w2p.count(words[i]) &amp;&amp; w2p[words[i]] != c) <span class="kw">return</span> false;
+            p2w[c] = words[i];
+            w2p[words[i]] = c;
+        }
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +159,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Split s; nếu len khác return false; hai map char↔word; mỗi cặp phải…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Hai chiều map đảm bảo mỗi char map một word và ngược lại.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một char một word</span><span class="analysis-tag edge">Pattern dài hơn words</span><span class="analysis-tag pit">Chỉ map pattern→word</span><span class="analysis-tag pit">Split s sai (nhiều space)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Word pattern = bijection check like isomorphic strings with words.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +186,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Word%20Pattern&lc_id=290&embed=true"></iframe>

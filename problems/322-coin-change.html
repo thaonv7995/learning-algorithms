@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Coin Change</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(amount×|coins|)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(amount)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>48.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Coin Change (LeetCode #322) — Medium.</div>
+                        <div class="block-text">Cho mảng mệnh giá coins và tổng amount. Trả số đồng xu ít nhất để đổi đủ amount; nếu không được trả -1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>coins = [1,2,5], amount = 11</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>coins = [2], amount = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>-1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>coins = [1], amount = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP bottom-up: dp[0]=0, dp[i]=min(dp[i-coin]+1) với mọi coin≤i. Khởi tạo dp=amount+1 (vô cực); dp[amount]&gt;amount thì -1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,36 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> coinChange(<span class="ty">int</span>* coins, <span class="ty">int</span> coinsSize, <span class="ty">int</span> amount) {
+    <span class="ty">int</span>* dp = <span class="kw">malloc</span>((amount + 1) * <span class="kw">sizeof</span>(<span class="ty">int</span>));
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt;= amount; i++) dp[i] = amount + 1;
+    dp[0] = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt;= amount; i++)
+        <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; coinsSize; j++)
+            <span class="kw">if</span> (coins[j] &lt;= i)
+                <span class="kw">if</span> (dp[i - coins[j]] + 1 &lt; dp[i]) dp[i] = dp[i - coins[j]] + 1;
+    <span class="ty">int</span> ans = dp[amount] &gt; amount ? -1 : dp[amount];
+    <span class="kw">free</span>(dp); <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> coinChange(<span class="ty">self</span>, coins: <span class="ty">List</span>[<span class="ty">int</span>], amount: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        dp = [amount + 1] * (amount + 1)
+        dp[0] = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, amount + 1):
+            <span class="kw">for</span> c <span class="kw">in</span> coins:
+                <span class="kw">if</span> c &lt;= i:
+                    dp[i] = <span class="ty">min</span>(dp[i], dp[i - c] + 1)
+        <span class="kw">return</span> dp[amount] <span class="kw">if</span> dp[amount] &lt;= amount <span class="kw">else</span> -1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> coinChange(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; coins, <span class="ty">int</span> amount) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dp(amount + 1, amount + 1);
+        dp[0] = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt;= amount; i++)
+            <span class="kw">for</span> (<span class="ty">int</span> c : coins)
+                <span class="kw">if</span> (c &lt;= i) dp[i] = min(dp[i], dp[i - c] + 1);
+        <span class="kw">return</span> dp[amount] &gt; amount ? -1 : dp[amount];
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +139,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(amount×|coins|)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(amount)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP bottom-up: dp[0]=0, dp[i]=min với mọi coin≤i.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Khởi tạo dp=amount+1 ; dp[amount]&gt;amount thì -1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>dp[i] là số coin tối thiểu cho i; chuyển trạng thái qua mọi coin hợp lệ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">amount=0 → 0</span><span class="analysis-tag edge">Không đổi được</span><span class="analysis-tag edge">Coin 1 luôn thành công</span><span class="analysis-tag pit">DFS không nhớ trạng thái TLE</span><span class="analysis-tag pit">Khởi tạo dp=INT_MAX quên +1 overflow</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Unbounded knapsack — coin dùng lại nhiều lần; duyệt i từ 1..amount.</p>
                     </details>
                 </div>
                 </div>

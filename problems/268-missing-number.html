@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #268</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Missing Number</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Missing Number (LeetCode #268) — Easy.</div>
+                        <div class="block-text">Mảng nums gồm n số distinct trong [0, n] (thiếu đúng một). Tìm số bị thiếu.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [3,0,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [0,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [9,6,4,2,3,5,7,0,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>8</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">XOR tất cả i=0..n với mọi nums[i]; cặp giống triệt tiêu, còn lại số thiếu. Hoặc sum n*(n+1)/2 - sum(nums).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,24 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> missingNumber(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> xorAll = n;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) xorAll ^= i ^ nums[i];
+    <span class="kw">return</span> xorAll;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> missingNumber(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        xor = <span class="ty">len</span>(nums)
+        <span class="kw">for</span> i, x <span class="kw">in</span> enumerate(nums):
+            xor ^= i ^ x
+        <span class="kw">return</span> xor</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> missingNumber(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> xorAll = nums.size();
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)nums.size(); i++) xorAll ^= i ^ nums[i];
+        <span class="kw">return</span> xorAll;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +131,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — XOR tất cả i=0..n với mọi nums[i]; cặp giống triệt tiêu,…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc sum n*/2 - sum.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>XOR i và nums[i] triệt tiêu mọi số có mặt; chỉ số thiếu còn lại.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Thiếu 0</span><span class="analysis-tag edge">Thiếu n</span><span class="analysis-tag pit">Sort O(n log n)</span><span class="analysis-tag pit">Hash set O(n) space</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Missing number = XOR index 0..n with all nums.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +155,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Missing%20Number&lc_id=268&embed=true"></iframe>

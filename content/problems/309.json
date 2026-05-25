@@ -2,33 +2,25 @@
   "id": 309,
   "title": "Best Time to Buy and Sell Stock with Cooldown",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Best Time to Buy and Sell Stock with Cooldown (LeetCode #309) — Medium.",
+  "description": "Cho giá cổ phiếu prices. Mỗi ngày: mua, bán (tối đa 1 cp), hoặc nghỉ. Sau khi bán phải cooldown 1 ngày trước khi mua lại. Tìm lợi nhuận tối đa.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "prices = [1,2,3,0,2]", "output": "3" },
+    { "input": "prices = [1]", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP 3 trạng thái: hold (đang giữ cp), sold (vừa bán hôm nay), rest (không giữ). Cập nhật: hold=max(hold, rest-price); sold=hold+price; rest=max(rest,sold).",
+  "memoryTip": "sold bắt buộc từ hold hôm qua; rest có thể từ rest hoặc sold hôm qua (cooldown).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        hold, sold, rest = -10**18, 0, 0\n        for p in prices:\n            prev_hold = hold\n            hold = max(hold, rest - p)\n            sold = prev_hold + p\n            rest = max(rest, sold)\n        return max(rest, sold)",
+    "cpp": "class Solution {\npublic:\n    int maxProfit(vector<int>& prices) {\n        long long hold = LLONG_MIN/2, sold = 0, rest = 0;\n        for (int p : prices) {\n            long long ph = hold;\n            hold = max(hold, rest - p);\n            sold = ph + p;\n            rest = max(rest, sold);\n        }\n        return max(rest, sold);\n    }\n};",
+    "c": "int maxProfit(int* prices, int n) {\n    long long hold = -1e18, sold = 0, rest = 0;\n    for (int i = 0; i < n; i++) {\n        long long ph = hold;\n        hold = hold > rest - prices[i] ? hold : rest - prices[i];\n        sold = ph + prices[i];\n        rest = rest > sold ? rest : sold;\n    }\n    return (int)(rest > sold ? rest : sold);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi giao dịch hợp lệ thuộc một trong ba trạng thái; chuyển trạng thái theo ngày bao phủ cooldown.",
+    "edgeCases": ["Giá giảm liên tục → 0", "Một ngày", "Chỉ một chu kỳ mua-bán"],
+    "pitfalls": ["Dùng sold cũ thay prev_hold khi bán", "Nhầm cooldown thành không bán liên tiếp"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

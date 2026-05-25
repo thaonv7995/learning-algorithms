@@ -3,32 +3,24 @@
   "title": "Search a 2D Matrix II",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(m+n)",
   "spaceComplexity": "O(1)",
-  "description": "Search a 2D Matrix II (LeetCode #240) — Medium.",
+  "description": "Ma trận m×n: mỗi hàng tăng dần trái→phải, mỗi cột tăng dần trên→dưới. Kiểm tra target có trong matrix không.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5", "output": "true" },
+    { "input": "matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Bắt đầu góc trên-phải (hoặc dưới-trái): nếu val > target đi trái; nếu < target đi xuống; bằng → true.",
+  "memoryTip": "Search 2D matrix II = staircase from top-right corner.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:\n        if not matrix:\n            return False\n        m, n = len(matrix), len(matrix[0])\n        r, c = 0, n - 1\n        while r < m and c >= 0:\n            v = matrix[r][c]\n            if v == target:\n                return True\n            if v > target:\n                c -= 1\n            else:\n                r += 1\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool searchMatrix(vector<vector<int>>& matrix, int target) {\n        if (matrix.empty()) return false;\n        int m = matrix.size(), n = matrix[0].size();\n        int r = 0, c = n - 1;\n        while (r < m && c >= 0) {\n            if (matrix[r][c] == target) return true;\n            if (matrix[r][c] > target) c--;\n            else r++;\n        }\n        return false;\n    }\n};",
+    "c": "bool searchMatrix240(int** matrix, int m, int* cs, int target) {\n    if (!m) return false;\n    int n = cs[0], r = 0, c = n - 1;\n    while (r < m && c >= 0) {\n        int v = matrix[r][c];\n        if (v == target) return true;\n        if (v > target) c--;\n        else r++;\n    }\n    return false;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi bước loại một hàng hoặc cột; không bỏ sót vì tính sorted 2 chiều.",
+    "edgeCases": ["Matrix rỗng", "Target nhỏ/lớn hơn mọi phần tử"],
+    "pitfalls": ["Binary search từng hàng O(m log n) chậm hơn", "Nhầm với matrix I (flatten BS)"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

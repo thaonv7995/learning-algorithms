@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #264</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Ugly Number II</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Ugly Number II (LeetCode #264) — Medium.</div>
+                        <div class="block-text">Trả số ugly thứ n (1-indexed). Ugly number chỉ có thừa số 2, 3, 5. n=1 trả 1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 10</code></div>
+                <div class="ex-line"><span>Out</span><code>12</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP ugly[i]: ba con trỏ i2,i3,i5; ugly[i]=min(ugly[i2]*2, ugly[i3]*3, ugly[i5]*5); tăng pointer tương ứng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,49 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> nthUglyNumber(<span class="ty">int</span> n) {
+    <span class="ty">long</span> <span class="ty">long</span>* ugly = <span class="kw">malloc</span>(n * <span class="kw">sizeof</span>(<span class="ty">long</span> <span class="ty">long</span>));
+    ugly[0] = 1;
+    <span class="ty">int</span> i2 = 0, i3 = 0, i5 = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; n; i++) {
+        <span class="ty">long</span> <span class="ty">long</span> next = ugly[i2]*2;
+        <span class="kw">if</span> (ugly[i3]*3 &lt; next) next = ugly[i3]*3;
+        <span class="kw">if</span> (ugly[i5]*5 &lt; next) next = ugly[i5]*5;
+        ugly[i] = next;
+        <span class="kw">if</span> (next == ugly[i2]*2) i2++;
+        <span class="kw">if</span> (next == ugly[i3]*3) i3++;
+        <span class="kw">if</span> (next == ugly[i5]*5) i5++;
+    }
+    <span class="ty">int</span> ans = (<span class="ty">int</span>)ugly[n-1];
+    <span class="kw">free</span>(ugly);
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> nthUglyNumber(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        ugly = [1] * n
+        i2 = i3 = i5 = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, n):
+            ugly[i] = <span class="ty">min</span>(ugly[i2] * 2, ugly[i3] * 3, ugly[i5] * 5)
+            <span class="kw">if</span> ugly[i] == ugly[i2] * 2:
+                i2 += 1
+            <span class="kw">if</span> ugly[i] == ugly[i3] * 3:
+                i3 += 1
+            <span class="kw">if</span> ugly[i] == ugly[i5] * 5:
+                i5 += 1
+        <span class="kw">return</span> ugly[-1]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> nthUglyNumber(<span class="ty">int</span> n) {
+        <span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; ugly(n, 1);
+        <span class="ty">int</span> i2 = 0, i3 = 0, i5 = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; n; i++) {
+            ugly[i] = min({ugly[i2] * 2, ugly[i3] * 3, ugly[i5] * 5});
+            <span class="kw">if</span> (ugly[i] == ugly[i2] * 2) i2++;
+            <span class="kw">if</span> (ugly[i] == ugly[i3] * 3) i3++;
+            <span class="kw">if</span> (ugly[i] == ugly[i5] * 5) i5++;
+        }
+        <span class="kw">return</span> (<span class="ty">int</span>)ugly[n - 1];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +146,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP ugly[i]: ba con trỏ i2,i3,i5; ugly[i]=min; tăng pointer tương ứng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi ugly mới là min bội tiếp theo của 2,3,5; tăng mọi pointer đạt min tránh trùng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1 → 1</span><span class="analysis-tag edge">n lớn cần long long</span><span class="analysis-tag pit">Heap O(n log n) chậm hơn</span><span class="analysis-tag pit">Chỉ tăng một pointer khi tie → thiếu số</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Ugly II = merge three sequences ×2, ×3, ×5 with pointers.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +175,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Ugly%20Number%20II&lc_id=264&embed=true"></iframe>

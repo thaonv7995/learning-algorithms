@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Decode String (LeetCode #394) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Chuỗi mã hóa dạng k[encoded_string] — lặp encoded_string k lần, có thể lồng nhau. Trả chuỗi decoded.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"3[a]2[bc]\"", "output": "\"aaabcbc\"" },
+    { "input": "s = \"3[a2[c]]\"", "output": "\"accaccacc\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack: gặp digit tích lũy k; '[' push (curString, k); gặp ']' pop và cur = prev + k*cur; chữ cái append cur.",
+  "memoryTip": "Stack pairs (string, count) — decode nested như eval brackets.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def decodeString(self, s: str) -> str:\n        st, cur, k = [], '', 0\n        for c in s:\n            if c.isdigit():\n                k = k * 10 + int(c)\n            elif c == '[':\n                st.append((cur, k)); cur, k = '', 0\n            elif c == ']':\n                prev, num = st.pop()\n                cur = prev + num * cur\n            else:\n                cur += c\n        return cur",
+    "cpp": "class Solution {\npublic:\n    string decodeString(string s) {\n        stack<pair<string,int>> st;\n        string cur; int k = 0;\n        for (char c : s) {\n            if (isdigit(c)) k = k*10 + (c-'0');\n            else if (c == '[') { st.push({cur,k}); cur.clear(); k=0; }\n            else if (c == ']') {\n                auto [prev, num] = st.top(); st.pop();\n                string rep;\n                for (int i=0;i<num;i++) rep += cur;\n                cur = prev + rep;\n            } else cur.push_back(c);\n        }\n        return cur;\n    }\n};",
+    "c": "char* decodeString(char* s) {\n    char* cur = calloc(10000,1); char* stackStr[100]; int stackK[100], top=0; int k=0;\n    for (int i=0;s[i];i++){\n        if (s[i]>='0'&&s[i]<='9') k=k*10+(s[i]-'0');\n        else if (s[i]=='['){ stackStr[top]=strdup(cur); stackK[top++]=k; cur[0]=0; k=0; }\n        else if (s[i]==']'){\n            char* prev=stackStr[--top]; int num=stackK[top];\n            char rep[10000]={0}; for(int t=0;t<num;t++) strcat(rep,cur);\n            strcpy(cur, prev); strcat(cur, rep); free(prev);\n        } else { int len=strlen(cur); cur[len]=s[i]; cur[len+1]=0; }\n    }\n    return cur;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Stack lưu context ngoài khi vào '['; ']' ghép prev + k*inner đúng nested.",
+    "edgeCases": ["Không nested", "k nhiều chữ số", "Lồng sâu"],
+    "pitfalls": ["Recursive không giới hạn depth", "Quên reset k sau '['"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

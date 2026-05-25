@@ -2,33 +2,26 @@
   "id": 387,
   "title": "First Unique Character in a String",
   "difficulty": "Easy",
-  "category": "String",
+  "category": "Hash Table",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "First Unique Character in a String (LeetCode #387) — Easy.",
+  "description": "Trả index ký tự không trùng đầu tiên trong chuỗi s; nếu không có trả -1.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"leetcode\"", "output": "0" },
+    { "input": "s = \"loveleetcode\"", "output": "2" },
+    { "input": "s = \"aabb\"", "output": "-1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm frequency 26 chữ; duyệt s lần hai tìm count==1 đầu tiên.",
+  "memoryTip": "Two-pass count — pass 2 tìm unique đầu tiên giữ thứ tự.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def firstUniqChar(self, s: str) -> int:\n        cnt = Counter(s)\n        for i, c in enumerate(s):\n            if cnt[c] == 1:\n                return i\n        return -1",
+    "cpp": "class Solution {\npublic:\n    int firstUniqChar(string s) {\n        int cnt[26] = {};\n        for (char c : s) cnt[c-'a']++;\n        for (int i = 0; i < (int)s.size(); i++) if (cnt[s[i]-'a'] == 1) return i;\n        return -1;\n    }\n};",
+    "c": "int firstUniqChar(char* s) {\n    int cnt[26] = {0};\n    for (int i = 0; s[i]; i++) cnt[s[i]-'a']++;\n    for (int i = 0; s[i]; i++) if (cnt[s[i]-'a'] == 1) return i;\n    return -1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Scan thứ hai đảm bảo index nhỏ nhất có count 1.",
+    "edgeCases": ["Một ký tự", "Toàn trùng", "Chuỗi dài"],
+    "pitfalls": ["Map thay array chậm hơn không cần", "Trả char thay index"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

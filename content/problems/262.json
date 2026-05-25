@@ -3,32 +3,24 @@
   "title": "Trips and Users",
   "difficulty": "Hard",
   "category": "Database",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Trips and Users (LeetCode #262) — Hard.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Trips (id, client_id, driver_id, city_id, status, request_at) và Users (users_id, banned, role). Tính tỷ lệ chuyến không bị hủy (status != 'cancelled') theo ngày request_at, chỉ client role='client' và banned='No'. Làm tròn 2 chữ số.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "Trips 2013-10-01..03 mixed status; banned clients excluded", "output": "daily cancellation_rate rounded" },
+    { "input": "All trips cancelled one day", "output": "0.00 for that day" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "JOIN Trips t với Users u ON client_id=users_id WHERE role='client' AND banned='No'; GROUP BY DATE(request_at); rate=ROUND(SUM(status!='cancelled')/COUNT(*), 2).",
+  "memoryTip": "Trips and Users = filter client not banned, group by day, non-cancelled ratio.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT Request_at AS Day,\n  ROUND(SUM(CASE WHEN Status != 'cancelled' THEN 1 ELSE 0 END) / COUNT(*), 2) AS Cancellation_Rate\nFROM Trips t\nJOIN Users u ON t.Client_Id = u.Users_Id\nWHERE u.Banned = 'No' AND u.Role = 'client'\nGROUP BY Day\nORDER BY Day;",
+    "cpp": "// SQL\nSELECT Request_at AS Day,\n  ROUND(SUM(CASE WHEN Status != 'cancelled' THEN 1 ELSE 0 END) / COUNT(*), 2) AS Cancellation_Rate\nFROM Trips t\nJOIN Users u ON t.Client_Id = u.Users_Id\nWHERE u.Banned = 'No' AND u.Role = 'client'\nGROUP BY Day\nORDER BY Day;",
+    "c": "/* SQL */\nSELECT Request_at AS Day,\n  ROUND(SUM(CASE WHEN Status != 'cancelled' THEN 1 ELSE 0 END) / COUNT(*), 2) AS Cancellation_Rate\nFROM Trips t\nJOIN Users u ON t.Client_Id = u.Users_Id\nWHERE u.Banned = 'No' AND u.Role = 'client'\nGROUP BY Day\nORDER BY Day;"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi ngày: tỷ lệ chuyến completed (non-cancelled) trên tổng chuyến client hợp lệ.",
+    "edgeCases": ["Ngày không trip → không xuất hiện", "Toàn cancelled → 0.00"],
+    "pitfalls": ["Quên filter banned/role", "ROUND vs TRUNCATE 2 decimals"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

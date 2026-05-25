@@ -3,32 +3,24 @@
   "title": "Integer Replacement",
   "difficulty": "Medium",
   "category": "Dynamic Programming",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Integer Replacement (LeetCode #397) — Medium.",
+  "timeComplexity": "O(log n)",
+  "spaceComplexity": "O(log n)",
+  "description": "Bắt đầu từ n, mỗi bước: n chẵn thì /2; n lẻ thì +1 hoặc -1. Tìm số bước tối thiểu về 1.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "n = 8", "output": "3" },
+    { "input": "n = 7", "output": "4" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Memo DFS: n==1 return 0; n chẵn 1+dfs(n/2); n lẻ 1+min(dfs(n+1), dfs(n-1)). Greedy: n lẻ chọn +1 trừ n==3 hoặc n%4==1 và n!=3.",
+  "memoryTip": "n=3 đặc biệt — trừ 1 nhanh hơn +1; n%4==1 thường -1 trừ edge 3.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def integerReplacement(self, n: int) -> int:\n        memo = {}\n        def dfs(x):\n            if x == 1: return 0\n            if x in memo: return memo[x]\n            if x % 2 == 0:\n                memo[x] = 1 + dfs(x // 2)\n            else:\n                memo[x] = 1 + min(dfs(x + 1), dfs(x - 1))\n            return memo[x]\n        return dfs(n)",
+    "cpp": "class Solution {\n    unordered_map<long long,int> memo;\n    int dfs(long long n) {\n        if (n == 1) return 0;\n        if (memo.count(n)) return memo[n];\n        if (n % 2 == 0) return memo[n] = 1 + dfs(n/2);\n        return memo[n] = 1 + min(dfs(n+1), dfs(n-1));\n    }\npublic:\n    int integerReplacement(int n) { return dfs(n); }\n};",
+    "c": "static int dfs(long long n) {\n    if (n == 1) return 0;\n    if (n % 2 == 0) return 1 + dfs(n / 2);\n    int a = dfs(n + 1), b = dfs(n - 1);\n    return 1 + (a < b ? a : b);\n}\nint integerReplacement(int n) { return dfs(n); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Memo BFS/DFS trên cây giảm n; thử cả +1 và -1 khi lẻ cho min steps.",
+    "edgeCases": ["n=1", "n=INT_MAX", "n=3"],
+    "pitfalls": ["Greedy sai vài n lẻ", "int overflow — dùng long long"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

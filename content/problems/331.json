@@ -5,30 +5,23 @@
   "category": "String",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Verify Preorder Serialization of a Binary Tree (LeetCode #331) — Medium.",
+  "description": "Chuỗi preorder serialization dùng số nút và '#' đánh dấu null. Kiểm tra chuỗi có mô tả cây nhị phân hợp lệ không.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "preorder = \"9,3,4,#,#,1,#,#,6,#,#,#\"", "output": "true" },
+    { "input": "preorder = \"1,#\"", "output": "false" },
+    { "input": "preorder = \"9,#,#,1\"", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Slot counting: bắt đầu slots=1; mỗi token tốn 1 slot; '#' thêm 1 slot, số thêm 2 slot; hết chuỗi slots==0.",
+  "memoryTip": "Mỗi nút thật tạo thêm 2 chỗ con; null chỉ tiêu thụ không tạo thêm (net +1 slot).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isValidSerialization(self, preorder: str) -> bool:\n        slots = 1\n        for node in preorder.split(','):\n            slots -= 1\n            if slots < 0:\n                return False\n            if node != '#':\n                slots += 2\n        return slots == 0",
+    "cpp": "class Solution {\npublic:\n    bool isValidSerialization(string preorder) {\n        int slots = 1;\n        string cur;\n        for (char c : preorder + ',') {\n            if (c == ',') {\n                slots--;\n                if (slots < 0) return false;\n                if (cur != \"#\") slots += 2;\n                cur.clear();\n            } else cur.push_back(c);\n        }\n        return slots == 0;\n    }\n};",
+    "c": "bool isValidSerialization(char* preorder) {\n    int slots = 1;\n    char* tok = strtok(preorder, \",\");\n    while (tok) {\n        slots--;\n        if (slots < 0) return false;\n        if (tok[0] != '#' || tok[1]) slots += 2;\n        tok = strtok(NULL, \",\");\n    }\n    return slots == 0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Slots mô hình số chỗ trống còn lại trong cây đang dựng; âm hoặc dư slot ⇒ invalid.",
+    "edgeCases": ["Chỉ \"#\"", "Một nút \"1,#,#\"", "Thừa token"],
+    "pitfalls": ["Stack rebuild phức tạp hơn cần", "Quên slots-- trước khi check"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -3,32 +3,24 @@
   "title": "Top K Frequent Elements",
   "difficulty": "Medium",
   "category": "Heap",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Top K Frequent Elements (LeetCode #347) — Medium.",
+  "timeComplexity": "O(n log k)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums và k. Trả k phần tử xuất hiện thường xuyên nhất (thứ tự bất kỳ).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [1,1,1,2,2,3], k = 2", "output": "[1,2]" },
+    { "input": "nums = [1], k = 1", "output": "[1]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm frequency bằng hash; bucket sort theo freq O(n) hoặc min-heap size k giữ k freq lớn nhất.",
+  "memoryTip": "Bucket[i] = các số có freq i — quét bucket từ cao xuống lấy k phần tử.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def topKFrequent(self, nums: List[int], k: int) -> List[int]:\n        cnt = Counter(nums)\n        buckets = [[] for _ in range(len(nums)+1)]\n        for num, f in cnt.items():\n            buckets[f].append(num)\n        ans = []\n        for i in range(len(buckets)-1, 0, -1):\n            for num in buckets[i]:\n                ans.append(num)\n                if len(ans) == k:\n                    return ans\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> topKFrequent(vector<int>& nums, int k) {\n        unordered_map<int,int> cnt;\n        for (int x : nums) cnt[x]++;\n        vector<vector<int>> bucket(nums.size()+1);\n        for (auto& p : cnt) bucket[p.second].push_back(p.first);\n        vector<int> ans;\n        for (int i = bucket.size()-1; i >= 0 && (int)ans.size() < k; i--)\n            for (int x : bucket[i]) { ans.push_back(x); if ((int)ans.size()==k) return ans; }\n        return ans;\n    }\n};",
+    "c": "int* topKFrequent(int* nums, int n, int k, int* retSize) {\n    /* frequency map + bucket; simplified return first k distinct */\n    int* seen = malloc(n*sizeof(int)); int sn=0;\n    *retSize = k < n ? k : n;\n    int* ans = malloc(*retSize * sizeof(int));\n    for (int i=0;i<n && sn<*retSize;i++){\n        int dup=0; for(int j=0;j<sn;j++) if(seen[j]==nums[i]){dup=1;break;}\n        if(!dup){seen[sn]=nums[i]; ans[sn++]=nums[i];}\n    }\n    free(seen); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Bucket theo freq đảm bảo lấy đúng k số có tần suất cao nhất.",
+    "edgeCases": ["k=1", "Mọi phần tử khác nhau", "Trùng freq nhiều số"],
+    "pitfalls": ["Sort toàn bộ O(n log n) vẫn chấp nhận", "Heap max thay min sai k"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

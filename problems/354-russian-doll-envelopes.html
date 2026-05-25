@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #354</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Russian Doll Envelopes</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>37.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Russian Doll Envelopes (LeetCode #354) — Hard.</div>
+                        <div class="block-text">Envelope [w,h] chứa được envelope khác nếu cả w và h đều lớn hơn (không bằng). Tìm số envelope tối đa có thể lồng nhau.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>envelopes = [[5,4],[6,4],[6,7],[2,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>envelopes = [[1,1],[1,1],[1,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sort theo w tăng, h giảm (trùng w); LIS trên h bằng patience sorting O(n log n).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maxEnvelopes(<span class="ty">int</span>** envelopes, <span class="ty">int</span> n, <span class="ty">int</span>* cs) {
+    /* sort + LIS on heights; qsort comparator by w asc, h desc */
+    <span class="ty">int</span>* tails = <span class="kw">malloc</span>(n*<span class="kw">sizeof</span>(<span class="ty">int</span>)); <span class="ty">int</span> t=0;
+    <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++){
+        <span class="ty">int</span> h=envelopes[i][1], lo=0, hi=t;
+        <span class="kw">while</span>(lo&lt;hi){ <span class="ty">int</span> m=(lo+hi)/2; <span class="kw">if</span>(tails[m]&lt;h) lo=m+1; <span class="kw">else</span> hi=m; }
+        tails[lo]=h; <span class="kw">if</span>(lo==t) t++;
+    }
+    <span class="kw">free</span>(tails); <span class="kw">return</span> t;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maxEnvelopes(<span class="ty">self</span>, envelopes: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        envelopes.sort(key=lambda x: (x[0], -x[1]))
+        tails = []
+        <span class="kw">for</span> _, h <span class="kw">in</span> envelopes:
+            i = bisect_left(tails, h)
+            <span class="kw">if</span> i == <span class="ty">len</span>(tails): tails.append(h)
+            <span class="kw">else</span>: tails[i] = h
+        <span class="kw">return</span> <span class="ty">len</span>(tails)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> maxEnvelopes(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; env) {
+        sort(env.begin(), env.end(), [](auto&amp; a, auto&amp; b){
+            <span class="kw">return</span> a[0] &lt; b[0] || (a[0]==b[0] &amp;&amp; a[1] &gt; b[1]);
+        });
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; tails;
+        <span class="kw">for</span> (auto&amp; e : env) {
+            <span class="ty">int</span> h = e[1];
+            auto it = lower_bound(tails.begin(), tails.end(), h);
+            <span class="kw">if</span> (it == tails.end()) tails.push_back(h);
+            <span class="kw">else</span> *it = h;
+        }
+        <span class="kw">return</span> tails.size();
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +137,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sort theo w tăng, h giảm ; LIS trên h bằng patience sorting O.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Giảm bài 2D nesting về LIS 1D sau sort đặc biệt; h giảm loại cùng w.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phong bì</span><span class="analysis-tag edge">Trùng w,h</span><span class="analysis-tag edge">Đã sort sẵn</span><span class="analysis-tag pit">LIS DP O(n²) TLE</span><span class="analysis-tag pit">Sort h tăng khi w bằng — sai</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Sort h giảm khi w bằng — tránh chọn hai cùng width trong LIS.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +166,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Russian%20Doll%20Envelopes&lc_id=354&embed=true"></iframe>

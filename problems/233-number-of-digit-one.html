@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #233</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Number of Digit One</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>38.7% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Number of Digit One (LeetCode #233) — Hard.</div>
+                        <div class="block-text">Đếm số lần chữ số '1' xuất hiện khi viết mọi số nguyên từ 1 đến n (bao gồm n).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 13</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Digit DP / math từng vị trí: factor=1,10,100...; higher, cur, lower từ n; cộng count tại mỗi digit.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,53 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> countDigitOne(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n &lt;= 0) <span class="kw">return</span> 0;
+    <span class="ty">long</span> <span class="ty">long</span> count = 0, factor = 1;
+    <span class="kw">while</span> (factor &lt;= n) {
+        <span class="ty">long</span> <span class="ty">long</span> lower = n - n / factor * factor;
+        <span class="ty">int</span> cur = n / factor % 10;
+        <span class="ty">long</span> <span class="ty">long</span> higher = n / (factor * 10);
+        <span class="kw">if</span> (cur == 0) count += higher * factor;
+        <span class="kw">else</span> <span class="kw">if</span> (cur == 1) count += higher * factor + lower + 1;
+        <span class="kw">else</span> count += (higher + 1) * factor;
+        factor *= 10;
+    }
+    <span class="kw">return</span> (<span class="ty">int</span>)count;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> countDigitOne(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> n &lt;= 0:
+            <span class="kw">return</span> 0
+        count, factor = 0, 1
+        <span class="kw">while</span> factor &lt;= n:
+            lower = n - n // factor * factor
+            cur = n // factor % 10
+            higher = n // (factor * 10)
+            <span class="kw">if</span> cur == 0:
+                count += higher * factor
+            <span class="kw">elif</span> cur == 1:
+                count += higher * factor + lower + 1
+            <span class="kw">else</span>:
+                count += (higher + 1) * factor
+            factor *= 10
+        <span class="kw">return</span> count</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> countDigitOne(<span class="ty">int</span> n) {
+        <span class="kw">if</span> (n &lt;= 0) <span class="kw">return</span> 0;
+        <span class="ty">long</span> <span class="ty">long</span> count = 0, factor = 1;
+        <span class="kw">while</span> (factor &lt;= n) {
+            <span class="ty">long</span> <span class="ty">long</span> lower = n - n / factor * factor;
+            <span class="ty">int</span> cur = n / factor % 10;
+            <span class="ty">long</span> <span class="ty">long</span> higher = n / (factor * 10);
+            <span class="kw">if</span> (cur == 0) count += higher * factor;
+            <span class="kw">else</span> <span class="kw">if</span> (cur == 1) count += higher * factor + lower + 1;
+            <span class="kw">else</span> count += (higher + 1) * factor;
+            factor *= 10;
+        }
+        <span class="kw">return</span> (<span class="ty">int</span>)count;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +151,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Digit DP / math từng vị trí: factor=1,10,100...; higher, cur, lower từ…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi digit position đóng góp số lần xuất hiện 1 độc lập theo higher/cur/lower.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=0 → 0</span><span class="analysis-tag edge">n=10 → đếm 1 ở 1 và 10</span><span class="analysis-tag pit">Brute loop 1..n TLE</span><span class="analysis-tag pit">Overflow factor — dùng long long</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Count digit 1 in 1..n = per-digit formula with higher/cur/lower.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +179,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Number%20of%20Digit%20One&lc_id=233&embed=true"></iframe>

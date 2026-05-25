@@ -2,33 +2,26 @@
   "id": 273,
   "title": "Integer to English Words",
   "difficulty": "Hard",
-  "category": "Math",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Integer to English Words (LeetCode #273) — Hard.",
+  "category": "String",
+  "timeComplexity": "O(log n)",
+  "spaceComplexity": "O(log n)",
+  "description": "Chuyển số nguyên không âm num (0 ≤ num ≤ 2^31-1) thành chữ tiếng Anh (units, tens, hundreds, thousand, million, billion).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "num = 123", "output": "\"One Hundred Twenty Three\"" },
+    { "input": "num = 12345", "output": "\"Twelve Thousand Three Hundred Forty Five\"" },
+    { "input": "num = 0", "output": "\"Zero\"" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Chia khối 1000 (billion/million/thousand); helper convert 0-999 bằng bảng dưới 20, tens, hundreds.",
+  "memoryTip": "Int to words = chunk by 1000 + helper for 0..999.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numberToWords(self, num: int) -> str:\n        if num == 0:\n            return \"Zero\"\n        below20 = \"One Two Three Four Five Six Seven Eight Nine Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen\".split()\n        tens = \"Ten Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety\".split()\n        def under1000(n):\n            if n == 0:\n                return \"\"\n            if n < 20:\n                return below20[n - 1]\n            if n < 100:\n                return tens[n // 10 - 1] + (\" \" + below20[n % 10 - 1] if n % 10 else \"\")\n            return below20[n // 100 - 1] + \" Hundred\" + (\" \" + under1000(n % 100) if n % 100 else \"\")\n        parts = []\n        for unit, label in ((1_000_000_000, \"Billion\"), (1_000_000, \"Million\"), (1000, \"Thousand\")):\n            if num >= unit:\n                parts.append(under1000(num // unit) + \" \" + label)\n                num %= unit\n        if num:\n            parts.append(under1000(num))\n        return \" \".join(parts)",
+    "cpp": "class Solution {\n    vector<string> below20 = {\"One\",\"Two\",\"Three\",\"Four\",\"Five\",\"Six\",\"Seven\",\"Eight\",\"Nine\",\"Ten\",\"Eleven\",\"Twelve\",\"Thirteen\",\"Fourteen\",\"Fifteen\",\"Sixteen\",\"Seventeen\",\"Eighteen\",\"Nineteen\"};\n    vector<string> tens = {\"Ten\",\"Twenty\",\"Thirty\",\"Forty\",\"Fifty\",\"Sixty\",\"Seventy\",\"Eighty\",\"Ninety\"};\n    string under1000(int n) {\n        if (!n) return \"\";\n        if (n < 20) return below20[n-1];\n        if (n < 100) return tens[n/10-1] + (n%10 ? \" \" + below20[n%10-1] : \"\");\n        return below20[n/100-1] + string(\" Hundred\") + (n%100 ? \" \" + under1000(n%100) : \"\");\n    }\npublic:\n    string numberToWords(int num) {\n        if (!num) return \"Zero\";\n        string res;\n        vector<pair<int,string>> units = {{1000000000,\"Billion\"},{1000000,\"Million\"},{1000,\"Thousand\"}};\n        for (auto& [u, lab] : units)\n            if (num >= u) { res += under1000(num/u) + \" \" + lab + \" \"; num %= u; }\n        if (num) res += under1000(num);\n        while (!res.empty() && res.back() == ' ') res.pop_back();\n        return res;\n    }\n};",
+    "c": "static const char* below20[] = {\"One\",\"Two\",\"Three\",\"Four\",\"Five\",\"Six\",\"Seven\",\"Eight\",\"Nine\",\"Ten\",\"Eleven\",\"Twelve\",\"Thirteen\",\"Fourteen\",\"Fifteen\",\"Sixteen\",\"Seventeen\",\"Eighteen\",\"Nineteen\"};\nstatic const char* tens[] = {\"Ten\",\"Twenty\",\"Thirty\",\"Forty\",\"Fifty\",\"Sixty\",\"Seventy\",\"Eighty\",\"Ninety\"};\nstatic void under1000(int n, char* out) {\n    out[0] = 0;\n    if (!n) return;\n    if (n < 20) { strcpy(out, below20[n - 1]); return; }\n    if (n < 100) {\n        strcpy(out, tens[n / 10 - 1]);\n        if (n % 10) { strcat(out, \" \"); strcat(out, below20[n % 10 - 1]); }\n        return;\n    }\n    strcpy(out, below20[n / 100 - 1]); strcat(out, \" Hundred\");\n    if (n % 100) { char tail[64]; under1000(n % 100, tail); strcat(out, \" \"); strcat(out, tail); }\n}\nchar* numberToWords(int num) {\n    if (num == 0) return strdup(\"Zero\");\n    char* out = calloc(256, 1);\n    struct { int u; const char* lab; } units[] = {{1000000000,\"Billion\"},{1000000,\"Million\"},{1000,\"Thousand\"}};\n    for (int i = 0; i < 3; i++) if (num >= units[i].u) {\n        char part[64]; under1000(num / units[i].u, part);\n        if (out[0]) strcat(out, \" \");\n        strcat(out, part); strcat(out, \" \"); strcat(out, units[i].lab);\n        num %= units[i].u;\n    }\n    if (num) { char part[64]; under1000(num, part); if (out[0]) strcat(out, \" \"); strcat(out, part); }\n    return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi khối 1000 đọc độc lập; nối label Billion/Million/Thousand đúng thứ tự.",
+    "edgeCases": ["num=0 → Zero", "100, 1000 without extra spaces"],
+    "pitfalls": ["Hyphen rules (LeetCode bỏ hyphen)", "Trailing spaces in output"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

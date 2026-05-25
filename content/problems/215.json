@@ -3,32 +3,24 @@
   "title": "Kth Largest Element in an Array",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(n) avg",
   "spaceComplexity": "O(1)",
-  "description": "Kth Largest Element in an Array (LeetCode #215) — Medium.",
+  "description": "Cho mảng nums không rỗng và số nguyên k. Trả phần tử lớn thứ k trong mảng (1-indexed, không phải thứ tự distinct).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [3,2,1,5,6,4], k = 2", "output": "5" },
+    { "input": "nums = [3,2,3,1,2,4,5,5,6], k = 4", "output": "4" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Quickselect: partition quanh pivot ngẫu nhiên/cuối; nếu pivot index == n-k thì trả; else recurse trái/phải.",
+  "memoryTip": "Kth largest = quickselect tìm index n-k sau partition.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findKthLargest(self, nums: List[int], k: int) -> int:\n        target = len(nums) - k\n        def select(l, r):\n            pivot = nums[r]\n            i = l\n            for j in range(l, r):\n                if nums[j] <= pivot:\n                    nums[i], nums[j] = nums[j], nums[i]\n                    i += 1\n            nums[i], nums[r] = nums[r], nums[i]\n            if i == target:\n                return nums[i]\n            return select(l, i - 1) if i > target else select(i + 1, r)\n        return select(0, len(nums) - 1)",
+    "cpp": "class Solution {\n    int partition(vector<int>& a, int l, int r) {\n        int pivot = a[r], i = l;\n        for (int j = l; j < r; j++)\n            if (a[j] <= pivot) swap(a[i++], a[j]);\n        swap(a[i], a[r]);\n        return i;\n    }\n    int select(vector<int>& a, int l, int r, int t) {\n        int p = partition(a, l, r);\n        if (p == t) return a[p];\n        return p > t ? select(a, l, p - 1, t) : select(a, p + 1, r, t);\n    }\npublic:\n    int findKthLargest(vector<int>& nums, int k) {\n        return select(nums, 0, nums.size() - 1, (int)nums.size() - k);\n    }\n};",
+    "c": "static int partition(int* a, int l, int r) {\n    int pivot = a[r], i = l, tmp;\n    for (int j = l; j < r; j++)\n        if (a[j] <= pivot) { tmp=a[i]; a[i]=a[j]; a[j]=tmp; i++; }\n    tmp=a[i]; a[i]=a[r]; a[r]=tmp;\n    return i;\n}\nstatic int selectK(int* a, int l, int r, int t) {\n    int p = partition(a, l, r);\n    if (p == t) return a[p];\n    return p > t ? selectK(a, l, p-1, t) : selectK(a, p+1, r, t);\n}\nint findKthLargest(int* nums, int n, int k) {\n    return selectK(nums, 0, n-1, n-k);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Partition đặt phần tử thứ n-k đúng vị trí sorted; quickselect trung bình O(n).",
+    "edgeCases": ["k=1 → max", "k=n → min", "Trùng lặp nhiều"],
+    "pitfalls": ["Sort O(n log n) chấp nhận được nhưng không tối ưu", "Heap O(n log k) cũng OK"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #204</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Count Primes</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>36.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Count Primes (LeetCode #204) — Medium.</div>
+                        <div class="block-text">Cho số nguyên n. Đếm số lượng số nguyên tố nhỏ hơn n (0 và 1 không được tính là số nguyên tố).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 10</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sieve of Eratosthenes: mảng bool isPrime; với i từ 2, nếu isPrime[i] thì đánh dấu mọi bội j=i*i, i+i, ... &lt; n là composite.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> countPrimes(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n &lt;= 2) <span class="kw">return</span> 0;
+    <span class="ty">char</span>* sieve = <span class="kw">calloc</span>(n, 1);
+    sieve[0] = sieve[1] = 1;
+    <span class="ty">int</span> cnt = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 2; i * i &lt; n; i++)
+        <span class="kw">if</span> (!sieve[i])
+            <span class="kw">for</span> (<span class="ty">int</span> j = i * i; j &lt; n; j += i)
+                sieve[j] = 1;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 2; i &lt; n; i++) <span class="kw">if</span> (!sieve[i]) cnt++;
+    <span class="kw">free</span>(sieve);
+    <span class="kw">return</span> cnt;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> countPrimes(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> n &lt;= 2:
+            <span class="kw">return</span> 0
+        sieve = [<span class="kw">True</span>] * n
+        sieve[0] = sieve[1] = <span class="kw">False</span>
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(2, <span class="ty">int</span>(n ** 0.5) + 1):
+            <span class="kw">if</span> sieve[i]:
+                <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i * i, n, i):
+                    sieve[j] = <span class="kw">False</span>
+        <span class="kw">return</span> sum(sieve)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> countPrimes(<span class="ty">int</span> n) {
+        <span class="kw">if</span> (n &lt;= 2) <span class="kw">return</span> 0;
+        <span class="ty">vector</span>&lt;<span class="ty">bool</span>&gt; sieve(n, true);
+        sieve[0] = sieve[1] = false;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 2; i * i &lt; n; i++)
+            <span class="kw">if</span> (sieve[i])
+                <span class="kw">for</span> (<span class="ty">int</span> j = i * i; j &lt; n; j += i)
+                    sieve[j] = false;
+        <span class="kw">return</span> count(sieve.begin(), sieve.end(), true);
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +145,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Sieve of Eratosthenes: mảng bool isPrime; với i từ 2, nếu…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — &lt; n là composite.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Sieve đánh dấu đúng mọi composite; số không bị đánh dấu là nguyên tố.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n &lt;= 2 → 0</span><span class="analysis-tag edge">n = 3 → 1</span><span class="analysis-tag pit">Trial division O(n√n) TLE</span><span class="analysis-tag pit">Quên xử lý n &lt;= 2</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Count primes &lt; n = sieve từ 2, bước nhảy bội i bắt đầu i*i.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Count%20Primes&lc_id=204&embed=true"></iframe>

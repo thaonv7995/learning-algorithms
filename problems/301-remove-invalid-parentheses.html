@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #301</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Remove Invalid Parentheses</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(2^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Remove Invalid Parentheses (LeetCode #301) — Hard.</div>
+                        <div class="block-text">Cho chuỗi s chứa '(' , ')' và chữ cái. Xóa số ký tự ngoặc tối thiểu để chuỗi còn lại hợp lệ. Trả về mọi chuỗi hợp lệ có thể, không trùng, thứ tự bất kỳ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;()())()&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;(())()&quot;,&quot;()()()&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;(a)())()&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;(a())()&quot;,&quot;(a)()()&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;)(&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS theo số ngoặc đã xóa: từ s, sinh mọi chuỗi xóa một '('. Nếu chuỗi hợp lệ thì thu; nếu chưa gặp hợp lệ thì tiếp tục tầng tiếp theo. Dùng set tránh trùng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,75 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> valid(<span class="ty">const</span> <span class="ty">char</span>* t) {
+    <span class="ty">int</span> bal = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; t[i]; i++) {
+        <span class="kw">if</span> (t[i] == '(') bal++;
+        <span class="kw">else</span> <span class="kw">if</span> (t[i] == ')') { <span class="kw">if</span> (--bal &lt; 0) <span class="kw">return</span> 0; }
+    }
+    <span class="kw">return</span> bal == 0;
+}
+/* Full BFS needs dynamic <span class="ty">string</span> sets; use C++ <span class="kw">for</span> production. */
+<span class="ty">char</span>** removeInvalidParentheses(<span class="ty">char</span>* s, <span class="ty">int</span>* retSize) {
+    *retSize = 0;
+    <span class="kw">if</span> (valid(s)) { <span class="ty">char</span>** r = <span class="kw">malloc</span>(<span class="kw">sizeof</span>(<span class="ty">char</span>*)); r[0] = strdup(s); *retSize = 1; <span class="kw">return</span> r; }
+    <span class="kw">return</span> NULL;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> removeInvalidParentheses(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        <span class="kw">def</span> valid(t):
+            bal = 0
+            <span class="kw">for</span> c <span class="kw">in</span> t:
+                <span class="kw">if</span> c == '(':
+                    bal += 1
+                <span class="kw">elif</span> c == ')':
+                    bal -= 1
+                    <span class="kw">if</span> bal &lt; 0:
+                        <span class="kw">return</span> <span class="kw">False</span>
+            <span class="kw">return</span> bal == 0
+        level, seen = {s}, {s}
+        <span class="kw">while</span> level:
+            good = [x <span class="kw">for</span> x <span class="kw">in</span> level <span class="kw">if</span> valid(x)]
+            <span class="kw">if</span> good:
+                <span class="kw">return</span> good
+            nxt = <span class="ty">set</span>()
+            <span class="kw">for</span> cur <span class="kw">in</span> level:
+                <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(cur):
+                    <span class="kw">if</span> c <span class="kw">not</span> <span class="kw">in</span> '()':
+                        continue
+                    t = cur[:i] + cur[i + 1:]
+                    <span class="kw">if</span> t <span class="kw">not</span> <span class="kw">in</span> seen:
+                        seen.add(t)
+                        nxt.add(t)
+            level = nxt
+        <span class="kw">return</span> []</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> valid(<span class="ty">const</span> <span class="ty">string</span>&amp; t) {
+        <span class="ty">int</span> bal = 0;
+        <span class="kw">for</span> (<span class="ty">char</span> c : t) {
+            <span class="kw">if</span> (c == '(') bal++;
+            <span class="kw">else</span> <span class="kw">if</span> (c == ')') { <span class="kw">if</span> (--bal &lt; 0) <span class="kw">return</span> false; }
+        }
+        <span class="kw">return</span> bal == 0;
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; removeInvalidParentheses(<span class="ty">string</span> s) {
+        unordered_set&lt;<span class="ty">string</span>&gt; level{s}, seen{s};
+        <span class="kw">while</span> (!level.empty()) {
+            <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; good;
+            <span class="kw">for</span> (auto&amp; x : level) <span class="kw">if</span> (valid(x)) good.push_back(x);
+            <span class="kw">if</span> (!good.empty()) <span class="kw">return</span> good;
+            unordered_set&lt;<span class="ty">string</span>&gt; nxt;
+            <span class="kw">for</span> (auto&amp; cur : level)
+                <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)cur.size(); i++)
+                    <span class="kw">if</span> (cur[i] == '(' || cur[i] == ')') {
+                        <span class="ty">string</span> t = cur.substr(0, i) + cur.substr(i + 1);
+                        <span class="kw">if</span> (!seen.count(t)) { seen.insert(t); nxt.insert(t); }
+                    }
+            level = move(nxt);
+        }
+        <span class="kw">return</span> {};
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +178,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(2^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — BFS theo số ngoặc đã xóa: từ s, sinh mọi chuỗi xóa một…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu chuỗi hợp lệ thì thu; nếu chưa gặp hợp lệ thì tiếp…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Dùng set tránh trùng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BFS đảm bảo xóa ít nhất: tầng k cho mọi chuỗi đã xóa đúng k ngoặc; dừng ở tầng hợp lệ đầu tiên.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chỉ chữ cái → trả chuỗi gốc</span><span class="analysis-tag edge">Toàn ')' hoặc '(' → [] hoặc sau xóa</span><span class="analysis-tag edge">Nhiều cách xóa tối thiểu</span><span class="analysis-tag pit">DFS xóa ngẫu nhiên không đảm bảo tối thiểu</span><span class="analysis-tag pit">Quên dedupe → trùng kết quả</span><span class="analysis-tag pit">Không bỏ qua chữ cái khi xóa</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>BFS theo lớp xóa — dừng ngay khi tầng đầu tiên cho chuỗi hợp lệ; không cần xóa sâu hơn.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +206,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Remove%20Invalid%20Parentheses&lc_id=301&embed=true"></iframe>

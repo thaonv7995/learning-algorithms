@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #223</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Rectangle Area</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.6% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Rectangle Area (LeetCode #223) — Medium.</div>
+                        <div class="block-text">Hai hình chữ nhật song song trục trên mặt phẳng 2D: ax1,ay1,ax2,ay2 và bx1,by1,bx2,by2. Tính tổng diện tích phủ (trừ phần giao).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>ax1=0, ay1=0, ax2=2, ay2=2, bx1=1, by1=1, bx2=3, by2=3</code></div>
+                <div class="ex-line"><span>Out</span><code>7</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>ax1=0, ay1=0, ax2=2, ay2=2, bx1=3, by1=3, bx2=4, by2=4</code></div>
+                <div class="ex-line"><span>Out</span><code>8</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">areaA + areaB - overlap; overlap width = max(0, min(ax2,bx2)-max(ax1,bx1)), height tương tự.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> computeArea(<span class="ty">int</span> ax1, <span class="ty">int</span> ay1, <span class="ty">int</span> ax2, <span class="ty">int</span> ay2, <span class="ty">int</span> bx1, <span class="ty">int</span> by1, <span class="ty">int</span> bx2, <span class="ty">int</span> by2) {
+    <span class="ty">long</span> <span class="ty">long</span> a = (<span class="ty">long</span> <span class="ty">long</span>)(ax2-ax1)*(ay2-ay1);
+    <span class="ty">long</span> <span class="ty">long</span> b = (<span class="ty">long</span> <span class="ty">long</span>)(bx2-bx1)*(by2-by1);
+    <span class="ty">long</span> <span class="ty">long</span> w = (min(ax2,bx2) &gt; max(ax1,bx1)) ? min(ax2,bx2)-max(ax1,bx1) : 0;
+    <span class="ty">long</span> <span class="ty">long</span> h = (min(ay2,by2) &gt; max(ay1,by1)) ? min(ay2,by2)-max(ay1,by1) : 0;
+    <span class="kw">return</span> (<span class="ty">int</span>)(a + b - w*h);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> computeArea(<span class="ty">self</span>, ax1: <span class="ty">int</span>, ay1: <span class="ty">int</span>, ax2: <span class="ty">int</span>, ay2: <span class="ty">int</span>, bx1: <span class="ty">int</span>, by1: <span class="ty">int</span>, bx2: <span class="ty">int</span>, by2: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        a = (ax2 - ax1) * (ay2 - ay1)
+        b = (bx2 - bx1) * (by2 - by1)
+        w = <span class="ty">max</span>(0, <span class="ty">min</span>(ax2, bx2) - <span class="ty">max</span>(ax1, bx1))
+        h = <span class="ty">max</span>(0, <span class="ty">min</span>(ay2, by2) - <span class="ty">max</span>(ay1, by1))
+        <span class="kw">return</span> a + b - w * h</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> computeArea(<span class="ty">int</span> ax1, <span class="ty">int</span> ay1, <span class="ty">int</span> ax2, <span class="ty">int</span> ay2, <span class="ty">int</span> bx1, <span class="ty">int</span> by1, <span class="ty">int</span> bx2, <span class="ty">int</span> by2) {
+        <span class="ty">long</span> <span class="ty">long</span> a = 1LL*(ax2-ax1)*(ay2-ay1);
+        <span class="ty">long</span> <span class="ty">long</span> b = 1LL*(bx2-bx1)*(by2-by1);
+        <span class="ty">long</span> <span class="ty">long</span> w = max(0, min(ax2,bx2) - max(ax1,bx1));
+        <span class="ty">long</span> <span class="ty">long</span> h = max(0, min(ay2,by2) - max(ay1,by1));
+        <span class="kw">return</span> (<span class="ty">int</span>)(a + b - w*h);
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +127,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — areaA + areaB - overlap; overlap width = max-max), height tương tự.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Inclusion-exclusion: union = A+B−intersection; overlap 0 nếu không giao.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không overlap → cộng đơn giản</span><span class="analysis-tag edge">Một rect nằm trong rect kia</span><span class="analysis-tag pit">int overflow → long long</span><span class="analysis-tag pit">Nhầm overlap width/height</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Union rectangle area = sum areas − intersection rectangle.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +155,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Rectangle%20Area&lc_id=223&embed=true"></iframe>

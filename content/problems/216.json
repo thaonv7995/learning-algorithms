@@ -2,33 +2,26 @@
   "id": 216,
   "title": "Combination Sum III",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Combination Sum III (LeetCode #216) — Medium.",
+  "category": "Backtracking",
+  "timeComplexity": "O(C(9,k))",
+  "spaceComplexity": "O(k)",
+  "description": "Tìm mọi bộ k số khác nhau từ 1..9 có tổng bằng n. Mỗi số dùng tối đa một lần. Trả danh sách các bộ (thứ tự tăng trong mỗi bộ).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "k = 3, n = 7", "output": "[[1,2,4]]" },
+    { "input": "k = 3, n = 9", "output": "[[1,2,6],[1,3,5],[2,3,4]]" },
+    { "input": "k = 4, n = 1", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Backtracking: start từ 1, thử thêm i nếu còn slot và n-i≥0; path đủ k và sum=n thì push.",
+  "memoryTip": "Combination Sum III = backtrack 1..9, chọn k số sum n, start tăng dần tránh trùng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def combinationSum3(self, k: int, n: int) -> List[List[int]]:\n        ans, path = [], []\n        def dfs(start, rem, left):\n            if left == 0:\n                if rem == 0:\n                    ans.append(path[:])\n                return\n            if rem <= 0:\n                return\n            for i in range(start, 10):\n                if i > rem:\n                    break\n                path.append(i)\n                dfs(i + 1, rem - i, left - 1)\n                path.pop()\n        dfs(1, n, k)\n        return ans",
+    "cpp": "class Solution {\n    vector<vector<int>> ans;\n    vector<int> path;\n    void dfs(int start, int rem, int k) {\n        if (k == 0) { if (rem == 0) ans.push_back(path); return; }\n        if (rem <= 0) return;\n        for (int i = start; i <= 9; i++) {\n            if (i > rem) break;\n            path.push_back(i);\n            dfs(i + 1, rem - i, k - 1);\n            path.pop_back();\n        }\n    }\npublic:\n    vector<vector<int>> combinationSum3(int k, int n) {\n        dfs(1, n, k);\n        return ans;\n    }\n};",
+    "c": "static void dfs216(int* path, int depth, int k, int start, int rem, int** out, int* outSz, int* cap) {\n    if (k == 0) {\n        if (rem == 0) {\n            int* row = malloc(depth * sizeof(int));\n            memcpy(row, path, depth * sizeof(int));\n            if (*outSz >= *cap) { *cap *= 2; out[0] = realloc(out[0], *cap * sizeof(int*)); }\n            ((int**)out)[(*outSz)++] = row;\n        }\n        return;\n    }\n    if (rem <= 0) return;\n    for (int i = start; i <= 9; i++) {\n        if (i > rem) break;\n        path[depth] = i;\n        dfs216(path, depth+1, k-1, i+1, rem-i, out, outSz, cap);\n    }\n}\nint** combinationSum3(int k, int n, int* retCol, int* retSize) {\n    int cap=16, sz=0, path[9];\n    int** out = malloc(cap*sizeof(int*));\n    dfs216(path,0,k,1,n,&out,&sz,&cap);\n    *retSize=sz; *retCol=k; return out;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Backtracking duyệt tăng dần nên mỗi tổ hợp hợp lệ đúng một lần.",
+    "edgeCases": ["k lớn sum nhỏ → []", "Một cách duy nhất"],
+    "pitfalls": ["Cho phép lặp số như Combination Sum I", "Không prune khi i > rem"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }
