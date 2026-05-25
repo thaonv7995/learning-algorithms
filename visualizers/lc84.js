@@ -43,7 +43,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
 
             if (!s.stack.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] maxArea=${s.maxArea}`, "success");
+                s.outputText = String(`maxArea=${s.maxArea}`); log(`[KẾT QUẢ] maxArea=${s.maxArea}`, "success");
                 return;
             }
             const top = s.stack.pop();

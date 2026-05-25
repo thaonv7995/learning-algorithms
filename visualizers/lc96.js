@@ -21,7 +21,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.nodes > s.n) {
                 s.ans = s.dp[s.n];
                 s.done = true;
-                log(`[KẾT QUẢ] numTrees(${s.n}) = ${s.ans}`, "success");
+                s.outputText = String(`numTrees(${s.n}) = ${s.ans}`); log(`[KẾT QUẢ] numTrees(${s.n}) = ${s.ans}`, "success");
                 return;
             }
             if (s.root <= s.nodes) {

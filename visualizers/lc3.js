@@ -13,7 +13,7 @@ window.LeetCodeVisualizers[3] = {
     step: function (state, log) {
         if (state.right >= state.str.length - 1) {
             state.done = true;
-            log(`[KẾT QUẢ] Độ dài chuỗi con dài nhất không lặp = ${state.maxLen}`, "success");
+            s.outputText = String(`Độ dài chuỗi con dài nhất không lặp = ${state.maxLen}`); log(`[KẾT QUẢ] Độ dài chuỗi con dài nhất không lặp = ${state.maxLen}`, "success");
             return;
         }
         state.right++;

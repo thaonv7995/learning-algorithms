@@ -13,7 +13,7 @@ window.LeetCodeVisualizers[22] = {
             s.path.pop();
             if (!s.path.length && s.res.length >= this._count(s.n)) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success");
             }
             return;
         }

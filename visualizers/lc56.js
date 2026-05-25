@@ -17,7 +17,7 @@ window.LeetCodeVisualizers[56] = {
     },
     step(s, log) {
         if (s.done) return;
-        if (s.i >= s.iv.length) { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
+        if (s.i >= s.iv.length) { s.done = true; s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
         const [a, b] = s.iv[s.i];
         if (a <= s.res[s.res.length - 1][1]) {
             s.res[s.res.length - 1][1] = Math.max(s.res[s.res.length - 1][1], b);
@@ -66,7 +66,7 @@ window.LeetCodeVisualizers[57] = {
             }
             s.res.push(s.ni.slice()); s.phase = "after"; log(`Chèn ${JSON.stringify(s.ni)}`, "success"); return;
         }
-        if (s.i >= s.iv.length) { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
+        if (s.i >= s.iv.length) { s.done = true; s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
         s.res.push(s.iv[s.i].slice()); s.i++;
     },
     render(s, c, st) {
@@ -93,11 +93,11 @@ window.LeetCodeVisualizers[58] = {
     step(s, log) {
         if (s.done) return;
         while (s.i >= 0 && s.str[s.i] === " ") { s.i--; log("Bỏ space trailing", "info"); if (s.i < 0) break; }
-        if (s.i < 0) { s.done = true; log(`[KẾT QUẢ] ${s.len}`, "success"); return; }
+        if (s.i < 0) { s.done = true; s.outputText = String(`${s.len}`); log(`[KẾT QUẢ] ${s.len}`, "success"); return; }
         if (!s.inWord) { s.inWord = true; log(`Bắt đầu đếm tại '${s.str[s.i]}'`, "info"); }
         s.len++; s.i--;
         if (s.i < 0 || s.str[s.i] === " ") {
-            s.done = true; log(`[KẾT QUẢ] ${s.len}`, "success");
+            s.done = true; s.outputText = String(`${s.len}`); log(`[KẾT QUẢ] ${s.len}`, "success");
         }
     },
     render(s, c, st) {
@@ -121,7 +121,7 @@ window.LeetCodeVisualizers[59] = {
     },
     step(s, log) {
         if (s.done) return;
-        if (s.t > s.b || s.l > s.r) { s.done = true; log(`[KẾT QUẢ] xong`, "success"); return; }
+        if (s.t > s.b || s.l > s.r) { s.done = true; s.outputText = String(`xong`); log(`[KẾT QUẢ] xong`, "success"); return; }
         if (s.dir === 0) {
             for (let c = s.l; c <= s.r; c++) { s.m[s.t][c] = s.val++; }
             s.t++; s.dir = 1; log("Fill →", "info");
@@ -172,7 +172,7 @@ window.LeetCodeVisualizers[60] = {
     },
     step(s, log) {
         if (s.done) return;
-        if (s.pos >= s.n) { s.done = true; log(`[KẾT QUẢ] "${s.res}"`, "success"); return; }
+        if (s.pos >= s.n) { s.done = true; s.outputText = String(`"${s.res}"`); log(`[KẾT QUẢ] "${s.res}"`, "success"); return; }
         const i = s.n - s.pos;
         const idx = Math.floor(s.k / s.fact[i - 1]);
         const pick = s.nums.splice(idx, 1)[0];

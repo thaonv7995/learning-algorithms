@@ -33,7 +33,7 @@ window.LeetCodeVisualizers[1] = {
         if (state.seenMap[comp] !== undefined) {
             state.done = true;
             state.resultPair = [state.seenMap[comp], state.left];
-            log(`[KẾT QUẢ] complement ${comp} tại index ${state.seenMap[comp]} → [${state.resultPair.join(", ")}]`, "success");
+            s.outputText = String(`complement ${comp} tại index ${state.seenMap[comp]} → [${state.resultPair.join(", ")}]`); log(`[KẾT QUẢ] complement ${comp} tại index ${state.seenMap[comp]} → [${state.resultPair.join(", ")}]`, "success");
             return;
         }
 

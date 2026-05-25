@@ -112,7 +112,7 @@ window.LeetCodeVisualizers[6] = {
         if (s.i >= s.str.length) {
             s.done = true;
             const { result } = _lc6Simulate(s.str, s.rows, s.str.length);
-            log(`[KẾT QUẢ] "${result}"`, "success");
+            s.outputText = String(`"${result}"`); log(`[KẾT QUẢ] "${result}"`, "success");
             return;
         }
         const c = s.str[s.i];
@@ -126,7 +126,7 @@ window.LeetCodeVisualizers[6] = {
         if (s.i >= s.str.length) {
             s.done = true;
             const { result } = _lc6Simulate(s.str, s.rows, s.str.length);
-            log(`[KẾT QUẢ] "${result}"`, "success");
+            s.outputText = String(`"${result}"`); log(`[KẾT QUẢ] "${result}"`, "success");
         }
     },
 
@@ -195,14 +195,14 @@ window.LeetCodeVisualizers[7] = {
         log(`[Khởi tạo] Reverse x=${s.x}`, "info");
     },
     step(s, log) {
-        if (s.work === 0 && s.digits.length) { s.done = true; log(`[KẾT QUẢ] ${s.res}`, "success"); return; }
-        if (s.work === 0) { s.done = true; log(`[KẾT QUẢ] 0`, "success"); return; }
+        if (s.work === 0 && s.digits.length) { s.done = true; s.outputText = String(`${s.res}`); log(`[KẾT QUẢ] ${s.res}`, "success"); return; }
+        if (s.work === 0) { s.done = true; s.outputText = String(`0`); log(`[KẾT QUẢ] 0`, "success"); return; }
         const d = s.work % 10;
         s.digits.push(d);
         s.res = s.res * 10 + d;
         s.work = Math.trunc(s.work / 10);
         log(`Bước ${s.stepIndex}: digit=${d}, res=${s.res}, còn x=${s.work}`, "info");
-        if (s.work === 0) { s.done = true; log(`[KẾT QUẢ] ${s.res}`, "success"); }
+        if (s.work === 0) { s.done = true; s.outputText = String(`${s.res}`); log(`[KẾT QUẢ] ${s.res}`, "success"); }
     },
     render(s, canvas, stats) {
         VizCore.statsBar(stats, [{ label: "x", value: s.work, cls: "accent" }, { label: "res", value: s.res, cls: "success" }]);
@@ -230,7 +230,7 @@ window.LeetCodeVisualizers[8] = {
         if (s.done) return;
         const ch = s.str[s.i];
         if (s.phase === "space") {
-            if (ch === " " || ch === undefined) { s.i++; if (s.i >= s.str.length) { s.done = true; log(`[KẾT QUẢ] ${s.sign * s.res}`, "success"); } return; }
+            if (ch === " " || ch === undefined) { s.i++; if (s.i >= s.str.length) { s.done = true; s.outputText = String(`${s.sign * s.res}`); log(`[KẾT QUẢ] ${s.sign * s.res}`, "success"); } return; }
             s.phase = "sign"; return this.step(s, log);
         }
         if (s.phase === "sign") {
@@ -249,7 +249,7 @@ window.LeetCodeVisualizers[8] = {
                 return;
             }
             s.done = true;
-            log(`[KẾT QUẢ] ${s.sign * s.res}`, "success");
+            s.outputText = String(`${s.sign * s.res}`); log(`[KẾT QUẢ] ${s.sign * s.res}`, "success");
         }
     },
     render(s, canvas, stats) {

@@ -25,7 +25,7 @@ window.LeetCodeVisualizers[21] = {
 
         if (empty1 && empty2) {
             state.done = true;
-            log(`[KẾT QUẢ] Đã trộn hoàn tất! Danh sách kết quả: ${state.mergedList.map(x => x.val).join(" -> ")}`, "success");
+            s.outputText = String(`Đã trộn hoàn tất! Danh sách kết quả: ${state.mergedList.map(x => x.val).join(" -> ")}`); log(`[KẾT QUẢ] Đã trộn hoàn tất! Danh sách kết quả: ${state.mergedList.map(x => x.val).join(" -> ")}`, "success");
             return;
         }
 

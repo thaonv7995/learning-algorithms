@@ -21,7 +21,7 @@ window.LeetCodeVisualizers[5] = {
     step: function (state, log) {
         if (state.center >= state.str.length && !state.expandOdd) {
             state.done = true;
-            log(`[KẾT QUẢ] Palindrome dài nhất = "${state.best}" (len ${state.best.length})`, "success");
+            s.outputText = String(`Palindrome dài nhất = "${state.best}" (len ${state.best.length})`); log(`[KẾT QUẢ] Palindrome dài nhất = "${state.best}" (len ${state.best.length})`, "success");
             return;
         }
 

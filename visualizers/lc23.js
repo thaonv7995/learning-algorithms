@@ -50,7 +50,7 @@ window.LeetCodeVisualizers[23] = (function () {
             }
             if (pick < 0) {
                 s.done = true;
-                log(`[KẾT QUẢ] [${s.merged.join("→")}]`, "success");
+                s.outputText = String(`[${s.merged.join("→")}]`); log(`[KẾT QUẢ] [${s.merged.join("→")}]`, "success");
                 return;
             }
             s.merged.push(best);
@@ -117,13 +117,13 @@ window.LeetCodeVisualizers[25] = {
         const start = s.groupStart;
         if (start >= s.work.length) {
             s.done = true;
-            log(`[KẾT QUẢ] [${s.work.join("→")}]`, "success");
+            s.outputText = String(`[${s.work.join("→")}]`); log(`[KẾT QUẢ] [${s.work.join("→")}]`, "success");
             return;
         }
         const end = Math.min(start + s.k, s.work.length);
         if (end - start < s.k) {
             s.done = true;
-            log(`[KẾT QUẢ] Nhóm cuối < k — giữ nguyên → [${s.work.join("→")}]`, "success");
+            s.outputText = String(`Nhóm cuối < k — giữ nguyên → [${s.work.join("→")}]`); log(`[KẾT QUẢ] Nhóm cuối < k — giữ nguyên → [${s.work.join("→")}]`, "success");
             return;
         }
         let l = start, r = end - 1;
@@ -135,7 +135,7 @@ window.LeetCodeVisualizers[25] = {
         s.groupStart = end;
         if (s.groupStart >= s.work.length) {
             s.done = true;
-            log(`[KẾT QUẢ] [${s.work.join("→")}]`, "success");
+            s.outputText = String(`[${s.work.join("→")}]`); log(`[KẾT QUẢ] [${s.work.join("→")}]`, "success");
         }
     },
     render(s, canvas, stats) {

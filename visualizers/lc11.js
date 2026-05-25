@@ -17,7 +17,7 @@ window.LeetCodeVisualizers[11] = {
     step: function(state, log, stopAuto) {
         if (state.left >= state.right) {
             state.done = true;
-            log(`[KẾT QUẢ] Hai con trỏ đụng độ tại L=R=${state.left}. Diện tích lớn nhất có thể chứa nước = ${state.maxArea}!`, "success");
+            s.outputText = String(`Hai con trỏ đụng độ tại L=R=${state.left}. Diện tích lớn nhất có thể chứa nước = ${state.maxArea}!`); log(`[KẾT QUẢ] Hai con trỏ đụng độ tại L=R=${state.left}. Diện tích lớn nhất có thể chứa nước = ${state.maxArea}!`, "success");
             return;
         }
 

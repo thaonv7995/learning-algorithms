@@ -22,7 +22,7 @@ window.LeetCodeVisualizers[739] = {
                 return;
             }
             state.done = true;
-            log(`[KẾT QUẢ] Đã duyệt xong toàn bộ! Mảng khoảng cách ngày chờ đợi ấm lên: [${state.ans.join(", ")}]`, "success");
+            s.outputText = String(`Đã duyệt xong toàn bộ! Mảng khoảng cách ngày chờ đợi ấm lên: [${state.ans.join(", ")}]`); log(`[KẾT QUẢ] Đã duyệt xong toàn bộ! Mảng khoảng cách ngày chờ đợi ấm lên: [${state.ans.join(", ")}]`, "success");
             return;
         }
 

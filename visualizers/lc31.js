@@ -15,7 +15,7 @@ window.LeetCodeVisualizers[31] = {
             if (s.i < 0) {
                 s.nums.reverse();
                 s.done = true;
-                log(`[KẾT QUẢ] Hoán vị max → [${s.nums.join(",")}]`, "success");
+                s.outputText = String(`Hoán vị max → [${s.nums.join(",")}]`); log(`[KẾT QUẢ] Hoán vị max → [${s.nums.join(",")}]`, "success");
                 return;
             }
             log(`Pivot i=${s.i} (nums[i]=${s.nums[s.i]})`, "info");
@@ -33,7 +33,7 @@ window.LeetCodeVisualizers[31] = {
         if (s.phase === "reverse") {
             if (s.lo >= s.hi) {
                 s.done = true;
-                log(`[KẾT QUẢ] [${s.nums.join(",")}]`, "success");
+                s.outputText = String(`[${s.nums.join(",")}]`); log(`[KẾT QUẢ] [${s.nums.join(",")}]`, "success");
                 return;
             }
             [s.nums[s.lo], s.nums[s.hi]] = [s.nums[s.hi], s.nums[s.lo]];
@@ -64,7 +64,7 @@ window.LeetCodeVisualizers[32] = {
     step(s, log) {
         if (s.i >= s.str.length) {
             s.done = true;
-            log(`[KẾT QUẢ] max=${s.best}`, "success");
+            s.outputText = String(`max=${s.best}`); log(`[KẾT QUẢ] max=${s.best}`, "success");
             return;
         }
         const c = s.str[s.i];
@@ -106,13 +106,13 @@ window.LeetCodeVisualizers[33] = {
     step(s, log) {
         if (s.l > s.r) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.ans ?? -1}`, "success");
+            s.outputText = String(`${s.ans ?? -1}`); log(`[KẾT QUẢ] ${s.ans ?? -1}`, "success");
             return;
         }
         const m = Math.floor((s.l + s.r) / 2);
         if (s.nums[m] === s.target) {
             s.ans = m; s.done = true;
-            log(`[KẾT QUẢ] index=${m}`, "success");
+            s.outputText = String(`index=${m}`); log(`[KẾT QUẢ] index=${m}`, "success");
             return;
         }
         if (s.nums[s.l] <= s.nums[m]) {
@@ -172,7 +172,7 @@ window.LeetCodeVisualizers[34] = {
         }
         if (s.l > s.r) {
             s.done = true;
-            log(`[KẾT QUẢ] [${s.ansL}, ${s.ansR}]`, "success");
+            s.outputText = String(`[${s.ansL}, ${s.ansR}]`); log(`[KẾT QUẢ] [${s.ansL}, ${s.ansR}]`, "success");
             return;
         }
         const m = Math.floor((s.l + s.r) / 2);
@@ -209,7 +209,7 @@ window.LeetCodeVisualizers[35] = {
     step(s, log) {
         if (s.l > s.r) {
             s.done = true;
-            log(`[KẾT QUẢ] insert at ${s.l}`, "success");
+            s.outputText = String(`insert at ${s.l}`); log(`[KẾT QUẢ] insert at ${s.l}`, "success");
             return;
         }
         const m = Math.floor((s.l + s.r) / 2);
@@ -290,7 +290,7 @@ window.LeetCodeVisualizers[36] = (function () {
         step(s, log) {
             if (s.r >= 9) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${s.ok}`, s.ok ? "success" : "warn");
+                s.outputText = String(`${s.ok}`); log(`[KẾT QUẢ] ${s.ok}`, s.ok ? "success" : "warn");
                 return;
             }
             const v = s.board[s.r][s.c];
@@ -411,7 +411,7 @@ window.LeetCodeVisualizers[37] = (function () {
             const pos = s._nextEmpty(s);
             if (!pos) {
                 s.done = true;
-                log(`[KẾT QUẢ] Đã giải xong`, "success");
+                s.outputText = String(`Đã giải xong`); log(`[KẾT QUẢ] Đã giải xong`, "success");
                 return;
             }
             if (s.r !== pos.r || s.c !== pos.c) {
@@ -469,7 +469,7 @@ window.LeetCodeVisualizers[38] = {
     step(s, log) {
         if (s.step >= s.n) {
             s.done = true;
-            log(`[KẾT QUẢ] "${s.cur}"`, "success");
+            s.outputText = String(`"${s.cur}"`); log(`[KẾT QUẢ] "${s.cur}"`, "success");
             return;
         }
         let nxt = "", i = 0;
@@ -481,7 +481,7 @@ window.LeetCodeVisualizers[38] = {
         }
         log(`Step ${s.step}: "${s.cur}" → "${nxt}"`, "info");
         s.cur = nxt; s.step++;
-        if (s.step >= s.n) { s.done = true; log(`[KẾT QUẢ] "${s.cur}"`, "success"); }
+        if (s.step >= s.n) { s.done = true; s.outputText = String(`"${s.cur}"`); log(`[KẾT QUẢ] "${s.cur}"`, "success"); }
     },
     render(s, c, st) {
         VizCore.statsBar(st, [{ label: "step", value: `${s.step}/${s.n}`, cls: "accent" }, { label: "cur", value: s.cur, cls: "success" }]);
@@ -508,11 +508,11 @@ window.LeetCodeVisualizers[39] = {
             s.res.push(s.path.slice());
             log(`Found ${JSON.stringify(s.path)}`, "success");
             if (s.path.length) { s.t += s.path.pop(); s.i++; }
-            else { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); }
+            else { s.done = true; s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); }
             return;
         }
         if (s.t < 0 || s.i >= s.c.length) {
-            if (!s.path.length) { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
+            if (!s.path.length) { s.done = true; s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
             s.t += s.path.pop(); s.i++;
             return;
         }
@@ -549,11 +549,11 @@ window.LeetCodeVisualizers[40] = {
             log(`Found ${JSON.stringify(s.path)}`, "success");
             s.i = s.path.length ? s.path.length : s.c.length;
             if (s.path.length) { const v = s.path.pop(); s.t += v; s.start = s.c.indexOf(v, s.start) + 1; }
-            else { s.done = true; log(`[KẾT QUẢ] ${s.res.length} combos`, "success"); }
+            else { s.done = true; s.outputText = String(`${s.res.length} combos`); log(`[KẾT QUẢ] ${s.res.length} combos`, "success"); }
             return;
         }
         if (s.start >= s.c.length || s.t < 0) {
-            if (!s.path.length) { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
+            if (!s.path.length) { s.done = true; s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
             const v = s.path.pop(); s.t += v; s.start = s.c.indexOf(v) + 1;
             return;
         }

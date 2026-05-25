@@ -45,7 +45,7 @@ window.LeetCodeVisualizers[4] = {
             if ((m + n) % 2 === 1) med = Math.max(p.maxLX, p.maxLY);
             else med = (Math.max(p.maxLX, p.maxLY) + Math.min(p.minRX, p.minRY)) / 2;
             state.median = med;
-            log(`[KẾT QUẢ] Partition hợp lệ → median = ${med}`, "success");
+            s.outputText = String(`Partition hợp lệ → median = ${med}`); log(`[KẾT QUẢ] Partition hợp lệ → median = ${med}`, "success");
             return;
         }
         if (p.maxLX > p.minRY) {

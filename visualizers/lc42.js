@@ -21,7 +21,7 @@ window.LeetCodeVisualizers[42] = {
 
         if (state.left >= state.right) {
             state.done = true;
-            log(`[KẾT QUẢ] Hai con trỏ chạm nhau tại L=R=${state.left}. Tổng lượng nước mưa đọng lại = ${state.water} đơn vị!`, "success");
+            s.outputText = String(`Hai con trỏ chạm nhau tại L=R=${state.left}. Tổng lượng nước mưa đọng lại = ${state.water} đơn vị!`); log(`[KẾT QUẢ] Hai con trỏ chạm nhau tại L=R=${state.left}. Tổng lượng nước mưa đọng lại = ${state.water} đơn vị!`, "success");
             return;
         }
 

@@ -54,7 +54,7 @@
                     if (s.i >= s.str.length) {
                         s.done = true;
                         s.outputText = `"${s.str}" (${s.str.length} ký tự)`;
-                        log(`[KẾT QUẢ] Duyệt xong chuỗi`, "success");
+                        s.outputText = String(`Duyệt xong chuỗi`); log(`[KẾT QUẢ] Duyệt xong chuỗi`, "success");
                         return;
                     }
                     log(`Bước ${s.stepIndex}: s[${s.i}]='${s.str[s.i]}'`, "info");
@@ -65,7 +65,7 @@
                     if (s.i >= s.nums.length) {
                         s.done = true;
                         s.outputText = `[${s.visit.join(" → ")}]`;
-                        log(`[KẾT QUẢ] Thứ tự duyệt: ${s.outputText}`, "success");
+                        s.outputText = String(`Thứ tự duyệt: ${s.outputText}`); log(`[KẾT QUẢ] Thứ tự duyệt: ${s.outputText}`, "success");
                         return;
                     }
                     const v = s.nums[s.i];
@@ -80,7 +80,7 @@
                     if (s.r >= s.grid.length) {
                         s.done = true;
                         s.outputText = `Quét xong ${s.grid.length}×${s.grid[0].length}`;
-                        log(`[KẾT QUẢ] Hoàn tất quét lưới`, "success");
+                        s.outputText = String(`Hoàn tất quét lưới`); log(`[KẾT QUẢ] Hoàn tất quét lưới`, "success");
                         return;
                     }
                     log(`Ô (${s.r},${s.c}) = ${s.grid[s.r][s.c]}`, "info");
@@ -92,7 +92,7 @@
                     s.done = true;
                     s.outputResult = s.nums.length;
                     s.outputText = `Duyệt xong n=${s.nums.length}`;
-                    log(`[KẾT QUẢ] Hoàn tất`, "success");
+                    s.outputText = String(`Hoàn tất`); log(`[KẾT QUẢ] Hoàn tất`, "success");
                     return;
                 }
                 log(`Bước ${s.stepIndex}: nums[${s.i}]=${s.nums[s.i]}`, "info");

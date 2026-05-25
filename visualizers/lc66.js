@@ -12,7 +12,7 @@ window.LeetCodeVisualizers[66] = {
         if (s.i < 0) {
             s.digits.unshift(1);
             s.done = true;
-            log(`[KẾT QUẢ] [${s.digits.join(",")}]`, "success");
+            s.outputText = String(`[${s.digits.join(",")}]`); log(`[KẾT QUẢ] [${s.digits.join(",")}]`, "success");
             return;
         }
         if (s.digits[s.i] < 9) {
@@ -57,7 +57,7 @@ window.LeetCodeVisualizers[67] = {
         if (s.i < 0 && s.j < 0 && !s.carry) {
             s.result = s.bits.reverse().join("") || "0";
             s.done = true;
-            log(`[KẾT QUẢ] "${s.result}"`, "success");
+            s.outputText = String(`"${s.result}"`); log(`[KẾT QUẢ] "${s.result}"`, "success");
             return;
         }
         let sum = s.carry;
@@ -98,7 +98,7 @@ window.LeetCodeVisualizers[68] = {
         if (s.done) return;
         if (s.i >= s.words.length) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.lines.length} dòng`, "success");
+            s.outputText = String(`${s.lines.length} dòng`); log(`[KẾT QUẢ] ${s.lines.length} dòng`, "success");
             return;
         }
         let j = s.i, len = 0;
@@ -155,7 +155,7 @@ window.LeetCodeVisualizers[69] = {
         if (s.done) return;
         if (s.lo > s.hi) {
             s.done = true;
-            log(`[KẾT QUẢ] sqrt(${s.x}) = ${s.ans}`, "success");
+            s.outputText = String(`sqrt(${s.x}) = ${s.ans}`); log(`[KẾT QUẢ] sqrt(${s.x}) = ${s.ans}`, "success");
             return;
         }
         const mid = Math.floor((s.lo + s.hi) / 2);
@@ -196,7 +196,7 @@ window.LeetCodeVisualizers[70] = {
         if (s.done) return;
         if (s.i > s.n) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.b} cách`, "success");
+            s.outputText = String(`${s.b} cách`); log(`[KẾT QUẢ] ${s.b} cách`, "success");
             return;
         }
         const t = s.a + s.b;

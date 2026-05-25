@@ -34,6 +34,13 @@ window.VizCore = {
         }
     },
 
+    /** Mark sandbox done and sync Output panel with log [KẾT QUẢ] text. */
+    finishResult(state, log, text, level = "success") {
+        state.done = true;
+        state.outputText = String(text);
+        log(`[KẾT QUẢ] ${text}`, level);
+    },
+
     statsBar(statsPanel, items) {
         statsPanel.innerHTML = `<div class="viz-stats-bar">${items.map(it => `
             <div class="viz-stat">

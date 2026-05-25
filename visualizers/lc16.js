@@ -13,7 +13,7 @@ window.LeetCodeVisualizers[16] = {
     step(s, log) {
         if (s.i >= s.nums.length - 2) {
             s.done = true;
-            log(`[KẾT QUẢ] closest=${s.best}`, "success");
+            s.outputText = String(`closest=${s.best}`); log(`[KẾT QUẢ] closest=${s.best}`, "success");
             return;
         }
         if (s.l >= s.r) { s.i++; s.l = s.i + 1; s.r = s.nums.length - 1; return; }
@@ -22,7 +22,7 @@ window.LeetCodeVisualizers[16] = {
             s.best = sum;
             log(`Cập nhật best=${s.best} (|${sum}-${s.target}|)`, "success");
         }
-        if (sum === s.target) { s.done = true; log(`[KẾT QUẢ] ${sum}`, "success"); return; }
+        if (sum === s.target) { s.done = true; s.outputText = String(`${sum}`); log(`[KẾT QUẢ] ${sum}`, "success"); return; }
         if (sum < s.target) s.l++; else s.r--;
     },
     render(s, canvas, stats) {
@@ -59,7 +59,7 @@ window.LeetCodeVisualizers[18] = {
     step(s, log) {
         if (s.i >= s.nums.length - 3) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.found.length} bộ`, "success");
+            s.outputText = String(`${s.found.length} bộ`); log(`[KẾT QUẢ] ${s.found.length} bộ`, "success");
             return;
         }
         if (s.j >= s.nums.length - 2) { s.i++; s.j = s.i + 1; s.l = s.j + 1; s.r = s.nums.length - 1; return; }

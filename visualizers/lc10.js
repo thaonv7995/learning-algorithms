@@ -67,7 +67,7 @@ window.LeetCodeVisualizers[10] = {
         const cells = (s.m + 1) * (s.n + 1);
         if (s.fillIdx >= cells) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.result}`, "success");
+            s.outputText = String(`${s.result}`); log(`[KẾT QUẢ] ${s.result}`, "success");
             return;
         }
         s.i = Math.floor(s.fillIdx / (s.n + 1));
@@ -76,7 +76,7 @@ window.LeetCodeVisualizers[10] = {
         s.fillIdx++;
         if (s.fillIdx >= cells) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.result}`, "success");
+            s.outputText = String(`${s.result}`); log(`[KẾT QUẢ] ${s.result}`, "success");
         }
     },
 

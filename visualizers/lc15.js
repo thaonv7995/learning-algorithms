@@ -11,14 +11,14 @@ window.LeetCodeVisualizers[15] = {
     step(s, log) {
         if (s.i >= s.nums.length - 2) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.found.length ? JSON.stringify(s.found) : "[]"}`, "success");
+            s.outputText = String(`${s.found.length ? JSON.stringify(s.found) : "[]"}`); log(`[KẾT QUẢ] ${s.found.length ? JSON.stringify(s.found) : "[]"}`, "success");
             return;
         }
         if (s.left >= s.right) {
             s.i++;
             while (s.i < s.nums.length - 2 && s.nums[s.i] === s.nums[s.i - 1]) s.i++;
             s.left = s.i + 1; s.right = s.nums.length - 1;
-            if (s.i >= s.nums.length - 2) { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.found)}`, "success"); }
+            if (s.i >= s.nums.length - 2) { s.done = true; s.outputText = String(`${JSON.stringify(s.found)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.found)}`, "success"); }
             return;
         }
         const sum = s.nums[s.i] + s.nums[s.left] + s.nums[s.right];

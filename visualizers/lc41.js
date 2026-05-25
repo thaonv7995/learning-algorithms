@@ -75,13 +75,13 @@ window.LeetCodeVisualizers[41] = (function () {
                 if (s.i >= s.n) {
                     s.answer = s.n + 1;
                     s.done = true;
-                    log(`[KẾT QUẢ] Đủ 1..${s.n} → trả ${s.answer}`, "success");
+                    s.outputText = String(`Đủ 1..${s.n} → trả ${s.answer}`); log(`[KẾT QUẢ] Đủ 1..${s.n} → trả ${s.answer}`, "success");
                     return;
                 }
                 if (s.nums[s.i] !== s.i + 1) {
                     s.answer = s.i + 1;
                     s.done = true;
-                    log(`[KẾT QUẢ] nums[${s.i}]=${s.nums[s.i]} ≠ ${s.i + 1} → thiếu ${s.answer}`, "success");
+                    s.outputText = String(`nums[${s.i}]=${s.nums[s.i]} ≠ ${s.i + 1} → thiếu ${s.answer}`); log(`[KẾT QUẢ] nums[${s.i}]=${s.nums[s.i]} ≠ ${s.i + 1} → thiếu ${s.answer}`, "success");
                     return;
                 }
                 log(`i=${s.i}: nums[i]=${s.nums[s.i]} ✓`, "info");

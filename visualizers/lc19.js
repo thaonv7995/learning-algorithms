@@ -23,7 +23,7 @@ window.LeetCodeVisualizers[19] = {
                 s.done = true;
                 const removeIdx = s.slow;
                 const out = s.list.filter((_, i) => i !== removeIdx);
-                log(`[KẾT QUẢ] Xóa index ${removeIdx} → [${out.join("→")}]`, "success");
+                s.outputText = String(`Xóa index ${removeIdx} → [${out.join("→")}]`); log(`[KẾT QUẢ] Xóa index ${removeIdx} → [${out.join("→")}]`, "success");
                 s.result = out;
                 return;
             }

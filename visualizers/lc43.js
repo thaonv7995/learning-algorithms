@@ -21,7 +21,7 @@ window.LeetCodeVisualizers[43] = {
             while (k < s.pos.length - 1 && s.pos[k] === 0) k++;
             s.result = s.pos.slice(k).join("");
             s.done = true;
-            log(`[KẾT QUẢ] "${s.result}"`, "success");
+            s.outputText = String(`"${s.result}"`); log(`[KẾT QUẢ] "${s.result}"`, "success");
             return;
         }
         const mul = (+s.a[s.i]) * (+s.b[s.j]);
@@ -90,7 +90,7 @@ window.LeetCodeVisualizers[44] = (function () {
             if (s.i > s.s.length) {
                 s.done = true;
                 const ok = s.dp[s.s.length][s.p.length];
-                log(`[KẾT QUẢ] dp[${s.s.length}][${s.p.length}] = ${ok}`, ok ? "success" : "warn");
+                s.outputText = String(`dp[${s.s.length}][${s.p.length}] = ${ok}`); log(`[KẾT QUẢ] dp[${s.s.length}][${s.p.length}] = ${ok}`, ok ? "success" : "warn");
                 return;
             }
             const v = s.i && s.j ? s.dp[s.i][s.j] : (s.i === 0 && s.j === 0 ? true : s.j ? s.dp[0][s.j] : false);
@@ -139,7 +139,7 @@ window.LeetCodeVisualizers[45] = {
         if (s.done) return;
         if (s.i >= s.nums.length - 1) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.steps} bước`, "success");
+            s.outputText = String(`${s.steps} bước`); log(`[KẾT QUẢ] ${s.steps} bước`, "success");
             return;
         }
         s.far = Math.max(s.far, s.i + s.nums[s.i]);

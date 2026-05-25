@@ -153,13 +153,13 @@ window.LeetCodeVisualizers[46] = {
         if (s.done) return;
         if (s.hi >= s.history.length) {
             s.done = true;
-            log(`[KẾT QUẢ] ${JSON.stringify(s.allRes)}`, "success");
+            s.outputText = String(`${JSON.stringify(s.allRes)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.allRes)}`, "success");
             return;
         }
         _lc46ApplyHistoryStep(s, s.history[s.hi++], s.nums, log);
         if (s.hi >= s.history.length) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.allRes.length} hoán vị`, "success");
+            s.outputText = String(`${s.allRes.length} hoán vị`); log(`[KẾT QUẢ] ${s.allRes.length} hoán vị`, "success");
         }
     },
     render(s, c, st) {
@@ -213,13 +213,13 @@ window.LeetCodeVisualizers[47] = {
         if (s.done) return;
         if (s.hi >= s.history.length) {
             s.done = true;
-            log(`[KẾT QUẢ] ${JSON.stringify(s.allRes)}`, "success");
+            s.outputText = String(`${JSON.stringify(s.allRes)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.allRes)}`, "success");
             return;
         }
         _lc46ApplyHistoryStep(s, s.history[s.hi++], s.nums, log);
         if (s.hi >= s.history.length) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.allRes.length} hoán vị unique`, "success");
+            s.outputText = String(`${s.allRes.length} hoán vị unique`); log(`[KẾT QUẢ] ${s.allRes.length} hoán vị unique`, "success");
         }
     },
     render(s, c, st) {
@@ -352,7 +352,7 @@ window.LeetCodeVisualizers[48] = {
         if (s.done) return;
         if (s.hi >= s.history.length) {
             s.done = true;
-            log(`[KẾT QUẢ] Xoay 90° CW xong`, "success");
+            s.outputText = String(`Xoay 90° CW xong`); log(`[KẾT QUẢ] Xoay 90° CW xong`, "success");
             return;
         }
         const st = s.history[s.hi++];
@@ -373,12 +373,12 @@ window.LeetCodeVisualizers[48] = {
             log(`Hàng ${st.row} đã reverse xong`, "success");
         } else if (st.type === "done") {
             s.done = true;
-            log(`[KẾT QUẢ] ${JSON.stringify(st.result)}`, "success");
+            s.outputText = String(`${JSON.stringify(st.result)}`); log(`[KẾT QUẢ] ${JSON.stringify(st.result)}`, "success");
         }
 
         if (s.hi >= s.history.length && !s.done) {
             s.done = true;
-            log(`[KẾT QUẢ] Xoay 90° CW xong`, "success");
+            s.outputText = String(`Xoay 90° CW xong`); log(`[KẾT QUẢ] Xoay 90° CW xong`, "success");
         }
     },
     render(s, c, st) {
@@ -457,7 +457,7 @@ window.LeetCodeVisualizers[49] = {
         if (s.i >= s.strs.length) {
             s.done = true;
             const keys = Object.keys(s.groups);
-            log(`[KẾT QUẢ] ${keys.length} nhóm anagram`, "success");
+            s.outputText = String(`${keys.length} nhóm anagram`); log(`[KẾT QUẢ] ${keys.length} nhóm anagram`, "success");
             return;
         }
         const w = s.strs[s.i];
@@ -498,11 +498,11 @@ window.LeetCodeVisualizers[50] = {
     },
     step(s, log) {
         if (s.done) return;
-        if (!s.N) { s.done = true; log(`[KẾT QUẢ] ${s.res}`, "success"); return; }
+        if (!s.N) { s.done = true; s.outputText = String(`${s.res}`); log(`[KẾT QUẢ] ${s.res}`, "success"); return; }
         if (s.N & 1) { s.res *= s.x; log(`Bit 1: res *= x → ${s.res}`, "info"); }
         else log(`Bit 0: bỏ qua nhân`, "info");
         s.x *= s.x; s.N >>= 1; s.bit++;
-        if (!s.N) { s.done = true; log(`[KẾT QUẢ] ${s.res}`, "success"); }
+        if (!s.N) { s.done = true; s.outputText = String(`${s.res}`); log(`[KẾT QUẢ] ${s.res}`, "success"); }
     },
     render(s, c, st) {
         VizCore.statsBar(st, [
@@ -539,12 +539,12 @@ window.LeetCodeVisualizers[52] = {
         if (s.done) return;
         if (s.row >= s.n) {
             s.count++; s.row--;
-            if (s.row < 0) { s.done = true; log(`[KẾT QUẢ] ${s.count} cách`, "success"); return; }
+            if (s.row < 0) { s.done = true; s.outputText = String(`${s.count} cách`); log(`[KẾT QUẢ] ${s.count} cách`, "success"); return; }
             s.col = 0; log(`+1 solution → backtrack`, "success"); return;
         }
         if (s.col >= s.n) {
             s.row--; s.col = 0;
-            if (s.row < 0) { s.done = true; log(`[KẾT QUẢ] ${s.count} cách`, "success"); return; }
+            if (s.row < 0) { s.done = true; s.outputText = String(`${s.count} cách`); log(`[KẾT QUẢ] ${s.count} cách`, "success"); return; }
             log(`Backtrack row ${s.row}`, "warn"); return;
         }
         const c = s.col, r = s.row;
@@ -585,7 +585,7 @@ window.LeetCodeVisualizers[53] = {
     step(s, log) {
         if (s.done) return;
         s.i++;
-        if (s.i >= s.nums.length) { s.done = true; log(`[KẾT QUẢ] max = ${s.best}`, "success"); return; }
+        if (s.i >= s.nums.length) { s.done = true; s.outputText = String(`max = ${s.best}`); log(`[KẾT QUẢ] max = ${s.best}`, "success"); return; }
         s.cur = Math.max(s.nums[s.i], s.cur + s.nums[s.i]);
         if (s.cur > s.best) s.best = s.cur;
         log(`i=${s.i}: cur=${s.cur}, best=${s.best}`, "info");
@@ -612,7 +612,7 @@ window.LeetCodeVisualizers[54] = {
     step(s, log) {
         if (s.done) return;
         const m = s.matrix;
-        if (s.t > s.b || s.l > s.r) { s.done = true; log(`[KẾT QUẢ] [${s.res.join(",")}]`, "success"); return; }
+        if (s.t > s.b || s.l > s.r) { s.done = true; s.outputText = String(`[${s.res.join(",")}]`); log(`[KẾT QUẢ] [${s.res.join(",")}]`, "success"); return; }
         if (s.dir === 0) {
             for (let c = s.l; c <= s.r; c++) { s.res.push(m[s.t][c]); log(`→ ${m[s.t][c]}`, "info"); }
             s.t++; s.dir = 1;
@@ -657,11 +657,11 @@ window.LeetCodeVisualizers[55] = {
     },
     step(s, log) {
         if (s.done) return;
-        if (s.i > s.far) { s.done = true; log(`[KẾT QUẢ] false — i=${s.i} > far=${s.far}`, "warn"); return; }
+        if (s.i > s.far) { s.done = true; s.outputText = String(`false — i=${s.i} > far=${s.far}`); log(`[KẾT QUẢ] false — i=${s.i} > far=${s.far}`, "warn"); return; }
         s.far = Math.max(s.far, s.i + s.nums[s.i]);
         log(`i=${s.i}: far=${s.far}`, "info");
         s.i++;
-        if (s.i >= s.nums.length) { s.done = true; log(`[KẾT QUẢ] true`, "success"); }
+        if (s.i >= s.nums.length) { s.done = true; s.outputText = String(`true`); log(`[KẾT QUẢ] true`, "success"); }
     },
     render(s, c, st) {
         VizCore.statsBar(st, [{ label: "i", value: s.done ? "—" : s.i, cls: "accent" }, { label: "far", value: s.far, cls: "success" }]);

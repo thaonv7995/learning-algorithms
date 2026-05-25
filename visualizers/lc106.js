@@ -37,7 +37,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
                 s.step = 1; return;
             }
             s.done = true;
-            log(`[KẾT QUẢ] Root=${s.root}, left size=${s.mid}, right size=${s.in.length - s.mid - 1}`, "success");
+            s.outputText = String(`Root=${s.root}, left size=${s.mid}, right size=${s.in.length - s.mid - 1}`); log(`[KẾT QUẢ] Root=${s.root}, left size=${s.mid}, right size=${s.in.length - s.mid - 1}`, "success");
         },
         render(s, c, st) {
             VizCore.statsBar(st, [{ label: "root", value: s.root, cls: "accent" }, { label: "mid", value: s.mid, cls: "success" }]);
@@ -67,7 +67,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (!s.q.length) {
                 s.levels.reverse();
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.levels)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
                 return;
             }
             const size = s.q.length, row = [];
@@ -82,7 +82,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (!s.q.length) {
                 s.levels.reverse();
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.levels)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
             }
         },
         render(s, c, st) {
@@ -116,7 +116,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (s.lo > s.hi) {
                 s.done = true;
-                log(`[KẾT QUẢ] picks=[${s.picks.join(",")}]`, "success");
+                s.outputText = String(`picks=[${s.picks.join(",")}]`); log(`[KẾT QUẢ] picks=[${s.picks.join(",")}]`, "success");
                 return;
             }
             const mid = Math.floor((s.lo + s.hi) / 2);
@@ -151,7 +151,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         step(s, log) {
             if (s.done) return;
             s.done = true;
-            log(`[KẾT QUẢ] Root=${s.root}, left=[${s.list.slice(0, s.mid).join(",")}] right=[${s.list.slice(s.mid + 1).join(",")}]`, "success");
+            s.outputText = String(`Root=${s.root}, left=[${s.list.slice(0, s.mid).join(",")}] right=[${s.list.slice(s.mid + 1).join(",")}]`); log(`[KẾT QUẢ] Root=${s.root}, left=[${s.list.slice(0, s.mid).join(",")}] right=[${s.list.slice(s.mid + 1).join(",")}]`, "success");
         },
         render(s, c, st) {
             VizCore.statsBar(st, [{ label: "root", value: s.root, cls: "success" }]);
@@ -189,7 +189,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             s.result = this.balanced(s.root);
             s.done = true;
-            log(`[KẾT QUẢ] ${s.result} (h left=${this.height(s.root && s.root.left)}, h right=${this.height(s.root && s.root.right)})`, s.result ? "success" : "warn");
+            s.outputText = String(`${s.result} (h left=${this.height(s.root && s.root.left)}, h right=${this.height(s.root && s.root.right)})`); log(`[KẾT QUẢ] ${s.result} (h left=${this.height(s.root && s.root.left)}, h right=${this.height(s.root && s.root.right)})`, s.result ? "success" : "warn");
         },
         render(s, c, st) {
             VizCore.statsBar(st, [{ label: "balanced", value: s.result ?? "…", cls: s.result ? "success" : "warn" }]);
@@ -218,7 +218,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             const { n, d } = s.q.shift();
             if (!n.left && !n.right) {
                 s.minDepth = d; s.done = true;
-                log(`[KẾT QUẢ] minDepth=${d} tại nút ${n.val}`, "success");
+                s.outputText = String(`minDepth=${d} tại nút ${n.val}`); log(`[KẾT QUẢ] minDepth=${d} tại nút ${n.val}`, "success");
                 return;
             }
             if (n.left) s.q.push({ n: n.left, d: d + 1 });
@@ -252,14 +252,14 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (!s.stack.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${s.found}`, s.found ? "success" : "warn");
+                s.outputText = String(`${s.found}`); log(`[KẾT QUẢ] ${s.found}`, s.found ? "success" : "warn");
                 return;
             }
             const { n, sum } = s.stack.pop();
             if (!n) return;
             const ns = sum + n.val;
             if (!n.left && !n.right) {
-                if (ns === s.target) { s.found = true; s.done = true; log(`[KẾT QUẢ] true — lá ${n.val} sum=${ns}`, "success"); }
+                if (ns === s.target) { s.found = true; s.done = true; s.outputText = String(`true — lá ${n.val} sum=${ns}`); log(`[KẾT QUẢ] true — lá ${n.val} sum=${ns}`, "success"); }
                 else log(`Lá ${n.val} sum=${ns} ≠ ${s.target}`, "info");
                 return;
             }
@@ -297,7 +297,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (!s.stack.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success");
                 return;
             }
             const { n, sum } = s.stack.pop();
@@ -342,7 +342,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (s.i >= s.nums.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] [${s.out.join("→")}]`, "success");
+                s.outputText = String(`[${s.out.join("→")}]`); log(`[KẾT QUẢ] [${s.out.join("→")}]`, "success");
                 return;
             }
             const v = s.nums[s.i];
@@ -376,7 +376,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (s.i >= s.s.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${s.dp[s.t.length]} cách`, "success");
+                s.outputText = String(`${s.dp[s.t.length]} cách`); log(`[KẾT QUẢ] ${s.dp[s.t.length]} cách`, "success");
                 return;
             }
             const c = s.s[s.i];
@@ -408,7 +408,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (!s.q.length) { s.done = true; log(`[KẾT QUẢ] ${s.links.length} liên kết`, "success"); return; }
+            if (!s.q.length) { s.done = true; s.outputText = String(`${s.links.length} liên kết`); log(`[KẾT QUẢ] ${s.links.length} liên kết`, "success"); return; }
             const size = s.q.length;
             for (let i = 0; i < size; i++) {
                 const n = s.q.shift();
@@ -419,7 +419,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
                 if (n.left) s.q.push(n.left);
                 if (n.right) s.q.push(n.right);
             }
-            if (!s.q.length) { s.done = true; log(`[KẾT QUẢ] done`, "success"); }
+            if (!s.q.length) { s.done = true; s.outputText = String(`done`); log(`[KẾT QUẢ] done`, "success"); }
         },
         render(s, c, st) {
             VizCore.statsBar(st, [{ label: "links", value: s.links.length, cls: "success" }]);
@@ -453,7 +453,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (!s.q.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${s.links.length} liên kết`, "success");
+                s.outputText = String(`${s.links.length} liên kết`); log(`[KẾT QUẢ] ${s.links.length} liên kết`, "success");
                 return;
             }
             const size = s.q.length;
@@ -468,7 +468,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             }
             if (!s.q.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] done`, "success");
+                s.outputText = String(`done`); log(`[KẾT QUẢ] done`, "success");
             }
         },
         render(s, c, st) {
@@ -499,7 +499,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (s.r >= s.n) { s.done = true; log(`[KẾT QUẢ] ${s.rows.length} hàng`, "success"); return; }
+            if (s.r >= s.n) { s.done = true; s.outputText = String(`${s.rows.length} hàng`); log(`[KẾT QUẢ] ${s.rows.length} hàng`, "success"); return; }
             const prev = s.rows[s.r - 1];
             const row = [1];
             for (let j = 1; j < s.r; j++) row.push(prev[j - 1] + prev[j]);
@@ -507,7 +507,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             s.rows.push(row);
             log(`Row ${s.r}: [${row.join(",")}]`, "info");
             s.r++;
-            if (s.r >= s.n) { s.done = true; log(`[KẾT QUẢ] done`, "success"); }
+            if (s.r >= s.n) { s.done = true; s.outputText = String(`done`); log(`[KẾT QUẢ] done`, "success"); }
         },
         render(s, c, st) {
             VizCore.statsBar(st, [{ label: "rows", value: s.rows.length, cls: "success" }]);
@@ -538,14 +538,14 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (s.r > s.k) { s.done = true; log(`[KẾT QUẢ] [${s.row.join(",")}]`, "success"); return; }
+            if (s.r > s.k) { s.done = true; s.outputText = String(`[${s.row.join(",")}]`); log(`[KẾT QUẢ] [${s.row.join(",")}]`, "success"); return; }
             const next = [1];
             for (let j = 1; j < s.r; j++) next.push(s.row[j - 1] + s.row[j]);
             next.push(1);
             s.row = next;
             log(`Row ${s.r}: [${s.row.join(",")}]`, "info");
             s.r++;
-            if (s.r > s.k) { s.done = true; log(`[KẾT QUẢ] [${s.row.join(",")}]`, "success"); }
+            if (s.r > s.k) { s.done = true; s.outputText = String(`[${s.row.join(",")}]`); log(`[KẾT QUẢ] [${s.row.join(",")}]`, "success"); }
         },
         render(s, c, st) {
             VizCore.statsBar(st, [{ label: "row", value: s.row.join(","), cls: "success" }]);
@@ -574,7 +574,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.r >= s.tri.length) {
                 s.done = true;
                 s.ans = Math.min(...s.dp);
-                log(`[KẾT QUẢ] min=${s.ans}`, "success");
+                s.outputText = String(`min=${s.ans}`); log(`[KẾT QUẢ] min=${s.ans}`, "success");
                 return;
             }
             const row = s.tri[s.r];
@@ -587,7 +587,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             s.dp = ndp; s.r++;
             if (s.r >= s.tri.length) {
                 s.done = true; s.ans = Math.min(...s.dp);
-                log(`[KẾT QUẢ] min=${s.ans}`, "success");
+                s.outputText = String(`min=${s.ans}`); log(`[KẾT QUẢ] min=${s.ans}`, "success");
             }
         },
         render(s, c, st) {

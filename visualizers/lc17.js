@@ -10,13 +10,13 @@ window.LeetCodeVisualizers[17] = {
     },
     step(s, log) {
         if (s.done) return;
-        if (!s.digits) { s.done = true; log(`[KẾT QUẢ] []`, "success"); return; }
+        if (!s.digits) { s.done = true; s.outputText = String(`[]`); log(`[KẾT QUẢ] []`, "success"); return; }
         if (s.idx >= s.digits.length) {
             s.res.push(s.path.join(""));
             log(`Hoàn thành "${s.path.join("")}"`, "success");
             s.idx--;
             if (s.path.length) s.path.pop();
-            if (s.idx < 0) { s.done = true; log(`[KẾT QUẢ] ${s.res.length} chuỗi`, "success"); }
+            if (s.idx < 0) { s.done = true; s.outputText = String(`${s.res.length} chuỗi`); log(`[KẾT QUẢ] ${s.res.length} chuỗi`, "success"); }
             return;
         }
         const letters = _PHONE[s.digits[s.idx]] || "";
@@ -24,7 +24,7 @@ window.LeetCodeVisualizers[17] = {
             s.letterIdx = 0;
             if (s.path.length) s.path.pop();
             s.idx--;
-            if (s.idx < 0) { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); }
+            if (s.idx < 0) { s.done = true; s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); }
             return;
         }
         s.path.push(letters[s.letterIdx]);

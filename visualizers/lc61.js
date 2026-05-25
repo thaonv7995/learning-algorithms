@@ -45,7 +45,7 @@ window.LeetCodeVisualizers[61] = {
         if (s.phase === "init") {
             if (!s.list.length || s.kEff === 0) {
                 s.done = true;
-                log(`[KẾT QUẢ] [${s.list.join("→")}] (không đổi)`, "success");
+                s.outputText = String(`[${s.list.join("→")}] (không đổi)`); log(`[KẾT QUẢ] [${s.list.join("→")}] (không đổi)`, "success");
                 s.result = s.list.slice();
                 return;
             }
@@ -57,7 +57,7 @@ window.LeetCodeVisualizers[61] = {
         if (s.phase === "split") {
             s.result = s.list.slice(s.split + 1).concat(s.list.slice(0, s.split + 1));
             s.done = true;
-            log(`[KẾT QUẢ] [${s.result.join("→")}]`, "success");
+            s.outputText = String(`[${s.result.join("→")}]`); log(`[KẾT QUẢ] [${s.result.join("→")}]`, "success");
         }
     },
     render(s, c, st) {
@@ -99,7 +99,7 @@ window.LeetCodeVisualizers[62] = {
         if (s.done) return;
         if (s.r >= s.m) {
             s.done = true;
-            log(`[KẾT QUẢ] dp[${s.m - 1}][${s.n - 1}] = ${s.dp[s.m - 1][s.n - 1]}`, "success");
+            s.outputText = String(`dp[${s.m - 1}][${s.n - 1}] = ${s.dp[s.m - 1][s.n - 1]}`); log(`[KẾT QUẢ] dp[${s.m - 1}][${s.n - 1}] = ${s.dp[s.m - 1][s.n - 1]}`, "success");
             return;
         }
         s.dp[s.r][s.c] = s.dp[s.r - 1][s.c] + s.dp[s.r][s.c - 1];
@@ -139,7 +139,7 @@ window.LeetCodeVisualizers[63] = {
         if (s.done) return;
         if (s.r >= s.m) {
             s.done = true;
-            log(`[KẾT QUẢ] ${s.dp[s.n - 1]} đường`, "success");
+            s.outputText = String(`${s.dp[s.n - 1]} đường`); log(`[KẾT QUẢ] ${s.dp[s.n - 1]} đường`, "success");
             return;
         }
         const blocked = s.grid[s.r][s.c] === 1;
@@ -190,7 +190,7 @@ window.LeetCodeVisualizers[64] = {
         if (s.done) return;
         if (s.r >= s.m) {
             s.done = true;
-            log(`[KẾT QUẢ] min sum = ${s.dp[s.n - 1]}`, "success");
+            s.outputText = String(`min sum = ${s.dp[s.n - 1]}`); log(`[KẾT QUẢ] min sum = ${s.dp[s.n - 1]}`, "success");
             return;
         }
         if (s.c === 0) {
@@ -244,7 +244,7 @@ window.LeetCodeVisualizers[65] = {
         if (s.i >= s.str.length) {
             s.done = true;
             const ok = s.seenD;
-            log(`[KẾT QUẢ] ${ok ? "valid" : "invalid"} (cần ít nhất 1 digit)`, ok ? "success" : "warn");
+            s.outputText = String(`${ok ? "valid" : "invalid"} (cần ít nhất 1 digit)`); log(`[KẾT QUẢ] ${ok ? "valid" : "invalid"} (cần ít nhất 1 digit)`, ok ? "success" : "warn");
             s.valid = ok;
             return;
         }

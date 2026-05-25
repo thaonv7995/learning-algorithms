@@ -61,7 +61,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.pi >= s.pairs.length) {
                 s.done = true;
                 s.result = true;
-                log(`[KẾT QUẢ] true — cây đối xứng`, "success");
+                s.outputText = String(`true — cây đối xứng`); log(`[KẾT QUẢ] true — cây đối xứng`, "success");
                 return;
             }
             const [a, b] = s.pairs[s.pi];
@@ -69,7 +69,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (!a || !b || a.val !== b.val) {
                 s.done = true;
                 s.result = false;
-                log(`[KẾT QUẢ] false — ${a ? a.val : "null"} vs ${b ? b.val : "null"}`, "warn");
+                s.outputText = String(`false — ${a ? a.val : "null"} vs ${b ? b.val : "null"}`); log(`[KẾT QUẢ] false — ${a ? a.val : "null"} vs ${b ? b.val : "null"}`, "warn");
                 return;
             }
             log(`Khớp ${a.val} (mirror)`, "success");
@@ -77,7 +77,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.pi >= s.pairs.length) {
                 s.done = true;
                 s.result = true;
-                log(`[KẾT QUẢ] true`, "success");
+                s.outputText = String(`true`); log(`[KẾT QUẢ] true`, "success");
             }
         },
         render(s, canvas, stats) {
@@ -113,7 +113,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (!s.q.length) {
                 if (s.cur.length) s.levels.push(s.cur.slice());
                 s.done = true;
-                log(`[KẾT QUẢ] ${s.levels.length} tầng`, "success");
+                s.outputText = String(`${s.levels.length} tầng`); log(`[KẾT QUẢ] ${s.levels.length} tầng`, "success");
                 return;
             }
             const size = s.q.length;
@@ -130,7 +130,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             log(`Hoàn tất tầng ${s.levels.length}: [${s.cur.join(",")}]`, "success");
             if (!s.q.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.levels)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
             }
         },
         render(s, canvas, stats) {
@@ -169,7 +169,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (!s.q.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.levels)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
                 return;
             }
             const size = s.q.length;
@@ -187,7 +187,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             s.leftToRight = !s.leftToRight;
             if (!s.q.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.levels)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.levels)}`, "success");
             }
         },
         render(s, canvas, stats) {
@@ -224,7 +224,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (!s.stack.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] maxDepth = ${s.maxDepth}`, "success");
+                s.outputText = String(`maxDepth = ${s.maxDepth}`); log(`[KẾT QUẢ] maxDepth = ${s.maxDepth}`, "success");
                 return;
             }
             const { node, depth } = s.stack.pop();
@@ -285,7 +285,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.stepIdx >= s.buildSteps.length) {
                 s.done = true;
                 s.treeArr = levelArr(buildTree([s.buildSteps[0].root, ...s.buildSteps[0].leftIn, ...s.buildSteps[0].rightIn].filter((v, i, a) => i === 0 || v !== undefined)));
-                log(`[KẾT QUẢ] Root=${s.buildSteps[0].root}, tách inorder tại index ${s.in.indexOf(s.buildSteps[0].root)}`, "success");
+                s.outputText = String(`Root=${s.buildSteps[0].root}, tách inorder tại index ${s.in.indexOf(s.buildSteps[0].root)}`); log(`[KẾT QUẢ] Root=${s.buildSteps[0].root}, tách inorder tại index ${s.in.indexOf(s.buildSteps[0].root)}`, "success");
                 return;
             }
             const st = s.buildSteps[s.stepIdx];
@@ -293,7 +293,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             s.stepIdx++;
             if (s.stepIdx >= s.buildSteps.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] Cây có gốc ${st.root}`, "success");
+                s.outputText = String(`Cây có gốc ${st.root}`); log(`[KẾT QUẢ] Cây có gốc ${st.root}`, "success");
             }
         },
         render(s, canvas, stats) {

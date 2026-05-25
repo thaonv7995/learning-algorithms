@@ -15,7 +15,7 @@ window.LeetCodeVisualizers[206] = {
     step: function(state, log, stopAuto) {
         if (state.currIdx >= state.listNodes.length) {
             state.done = true;
-            log(`[KẾT QUẢ] Đảo chiều con trỏ linked list hoàn tất! Nút đầu mới là Nút ${state.listNodes[state.listNodes.length - 1]}.`, "success");
+            s.outputText = String(`Đảo chiều con trỏ linked list hoàn tất! Nút đầu mới là Nút ${state.listNodes[state.listNodes.length - 1]}.`); log(`[KẾT QUẢ] Đảo chiều con trỏ linked list hoàn tất! Nút đầu mới là Nút ${state.listNodes[state.listNodes.length - 1]}.`, "success");
             return;
         }
 

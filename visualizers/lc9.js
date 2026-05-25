@@ -19,7 +19,7 @@ window.LeetCodeVisualizers[9] = {
         if (s.x <= s.rev) {
             s.result = s.x === s.rev || s.x === Math.trunc(s.rev / 10);
             s.done = true;
-            log(`[KẾT QUẢ] ${s.result} (x=${s.x}, rev=${s.rev})`, "success");
+            s.outputText = String(`${s.result} (x=${s.x}, rev=${s.rev})`); log(`[KẾT QUẢ] ${s.result} (x=${s.x}, rev=${s.rev})`, "success");
             return;
         }
         const d = s.x % 10;

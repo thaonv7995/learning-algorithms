@@ -9,7 +9,7 @@ window.LeetCodeVisualizers[12] = {
         log(`[Khởi tạo] intToRoman num=${s.num}`, "info");
     },
     step(s, log) {
-        if (s.work === 0 || s.idx >= _ROMAN.length) { s.done = true; log(`[KẾT QUẢ] "${s.out}"`, "success"); return; }
+        if (s.work === 0 || s.idx >= _ROMAN.length) { s.done = true; s.outputText = String(`"${s.out}"`); log(`[KẾT QUẢ] "${s.out}"`, "success"); return; }
         const [v, sym] = _ROMAN[s.idx];
         if (s.work >= v) {
             s.out += sym; s.work -= v;
@@ -36,7 +36,7 @@ window.LeetCodeVisualizers[13] = {
         log(`[Khởi tạo] romanToInt s="${s.str}"`, "info");
     },
     step(s, log) {
-        if (s.i >= s.str.length) { s.done = true; log(`[KẾT QUẢ] ${s.sum}`, "success"); return; }
+        if (s.i >= s.str.length) { s.done = true; s.outputText = String(`${s.sum}`); log(`[KẾT QUẢ] ${s.sum}`, "success"); return; }
         const cur = _RMAP[s.str[s.i]] || 0;
         const nxt = s.i + 1 < s.str.length ? _RMAP[s.str[s.i + 1]] : 0;
         if (cur < nxt) { s.sum -= cur; log(`'${s.str[s.i]}' subtract → sum=${s.sum}`, "info"); }
@@ -73,7 +73,7 @@ window.LeetCodeVisualizers[14] = {
     step(s, log) {
         if (s.strIdx >= s.strs.length || !s.prefix) {
             s.done = true;
-            log(`[KẾT QUẢ] "${s.prefix}"`, "success");
+            s.outputText = String(`"${s.prefix}"`); log(`[KẾT QUẢ] "${s.prefix}"`, "success");
             return;
         }
         const cur = s.strs[s.strIdx];
@@ -83,7 +83,7 @@ window.LeetCodeVisualizers[14] = {
             s.strIdx++;
             if (s.strIdx >= s.strs.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] "${s.prefix}"`, "success");
+                s.outputText = String(`"${s.prefix}"`); log(`[KẾT QUẢ] "${s.prefix}"`, "success");
             }
             return;
         }
@@ -92,7 +92,7 @@ window.LeetCodeVisualizers[14] = {
         log(`Bước ${s.stepIndex}: "${cur}" không khớp → bỏ '${s.removedChar}' → prefix="${s.prefix}"`, "warn");
         if (!s.prefix) {
             s.done = true;
-            log(`[KẾT QUẢ] ""`, "success");
+            s.outputText = String(`""`); log(`[KẾT QUẢ] ""`, "success");
         }
     },
 

@@ -339,22 +339,47 @@
             ["count", "count"], ["total", "tổng"], ["sum", "tổng"], ["xor", "xor"],
             ["ones", "ones"], ["maxLen", "độ dài"], ["found", "found"], ["second", "kết quả"],
             ["islands", "islands"], ["maxArea", "diện tích"], ["k", "k"], ["w", "k"],
-            ["len", "độ dài"], ["placed", "placed"], ["startHp", "min HP"], ["minHp", "min HP"]
+            ["len", "độ dài"], ["placed", "placed"], ["startHp", "min HP"], ["minHp", "min HP"],
+            ["maxP", "kết quả"], ["maxGap", "maxGap"], ["cand", "kết quả"], ["zeros", "zeros"],
+            ["nextVal", "kết quả"], ["deleteCount", "deleted"], ["median", "median"],
+            ["res", "kết quả"], ["value", "kết quả"], ["num", "kết quả"], ["idx", "index"],
+            ["peak", "peak"], ["rank", "rank"], ["score", "score"], ["gap", "gap"]
         ];
         for (const [key, label] of scalars) {
             const v = s[key];
             if (v != null && typeof v !== "object") return val(v, label, s);
         }
+        if (typeof s.digits === "string" && s.digits) return txt(s.digits, s);
         if (typeof s.valid === "boolean") return bool(s.valid, s);
+        if (Array.isArray(s.valid) && s.valid.length) {
+            return { kind: "text", text: JSON.stringify(s.valid), flash: true };
+        }
         if (typeof s.ok === "boolean") return bool(s.ok, s);
+        if (Array.isArray(s.dp) && s.dp.length && typeof s.dp[0] !== "object" && s.dp[0] != null) {
+            return val(s.dp[0], "dp[0]", s);
+        }
         if (s.dp && Array.isArray(s.dp[0]) && s.dp[0][0] != null && s.dp[0][0] !== Infinity) {
             return val(s.dp[0][0], "min HP", s);
         }
         if (s.dp && s.target != null && s.dp[s.target] != null && s.dp[s.target] !== Infinity) {
             return val(s.dp[s.target], "dp[target]", s);
         }
-        if (Array.isArray(s.out) && s.out.length) {
-            return { kind: "text", text: JSON.stringify(s.out), flash: true };
+        if (Array.isArray(s.out)) {
+            if (!s.out.length) return txt("[]", s);
+            const first = s.out[0];
+            if (typeof first === "object" && first !== null) {
+                return { kind: "text", text: JSON.stringify(s.out), flash: true };
+            }
+            if (typeof first === "number") return arr(s.out, s, "kết quả");
+            return itemList(s.out.map(String), s);
+        }
+        if (Array.isArray(s.found) && s.found.length) {
+            const f0 = s.found[0];
+            if (typeof f0 === "number") return arr(s.found, s, "found");
+            return itemList(s.found.map(String), s);
+        }
+        if (Array.isArray(s.dups) && s.dups.length) {
+            return { kind: "text", text: JSON.stringify(s.dups), flash: true };
         }
         if (Array.isArray(s.cands) && s.cands.length) {
             return itemList(s.cands.map(String), s);

@@ -14,7 +14,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         step(s, log) {
             if (s.i >= s.nums.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ones=${s.ones} (số đơn độc)`, "success");
+                s.outputText = String(`ones=${s.ones} (số đơn độc)`); log(`[KẾT QUẢ] ones=${s.ones} (số đơn độc)`, "success");
                 return;
             }
             const n = s.nums[s.i];
@@ -51,7 +51,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (s.i >= s.nodes.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] cloned ${s.order.length} nodes`, "success");
+                s.outputText = String(`cloned ${s.order.length} nodes`); log(`[KẾT QUẢ] cloned ${s.order.length} nodes`, "success");
                 return;
             }
             const id = s.i;
@@ -95,7 +95,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (s.i > s.str.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${s.dp[s.str.length]}`, "success");
+                s.outputText = String(`${s.dp[s.str.length]}`); log(`[KẾT QUẢ] ${s.dp[s.str.length]}`, "success");
                 return;
             }
             for (let j = 0; j < s.i; j++) {
@@ -140,7 +140,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.step >= 8) {
                 s.hasCycle = true;
                 s.done = true;
-                log(`[KẾT QUẢ] hasCycle=true (slow==fast)`, "success");
+                s.outputText = String(`hasCycle=true (slow==fast)`); log(`[KẾT QUẢ] hasCycle=true (slow==fast)`, "success");
                 return;
             }
             s.slow = (s.slow + 1) % s.nums.length;
@@ -148,7 +148,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             log(`slow→${s.slow} fast→${s.fast}`, "info");
             if (s.slow === s.fast && s.step > 0) {
                 s.hasCycle = true; s.done = true;
-                log(`[KẾT QUẢ] hasCycle=true`, "success");
+                s.outputText = String(`hasCycle=true`); log(`[KẾT QUẢ] hasCycle=true`, "success");
                 return;
             }
             s.step++;
@@ -183,12 +183,12 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
                 s.fast = (s.fast + 2) % s.nums.length;
                 if (s.slow === s.fast) { s.meet = s.slow; s.phase = 1; s.slow = 0; s.fast = s.meet; log(`Gặp tại ${s.meet}`, "success"); }
                 else log(`Floyd: slow=${s.slow} fast=${s.fast}`, "info");
-                if (s.phase === 0 && s.slow === 0 && s.fast === 0) { s.done = true; log(`[KẾT QUẢ] entry=${s.entry}`, "success"); }
+                if (s.phase === 0 && s.slow === 0 && s.fast === 0) { s.done = true; s.outputText = String(`entry=${s.entry}`); log(`[KẾT QUẢ] entry=${s.entry}`, "success"); }
                 return;
             }
             s.slow = (s.slow + 1) % s.nums.length;
             s.fast = (s.fast + 1) % s.nums.length;
-            if (s.slow === s.fast) { s.entry = s.slow; s.done = true; log(`[KẾT QUẢ] entry index=${s.entry}`, "success"); }
+            if (s.slow === s.fast) { s.entry = s.slow; s.done = true; s.outputText = String(`entry index=${s.entry}`); log(`[KẾT QUẢ] entry index=${s.entry}`, "success"); }
             else log(`Reset: slow=${s.slow} fast=${s.fast}`, "info");
         },
         render(s, c, st) {
@@ -214,7 +214,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (!s.stack.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success");
                 return;
             }
             const idx = s.stack.pop();
@@ -247,7 +247,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (s.i >= s.order.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success");
+                s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success");
                 return;
             }
             s.res.push(s.nums[s.order[s.i]]);
@@ -275,7 +275,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (s.i >= s.ops.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] cache keys=[${[...s.cache.keys()].join(",")}]`, "success");
+                s.outputText = String(`cache keys=[${[...s.cache.keys()].join(",")}]`); log(`[KẾT QUẢ] cache keys=[${[...s.cache.keys()].join(",")}]`, "success");
                 return;
             }
             const op = s.ops[s.i];
@@ -334,7 +334,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.done) return;
             if (s.i >= s.tokens.length) {
                 s.done = true;
-                log(`[KẾT QUẢ] ${s.stack[0]}`, "success");
+                s.outputText = String(`${s.stack[0]}`); log(`[KẾT QUẢ] ${s.stack[0]}`, "success");
                 return;
             }
             const t = s.tokens[s.i];

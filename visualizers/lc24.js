@@ -6,7 +6,7 @@ window.LeetCodeVisualizers[24] = {
         log(`[Khởi tạo] Swap pairs [${s.list.join("→")}]`, "info");
     },
     step(s, log) {
-        if (s.i >= s.list.length - 1) { s.done = true; log(`[KẾT QUẢ] [${s.list.join("→")}]`, "success"); return; }
+        if (s.i >= s.list.length - 1) { s.done = true; s.outputText = String(`[${s.list.join("→")}]`); log(`[KẾT QUẢ] [${s.list.join("→")}]`, "success"); return; }
         [s.list[s.i], s.list[s.i + 1]] = [s.list[s.i + 1], s.list[s.i]];
         log(`Swap index ${s.i},${s.i + 1}`, "info");
         s.i += 2;
@@ -29,7 +29,7 @@ window.LeetCodeVisualizers[26] = {
         log(`[Khởi tạo] Remove duplicates`, "info");
     },
     step(s, log) {
-        if (s.r >= s.nums.length) { s.done = true; log(`[KẾT QUẢ] k=${s.w}`, "success"); return; }
+        if (s.r >= s.nums.length) { s.done = true; s.outputText = String(`k=${s.w}`); log(`[KẾT QUẢ] k=${s.w}`, "success"); return; }
         if (s.nums[s.r] !== s.nums[s.w - 1]) {
             s.nums[s.w] = s.nums[s.r];
             log(`nums[${s.w}]=${s.nums[s.r]}`, "info");
@@ -58,7 +58,7 @@ window.LeetCodeVisualizers[27] = {
         log(`[Khởi tạo] Remove val=${s.val}`, "info");
     },
     step(s, log) {
-        if (s.r >= s.nums.length) { s.done = true; log(`[KẾT QUẢ] k=${s.w}`, "success"); return; }
+        if (s.r >= s.nums.length) { s.done = true; s.outputText = String(`k=${s.w}`); log(`[KẾT QUẢ] k=${s.w}`, "success"); return; }
         if (s.nums[s.r] !== s.val) {
             s.nums[s.w] = s.nums[s.r]; s.w++;
             log(`Giữ ${s.nums[s.r]}`, "info");
@@ -90,12 +90,12 @@ window.LeetCodeVisualizers[28] = {
     },
     step(s, log) {
         const m = s.needle.length;
-        if (m === 0) { s.done = true; log(`[KẾT QUẢ] 0`, "success"); return; }
-        if (s.i > s.hay.length - m) { s.done = true; log(`[KẾT QUẢ] -1`, "success"); s.result = -1; return; }
+        if (m === 0) { s.done = true; s.outputText = String(`0`); log(`[KẾT QUẢ] 0`, "success"); return; }
+        if (s.i > s.hay.length - m) { s.done = true; s.outputText = String(`-1`); log(`[KẾT QUẢ] -1`, "success"); s.result = -1; return; }
         const sub = s.hay.slice(s.i, s.i + m);
         if (sub === s.needle) {
             s.done = true; s.result = s.i;
-            log(`[KẾT QUẢ] ${s.i}`, "success");
+            s.outputText = String(`${s.i}`); log(`[KẾT QUẢ] ${s.i}`, "success");
             return;
         }
         log(`i=${s.i} "${sub}" ≠ needle`, "info");
@@ -129,7 +129,7 @@ window.LeetCodeVisualizers[29] = {
         if (s.work < s.div) {
             s.done = true;
             const sign = (s.a < 0) ^ (s.b < 0) ? -1 : 1;
-            log(`[KẾT QUẢ] ${s.q * sign}`, "success");
+            s.outputText = String(`${s.q * sign}`); log(`[KẾT QUẢ] ${s.q * sign}`, "success");
             return;
         }
         let k = 1;
@@ -165,7 +165,7 @@ window.LeetCodeVisualizers[30] = {
         const total = s.words.length * s.wl;
         if (s.i > s.str.length - total) {
             s.done = true;
-            log(`[KẾT QUẢ] ${JSON.stringify(s.found)}`, "success");
+            s.outputText = String(`${JSON.stringify(s.found)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.found)}`, "success");
             return;
         }
         const chunk = s.str.slice(s.i, s.i + total);

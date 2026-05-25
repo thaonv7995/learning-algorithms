@@ -19,9 +19,9 @@ window.LeetCodeVisualizers[20] = {
         if (state.left >= state.str.length) {
             state.done = true;
             if (state.stack.length === 0) {
-                log(`[KẾT QUẢ] Chuỗi ngoặc khớp LIFO tuyệt đối. Kết luận: HỢP LỆ!`, "success");
+                s.outputText = String(`Chuỗi ngoặc khớp LIFO tuyệt đối. Kết luận: HỢP LỆ!`); log(`[KẾT QUẢ] Chuỗi ngoặc khớp LIFO tuyệt đối. Kết luận: HỢP LỆ!`, "success");
             } else {
-                log(`[KẾT QUẢ] Hết chuỗi nhưng Stack vẫn còn ${state.stack.length} ngoặc dư. Kết luận: KHÔNG HỢP LỆ!`, "error");
+                s.outputText = String(`Hết chuỗi nhưng Stack vẫn còn ${state.stack.length} ngoặc dư. Kết luận: KHÔNG HỢP LỆ!`); log(`[KẾT QUẢ] Hết chuỗi nhưng Stack vẫn còn ${state.stack.length} ngoặc dư. Kết luận: KHÔNG HỢP LỆ!`, "error");
             }
             return;
         }

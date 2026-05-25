@@ -27,7 +27,7 @@ window.LeetCodeVisualizers[2] = {
         const done2 = state.p2 >= state.list2.length;
         if (done1 && done2 && state.carry === 0) {
             state.done = true;
-            log(`[KẾT QUẢ] [${state.result.join("→")}]`, "success");
+            s.outputText = String(`[${state.result.join("→")}]`); log(`[KẾT QUẢ] [${state.result.join("→")}]`, "success");
             return;
         }
 
@@ -45,7 +45,7 @@ window.LeetCodeVisualizers[2] = {
 
         if (state.p1 >= state.list1.length && state.p2 >= state.list2.length && state.carry === 0) {
             state.done = true;
-            log(`[KẾT QUẢ] [${state.result.join("→")}]`, "success");
+            s.outputText = String(`[${state.result.join("→")}]`); log(`[KẾT QUẢ] [${state.result.join("→")}]`, "success");
         }
     },
 

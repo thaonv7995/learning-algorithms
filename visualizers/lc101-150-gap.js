@@ -13,7 +13,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (s.i > s.n) { s.done = true; log(`[KẾT QUẢ] min cuts = ${s.dp[s.n] - 1}`, "success"); return; }
+            if (s.i > s.n) { s.done = true; s.outputText = String(`min cuts = ${s.dp[s.n] - 1}`); log(`[KẾT QUẢ] min cuts = ${s.dp[s.n] - 1}`, "success"); return; }
             for (let j = 0; j < s.i; j++) {
                 const sub = s.s.slice(j, s.i);
                 if (sub === sub.split("").reverse().join("") && s.dp[j] + 1 < s.dp[s.i]) {
@@ -41,7 +41,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (s.start >= s.s.length) { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
+            if (s.start >= s.s.length) { s.done = true; s.outputText = String(`${JSON.stringify(s.res)}`); log(`[KẾT QUẢ] ${JSON.stringify(s.res)}`, "success"); return; }
             for (const w of s.words) {
                 if (s.s.startsWith(w, s.start)) {
                     s.res.push(s.s.slice(0, s.start) + w + (s.start + w.length < s.s.length ? " " + s.s.slice(s.start + w.length) : ""));
@@ -50,7 +50,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
                     break;
                 }
             }
-            if (s.start >= s.s.length) { s.done = true; log(`[KẾT QUẢ] paths found`, "success"); }
+            if (s.start >= s.s.length) { s.done = true; s.outputText = String(`paths found`); log(`[KẾT QUẢ] paths found`, "success"); }
         },
         render(s, c, st) {
             V.statsBar(st, [{ label: "start", value: s.start, cls: "accent" }]);
@@ -82,7 +82,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
                 if (i < s.tail.length) s.result.push(s.tail[i]);
             }
             s.done = true;
-            log(`[KẾT QUẢ] [${s.result.join("→")}]`, "success");
+            s.outputText = String(`[${s.result.join("→")}]`); log(`[KẾT QUẢ] [${s.result.join("→")}]`, "success");
         },
         render(s, c, st) {
             V.statsBar(st, [{ label: "phase", value: s.phase, cls: "accent" }]);
@@ -102,7 +102,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (s.i >= s.nums.length) { s.done = true; log(`[KẾT QUẢ] [${s.nums.join("→")}]`, "success"); return; }
+            if (s.i >= s.nums.length) { s.done = true; s.outputText = String(`[${s.nums.join("→")}]`); log(`[KẾT QUẢ] [${s.nums.join("→")}]`, "success"); return; }
             const key = s.nums[s.i];
             let j = s.i - 1;
             while (j >= 0 && s.nums[j] > key) { s.nums[j + 1] = s.nums[j]; j--; }
@@ -132,7 +132,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
             if (s.i >= s.nums.length) {
                 s.nums.sort((a, b) => a - b);
                 s.done = true;
-                log(`[KẾT QUẢ] [${s.nums.join("→")}]`, "success");
+                s.outputText = String(`[${s.nums.join("→")}]`); log(`[KẾT QUẢ] [${s.nums.join("→")}]`, "success");
                 return;
             }
             log(`Merge pass tại i=${s.i}`, "info");
@@ -155,7 +155,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (s.i >= s.pts.length) { s.done = true; log(`[KẾT QUẢ] ${s.best} điểm`, "success"); return; }
+            if (s.i >= s.pts.length) { s.done = true; s.outputText = String(`${s.best} điểm`); log(`[KẾT QUẢ] ${s.best} điểm`, "success"); return; }
             let local = 1;
             for (let j = 0; j < s.i; j++) {
                 const dx = s.pts[s.i][0] - s.pts[j][0];
