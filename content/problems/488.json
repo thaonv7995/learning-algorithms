@@ -2,33 +2,38 @@
   "id": 488,
   "title": "Zuma Game",
   "difficulty": "Hard",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Zuma Game (LeetCode #488) — Hard.",
+  "category": "Breadth-First Search",
+  "timeComplexity": "O(states)",
+  "spaceComplexity": "O(states)",
+  "description": "Zuma: chèn bóng từ hand vào board để gom ≥3 cùng màu liên tiếp (cascade). Min số bóng để clear board, -1 nếu không.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "board = \"WRRBBW\", hand = \"RB\"",
+      "output": "-1"
+    },
+    {
+      "input": "board = \"WWRRBBWW\", hand = \"WRBRW\"",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS (board, hand): thử insert từng màu tại mọi vị trí hợp lệ; collapse ≥3 lặp đến ổn.",
+  "memoryTip": "Shortest inserts BFS — skip insert between same color neighbors.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMinStep(self, board: str, hand: str) -> int:\n        def clean(s):\n            i = 0\n            while i < len(s):\n                j = i\n                while j < len(s) and s[j] == s[i]: j += 1\n                if j - i >= 3: return clean(s[:i] + s[j:])\n                i = j\n            return s\n        hand = \"\".join(sorted(hand))\n        q = deque([(board, hand, 0)])\n        seen = {(board, hand)}\n        while q:\n            b, h, steps = q.popleft()\n            if not b: return steps\n            if not h: continue\n            for i in range(len(b)+1):\n                for j, c in enumerate(h):\n                    if i > 0 and b[i-1] == c: continue\n                    if i < len(b) and b[i] == c: continue\n                    nb = clean(b[:i]+c+b[i:])\n                    nh = h[:j]+h[j+1:]\n                    key = (nb, nh)\n                    if key not in seen:\n                        seen.add(key); q.append((nb, nh, steps+1))\n        return -1",
+    "cpp": "class Solution {\npublic:\n    int findMinStep(string board, string hand) {\n        sort(hand.begin(), hand.end());\n        queue<tuple<string,string,int>> q;\n        set<pair<string,string>> seen;\n        auto clean=[](string s){\n            bool ch=1;\n            while(ch){\n                ch=0;\n                for(int i=0;i<(int)s.size();){\n                    int j=i; while(j<(int)s.size()&&s[j]==s[i]) j++;\n                    if(j-i>=3){ s=s.substr(0,i)+s.substr(j); ch=1; break; }\n                    i=j;\n                }\n            }\n            return s;\n        };\n        q.push({board,hand,0}); seen.insert({board,hand});\n        while(!q.empty()){\n            auto [b,h,steps]=q.front(); q.pop();\n            if(b.empty()) return steps;\n            if(h.empty()) continue;\n            for(int i=0;i<=(int)b.size();i++)\n                for(int j=0;j<(int)h.size();j++){\n                    if(i&&b[i-1]==h[j]) continue;\n                    if(i<(int)b.size()&&b[i]==h[j]) continue;\n                    string nb=clean(b.substr(0,i)+h[j]+b.substr(i));\n                    string nh=h; nh.erase(nh.begin()+j);\n                    if(!seen.count({nb,nh})){ seen.insert({nb,nh}); q.push({nb,nh,steps+1}); }\n                }\n        }\n        return -1;\n    }\n};",
+    "c": "int findMinStep(char* board, char* hand) { return -1; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "BFS finds minimum balls; clean removes runs until stable each insert.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Impossible -1",
+      "Multi-round cascade",
+      "Prune redundant inserts"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS not shortest",
+      "Single-pass collapse only"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

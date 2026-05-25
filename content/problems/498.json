@@ -2,33 +2,38 @@
   "id": 498,
   "title": "Diagonal Traverse",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Matrix",
+  "timeComplexity": "O(mn)",
   "spaceComplexity": "O(1)",
-  "description": "Diagonal Traverse (LeetCode #498) — Medium.",
+  "description": "Trả các phần tử matrix theo thứ tự diagonal traverse (↗ rồi ↙ xen kẽ).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "mat = [[1,2,3],[4,5,6],[7,8,9]]",
+      "output": "[1,2,4,7,5,3,6,8,9]"
+    },
+    {
+      "input": "mat = [[1,2],[3,4]]",
+      "output": "[1,2,3,4]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Simulate direction: start (0,0); if top row or even diagonal go down-left else up-right.",
+  "memoryTip": "Toggle dir when hit top row or right column — diagonal walk.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findDiagonalOrder(self, mat: List[List[int]]) -> List[int]:\n        if not mat: return []\n        m, n = len(mat), len(mat[0])\n        ans = []\n        r = c = 0\n        for _ in range(m*n):\n            ans.append(mat[r][c])\n            if (r+c) % 2 == 0:\n                if c == n-1: r += 1\n                elif r == 0: c += 1\n                else: r -= 1; c += 1\n            else:\n                if r == m-1: c += 1\n                elif c == 0: r += 1\n                else: r += 1; c -= 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> findDiagonalOrder(vector<vector<int>>& mat) {\n        int m=mat.size(), n=mat[0].size(); vector<int> ans;\n        int r=0,c=0;\n        for(int k=0;k<m*n;k++){\n            ans.push_back(mat[r][c]);\n            if((r+c)%2==0){\n                if(c==n-1) r++; else if(r==0) c++; else { r--; c++; }\n            } else {\n                if(r==m-1) c++; else if(c==0) r++; else { r++; c--; }\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int* findDiagonalOrder(int** mat,int m,int* cs,int n,int* rs){\n    int* ans=malloc(m*n*sizeof(int)); *rs=m*n;\n    int r=0,c=0,k;\n    for(k=0;k<m*n;k++){\n        ans[k]=mat[r][c];\n        if((r+c)%2==0){\n            if(c==n-1) r++; else if(r==0) c++; else { r--; c++; }\n        } else {\n            if(r==m-1) c++; else if(c==0) r++; else { r++; c--; }\n        }\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Direction rules cover boundary turns for zigzag diagonals.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "1 row",
+      "1 column",
+      "2×2 matrix"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Wrong parity turn",
+      "Out of bounds"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

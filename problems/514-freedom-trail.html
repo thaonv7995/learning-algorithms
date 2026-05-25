@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #514</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Freedom Trail</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * m^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n * m)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Freedom Trail (LeetCode #514) — Hard.</div>
+                        <div class="block-text">Ring chứa key (có thể lặp ký tự). Bắt đầu tại 'A', di chuyển tối thiểu trên ring để gõ key. Trả tổng bước (di chuyển + bấm phím).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>ring = &quot;godding&quot;, key = &quot;gd&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>ring = &quot;godding&quot;, key = &quot;godding&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>13</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[i][j]: min cost gõ key[0..i) khi tay ở vị trí j trên ring. Precompute khoảng cách vòng giữa mọi cặp vị trí cùng ký tự.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,46 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DP ring + key — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findRotateSteps(<span class="ty">self</span>, ring: <span class="ty">str</span>, key: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+        pos = defaultdict(<span class="ty">list</span>)
+        <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(ring):
+            pos[c].append(i)
+        n, m = <span class="ty">len</span>(ring), <span class="ty">len</span>(key)
+        INF = 10**9
+        dp = [[INF] * n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(key) + 1)]
+        dp[0][0] = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(key)):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+                <span class="kw">if</span> dp[i][j] == INF:
+                    continue
+                <span class="kw">for</span> k <span class="kw">in</span> pos[key[i]]:
+                    step = <span class="ty">min</span>(abs(k - j), n - abs(k - j)) + 1
+                    dp[i + 1][k] = <span class="ty">min</span>(dp[i + 1][k], dp[i][j] + step)
+        <span class="kw">return</span> <span class="ty">min</span>(dp[<span class="ty">len</span>(key)])
+</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findRotateSteps(<span class="ty">string</span> ring, <span class="ty">string</span> key) {
+        <span class="ty">int</span> n = ring.size();
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; pos(26);
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) pos[ring[i]-'a'].push_back(i);
+        <span class="ty">int</span> m = key.size();
+        <span class="ty">const</span> <span class="ty">int</span> INF = 1e9;
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(m+1, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n, INF));
+        dp[0][0] = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++) {
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; n; j++) <span class="kw">if</span> (dp[i][j] &lt; INF) {
+                <span class="kw">for</span> (<span class="ty">int</span> k : pos[key[i]-'a']) {
+                    <span class="ty">int</span> step = min(abs(k-j), n-abs(k-j)) + 1;
+                    dp[i+1][k] = min(dp[i+1][k], dp[i][j] + step);
+                }
+            }
+        }
+        <span class="kw">return</span> *min_element(dp[m].begin(), dp[m].end());
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +144,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * m^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n * m)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP[i][j]: min cost gõ key[0..i) khi tay ở vị trí j trên…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Precompute khoảng cách vòng giữa mọi cặp vị trí cùng ký…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DP thử mọi vị trí ring khớp ký tự key, cộng bước xoay tối thiểu + 1 bấm.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">key một ký tự</span><span class="analysis-tag edge">Nhiều vị trí cùng chữ trên ring</span><span class="analysis-tag pit">Quên +1 bấm phím</span><span class="analysis-tag pit">Dist vòng sai (không min hai chiều)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Freedom Trail = DP trên + dist vòng tròn min.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +172,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Freedom%20Trail&lc_id=514&embed=true"></iframe>

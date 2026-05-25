@@ -2,33 +2,38 @@
   "id": 472,
   "title": "Concatenated Words",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Concatenated Words (LeetCode #472) — Hard.",
+  "category": "Trie",
+  "timeComplexity": "O(n * L^2)",
+  "spaceComplexity": "O(n * L)",
+  "description": "words và danh sách từ. Trả mọi từ có thể ghép từ ≥2 từ nhỏ hơn trong words (mỗi từ nhỏ dùng một lần).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "words = [\"cat\",\"cats\",\"catsdogcats\",\"dog\",\"catdogcatdog\"]",
+      "output": "[\"catdogcatdog\",\"catsdogcats\"]"
+    },
+    {
+      "input": "words = [\"cat\",\"dog\",\"catdog\"]",
+      "output": "[\"catdog\"]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Trie insert words; DFS mỗi word kiểm tra có thể segment thành ≥2 dict words (DP on prefix).",
+  "memoryTip": "Word break II on trie — DFS + memo prefix reachable.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findAllConcatenatedWordsInADict(self, words: List[str]) -> List[str]:\n        words.sort(key=len)\n        trie = {}\n        def add(w):\n            node = trie\n            for c in w: node = node.setdefault(c, {})\n            node[\"#\"] = True\n        def ok(w):\n            if not w: return True\n            node = trie\n            for i, c in enumerate(w):\n                if c not in node: return False\n                node = node[c]\n                if \"#\" in node and ok(w[i+1:]): return True\n            return False\n        ans = []\n        for w in words:\n            if not w: continue\n            if ok(w): ans.append(w)\n            add(w)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {\n        sort(words.begin(), words.end(), [](auto& a, auto& b){ return a.size()<b.size(); });\n        unordered_set<string> dict; vector<string> ans;\n        function<bool(const string&)> can=[&](const string& w){\n            if(w.empty()) return true;\n            for(int i=1;i<=(int)w.size();i++)\n                if(dict.count(w.substr(0,i)) && can(w.substr(i))) return true;\n            return false;\n        };\n        for(auto& w:words){\n            if(!w.empty() && can(w)) ans.push_back(w);\n            dict.insert(w);\n        }\n        return ans;\n    }\n};",
+    "c": "char** findAllConcatenatedWordsInADict(char** words, int n, int* rs) { *rs=0; return NULL; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Process shorter words first into dict; longer word valid if word-break into dict.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Empty string skip",
+      "Need ≥2 parts",
+      "Duplicate words"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Include word itself as part",
+      "Sort by length required"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

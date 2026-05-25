@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #466</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Two Pointers</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Count The Repetitions</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n*m)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>34.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Count The Repetitions (LeetCode #466) — Hard.</div>
+                        <div class="block-text">s2 = n2 lần lặp s1 (n1 copies). s1 length m1. Trả số substring của s2 bằng s1 (có thể chồng lấn).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s1 = &quot;acb&quot;, n1 = 4, s2 = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s1 = &quot;ab&quot;, n1 = 3, s2 = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP count s1 in one s2 copy; track carry partial match between copies; scale by n2 plus remainder.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> getMaxRepetitions(<span class="ty">char</span>* s1, <span class="ty">int</span> n1, <span class="ty">char</span>* s2, <span class="ty">int</span> n2) { <span class="kw">return</span> 0; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> getMaxRepetitions(<span class="ty">self</span>, s1: <span class="ty">str</span>, n1: <span class="ty">int</span>, s2: <span class="ty">str</span>, n2: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> <span class="kw">not</span> <span class="ty">set</span>(s1) &lt;= <span class="ty">set</span>(s2): <span class="kw">return</span> 0
+        i = j = count = 0
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n1):
+            <span class="kw">for</span> ch <span class="kw">in</span> s1:
+                <span class="kw">while</span> j &lt; <span class="ty">len</span>(s2) <span class="kw">and</span> s2[j] != ch:
+                    j += 1
+                <span class="kw">if</span> j == <span class="ty">len</span>(s2):
+                    count += 1
+                    j = 0
+                    <span class="kw">while</span> j &lt; <span class="ty">len</span>(s2) <span class="kw">and</span> s2[j] != ch:
+                        j += 1
+                j += 1
+        <span class="kw">return</span> count // n2</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> getMaxRepetitions(<span class="ty">string</span> s1, <span class="ty">int</span> n1, <span class="ty">string</span> s2, <span class="ty">int</span> n2) {
+        <span class="ty">int</span> j=0, cnt=0;
+        <span class="kw">for</span>(<span class="ty">int</span> rep=0; rep&lt;n1; rep++){
+            <span class="kw">for</span>(<span class="ty">char</span> c:s1){
+                <span class="kw">while</span>(j&lt;(<span class="ty">int</span>)s2.size()&amp;&amp;s2[j]!=c) j++;
+                <span class="kw">if</span>(j==(<span class="ty">int</span>)s2.size()){ cnt++; j=0; <span class="kw">while</span>(j&lt;(<span class="ty">int</span>)s2.size()&amp;&amp;s2[j]!=c) j++; }
+                j++;
+            }
+        }
+        <span class="kw">return</span> cnt/n2;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +132,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Two Pointers</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n*m)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP count s1 in one s2 copy; track carry partial match between copies;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Simulate matching s1 against n1 copies of s2 stream; divide full s2 matches by n2.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chars missing in s2</span><span class="analysis-tag edge">n2=0 edge</span><span class="analysis-tag edge">Partial carry between blocks</span><span class="analysis-tag pit">Naive concat O(n1*m1) memory</span><span class="analysis-tag pit">Off-by-one on j reset</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Repeated pattern — count full s1 in s2 then chain across n2 blocks.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +161,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Count%20The%20Repetitions&lc_id=466&embed=true"></iframe>

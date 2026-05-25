@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #507</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Perfect Number</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(sqrt n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>48.9% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Perfect Number (LeetCode #507) — Easy.</div>
+                        <div class="block-text">Số hoàn hảo là số bằng tổng các ước dương đúng (không tính chính nó). Kiểm tra num có phải perfect number không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>num = 28</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>num = 7</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>num = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Cộng ước từ 1 đến sqrt(num); nếu i chia hết thì cộng i và num/i (trừ trùng sqrt).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Sum divisors sqrt — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> checkPerfectNumber(<span class="ty">self</span>, num: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">if</span> num &lt;= 1:
+            <span class="kw">return</span> <span class="kw">False</span>
+        s = 1
+        i = 2
+        <span class="kw">while</span> i * i &lt;= num:
+            <span class="kw">if</span> num % i == 0:
+                s += i
+                <span class="kw">if</span> i * i != num:
+                    s += num // i
+            i += 1
+        <span class="kw">return</span> s == num</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> checkPerfectNumber(<span class="ty">int</span> num) {
+        <span class="kw">if</span> (num &lt;= 1) <span class="kw">return</span> false;
+        <span class="ty">int</span> sum = 1;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 2; i * i &lt;= num; i++) {
+            <span class="kw">if</span> (num % i == 0) {
+                sum += i;
+                <span class="kw">if</span> (i * i != num) sum += num / i;
+            }
+        }
+        <span class="kw">return</span> sum == num;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +136,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(sqrt n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Cộng ước từ 1 đến sqrt; nếu i chia hết thì cộng i và num/i .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Tổng ước đúng (không kể num) so với num xác định perfect number.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">num=1 → false</span><span class="analysis-tag edge">num=6 → true</span><span class="analysis-tag pit">Cộng cả chính num</span><span class="analysis-tag pit">Double-count ước sqrt</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Perfect number: sum divisors = num; luôn cộng 1, duyệt đến sqrt.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Perfect%20Number&lc_id=507&embed=true"></iframe>

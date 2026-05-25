@@ -2,33 +2,37 @@
   "id": 547,
   "title": "Number of Provinces",
   "difficulty": "Medium",
-  "category": "Depth-First Search",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Number of Provinces (LeetCode #547) — Medium.",
+  "category": "Graph",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n)",
+  "description": "Ma trận n×n isConnected: isConnected[i][j]=1 nếu thành phố i,j cùng tỉnh. Đếm số tỉnh (connected components).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "isConnected = [[1,1,0],[1,1,0],[0,0,1]]",
+      "output": "2"
+    },
+    {
+      "input": "isConnected = [[1,0,0],[0,1,0],[0,0,1]]",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS/BFS hoặc Union-Find: duyệt i=0..n-1, nếu chưa thăm thì dfs lan và tăng count.",
+  "memoryTip": "Number of provinces = count connected components in adjacency matrix.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findCircleNum(self, isConnected: List[List[int]]) -> int:\n        n = len(isConnected)\n        seen = [False]*n\n        def dfs(u):\n            seen[u] = True\n            for v in range(n):\n                if isConnected[u][v] and not seen[v]:\n                    dfs(v)\n        ans = 0\n        for i in range(n):\n            if not seen[i]:\n                dfs(i)\n                ans += 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findCircleNum(vector<vector<int>>& isConnected) {\n        int n = isConnected.size();\n        vector<bool> seen(n);\n        function<void(int)> dfs = [&](int u) {\n            seen[u] = true;\n            for (int v = 0; v < n; v++)\n                if (isConnected[u][v] && !seen[v]) dfs(v);\n        };\n        int ans = 0;\n        for (int i = 0; i < n; i++)\n            if (!seen[i]) { dfs(i); ans++; }\n        return ans;\n    }\n};",
+    "c": "/* DFS components — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi DFS thăm trọn một component; đếm số lần khởi dfs.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1 → 1",
+      "Toàn kết nối → 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ xét cạnh i,i+1",
+      "Quên matrix đối xứng vẫn dfs đủ"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

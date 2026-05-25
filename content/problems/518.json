@@ -3,32 +3,40 @@
   "title": "Coin Change II",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Coin Change II (LeetCode #518) — Medium.",
+  "timeComplexity": "O(n * amount)",
+  "spaceComplexity": "O(amount)",
+  "description": "Cho coins và amount. Đếm số cách tổ hợp (thứ tự coin không quan trọng) sao tổng bằng amount.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "amount=5, coins=[1,2,5]",
+      "output": "4"
+    },
+    {
+      "input": "amount=3, coins=[2]",
+      "output": "0"
+    },
+    {
+      "input": "amount=10, coins=[10]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Unbounded knapsack đếm cách: dp[0]=1; duyệt coin ngoài, cộng dp[j-coin] vào dp[j].",
+  "memoryTip": "Coin change II = DP amount, coin loop outside tránh đếm hoán vị.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def change(self, amount: int, coins: List[int]) -> int:\n        dp = [0] * (amount + 1)\n        dp[0] = 1\n        for c in coins:\n            for j in range(c, amount + 1):\n                dp[j] += dp[j - c]\n        return dp[amount]",
+    "cpp": "class Solution {\npublic:\n    int change(int amount, vector<int>& coins) {\n        vector<int> dp(amount + 1);\n        dp[0] = 1;\n        for (int c : coins)\n            for (int j = c; j <= amount; j++)\n                dp[j] += dp[j - c];\n        return dp[amount];\n    }\n};",
+    "c": "/* Unbounded knapsack count — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "dp[j] = tổng cách dùng coin đã xét; coin ngoài vòng tránh trùng hoán vị.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "amount=0 → 1 cách rỗng",
+      "Không coin khớp → 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Đảo vòng coin/amount → đếm permutation",
+      "Overflow int với amount lớn"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

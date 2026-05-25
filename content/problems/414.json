@@ -5,30 +5,39 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Third Maximum Number (LeetCode #414) — Easy.",
+  "description": "Trả giá trị lớn thứ ba khác nhau trong mảng nums. Nếu không đủ 3 giá trị khác nhau thì trả max.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [3,2,1]",
+      "output": "1"
+    },
+    {
+      "input": "nums = [1,2]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [2,2,3,1]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Giữ ba biến first, second, third (long min). Duyệt x: cập nhật nếu x lớn hơn từng mức, bỏ qua trùng.",
+  "memoryTip": "Third max — track top 3 distinct, không sort O(n log n) cần thiết.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def thirdMax(self, nums: List[int]) -> int:\n        a = b = c = -10**18\n        for x in nums:\n            if x == a or x == b or x == c: continue\n            if x > a: a, b, c = x, a, b\n            elif x > b: b, c = x, b\n            elif x > c: c = x\n        return c if c > -10**17 else a",
+    "cpp": "class Solution {\npublic:\n    int thirdMax(vector<int>& nums) {\n        long a=LLONG_MIN,b=LLONG_MIN,c=LLONG_MIN;\n        for(long x:nums){\n            if(x==a||x==b||x==c) continue;\n            if(x>a) { c=b; b=a; a=x; }\n            else if(x>b) { c=b; b=x; }\n            else if(x>c) c=x;\n        }\n        return c>LLONG_MIN/2 ? (int)c : (int)a;\n    }\n};",
+    "c": "int thirdMax(int* nums, int n) {\n    long a=LLONG_MIN,b=LLONG_MIN,c=LLONG_MIN;\n    for(int i=0;i<n;i++){\n        long x=nums[i];\n        if(x==a||x==b||x==c) continue;\n        if(x>a){ c=b;b=a;a=x; }\n        else if(x>b){ c=b;b=x; }\n        else if(x>c) c=x;\n    }\n    return c>LLONG_MIN/2 ? (int)c : (int)a;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Ba biến luôn là top 3 distinct seen; thiếu third thì trả first.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "INT_MIN trong mảng",
+      "Chỉ 1 distinct",
+      "Trùng lặp nhiều"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort unique sai tie",
+      "Quên case <3 distinct → max"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

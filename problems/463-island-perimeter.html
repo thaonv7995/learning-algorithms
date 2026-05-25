@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #463</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Matrix</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Island Perimeter</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>74.5% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Island Perimeter (LeetCode #463) — Easy.</div>
+                        <div class="block-text">Grid 0=nước, 1=đất. Một đảo là khối 1 liên thông. Tính chu vi đảo (cạnh tiếp giáp nước hoặc biên).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>grid = [[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]</code></div>
+                <div class="ex-line"><span>Out</span><code>16</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>grid = [[1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Mỗi ô 1: +4; trừ 2 cho mỗi neighbor 1 (chia sẻ cạnh).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> islandPerimeter(<span class="ty">int</span>** grid, <span class="ty">int</span> m, <span class="ty">int</span>* cs, <span class="ty">int</span> n) {
+    <span class="ty">int</span> ans=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) <span class="kw">if</span>(grid[i][j]){
+        ans+=4;
+        <span class="kw">if</span>(i&amp;&amp;grid[i-1][j]) ans-=2;
+        <span class="kw">if</span>(j&amp;&amp;grid[i][j-1]) ans-=2;
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> islandPerimeter(<span class="ty">self</span>, grid: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        m, n = <span class="ty">len</span>(grid), <span class="ty">len</span>(grid[0])
+        ans = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+                <span class="kw">if</span> grid[i][j]:
+                    ans += 4
+                    <span class="kw">if</span> i <span class="kw">and</span> grid[i-1][j]: ans -= 2
+                    <span class="kw">if</span> j <span class="kw">and</span> grid[i][j-1]: ans -= 2
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> islandPerimeter(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; g) {
+        <span class="ty">int</span> m=g.size(), n=g[0].size(), ans=0;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) <span class="kw">if</span>(g[i][j]){
+            ans+=4;
+            <span class="kw">if</span>(i&amp;&amp;g[i-1][j]) ans-=2;
+            <span class="kw">if</span>(j&amp;&amp;g[i][j-1]) ans-=2;
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +134,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">Matrix</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Mỗi ô 1: +4; trừ 2 cho mỗi neighbor 1 .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Each land cell 4 edges minus double-counted internal borders.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Single cell island</span><span class="analysis-tag edge">No land → 0</span><span class="analysis-tag edge">Multiple islands sum all</span><span class="analysis-tag pit">DFS flood fill unnecessary</span><span class="analysis-tag pit">Count water edges separately wrong</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Perimeter = 4*cells - 2*shared_edges — no DFS needed.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Island%20Perimeter&lc_id=463&embed=true"></iframe>

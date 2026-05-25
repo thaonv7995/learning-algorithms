@@ -2,33 +2,38 @@
   "id": 462,
   "title": "Minimum Moves to Equal Array Elements II",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Math",
+  "timeComplexity": "O(n log n)",
   "spaceComplexity": "O(1)",
-  "description": "Minimum Moves to Equal Array Elements II (LeetCode #462) — Medium.",
+  "description": "Mỗi move chọn i và tăng hoặc giảm nums[i] đúng 1. Min moves để mọi phần tử bằng nhau.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,2,3]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [1,0,0,8,6]",
+      "output": "14"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Target optimal là median. Answer = sum |nums[i] - median|.",
+  "memoryTip": "462 median vs 453 min — +/-1 moves converge to median.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minMoves2(self, nums: List[int]) -> int:\n        nums.sort()\n        m = nums[len(nums)//2]\n        return sum(abs(x - m) for x in nums)",
+    "cpp": "class Solution {\npublic:\n    int minMoves2(vector<int>& nums) {\n        nth_element(nums.begin(), nums.begin()+nums.size()/2, nums.end());\n        int m=nums[nums.size()/2], ans=0;\n        for(int x:nums) ans+=abs(x-m);\n        return ans;\n    }\n};",
+    "c": "int cmpi462(const void* a,const void* b){ return *(int*)a-*(int*)b; }\nint minMoves2(int* nums, int n){\n    qsort(nums,n,sizeof(int),cmpi462);\n    int m=nums[n/2], ans=0;\n    for(int i=0;i<n;i++){ int d=nums[i]-m; ans+=d<0?-d:d; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "L1 minimizer is median — sum absolute deviations minimized.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một phần tử",
+      "Even n any middle median",
+      "Negative nums"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng mean",
+      "Nhầm 453 increment-only"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

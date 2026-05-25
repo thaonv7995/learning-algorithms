@@ -3,32 +3,36 @@
   "title": "Single Element in a Sorted Array",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Single Element in a Sorted Array (LeetCode #540) — Medium.",
+  "description": "Mảng đã sort, mọi phần tử xuất hiện đúng hai lần trừ một phần tử xuất hiện một lần. Tìm phần tử đơn.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,1,2,3,3,4,4,8,8]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [3,3,7,7,10,11,11]",
+      "output": "10"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search: tại mid, nếu mid chẵn thì nums[mid]==nums[mid+1]; lẻ thì nums[mid]==nums[mid-1]. Điều chỉnh left/right theo cặp lệch.",
+  "memoryTip": "Single in sorted: BS theo parity — cặt đôi đúng ở nửa trái hay phải single.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def singleNonDuplicate(self, nums: List[int]) -> int:\n        lo, hi = 0, len(nums) - 1\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if mid % 2 == 1:\n                mid -= 1\n            if nums[mid] == nums[mid + 1]:\n                lo = mid + 2\n            else:\n                hi = mid\n        return nums[lo]",
+    "cpp": "class Solution {\npublic:\n    int singleNonDuplicate(vector<int>& nums) {\n        int lo = 0, hi = (int)nums.size() - 1;\n        while (lo < hi) {\n            int mid = (lo + hi) / 2;\n            if (mid % 2) mid--;\n            if (nums[mid] == nums[mid + 1]) lo = mid + 2;\n            else hi = mid;\n        }\n        return nums[lo];\n    }\n};",
+    "c": "/* Binary search parity — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Invariant: single nằm bên có số phần tử lẻ sau khi loại cặt đôi đúng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Single ở đầu/cuối",
+      "Mảng 3 phần tử"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "XOR toàn mảng không O(log n)",
+      "Mid parity xử lý sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,38 @@
   "id": 475,
   "title": "Heaters",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Binary Search",
+  "timeComplexity": "O(n log n + m log m)",
   "spaceComplexity": "O(1)",
-  "description": "Heaters (LeetCode #475) — Medium.",
+  "description": "houses và heaters trên trục số. Minimize max distance từ mỗi house tới heater gần nhất (radius tối thiểu).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "houses = [1,2,3], heaters = [2]",
+      "output": "1"
+    },
+    {
+      "input": "houses = [1,2,3,4], heaters = [1,4]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort both; với mỗi house binary search lower_bound heater; dist = min(|h-heater|).",
+  "memoryTip": "For each house nearest heater — binary search on sorted heaters.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findRadius(self, houses: List[int], heaters: List[int]) -> int:\n        houses.sort(); heaters.sort()\n        ans = 0\n        for h in houses:\n            i = bisect.bisect_left(heaters, h)\n            d = float(\"inf\")\n            if i < len(heaters): d = min(d, abs(heaters[i]-h))\n            if i: d = min(d, abs(heaters[i-1]-h))\n            ans = max(ans, d)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findRadius(vector<int>& houses, vector<int>& heaters) {\n        sort(houses.begin(), houses.end()); sort(heaters.begin(), heaters.end());\n        int ans=0;\n        for(int h:houses){\n            auto it=lower_bound(heaters.begin(), heaters.end(), h);\n            int d=INT_MAX;\n            if(it!=heaters.end()) d=min(d, abs(*it-h));\n            if(it!=heaters.begin()) d=min(d, abs(*prev(it)-h));\n            ans=max(ans,d);\n        }\n        return ans;\n    }\n};",
+    "c": "int findRadius(int* houses, int hn, int* heaters, int hen) {\n    qsort(houses,hn,sizeof(int),cmpi);\n    qsort(heaters,hen,sizeof(int),cmpi);\n    int ans=0;\n    for(int hi=0;hi<hn;hi++){\n        int h=houses[hi], d=INT_MAX;\n        int l=0,r=hen;\n        while(l<r){ int m=(l+r)/2; if(heaters[m]<h) l=m+1; else r=m; }\n        if(l<hen){ int t=heaters[l]-h; if(t<d) d=t; }\n        if(l>0){ int t=h-heaters[l-1]; if(t<d) d=t; }\n        if(d>ans) ans=d;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Min distance per house to nearest heater; max over houses is radius.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "One heater many houses",
+      "House equals heater → 0",
+      "Heater outside range"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Linear scan heaters TLE",
+      "Forget check i-1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

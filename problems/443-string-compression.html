@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #443</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Two Pointers</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">String Compression</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">String Compression (LeetCode #443) — Medium.</div>
+                        <div class="block-text">Nén chars in-place: nhóm ký tự liên tiếp thành ký tự + số lần (nếu &gt;1). Trả độ dài mới.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>chars = [&quot;a&quot;,&quot;a&quot;,&quot;b&quot;,&quot;b&quot;,&quot;c&quot;,&quot;c&quot;,&quot;c&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>6, chars = [&quot;a&quot;,&quot;2&quot;,&quot;b&quot;,&quot;2&quot;,&quot;c&quot;,&quot;3&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>chars = [&quot;a&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Two pointers write: read group, write char rồi count string nếu len&gt;1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> compress(<span class="ty">char</span>* chars, <span class="ty">int</span> n) {
+    <span class="ty">int</span> w=0,i=0;
+    <span class="kw">while</span>(i&lt;n){
+        <span class="ty">char</span> ch=chars[i]; <span class="ty">int</span> j=i;
+        <span class="kw">while</span>(j&lt;n&amp;&amp;chars[j]==ch) j++;
+        chars[w++]=ch; <span class="ty">int</span> cnt=j-i;
+        <span class="kw">if</span>(cnt&gt;1){
+            <span class="ty">char</span> buf[12]; sprintf(buf,&quot;%d&quot;,cnt);
+            <span class="kw">for</span>(<span class="ty">int</span> k=0;buf[k];k++) chars[w++]=buf[k];
+        }
+        i=j;
+    }
+    <span class="kw">return</span> w;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> compress(<span class="ty">self</span>, chars: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">int</span>:
+        w = i = 0
+        <span class="kw">while</span> i &lt; <span class="ty">len</span>(chars):
+            ch = chars[i]; j = i
+            <span class="kw">while</span> j &lt; <span class="ty">len</span>(chars) <span class="kw">and</span> chars[j] == ch: j += 1
+            chars[w] = ch; w += 1
+            cnt = j - i
+            <span class="kw">if</span> cnt &gt; 1:
+                <span class="kw">for</span> c <span class="kw">in</span> <span class="ty">str</span>(cnt): chars[w] = c; w += 1
+            i = j
+        <span class="kw">return</span> w</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> compress(<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&amp; c) {
+        <span class="ty">int</span> w=0, i=0, n=c.size();
+        <span class="kw">while</span>(i&lt;n){
+            <span class="ty">char</span> ch=c[i]; <span class="ty">int</span> j=i;
+            <span class="kw">while</span>(j&lt;n&amp;&amp;c[j]==ch) j++;
+            c[w++]=ch; <span class="ty">int</span> cnt=j-i;
+            <span class="kw">if</span>(cnt&gt;1){ <span class="ty">string</span> s=to_string(cnt); <span class="kw">for</span>(<span class="ty">char</span> x:s) c[w++]=x; }
+            i=j;
+        }
+        <span class="kw">return</span> w;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +147,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Two pointers write: read group, write char rồi count string nếu len&gt;1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>In-place write không overlap vì compressed ≤ original.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một ký tự</span><span class="analysis-tag edge">Count &gt;9 nhiều chữ số</span><span class="analysis-tag edge">Không cần số nếu count=1</span><span class="analysis-tag pit">Ghi count khi =1</span><span class="analysis-tag pit">Buffer overflow write</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Read pointer scan groups — write pointer builds compressed.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=String%20Compression&lc_id=443&embed=true"></iframe>

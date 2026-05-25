@@ -2,33 +2,42 @@
   "id": 416,
   "title": "Partition Equal Subset Sum",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Partition Equal Subset Sum (LeetCode #416) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n*sum)",
+  "spaceComplexity": "O(sum)",
+  "description": "Cho mảng nums số nguyên dương. Kiểm tra có thể chia thành hai tập con có tổng bằng nhau không.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,5,11,5]",
+      "output": "true"
+    },
+    {
+      "input": "nums = [1,2,3,5]",
+      "output": "false"
+    },
+    {
+      "input": "nums = [2,2,1,1]",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Target = sum/2; 0/1 knapsack dp[s] = có subset sum s. Duyệt từng x cập nhật dp từ target xuống 0.",
+  "memoryTip": "Partition = subset sum đúng nửa tổng — dp boolean 1D.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canPartition(self, nums: List[int]) -> bool:\n        s = sum(nums)\n        if s & 1: return False\n        t = s // 2\n        dp = [False] * (t + 1)\n        dp[0] = True\n        for x in nums:\n            for j in range(t, x - 1, -1):\n                dp[j] |= dp[j - x]\n        return dp[t]",
+    "cpp": "class Solution {\npublic:\n    bool canPartition(vector<int>& nums) {\n        int s=accumulate(nums.begin(),nums.end(),0);\n        if(s&1) return false;\n        int t=s/2; vector<char> dp(t+1); dp[0]=1;\n        for(int x:nums)\n            for(int j=t;j>=x;j--) dp[j]|=dp[j-x];\n        return dp[t];\n    }\n};",
+    "c": "bool canPartition(int* nums, int n) {\n    long s=0; for(int i=0;i<n;i++) s+=nums[i];\n    if(s&1) return false;\n    int t=(int)(s/2);\n    char* dp=calloc(t+1,1); dp[0]=1;\n    for(int i=0;i<n;i++) for(int j=t;j>=nums[i];j--) dp[j]|=dp[j-nums[i]];\n    bool ok=dp[t]; free(dp); return ok;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Subset sum đúng target iff chia được hai phần bằng nhau.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Tổng lẻ → false",
+      "Một phần tử",
+      "Target=0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Loop j tăng dùng lại x",
+      "Quên check sum chẵn"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

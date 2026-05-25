@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #416</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Partition Equal Subset Sum</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n*sum)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(sum)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Partition Equal Subset Sum (LeetCode #416) — Medium.</div>
+                        <div class="block-text">Cho mảng nums số nguyên dương. Kiểm tra có thể chia thành hai tập con có tổng bằng nhau không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,5,11,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [2,2,1,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Target = sum/2; 0/1 knapsack dp[s] = có subset sum s. Duyệt từng x cập nhật dp từ target xuống 0.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> canPartition(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">long</span> s=0; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) s+=nums[i];
+    <span class="kw">if</span>(s&amp;1) <span class="kw">return</span> false;
+    <span class="ty">int</span> t=(<span class="ty">int</span>)(s/2);
+    <span class="ty">char</span>* dp=<span class="kw">calloc</span>(t+1,1); dp[0]=1;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=t;j&gt;=nums[i];j--) dp[j]|=dp[j-nums[i]];
+    <span class="ty">bool</span> ok=dp[t]; <span class="kw">free</span>(dp); <span class="kw">return</span> ok;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> canPartition(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        s = sum(nums)
+        <span class="kw">if</span> s &amp; 1: <span class="kw">return</span> <span class="kw">False</span>
+        t = s // 2
+        dp = [<span class="kw">False</span>] * (t + 1)
+        dp[0] = <span class="kw">True</span>
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(t, x - 1, -1):
+                dp[j] |= dp[j - x]
+        <span class="kw">return</span> dp[t]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> canPartition(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> s=accumulate(nums.begin(),nums.end(),0);
+        <span class="kw">if</span>(s&amp;1) <span class="kw">return</span> false;
+        <span class="ty">int</span> t=s/2; <span class="ty">vector</span>&lt;<span class="ty">char</span>&gt; dp(t+1); dp[0]=1;
+        <span class="kw">for</span>(<span class="ty">int</span> x:nums)
+            <span class="kw">for</span>(<span class="ty">int</span> j=t;j&gt;=x;j--) dp[j]|=dp[j-x];
+        <span class="kw">return</span> dp[t];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +137,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n*sum)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(sum)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Target = sum/2; 0/1 knapsack dp[s] = có subset sum s.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Duyệt từng x cập nhật dp từ target xuống 0.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Subset sum đúng target iff chia được hai phần bằng nhau.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Tổng lẻ → false</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Target=0</span><span class="analysis-tag pit">Loop j tăng dùng lại x</span><span class="analysis-tag pit">Quên check sum chẵn</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Partition = subset sum đúng nửa tổng — dp boolean 1D.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +166,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Partition%20Equal%20Subset%20Sum&lc_id=416&embed=true"></iframe>

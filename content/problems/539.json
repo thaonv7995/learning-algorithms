@@ -3,32 +3,36 @@
   "title": "Minimum Time Difference",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Minimum Time Difference (LeetCode #539) — Medium.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng time dạng \"HH:MM\" (24h). Trả chênh lệch thời gian nhỏ nhất (phút) giữa hai mốc bất kỳ (có thể qua nửa đêm).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "time = [\"23:59\",\"00:00\"]",
+      "output": "1"
+    },
+    {
+      "input": "time = [\"00:00\",\"04:00\",\"22:00\"]",
+      "output": "120"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Chuyển mỗi time sang phút 0..1439; sort; min diff giữa kề + wrap (1440 - last + first).",
+  "memoryTip": "Min time diff: parse to minutes, sort, check adjacent + circular midnight.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMinDifference(self, timeList: List[str]) -> int:\n        mins = []\n        for t in timeList:\n            h, m = map(int, t.split(\":\"))\n            mins.append(h * 60 + m)\n        mins.sort()\n        ans = 24 * 60\n        for i in range(1, len(mins)):\n            ans = min(ans, mins[i] - mins[i-1])\n        ans = min(ans, 24*60 - mins[-1] + mins[0])\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findMinDifference(vector<string>& timeList) {\n        vector<int> m;\n        for (auto& t : timeList) {\n            int h = stoi(t.substr(0,2)), mi = stoi(t.substr(3,2));\n            m.push_back(h*60+mi);\n        }\n        sort(m.begin(), m.end());\n        int ans = 1440;\n        for (int i = 1; i < (int)m.size(); i++) ans = min(ans, m[i]-m[i-1]);\n        ans = min(ans, 1440 - m.back() + m.front());\n        return ans;\n    }\n};",
+    "c": "/* Parse minutes sort wrap — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Min diff trên vòng tròn 1440 phút = min kề sort và qua midnight.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Hai time đối xứng midnight",
+      "Trùng time → 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên wrap cuối-đầu",
+      "Parse HH:MM sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

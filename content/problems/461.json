@@ -3,32 +3,37 @@
   "title": "Hamming Distance",
   "difficulty": "Easy",
   "category": "Bit Manipulation",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Hamming Distance (LeetCode #461) — Easy.",
+  "description": "Hamming distance giữa hai số nguyên không âm — số bit khác nhau ở cùng vị trí.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "x = 1, y = 4",
+      "output": "2"
+    },
+    {
+      "input": "x = 3, y = 1",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "XOR x^y rồi đếm bit 1 (Brian Kernighan hoặc __builtin_popcount).",
+  "memoryTip": "XOR zeros matching bits — popcount of xor.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def hammingDistance(self, x: int, y: int) -> int:\n        return (x ^ y).bit_count()",
+    "cpp": "class Solution {\npublic:\n    int hammingDistance(int x, int y) {\n        return __builtin_popcount(x ^ y);\n    }\n};",
+    "c": "int hammingDistance(int x, int y) {\n    unsigned v = x ^ y, c = 0;\n    while(v){ c += v & 1; v >>= 1; }\n    return c;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "XOR marks differing bits; popcount equals Hamming distance.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "x==y → 0",
+      "Single bit diff",
+      "Large 32-bit"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Compare strings",
+      "Signed shift issues in C"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

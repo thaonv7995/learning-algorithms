@@ -2,33 +2,42 @@
   "id": 467,
   "title": "Unique Substrings in Wraparound String",
   "difficulty": "Medium",
-  "category": "String",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Unique Substrings in Wraparound String (LeetCode #467) — Medium.",
+  "description": "Chuỗi wraparound: sau z là a. Đếm số substring khác nhau (contiguous) theo quy tắc wrap.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"a\"",
+      "output": "1"
+    },
+    {
+      "input": "s = \"cac\"",
+      "output": "2"
+    },
+    {
+      "input": "s = \"zab\"",
+      "output": "6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "dp[c] = số substring kết thúc bằng c; nếu prev(s[i]) hợp lệ thì dp[s[i]]=dp[prev]+1 else 1; cộng dồn.",
+  "memoryTip": "Only extend from previous letter in alphabet (with z→a) — linear DP[26].",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findSubstringInWraproundString(self, s: str) -> int:\n        dp = [0] * 26\n        for i, ch in enumerate(s):\n            if i and (ord(ch) - ord(s[i-1]) + 26) % 26 == 1:\n                dp[ord(ch)-97] = dp[ord(s[i-1])-97] + 1\n            else:\n                dp[ord(ch)-97] = 1\n        return sum(dp)",
+    "cpp": "class Solution {\npublic:\n    int findSubstringInWraproundString(string s) {\n        int dp[26]={};\n        for(int i=0;i<(int)s.size();i++){\n            if(i&&(s[i]-s[i-1]+26)%26==1) dp[s[i]-'a']=dp[s[i-1]-'a']+1;\n            else dp[s[i]-'a']=1;\n        }\n        return accumulate(dp,dp+26,0);\n    }\n};",
+    "c": "int findSubstringInWraproundString(char* s) {\n    int dp[26]={0}, ans=0;\n    for(int i=0;s[i];i++){\n        if(i&&(s[i]-s[i-1]+26)%26==1) dp[s[i]-'a']=dp[s[i-1]-'a']+1;\n        else dp[s[i]-'a']=1;\n    }\n    for(int i=0;i<26;i++) ans+=dp[i];\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Max unique substrings ending at each letter — sum over alphabet.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Broken wrap resets len 1",
+      "Single char",
+      "Full circle abc...z"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Set all substrings O(n²)",
+      "Quên mod 26 cho z→a"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

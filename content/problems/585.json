@@ -4,31 +4,35 @@
   "difficulty": "Medium",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Investments in 2016 (LeetCode #585) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Insurance table t1 join t2 cùng pid khác tuid, t1 ttype='premium', t2 ttype='claim', t1 tname khác t2 tname, t1 txn_date năm 2016. SUM t2 price.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "Premium và claim khác insurer cùng policy 2016",
+      "output": "Tổng claim price"
+    },
+    {
+      "input": "Không cặp thỏa",
+      "output": "NULL hoặc 0 tùy engine"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Self join Insurance ON pid, filter premium/claim, different tname, year 2016, SUM t2.price.",
+  "memoryTip": "Investments 2016 = self join premium vs claim same pid diff name year filter.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT SUM(t2.price) AS total\nFROM Insurance t1\nJOIN Insurance t2 ON t1.pid = t2.pid\nWHERE t1.ttype = 'premium' AND t2.ttype = 'claim'\n  AND t1.tname != t2.tname\n  AND t1.txn_date LIKE '2016%';",
+    "cpp": "// SQL\nSELECT SUM(t2.price) AS total\nFROM Insurance t1\nJOIN Insurance t2 ON t1.pid = t2.pid\nWHERE t1.ttype = 'premium' AND t2.ttype = 'claim'\n  AND t1.tname != t2.tname\n  AND t1.txn_date LIKE '2016%';",
+    "c": "/* SQL self join Insurance — xem SQL */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Join cùng policy premium/claim khác insurer, lọc năm 2016 trên premium.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Nhiều claim một policy",
+      "Không row → NULL sum"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Join sai ttype",
+      "Lọc năm trên claim thay premium"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

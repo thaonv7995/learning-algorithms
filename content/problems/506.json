@@ -3,32 +3,36 @@
   "title": "Relative Ranks",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Relative Ranks (LeetCode #506) — Easy.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng điểm score. Xếp hạng: hạng 1 \"Gold Medal\", 2 \"Silver Medal\", 3 \"Bronze Medal\", còn lại là số hạng. Trả mảng chuỗi cùng thứ tự score.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "score = [5,4,3,2,1]",
+      "output": "[\"Gold Medal\",\"Silver Medal\",\"Bronze Medal\",\"4\",\"5\"]"
+    },
+    {
+      "input": "score = [10,3,8,9,4]",
+      "output": "[\"Gold Medal\",\"5\",\"Bronze Medal\",\"Silver Medal\",\"4\"]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort index theo score giảm dần; gán medal cho 3 hạng đầu, các hạng sau gán số thứ tự.",
+  "memoryTip": "Relative ranks = sort (score, index) desc rồi map rank vào vị trí gốc.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findRelativeRanks(self, score: List[int]) -> List[str]:\n        n = len(score)\n        order = sorted(range(n), key=lambda i: -score[i])\n        ans = [\"\"] * n\n        medals = [\"Gold Medal\", \"Silver Medal\", \"Bronze Medal\"]\n        for rank, i in enumerate(order):\n            ans[i] = medals[rank] if rank < 3 else str(rank + 1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<string> findRelativeRanks(vector<int>& score) {\n        int n = score.size();\n        vector<int> idx(n);\n        iota(idx.begin(), idx.end(), 0);\n        sort(idx.begin(), idx.end(), [&](int a, int b){ return score[a] > score[b]; });\n        vector<string> ans(n);\n        vector<string> m = {\"Gold Medal\",\"Silver Medal\",\"Bronze Medal\"};\n        for (int r = 0; r < n; r++)\n            ans[idx[r]] = r < 3 ? m[r] : to_string(r + 1);\n        return ans;\n    }\n};",
+    "c": "/* Sort index by score — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Xếp hạng theo thứ tự score giảm dần, map ngược về index gốc.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1 chỉ Gold",
+      "n=2 không có Bronze"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Gán rank theo index sort thay vì vị trí gốc",
+      "Nhầm hạng 4-based vs 0-based"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

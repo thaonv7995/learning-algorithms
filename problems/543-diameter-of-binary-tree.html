@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #543</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Diameter of Binary Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>65.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Diameter of Binary Tree (LeetCode #543) — Easy.</div>
+                        <div class="block-text">Trả đường kính cây nhị phân (số cạnh dài nhất giữa hai nút bất kỳ).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [1,2,3,4,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [1,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS: tại mỗi node, diameter candidate = depth(left)+depth(right); trả max depth lên parent.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,31 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DFS diameter depth — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> diameterOfBinaryTree(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">int</span>:
+        <span class="ty">self</span>.ans = 0
+        <span class="kw">def</span> depth(n):
+            <span class="kw">if</span> <span class="kw">not</span> n: <span class="kw">return</span> 0
+            l = depth(n.left)
+            r = depth(n.right)
+            <span class="ty">self</span>.ans = <span class="ty">max</span>(<span class="ty">self</span>.ans, l + r)
+            <span class="kw">return</span> 1 + <span class="ty">max</span>(l, r)
+        depth(root)
+        <span class="kw">return</span> <span class="ty">self</span>.ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> ans = 0;
+    <span class="ty">int</span> depth(TreeNode* n) {
+        <span class="kw">if</span> (!n) <span class="kw">return</span> 0;
+        <span class="ty">int</span> l = depth(n-&gt;left), r = depth(n-&gt;right);
+        ans = max(ans, l + r);
+        <span class="kw">return</span> 1 + max(l, r);
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> diameterOfBinaryTree(TreeNode* root) {
+        depth(root);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +130,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DFS: tại mỗi node, diameter candidate = depth+depth; trả max depth lên…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đường kính qua node = tổng chiều cao hai nhánh con; max over nodes.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút → 0</span><span class="analysis-tag edge">Đường kính không qua root</span><span class="analysis-tag pit">Nhầm đường kính với chiều cao</span><span class="analysis-tag pit">Không cập nhật global ans</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Tree diameter: postorder depth, update global max leftDepth+rightDepth.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +157,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Diameter%20of%20Binary%20Tree&lc_id=543&embed=true"></iframe>

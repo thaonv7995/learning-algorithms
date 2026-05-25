@@ -3,32 +3,40 @@
   "title": "Next Greater Element III",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Next Greater Element III (LeetCode #556) — Medium.",
+  "description": "Cho số nguyên n. Trả next greater với cùng các chữ số (next permutation); không có trả -1.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 12",
+      "output": "21"
+    },
+    {
+      "input": "n = 21",
+      "output": "-1"
+    },
+    {
+      "input": "n = 534976",
+      "output": "536479"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Chuyển sang mảng chữ số; next_permutation: tìm i giảm dần, swap với số lớn hơn nhỏ nhất bên phải, reverse suffix.",
+  "memoryTip": "Next greater element III = next_permutation on digits; overflow check 32-bit.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def nextGreaterElement(self, n: int) -> int:\n        a = list(str(n))\n        i = len(a) - 2\n        while i >= 0 and a[i] >= a[i+1]:\n            i -= 1\n        if i < 0:\n            return -1\n        j = len(a) - 1\n        while a[j] <= a[i]:\n            j -= 1\n        a[i], a[j] = a[j], a[i]\n        a[i+1:] = reversed(a[i+1:])\n        ans = int(\"\".join(a))\n        return ans if ans < 2**31 else -1",
+    "cpp": "class Solution {\npublic:\n    int nextGreaterElement(int n) {\n        string a = to_string(n);\n        int i = (int)a.size()-2;\n        while (i>=0 && a[i]>=a[i+1]) i--;\n        if (i<0) return -1;\n        int j = (int)a.size()-1;\n        while (a[j]<=a[i]) j--;\n        swap(a[i], a[j]);\n        reverse(a.begin()+i+1, a.end());\n        long long ans = stoll(a);\n        return ans >= (1LL<<31) ? -1 : (int)ans;\n    }\n};",
+    "c": "/* Next permutation digits — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Next permutation chuẩn trên chữ số; kiểm tra 32-bit signed.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Đã max permutation → -1",
+      "Overflow → -1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên reverse suffix",
+      "Không check INT_MAX"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #483</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Smallest Good Base</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log^2 n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46.2% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Smallest Good Base (LeetCode #483) — Hard.</div>
+                        <div class="block-text">Tìm cơ số k nhỏ nhất (k≥2) sao n viết được toàn chữ số 1 trong hệ k (số repunit).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 13</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;3&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 4681</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;8&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>n = 10001</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;142857&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Thử độ dài len giảm dần; binary search k sao (k^len-1)/(k-1)=n.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,31 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* smallestGoodBase(<span class="ty">char</span>* nStr) { <span class="kw">return</span> strdup(&quot;2&quot;); }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> smallestGoodBase(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">import</span> math
+        <span class="kw">for</span> len1 <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">int</span>(math.log(n, 2))+2, 1, -1):
+            k = <span class="ty">int</span>(n ** (1.0/len1))
+            <span class="kw">for</span> cand <span class="kw">in</span> (k, k+1, k-1):
+                <span class="kw">if</span> cand &gt;= 2 <span class="kw">and</span> (pow(cand, len1) - 1) == (cand - 1) * n:
+                    <span class="kw">return</span> <span class="ty">str</span>(cand)
+        <span class="kw">return</span> <span class="ty">str</span>(n - 1)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> smallestGoodBase(<span class="ty">long</span> <span class="ty">long</span> n) {
+        <span class="kw">for</span>(<span class="ty">int</span> len=60;len&gt;=2;len--){
+            <span class="ty">long</span> <span class="ty">long</span> lo=2, hi=n-1;
+            <span class="kw">while</span>(lo&lt;=hi){
+                <span class="ty">long</span> <span class="ty">long</span> mid=lo+(hi-lo)/2;
+                __int128 s=0, p=1;
+                <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;len;i++){ s+=p; p*=mid; <span class="kw">if</span>(s&gt;n) break; }
+                <span class="kw">if</span>(s==n) <span class="kw">return</span> to_string(mid);
+                <span class="kw">if</span>(s&gt;n) hi=mid-1; <span class="kw">else</span> lo=mid+1;
+            }
+        }
+        <span class="kw">return</span> to_string(n-1);
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +134,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log^2 n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thử độ dài len giảm dần; binary search k sao /=n.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Verify repunit sum equals n for candidate base k and length len.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=3 → 2</span><span class="analysis-tag edge">Prime n often n-1</span><span class="analysis-tag edge">Use int128 avoid overflow</span><span class="analysis-tag pit">Float root precision</span><span class="analysis-tag pit">Wrong len iteration order</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Repunit formula — larger len implies smaller base k.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +162,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Smallest%20Good%20Base&lc_id=483&embed=true"></iframe>

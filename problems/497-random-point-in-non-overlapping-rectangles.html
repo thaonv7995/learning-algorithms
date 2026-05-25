@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #497</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Randomized</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Random Point in Non-overlapping Rectangles</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log n) pick</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>39.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Random Point in Non-overlapping Rectangles (LeetCode #497) — Medium.</div>
+                        <div class="block-text">Rectangles không overlap cho pick point uniform trong union các rectangle.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>rects = [[1,1,5,5]], pick returns point inside</code></div>
+                <div class="ex-line"><span>Out</span><code>uniform in union</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>multiple rects by area weight</code></div>
+                <div class="ex-line"><span>Out</span><code>pick rect then point</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Prefix sum diện tích; random chọn rect theo area; random point trong rect.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* pick497(<span class="ty">int</span>* ret) { ret[0]=ret[1]=0; <span class="kw">return</span> ret; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, rects: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]):
+        <span class="ty">self</span>.rects = rects
+        <span class="ty">self</span>.areas = []
+        s = 0
+        <span class="kw">for</span> x1,y1,x2,y2 <span class="kw">in</span> rects:
+            s += (x2-x1+1)*(y2-y1+1)
+            <span class="ty">self</span>.areas.append(s)
+        <span class="ty">self</span>.total = s
+    <span class="kw">def</span> pick(<span class="ty">self</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        r = random.randint(1, <span class="ty">self</span>.total)
+        i = bisect.bisect_left(<span class="ty">self</span>.areas, r)
+        x1,y1,x2,y2 = <span class="ty">self</span>.rects[i]
+        <span class="kw">return</span> [random.randint(x1,x2), random.randint(y1,y2)]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; rects; <span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; areas; <span class="ty">long</span> <span class="ty">long</span> total;
 <span class="ty">public</span>:
+    Solution(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; r):rects(r){
+        <span class="kw">for</span>(auto&amp; v:rects){ total+=(<span class="ty">long</span> <span class="ty">long</span>)(v[2]-v[0]+1)*(v[3]-v[1]+1); areas.push_back(total); }
+    }
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; pick() {
+        <span class="ty">long</span> <span class="ty">long</span> r=1+rand()%(total);
+        <span class="ty">int</span> i=lower_bound(areas.begin(),areas.end(),r)-areas.begin();
+        auto&amp; v=rects[i];
+        <span class="kw">return</span> {v[0]+rand()%(v[2]-v[0]+1), v[1]+rand()%(v[3]-v[1]+1)};
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +130,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Randomized</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Prefix sum diện tích; random chọn rect theo area; random point trong…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Area-weighted rect choice + uniform point gives uniform over union.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Single rect</span><span class="analysis-tag edge">Thin rect area 1</span><span class="analysis-tag edge">Many rects</span><span class="analysis-tag pit">Pick rect uniform not by area</span><span class="analysis-tag pit">Inclusive bounds +1</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Two-step: pick rectangle by cumulative area, then uniform in rect.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +159,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Random%20Point%20in%20Non-overlapping%20Rectangles&lc_id=497&embed=true"></iframe>

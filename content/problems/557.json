@@ -2,33 +2,37 @@
   "id": 557,
   "title": "Reverse Words in a String III",
   "difficulty": "Easy",
-  "category": "Two Pointers",
+  "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Reverse Words in a String III (LeetCode #557) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Đảo ngược từng từ trong chuỗi (từ cách nhau bởi space), giữ nguyên thứ tự từ và khoảng trắng đơn.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"Let's take LeetCode contest\"",
+      "output": "\"s'teL ekat edoCteeL tsetnoc\""
+    },
+    {
+      "input": "s = \"God Ding\"",
+      "output": "\"doG gniD\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Split theo space hoặc duyệt: reverse từng đoạn giữa spaces.",
+  "memoryTip": "Reverse words III = reverse each word segment in char array.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reverseWords(self, s: str) -> str:\n        return \" \".join(w[::-1] for w in s.split(\" \"))",
+    "cpp": "class Solution {\npublic:\n    string reverseWords(string s) {\n        for (int i = 0; i < (int)s.size(); i++) {\n            int j = i;\n            while (j < (int)s.size() && s[j] != ' ') j++;\n            reverse(s.begin()+i, s.begin()+j);\n            i = j;\n        }\n        return s;\n    }\n};",
+    "c": "/* Reverse each word — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi word được reverse độc lập; spaces giữ nguyên vị trí.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một từ",
+      "Hai từ"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Reverse cả chuỗi",
+      "split() nuốt spaces (Python dùng split(\" \"))"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

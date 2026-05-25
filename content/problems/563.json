@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Binary Tree Tilt (LeetCode #563) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Tilt của node = |tổng cây con trái - tổng cây con phải|. Trả tổng tilt mọi node.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [1,2,3]",
+      "output": "1"
+    },
+    {
+      "input": "root = [4,-9,20,null,null,15,7]",
+      "output": "44"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Postorder: trả tổng subtree; cộng |sumL-sumR| vào global answer.",
+  "memoryTip": "Binary tree tilt = postorder sum + accumulate abs(leftSum-rightSum).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findTilt(self, root: Optional[TreeNode]) -> int:\n        self.ans = 0\n        def dfs(n):\n            if not n: return 0\n            l, r = dfs(n.left), dfs(n.right)\n            self.ans += abs(l - r)\n            return n.val + l + r\n        dfs(root)\n        return self.ans",
+    "cpp": "class Solution {\n    int ans = 0;\n    int dfs(TreeNode* n) {\n        if (!n) return 0;\n        int l = dfs(n->left), r = dfs(n->right);\n        ans += abs(l - r);\n        return n->val + l + r;\n    }\npublic:\n    int findTilt(TreeNode* root) {\n        dfs(root);\n        return ans;\n    }\n};",
+    "c": "/* Postorder subtree sum — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Tổng subtree đúng tại mỗi node; tilt cộng dồn độc lập.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một nút tilt 0",
+      "Giá trị âm"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Tính tilt tại root only",
+      "Nhầm tilt với balance factor"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

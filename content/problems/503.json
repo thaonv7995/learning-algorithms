@@ -4,31 +4,35 @@
   "difficulty": "Medium",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Next Greater Element II (LeetCode #503) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng vòng (next của phần tử cuối là phần tử đầu). Với mỗi nums[i], trả next greater element; không có thì -1.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,2,1]",
+      "output": "[2,-1,2]"
+    },
+    {
+      "input": "nums = [1,2,3,4,3]",
+      "output": "[2,3,4,-1,4]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Monotonic stack giảm dần trên mảng lặp 2n: pop khi nums[i%n] > stack top, gán NGE; push i%n.",
+  "memoryTip": "NGE vòng = duyệt 2n với index % n, stack lưu index chưa có NGE.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def nextGreaterElements(self, nums: List[int]) -> List[int]:\n        n = len(nums)\n        ans = [-1] * n\n        st = []\n        for i in range(2 * n - 1, -1, -1):\n            idx = i % n\n            while st and nums[st[-1]] <= nums[idx]:\n                st.pop()\n            if st:\n                ans[idx] = nums[st[-1]]\n            st.append(idx)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> nextGreaterElements(vector<int>& nums) {\n        int n = nums.size();\n        vector<int> ans(n, -1);\n        stack<int> st;\n        for (int i = 2 * n - 1; i >= 0; i--) {\n            int idx = i % n;\n            while (!st.empty() && nums[st.top()] <= nums[idx]) st.pop();\n            if (!st.empty()) ans[idx] = nums[st.top()];\n            st.push(idx);\n        }\n        return ans;\n    }\n};",
+    "c": "/* Monotonic stack 2n — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Duyệt ngược mô phỏng tìm phần tử lớn hơn tiếp theo trên vòng tròn.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một phần tử → -1",
+      "Mảng giảm dần → toàn -1 trừ vòng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ duyệt n lần bỏ sót wrap",
+      "Stack không pop bằng <= gây sai NGE"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

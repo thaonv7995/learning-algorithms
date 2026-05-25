@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #498</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Matrix</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Diagonal Traverse</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>67.2% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Diagonal Traverse (LeetCode #498) — Medium.</div>
+                        <div class="block-text">Trả các phần tử matrix theo thứ tự diagonal traverse (↗ rồi ↙ xen kẽ).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>mat = [[1,2,3],[4,5,6],[7,8,9]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2,4,7,5,3,6,8,9]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>mat = [[1,2],[3,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2,3,4]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Simulate direction: start (0,0); if top row or even diagonal go down-left else up-right.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,51 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* findDiagonalOrder(<span class="ty">int</span>** mat,<span class="ty">int</span> m,<span class="ty">int</span>* cs,<span class="ty">int</span> n,<span class="ty">int</span>* rs){
+    <span class="ty">int</span>* ans=<span class="kw">malloc</span>(m*n*<span class="kw">sizeof</span>(<span class="ty">int</span>)); *rs=m*n;
+    <span class="ty">int</span> r=0,c=0,k;
+    <span class="kw">for</span>(k=0;k&lt;m*n;k++){
+        ans[k]=mat[r][c];
+        <span class="kw">if</span>((r+c)%2==0){
+            <span class="kw">if</span>(c==n-1) r++; <span class="kw">else</span> <span class="kw">if</span>(r==0) c++; <span class="kw">else</span> { r--; c++; }
+        } <span class="kw">else</span> {
+            <span class="kw">if</span>(r==m-1) c++; <span class="kw">else</span> <span class="kw">if</span>(c==0) r++; <span class="kw">else</span> { r++; c--; }
+        }
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findDiagonalOrder(<span class="ty">self</span>, mat: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        <span class="kw">if</span> <span class="kw">not</span> mat: <span class="kw">return</span> []
+        m, n = <span class="ty">len</span>(mat), <span class="ty">len</span>(mat[0])
+        ans = []
+        r = c = 0
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m*n):
+            ans.append(mat[r][c])
+            <span class="kw">if</span> (r+c) % 2 == 0:
+                <span class="kw">if</span> c == n-1: r += 1
+                <span class="kw">elif</span> r == 0: c += 1
+                <span class="kw">else</span>: r -= 1; c += 1
+            <span class="kw">else</span>:
+                <span class="kw">if</span> r == m-1: c += 1
+                <span class="kw">elif</span> c == 0: r += 1
+                <span class="kw">else</span>: r += 1; c -= 1
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findDiagonalOrder(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; mat) {
+        <span class="ty">int</span> m=mat.size(), n=mat[0].size(); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="ty">int</span> r=0,c=0;
+        <span class="kw">for</span>(<span class="ty">int</span> k=0;k&lt;m*n;k++){
+            ans.push_back(mat[r][c]);
+            <span class="kw">if</span>((r+c)%2==0){
+                <span class="kw">if</span>(c==n-1) r++; <span class="kw">else</span> <span class="kw">if</span>(r==0) c++; <span class="kw">else</span> { r--; c++; }
+            } <span class="kw">else</span> {
+                <span class="kw">if</span>(r==m-1) c++; <span class="kw">else</span> <span class="kw">if</span>(c==0) r++; <span class="kw">else</span> { r++; c--; }
+            }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +148,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">Matrix</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Simulate direction: start ; if top row or even diagonal go down-left…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Direction rules cover boundary turns for zigzag diagonals.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">1 row</span><span class="analysis-tag edge">1 column</span><span class="analysis-tag edge">2×2 matrix</span><span class="analysis-tag pit">Wrong parity turn</span><span class="analysis-tag pit">Out of bounds</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Toggle dir when hit top row or right column — diagonal walk.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +177,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Diagonal%20Traverse&lc_id=498&embed=true"></iframe>

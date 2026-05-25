@@ -2,33 +2,42 @@
   "id": 481,
   "title": "Magical String",
   "difficulty": "Medium",
-  "category": "Two Pointers",
+  "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Magical String (LeetCode #481) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Magical string S: bắt đầu \"122\". S[i] cho biết lặp bao nhiêu lần ký tự 1 hoặc 2 kế tiếp. Đếm số '1' trong n ký tự đầu của S.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 6",
+      "output": "3"
+    },
+    {
+      "input": "n = 1",
+      "output": "1"
+    },
+    {
+      "input": "n = 4",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mảng s; i=2; lặp s[i] lần thêm (last%2?2:1); đếm 1 trong n phần tử đầu.",
+  "memoryTip": "Self-describing string — pointer i reads repeat count for next block.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def magicalString(self, n: int) -> int:\n        if n == 0: return 0\n        s = [1, 2, 2]\n        i = 2\n        while len(s) < n:\n            s.extend([s[-1] % 2 + 1] * s[i])\n            i += 1\n        return sum(s[:n])",
+    "cpp": "class Solution {\npublic:\n    int magicalString(int n) {\n        if(!n) return 0;\n        vector<int> s={1,2,2}; int i=2, ans=0;\n        while((int)s.size()<n){\n            int rep=s[i], val=s.back()==1?2:1;\n            while(rep--) s.push_back(val);\n            i++;\n        }\n        for(int j=0;j<n;j++) ans+=s[j]==1;\n        return ans;\n    }\n};",
+    "c": "int magicalString(int n) {\n    if(!n) return 0;\n    int* s=malloc((n+100)*sizeof(int)); int sz=3, i=2;\n    s[0]=1;s[1]=2;s[2]=2;\n    while(sz<n){\n        int rep=s[i], val=s[sz-1]==1?2:1;\n        while(rep--) s[sz++]=val;\n        i++;\n    }\n    int ans=0; for(int j=0;j<n;j++) if(s[j]==1) ans++;\n    free(s); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Expansion rule matches magical string definition until length n.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n≤3",
+      "Only count first n",
+      "Fast growth O(n) total"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Build infinite string",
+      "Wrong alternation 1/2"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

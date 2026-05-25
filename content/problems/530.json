@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Minimum Absolute Difference in BST (LeetCode #530) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho BST. Trả minimum absolute difference giữa hai giá trị bất kỳ trong cây.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [4,2,6,1,3]",
+      "output": "1"
+    },
+    {
+      "input": "root = [1,0,48,null,null,12,49]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Inorder BST → dãy tăng dần; min diff = min(nums[i]-nums[i-1]).",
+  "memoryTip": "Min abs diff BST = inorder adjacent pairs only.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def getMinimumDifference(self, root: Optional[TreeNode]) -> int:\n        self.prev = None\n        self.ans = 10**18\n        def dfs(n):\n            if not n: return\n            dfs(n.left)\n            if self.prev is not None:\n                self.ans = min(self.ans, n.val - self.prev)\n            self.prev = n.val\n            dfs(n.right)\n        dfs(root)\n        return self.ans",
+    "cpp": "class Solution {\n    TreeNode* prev = nullptr;\n    int ans = INT_MAX;\n    void inorder(TreeNode* n) {\n        if (!n) return;\n        inorder(n->left);\n        if (prev) ans = min(ans, n->val - prev->val);\n        prev = n;\n        inorder(n->right);\n    }\npublic:\n    int getMinimumDifference(TreeNode* root) {\n        inorder(root);\n        return ans;\n    }\n};",
+    "c": "/* Inorder min adjacent — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Trong BST sorted inorder, min diff luôn giữa hai phần tử kề nhau.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Hai nút",
+      "Giá trị cách xa nhưng diff nhỏ ở kề"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "So sánh mọi cặp O(n^2)",
+      "Quên init prev"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

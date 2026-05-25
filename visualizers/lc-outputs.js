@@ -330,7 +330,7 @@
         return null;
     }
 
-    for (let id = 201; id <= 400; id++) {
+    for (let id = 201; id <= 600; id++) {
         if (R[id] == null) R[id] = outFromState;
     }
 

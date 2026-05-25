@@ -2,33 +2,38 @@
   "id": 491,
   "title": "Non-decreasing Subsequences",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Non-decreasing Subsequences (LeetCode #491) — Medium.",
+  "category": "Backtracking",
+  "timeComplexity": "O(n * 2^n)",
+  "spaceComplexity": "O(n)",
+  "description": "Tìm mọi subsequence length ≥2 của nums sao elements non-decreasing (không nhất liên tiếp). Trả list không trùng.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [4,6,7,7]",
+      "output": "[[4,6],[4,6,7],[4,6,7,7],[4,7],[4,7,7],[6,7],[6,7,7],[7,7]]"
+    },
+    {
+      "input": "nums = [4,4,3,2,1]",
+      "output": "[]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Backtrack: tại index i chọn start subsequence; dùng set per level tránh duplicate picks cùng value.",
+  "memoryTip": "Subsets with non-decreasing — skip duplicate value at same depth.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findSubsequences(self, nums: List[int]) -> List[List[int]]:\n        ans = []\n        path = []\n        def dfs(i):\n            if len(path) >= 2: ans.append(path[:])\n            used = set()\n            for j in range(i, len(nums)):\n                if nums[j] in used: continue\n                if path and nums[j] < path[-1]: continue\n                used.add(nums[j])\n                path.append(nums[j])\n                dfs(j+1)\n                path.pop()\n        dfs(0)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> findSubsequences(vector<int>& nums) {\n        vector<vector<int>> ans; vector<int> path;\n        function<void(int)> dfs=[&](int i){\n            if(path.size()>=2) ans.push_back(path);\n            unordered_set<int> used;\n            for(int j=i;j<(int)nums.size();j++){\n                if(used.count(nums[j])) continue;\n                if(!path.empty()&&nums[j]<path.back()) continue;\n                used.insert(nums[j]);\n                path.push_back(nums[j]); dfs(j+1); path.pop_back();\n            }\n        };\n        dfs(0); return ans;\n    }\n};",
+    "c": "int** findSubsequences(int* nums,int n,int* rs,int** cs){*rs=0;return NULL;}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Backtrack builds increasing subsequences; set prevents duplicate branches.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Decreasing array → empty",
+      "All equal valid",
+      "Length 2 minimum output"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort nums destroys index order",
+      "Global dedupe wrong"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

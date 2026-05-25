@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #478</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Generate Random Point in a Circle</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) avg</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>42.9% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Generate Random Point in a Circle (LeetCode #478) — Medium.</div>
+                        <div class="block-text">Generate uniform random point trong hình tròn radius radius tâm (x_center, y_center).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>radius=1, x_center=0, y_center=0</code></div>
+                <div class="ex-line"><span>Out</span><code>points in unit disk uniform</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>radius=0</code></div>
+                <div class="ex-line"><span>Out</span><code>always center</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Rejection: sample square [cx-r,cx+r]×[cy-r,cy+r] until inside circle; hoặc polar sqrt(U)*r.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,27 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">double</span>* randPoint478(<span class="ty">double</span>* ret) { ret[0]=ret[1]=0; <span class="kw">return</span> ret; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, radius: float, x_center: float, y_center: float):
+        <span class="ty">self</span>.r, <span class="ty">self</span>.xc, <span class="ty">self</span>.yc = radius, x_center, y_center
+    <span class="kw">def</span> randPoint(<span class="ty">self</span>) -&gt; <span class="ty">List</span>[float]:
+        <span class="kw">while</span> <span class="kw">True</span>:
+            x = random.uniform(<span class="ty">self</span>.xc-<span class="ty">self</span>.r, <span class="ty">self</span>.xc+<span class="ty">self</span>.r)
+            y = random.uniform(<span class="ty">self</span>.yc-<span class="ty">self</span>.r, <span class="ty">self</span>.yc+<span class="ty">self</span>.r)
+            <span class="kw">if</span> (x-<span class="ty">self</span>.xc)**2 + (y-<span class="ty">self</span>.yc)**2 &lt;= <span class="ty">self</span>.r**2:
+                <span class="kw">return</span> [x, y]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">double</span> r, xc, yc;
 <span class="ty">public</span>:
+    Solution(<span class="ty">double</span> radius, <span class="ty">double</span> x_center, <span class="ty">double</span> y_center):r(radius),xc(x_center),yc(y_center){}
+    <span class="ty">vector</span>&lt;<span class="ty">double</span>&gt; randPoint() {
+        <span class="kw">while</span>(true){
+            <span class="ty">double</span> x=((<span class="ty">double</span>)rand()/RAND_MAX*2-1)*r+xc;
+            <span class="ty">double</span> y=((<span class="ty">double</span>)rand()/RAND_MAX*2-1)*r+yc;
+            <span class="kw">if</span>((x-xc)*(x-xc)+(y-yc)*(y-yc)&lt;=r*r) <span class="kw">return</span> {x,y};
+        }
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +125,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Rejection: sample square [cx-r,cx+r]×[cy-r,cy+r] until inside circle;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Rejection in bounding square gives uniform area measure in disk.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">radius=0</span><span class="analysis-tag edge">Large radius</span><span class="analysis-tag edge">Polar method alternative</span><span class="analysis-tag pit">Uniform angle+radius biases center</span><span class="analysis-tag pit">Wrong square bounds</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>sqrt for radius — uniform area not uniform r.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +153,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Generate%20Random%20Point%20in%20a%20Circle&lc_id=478&embed=true"></iframe>

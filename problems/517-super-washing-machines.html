@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #517</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Super Washing Machines</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Super Washing Machines (LeetCode #517) — Hard.</div>
+                        <div class="block-text">n máy giặt, mỗi máy có lượng quần áo. Có thể chuyển quần giữa máy kề. Tìm số lần chuyển tối thiểu để mọi máy bằng nhau; không thể thì -1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>machines = [1,0,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>machines = [0,3,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>-1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Tổng phải chia hết n. Target t = sum/n. Prefix balance: mỗi bước cần |prefix| tối đa để cân; answer = max over positions.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Prefix balance max — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findMinMoves(<span class="ty">self</span>, machines: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        total = sum(machines)
+        n = <span class="ty">len</span>(machines)
+        <span class="kw">if</span> total % n:
+            <span class="kw">return</span> -1
+        target = total // n
+        ans = bal = 0
+        <span class="kw">for</span> m <span class="kw">in</span> machines:
+            diff = m - target
+            bal += diff
+            ans = <span class="ty">max</span>(ans, abs(bal), abs(diff))
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findMinMoves(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; machines) {
+        <span class="ty">long</span> <span class="ty">long</span> sum = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> x : machines) sum += x;
+        <span class="ty">int</span> n = machines.size();
+        <span class="kw">if</span> (sum % n) <span class="kw">return</span> -1;
+        <span class="ty">int</span> target = sum / n;
+        <span class="ty">long</span> <span class="ty">long</span> bal = 0;
+        <span class="ty">int</span> ans = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> m : machines) {
+            <span class="ty">int</span> diff = m - target;
+            bal += diff;
+            ans = max({ans, (<span class="ty">int</span>)abs(bal), abs(diff)});
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +139,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Tổng phải chia hết n.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Target t = sum/n.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Prefix balance: mỗi bước cần |prefix| tối đa để cân;…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Cân bằng prefix và diff tại từng máy giới hạn số lần chuyển đồng thời cần thiết.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">sum không chia n → -1</span><span class="analysis-tag edge">Một máy</span><span class="analysis-tag pit">Chỉ xét prefix không xét |diff|</span><span class="analysis-tag pit">Quên kiểm tra sum % n</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Washing machines: sum%n≠0 → -1; else max |prefix excess| và |simultaneous load|.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Super%20Washing%20Machines&lc_id=517&embed=true"></iframe>

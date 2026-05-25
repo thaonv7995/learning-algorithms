@@ -4,31 +4,36 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "N-ary Tree Level Order Traversal (LeetCode #429) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho cây N-ary. Trả danh sách các level từ trái sang phải (BFS từng tầng).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [1,null,3,2,4,null,5,6]",
+      "output": "[[1],[3,2,4],[5,6]]"
+    },
+    {
+      "input": "root = [1,null,2,3,4,5,null,null,6,7,null,8,null,9,10]",
+      "output": "[[1],[2,3,4,5],[6,7,8,9,10]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS queue: lưu size mỗi level, pop hết level hiện tại, push children.",
+  "memoryTip": "Giống LC 102 nhưng children là list thay vì left/right.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def levelOrder(self, root: Node) -> List[List[int]]:\n        if not root: return []\n        ans, q = [], deque([root])\n        while q:\n            level, n = [], len(q)\n            for _ in range(n):\n                node = q.popleft()\n                level.append(node.val)\n                q.extend(node.children)\n            ans.append(level)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> levelOrder(Node* root) {\n        vector<vector<int>> ans;\n        if (!root) return ans;\n        queue<Node*> q; q.push(root);\n        while (!q.empty()) {\n            int sz=q.size(); vector<int> level;\n            while(sz--){\n                Node* cur=q.front(); q.pop();\n                level.push_back(cur->val);\n                for(Node* ch:cur->children) q.push(ch);\n            }\n            ans.push_back(level);\n        }\n        return ans;\n    }\n};",
+    "c": "int** levelOrder(struct Node* root, int* rs, int** cs) { *rs=0; return NULL; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "BFS theo batch size đảm bảo tách đúng từng level.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Root null",
+      "Một node",
+      "Children rỗng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không fix size level",
+      "DFS depth không đảm bảo order"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

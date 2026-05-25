@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #532</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">K-diff Pairs in an Array</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">K-diff Pairs in an Array (LeetCode #532) — Medium.</div>
+                        <div class="block-text">Cho mảng nums và số k. Đếm số cặp (i,j) với i&lt;j sao nums[i]-nums[j]=k hoặc nums[j]-nums[i]=k. Mỗi cặp giá trị chỉ đếm một lần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [3,1,4,1,5], k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4,5], k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,3,1,5,4], k = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">HashMap đếm tần suất. Với mỗi x, cộng count[x+k] + (k==0 ? count[x]-1 : count[x-k]?) — chuẩn: duyệt x, cộng seen[x-k], rồi tăng seen[x].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,32 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Hash freq x-k — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findPairs(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">from</span> collections <span class="kw">import</span> Counter
+        cnt = Counter()
+        ans = 0
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">if</span> k == 0:
+                <span class="kw">if</span> cnt[x]:
+                    ans += 1
+            <span class="kw">elif</span> cnt[x - k]:
+                ans += 1
+            cnt[x] += 1
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findPairs(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> k) {
+        unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; cnt;
+        <span class="ty">int</span> ans = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> x : nums) {
+            <span class="kw">if</span> (k == 0) { <span class="kw">if</span> (cnt[x]) ans++; }
+            <span class="kw">else</span> <span class="kw">if</span> (cnt.count(x - k)) ans++;
+            cnt[x]++;
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +136,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — HashMap đếm tần suất.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Với mỗi x, cộng count[x+k] + (k==0 ?</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — count[x]-1 : count[x-k]?) — chuẩn: duyệt x, cộng…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi cặp được đếm khi gặp phần tử thứ hai; freq tránh double count.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=0 đếm cặp trùng giá trị</span><span class="analysis-tag edge">Không cặp → 0</span><span class="analysis-tag pit">Đếm cả (i,j) và (j,i)</span><span class="analysis-tag pit">Dùng set bỏ sót duplicate values</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>K-diff pairs: duyệt nums, ans += freq[x-k], rồi freq[x]++ .</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=K-diff%20Pairs%20in%20an%20Array&lc_id=532&embed=true"></iframe>

@@ -2,33 +2,38 @@
   "id": 495,
   "title": "Teemo Attacking",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Simulation",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Teemo Attacking (LeetCode #495) — Easy.",
+  "description": "Teemo bắn Ashe tại timeSeries[i], poison duration giây. Damage mỗi giây while poisoned; overlap refresh không stack duration.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "timeSeries = [1,4], duration = 2",
+      "output": "4"
+    },
+    {
+      "input": "timeSeries = [1,2], duration = 2",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tổng += min(duration, timeSeries[i+1]-timeSeries[i]) cho mỗi hit; hit cuối +duration.",
+  "memoryTip": "Overlap poison — each segment contributes min(duration, gap to next).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findPoisonedDuration(self, timeSeries: List[int], duration: int) -> int:\n        if not timeSeries: return 0\n        ans = 0\n        for i in range(len(timeSeries)-1):\n            ans += min(duration, timeSeries[i+1]-timeSeries[i])\n        return ans + duration",
+    "cpp": "class Solution {\npublic:\n    int findPoisonedDuration(vector<int>& t, int d) {\n        if(t.empty()) return 0;\n        int ans=0;\n        for(int i=0;i+1<(int)t.size();i++) ans+=min(d,t[i+1]-t[i]);\n        return ans+d;\n    }\n};",
+    "c": "int findPoisonedDuration(int* t, int n, int d) {\n    if(!n) return 0;\n    int ans=0;\n    for(int i=0;i+1<n;i++) ans+= d < t[i+1]-t[i] ? d : t[i+1]-t[i];\n    return ans+d;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Poison active until min(next hit, current+duration) each segment.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Single hit",
+      "Hits far apart full duration each",
+      "Empty series"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Stack duration",
+      "Off-by-one last segment"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

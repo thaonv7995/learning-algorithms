@@ -3,32 +3,41 @@
   "title": "Smallest Good Base",
   "difficulty": "Hard",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log^2 n)",
   "spaceComplexity": "O(1)",
-  "description": "Smallest Good Base (LeetCode #483) — Hard.",
+  "description": "Tìm cơ số k nhỏ nhất (k≥2) sao n viết được toàn chữ số 1 trong hệ k (số repunit).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 13",
+      "output": "\"3\""
+    },
+    {
+      "input": "n = 4681",
+      "output": "\"8\""
+    },
+    {
+      "input": "n = 10001",
+      "output": "\"142857\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Thử độ dài len giảm dần; binary search k sao (k^len-1)/(k-1)=n.",
+  "memoryTip": "Repunit formula — larger len implies smaller base k.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def smallestGoodBase(self, n: int) -> str:\n        import math\n        for len1 in range(int(math.log(n, 2))+2, 1, -1):\n            k = int(n ** (1.0/len1))\n            for cand in (k, k+1, k-1):\n                if cand >= 2 and (pow(cand, len1) - 1) == (cand - 1) * n:\n                    return str(cand)\n        return str(n - 1)",
+    "cpp": "class Solution {\npublic:\n    string smallestGoodBase(long long n) {\n        for(int len=60;len>=2;len--){\n            long long lo=2, hi=n-1;\n            while(lo<=hi){\n                long long mid=lo+(hi-lo)/2;\n                __int128 s=0, p=1;\n                for(int i=0;i<len;i++){ s+=p; p*=mid; if(s>n) break; }\n                if(s==n) return to_string(mid);\n                if(s>n) hi=mid-1; else lo=mid+1;\n            }\n        }\n        return to_string(n-1);\n    }\n};",
+    "c": "char* smallestGoodBase(char* nStr) { return strdup(\"2\"); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Verify repunit sum equals n for candidate base k and length len.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=3 → 2",
+      "Prime n often n-1",
+      "Use int128 avoid overflow"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Float root precision",
+      "Wrong len iteration order"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

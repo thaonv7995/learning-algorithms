@@ -4,31 +4,39 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Find Mode in Binary Search Tree (LeetCode #501) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho cây BST. Trả về tất cả giá trị mode (xuất hiện nhiều nhất). Nếu nhiều mode thì trả tất cả, thứ tự tăng dần. Duyệt inorder vì BST cho thứ tự đã sort.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [1,null,2,2]",
+      "output": "[2]"
+    },
+    {
+      "input": "root = [0]",
+      "output": "[0]"
+    },
+    {
+      "input": "root = [1,1,2,2,2]",
+      "output": "[2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Inorder duyệt tăng dần: đếm tần suất liên tiếp, cập nhật maxCount và danh sách modes khi gặp tần suất mới hoặc bằng max.",
+  "memoryTip": "BST mode = inorder + đếm run liên tiếp, không cần hash toàn cây nếu chỉ cần mode trên giá trị sort.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMode(self, root: Optional[TreeNode]) -> List[int]:\n        self.prev = None\n        self.maxCnt = self.cnt = 0\n        self.modes = []\n        def dfs(n):\n            if not n: return\n            dfs(n.left)\n            if self.prev is None:\n                self.cnt = 1\n            elif n.val == self.prev:\n                self.cnt += 1\n            else:\n                self.cnt = 1\n            if self.cnt > self.maxCnt:\n                self.maxCnt = self.cnt\n                self.modes = [n.val]\n            elif self.cnt == self.maxCnt:\n                self.modes.append(n.val)\n            self.prev = n.val\n            dfs(n.right)\n        dfs(root)\n        return self.modes",
+    "cpp": "class Solution {\n    TreeNode* prev = nullptr;\n    int maxCnt = 0, cnt = 0;\n    vector<int> modes;\n    void inorder(TreeNode* n) {\n        if (!n) return;\n        inorder(n->left);\n        cnt = (!prev || n->val == prev->val) ? cnt + 1 : 1;\n        if (cnt > maxCnt) { maxCnt = cnt; modes = {n->val}; }\n        else if (cnt == maxCnt) modes.push_back(n->val);\n        prev = n;\n        inorder(n->right);\n    }\npublic:\n    vector<int> findMode(TreeNode* root) {\n        inorder(root);\n        return modes;\n    }\n};",
+    "c": "/* Inorder đếm run — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Inorder liệt kê giá trị không giảm; đếm run cho tần suất chính xác trên BST.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một nút → mode là giá trị đó",
+      "Nhiều mode cùng tần suất max"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng hash bỏ qua thứ tự tăng dần output",
+      "Quên reset cnt khi giá trị đổi"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

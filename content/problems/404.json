@@ -4,31 +4,40 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Sum of Left Leaves (LeetCode #404) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho cây nhị phân root. Tính tổng giá trị các nút lá trái (nút là con trái của cha và không có con).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [3,9,20,null,null,15,7]",
+      "output": "24"
+    },
+    {
+      "input": "root = [1]",
+      "output": "0"
+    },
+    {
+      "input": "root = [1,2,3,4,null,5]",
+      "output": "4"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS: nếu node.left là lá (không có con) thì cộng val; đệ quy trái/phải.",
+  "memoryTip": "Lá trái = left tồn tại và left.left/right đều null — lá phải không tính.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def sumOfLeftLeaves(self, root: Optional[TreeNode]) -> int:\n        if not root: return 0\n        s = 0\n        if root.left and not root.left.left and not root.left.right:\n            s += root.left.val\n        return s + self.sumOfLeftLeaves(root.left) + self.sumOfLeftLeaves(root.right)",
+    "cpp": "class Solution {\npublic:\n    int sumOfLeftLeaves(TreeNode* root) {\n        if (!root) return 0;\n        int s = 0;\n        if (root->left && !root->left->left && !root->left->right)\n            s += root->left->val;\n        return s + sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right);\n    }\n};",
+    "c": "int sumOfLeftLeaves(struct TreeNode* root) {\n    if (!root) return 0;\n    int s = 0;\n    if (root->left && !root->left->left && !root->left->right) s += root->left->val;\n    return s + sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Chỉ cộng node thỏa điều kiện lá trái tại mỗi cha — không nhầm lá phải.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Root đơn → 0",
+      "Chỉ lá trái sâu",
+      "Cây không cân bằng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Cộng mọi lá",
+      "Nhầm node chỉ có con trái là lá"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

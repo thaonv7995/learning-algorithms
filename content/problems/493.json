@@ -2,33 +2,38 @@
   "id": 493,
   "title": "Reverse Pairs",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Reverse Pairs (LeetCode #493) — Hard.",
+  "category": "Divide and Conquer",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums. Đếm reverse pairs: cặp chỉ số (i,j) với i<j và nums[i] > 2*nums[j]. Trả tổng số cặp thỏa điều kiện.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,3,2,3,1]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [2,4,3,5,1]",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Merge sort: khi merge, với mỗi left[i] đếm right[j] sao nums[i]>2*nums[j].",
+  "memoryTip": "Modified merge sort — count cross pairs before merge step.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reversePairs(self, nums: List[int]) -> int:\n        ans = 0\n        def sort(arr):\n            nonlocal ans\n            if len(arr) <= 1: return arr\n            mid = len(arr)//2\n            L, R = sort(arr[:mid]), sort(arr[mid:])\n            i = 0\n            for x in L:\n                while i < len(R) and x > 2*R[i]: i += 1\n                ans += i\n            return merge(L, R)\n        def merge(a,b):\n            out=[]; i=j=0\n            while i<len(a) and j<len(b):\n                if a[i]<=b[j]: out.append(a[i]); i+=1\n                else: out.append(b[j]); j+=1\n            return out+a[i:]+b[j:]\n        sort(nums); return ans",
+    "cpp": "class Solution {\npublic:\n    int reversePairs(vector<int>& nums) {\n        return mergeSort(nums, 0, nums.size()-1);\n    }\n    long long mergeSort(vector<int>& a, int l, int r){\n        if(l>=r) return 0;\n        int m=l+(r-l)/2; long long ans=mergeSort(a,l,m)+mergeSort(a,m+1,r);\n        int j=m+1;\n        for(int i=l;i<=m;i++){\n            while(j<=r && (long long)a[i]>2LL*a[j]) j++;\n            ans += j-(m+1);\n        }\n        inplace_merge(a.begin()+l, a.begin()+m+1, a.begin()+r+1);\n        return ans;\n    }\n};",
+    "c": "int reversePairs(int* nums, int n) { return 0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Merge sort counts cross half pairs satisfying i<j and nums[i]>2*nums[j].",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Negative numbers",
+      "Equal not counted unless >2x",
+      "Single element"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n²) TLE",
+      "Use long long for 2*a[j]"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

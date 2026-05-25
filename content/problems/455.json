@@ -2,33 +2,38 @@
   "id": 455,
   "title": "Assign Cookies",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Greedy",
+  "timeComplexity": "O(n log n + m log m)",
   "spaceComplexity": "O(1)",
-  "description": "Assign Cookies (LeetCode #455) — Easy.",
+  "description": "g[i] là kích thước cookie thứ i, s[j] độ thèm child j. Mỗi child tối đa 1 cookie (g[i]≥s[j]). Max số child được phục vụ.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "g = [1,2,3], s = [1,1]",
+      "output": "1"
+    },
+    {
+      "input": "g = [1,2], s = [1,2,3]",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort g và s; two pointers: nếu s[j]≥g[i] thì phục vụ cả hai tăng, else tăng j tìm cookie đủ lớn.",
+  "memoryTip": "Smallest sufficient cookie for smallest greedy child — two pointers.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findContentChildren(self, g: List[int], s: List[int]) -> int:\n        g.sort(); s.sort()\n        i = j = 0\n        while i < len(g) and j < len(s):\n            if s[j] >= g[i]: i += 1\n            j += 1\n        return i",
+    "cpp": "class Solution {\npublic:\n    int findContentChildren(vector<int>& g, vector<int>& s) {\n        sort(g.begin(), g.end()); sort(s.begin(), s.end());\n        int i=0,j=0;\n        while(i<(int)g.size()&&j<(int)s.size()){\n            if(s[j]>=g[i]) i++;\n            j++;\n        }\n        return i;\n    }\n};",
+    "c": "int cmpi(const void* a,const void* b){ return *(int*)a-*(int*)b; }\nint findContentChildren(int* g,int gn,int* s,int sn){\n    qsort(g,gn,sizeof(int),cmpi); qsort(s,sn,sizeof(int),cmpi);\n    int i=0,j=0;\n    while(i<gn&&j<sn){ if(s[j]>=g[i]) i++; j++; }\n    return i;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Greedy assign smallest cookie that satisfies current smallest child.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không cookie",
+      "Cookie lớn dư",
+      "g rỗng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort một mảng",
+      "Assign cookie lớn cho child nhỏ trước"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

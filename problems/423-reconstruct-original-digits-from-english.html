@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #423</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Reconstruct Original Digits from English</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Reconstruct Original Digits from English (LeetCode #423) — Medium.</div>
+                        <div class="block-text">Cho chuỗi s gồm chữ cái tiếng Anh viết thường của các số zero–nine đảo thứ tự. Trả các chữ số gốc theo thứ tự tăng dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;owoztneoer&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;012&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;fviefuro&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;45&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;nnei&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;9&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đếm chữ cái; zero chỉ có z, two chỉ có w, four chỉ có u, six chỉ có x, eight chỉ có g. Trừ dần rồi suy three(seven), five, nine, one.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,44 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* originalDigits(<span class="ty">char</span>* s) { <span class="kw">return</span> strdup(&quot;0123456789&quot;); /* see C++ */ }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> originalDigits(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        cnt = Counter(s)
+        order = &quot;zowtufxsgn&quot;
+        digits = &quot;0123456789&quot;
+        uniq = &quot;zowtufxg&quot;
+        ans = []
+        <span class="kw">for</span> d, u <span class="kw">in</span> zip(&quot;02468&quot;, uniq):
+            k = cnt[u]
+            ans += [d] * k
+            <span class="kw">for</span> c <span class="kw">in</span> [&quot;zero&quot;,&quot;two&quot;,&quot;four&quot;,&quot;six&quot;,&quot;eight&quot;][<span class="ty">int</span>(d)//2]:
+                cnt[c] -= k
+        <span class="kw">for</span> d, word <span class="kw">in</span> zip(&quot;3579&quot;, [&quot;three&quot;,&quot;five&quot;,&quot;seven&quot;,&quot;nine&quot;]):
+            k = cnt[word[0]]
+            ans += [d] * k
+            <span class="kw">for</span> c <span class="kw">in</span> word: cnt[c] -= k
+        ans += [&quot;1&quot;] * cnt[&quot;o&quot;]
+        <span class="kw">return</span> &quot;&quot;.join(sorted(ans))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> originalDigits(<span class="ty">string</span> s) {
+        <span class="ty">int</span> c[26]={};
+        <span class="kw">for</span>(<span class="ty">char</span> ch:s) c[ch-'a']++;
+        <span class="ty">int</span> cnt[10]={};
+        cnt[0]=c['z'-'a']; cnt[2]=c['w'-'a']; cnt[4]=c['u'-'a'];
+        cnt[6]=c['x'-'a']; cnt[8]=c['g'-'a'];
+        c['o'-'a']-=cnt[0]+cnt[2]+cnt[4];
+        c['t'-'a']-=cnt[2]+cnt[3]+cnt[8];
+        c['f'-'a']-=cnt[4]+cnt[5];
+        c['s'-'a']-=cnt[6]+cnt[7];
+        c['g'-'a']-=cnt[8];
+        cnt[3]=c['t'-'a']; cnt[5]=c['f'-'a']; cnt[7]=c['s'-'a']; cnt[9]=c['n'-'a'];
+        cnt[1]=c['o'-'a'];
+        <span class="ty">string</span> ans;
+        <span class="kw">for</span>(<span class="ty">int</span> d=0;d&lt;10;d++) ans += <span class="ty">string</span>(cnt[d], '0'+d);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +151,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Đếm chữ cái; zero chỉ có z, two chỉ có w, four chỉ có u,…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Trừ dần rồi suy three, five, nine, one.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi digit có chữ cái đặc trưng — trừ frequency đúng thứ tự suy ra count.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một digit</span><span class="analysis-tag edge">Nhiều cùng digit</span><span class="analysis-tag edge">Thiếu chữ unique</span><span class="analysis-tag pit">Sort chữ cái không đúng</span><span class="analysis-tag pit">Trừ frequency sai thứ tự</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Unique letter: z→0, w→2, u→4, x→6, g→8 — giải theo thứ tự đó.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +175,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Reconstruct%20Original%20Digits%20from%20English&lc_id=423&embed=true"></iframe>

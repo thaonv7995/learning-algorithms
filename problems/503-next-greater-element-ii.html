@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #503</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Next Greater Element II</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Next Greater Element II (LeetCode #503) — Medium.</div>
+                        <div class="block-text">Cho mảng vòng (next của phần tử cuối là phần tử đầu). Với mỗi nums[i], trả next greater element; không có thì -1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,-1,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,3,4,-1,4]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Monotonic stack giảm dần trên mảng lặp 2n: pop khi nums[i%n] &gt; stack top, gán NGE; push i%n.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,34 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Monotonic stack 2n — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> nextGreaterElements(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        n = <span class="ty">len</span>(nums)
+        ans = [-1] * n
+        st = []
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(2 * n - 1, -1, -1):
+            idx = i % n
+            <span class="kw">while</span> st <span class="kw">and</span> nums[st[-1]] &lt;= nums[idx]:
+                st.pop()
+            <span class="kw">if</span> st:
+                ans[idx] = nums[st[-1]]
+            st.append(idx)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; nextGreaterElements(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> n = nums.size();
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans(n, -1);
+        stack&lt;<span class="ty">int</span>&gt; st;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 2 * n - 1; i &gt;= 0; i--) {
+            <span class="ty">int</span> idx = i % n;
+            <span class="kw">while</span> (!st.empty() &amp;&amp; nums[st.top()] &lt;= nums[idx]) st.pop();
+            <span class="kw">if</span> (!st.empty()) ans[idx] = nums[st.top()];
+            st.push(idx);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +133,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Monotonic stack giảm dần trên mảng lặp 2n: pop khi nums[i%n] &gt; stack…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Duyệt ngược mô phỏng tìm phần tử lớn hơn tiếp theo trên vòng tròn.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử → -1</span><span class="analysis-tag edge">Mảng giảm dần → toàn -1 trừ vòng</span><span class="analysis-tag pit">Chỉ duyệt n lần bỏ sót wrap</span><span class="analysis-tag pit">Stack không pop bằng &lt;= gây sai NGE</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>NGE vòng = duyệt 2n với index % n, stack lưu index chưa có NGE.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +160,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Next%20Greater%20Element%20II&lc_id=503&embed=true"></iframe>

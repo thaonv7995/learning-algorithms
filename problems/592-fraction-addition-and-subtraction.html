@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #592</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Fraction Addition and Subtraction</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Fraction Addition and Subtraction (LeetCode #592) — Medium.</div>
+                        <div class="block-text">Cho biểu thức chuỗi gồm phân số dạng ±a/b cộng trừ nhau. Trả kết quả phân số tối giản dạng &quot;p/q&quot;.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>expression = &quot;-1/2+1/2&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;0/1&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>expression = &quot;-1/2+1/2+1/3&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;1/3&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>expression = &quot;1/3-1/2&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;-1/6&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Parse từng phân số; cộng dồn num/den lcm; cuối gcd rút gọn, chuẩn hóa dấu mẫu dương.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Parse fractions lcm gcd — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> fractionAddition(<span class="ty">self</span>, expression: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">import</span> re
+        <span class="kw">from</span> math <span class="kw">import</span> gcd
+        nums = <span class="ty">list</span>(map(<span class="ty">int</span>, re.findall(r'[+-]?\d+', expression)))
+        num = den = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(0, <span class="ty">len</span>(nums), 2):
+            a, b = nums[i], nums[i+1]
+            num = num * b + a * den
+            den = den * b <span class="kw">if</span> den <span class="kw">else</span> b
+            g = gcd(abs(num), abs(den))
+            num //= g
+            den //= g
+        <span class="kw">if</span> den &lt; 0:
+            num, den = -num, -den
+        <span class="kw">return</span> f&quot;{num}/{den}&quot;</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">long</span> <span class="ty">long</span> gcdll(<span class="ty">long</span> <span class="ty">long</span> a, <span class="ty">long</span> <span class="ty">long</span> b){ <span class="kw">return</span> b?gcdll(b,a%b):abs(a); }
 <span class="ty">public</span>:
+    <span class="ty">string</span> fractionAddition(<span class="ty">string</span> expression) {
+        <span class="ty">long</span> <span class="ty">long</span> num=0, den=1;
+        <span class="ty">int</span> i=0, n=expression.size();
+        <span class="kw">while</span> (i&lt;n) {
+            <span class="ty">long</span> <span class="ty">long</span> sign=1; <span class="kw">if</span> (expression[i]=='+'||expression[i]=='-'){ sign=expression[i]=='-'?-1:1; i++; }
+            <span class="ty">long</span> <span class="ty">long</span> a=0; <span class="kw">while</span> (i&lt;n &amp;&amp; isdigit(expression[i])) a=a*10+expression[i++]-'0'; a*=sign;
+            i++; <span class="ty">long</span> <span class="ty">long</span> b=0; <span class="kw">while</span> (i&lt;n &amp;&amp; isdigit(expression[i])) b=b*10+expression[i++]-'0';
+            num = num*b + a*den; den = den*b;
+            <span class="ty">long</span> <span class="ty">long</span> g = gcdll(num, den); num/=g; den/=g;
+        }
+        <span class="kw">if</span> (den&lt;0){ num=-num; den=-den; }
+        <span class="kw">return</span> to_string(num)+&quot;/&quot;+to_string(den);
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +146,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Parse từng phân số; cộng dồn num/den lcm; cuối gcd rút gọn, chuẩn hóa…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Cộng phân số qua lcm; gcd sau mỗi bước tránh overflow.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Kết quả 0 → 0/1</span><span class="analysis-tag edge">Một phân số âm</span><span class="analysis-tag pit">Quên chuẩn hóa dấu mẫu</span><span class="analysis-tag pit">Parse dấu + ẩn</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Fraction expression = parse sign+num/den, accumulate with lcm, gcd reduce.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Fraction%20Addition%20and%20Subtraction&lc_id=592&embed=true"></iframe>

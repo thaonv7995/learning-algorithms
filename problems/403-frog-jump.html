@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #403</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Frog Jump</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>47.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Frog Jump (LeetCode #403) — Hard.</div>
+                        <div class="block-text">Ếch nhảy trên các đá stones (tọa độ tăng dần). Từ đá đầu chỉ nhảy 1 đơn vị. Từ đá trước đó đã nhảy k đơn vị, lần sau nhảy k-1, k hoặc k+1. Trả true nếu tới được đá cuối.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>stones = [0,1,3,5,6,8,12,17]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>stones = [0,1,2,3,4,8,9,11]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>stones = [0]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[i][k] = có thể tới stones[i] bằng bước k (k≤200). Map pos→index; từ mỗi (i,k) thử nhảy k-1,k,k+1 tới đá kế.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> canCross(<span class="ty">int</span>* stones, <span class="ty">int</span> n) {
+    <span class="ty">int</span> dp[2000][210] = {0};
+    <span class="ty">int</span> idx[2001]; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;2001;i++) idx[i]=-1;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) idx[stones[i]]=i;
+    dp[0][1]=1;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> k=1;k&lt;=200;k++) <span class="kw">if</span>(dp[i][k]){
+        <span class="ty">int</span> p=stones[i]+k; <span class="kw">if</span>(p&gt;2000||idx[p]&lt;0) continue;
+        dp[idx[p]][k]=1; <span class="kw">if</span>(k&gt;1) dp[idx[p]][k-1]=1; dp[idx[p]][k+1]=1;
+    }
+    <span class="kw">for</span>(<span class="ty">int</span> k=1;k&lt;=200;k++) <span class="kw">if</span>(dp[n-1][k]) <span class="kw">return</span> true;
+    <span class="kw">return</span> n==1;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> canCross(<span class="ty">self</span>, stones: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        pos = {s: i <span class="kw">for</span> i, s <span class="kw">in</span> enumerate(stones)}
+        n = <span class="ty">len</span>(stones)
+        dp = [<span class="ty">set</span>() <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n)]
+        dp[0].add(0)
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            <span class="kw">for</span> k <span class="kw">in</span> dp[i]:
+                <span class="kw">for</span> nk <span class="kw">in</span> (k-1, k, k+1):
+                    <span class="kw">if</span> nk &lt;= 0: continue
+                    j = stones[i] + nk
+                    <span class="kw">if</span> j <span class="kw">in</span> pos:
+                        dp[pos[j]].add(nk)
+        <span class="kw">return</span> bool(dp[n-1])</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> canCross(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; stones) {
+        unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; pos;
+        <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)stones.size();i++) pos[stones[i]]=i;
+        <span class="ty">int</span> n=stones.size();
+        <span class="ty">vector</span>&lt;unordered_set&lt;<span class="ty">int</span>&gt;&gt; dp(n);
+        dp[0].insert(0);
+        <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;n;i++)
+            <span class="kw">for</span> (<span class="ty">int</span> k : dp[i])
+                <span class="kw">for</span> (<span class="ty">int</span> nk : {k-1,k,k+1})
+                    <span class="kw">if</span> (nk&gt;0 &amp;&amp; pos.count(stones[i]+nk))
+                        dp[pos[stones[i]+nk]].insert(nk);
+        <span class="kw">return</span> !dp[n-1].empty();
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +149,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP[i][k] = có thể tới stones[i] bằng bước k .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Map pos→index; từ mỗi thử nhảy k-1,k,k+1 tới đá kế.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DP mô phỏng mọi bước nhảy hợp lệ từ từng đá — đạt cuối iff có state.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một đá → true</span><span class="analysis-tag edge">Khoảng cách đầu ≠1 → false</span><span class="analysis-tag edge">Nhảy lùi k-1=0 bị cấm</span><span class="analysis-tag pit">BFS không lưu last jump</span><span class="analysis-tag pit">Quên ràng buộc k&gt;0 sau bước đầu</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Bước nhảy phụ thuộc bước trước — DP 2 chiều pos × lastJump, không chỉ pos.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +178,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Frog%20Jump&lc_id=403&embed=true"></iframe>

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #511</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Database</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Game Play Analysis I</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>76.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Game Play Analysis I (LeetCode #511) — Easy.</div>
+                        <div class="block-text">Bảng Activity(player_id, device_id, event_date, games_played). Tìm player_id đầu tiên (nhỏ nhất) của mỗi người chơi — ngày đăng nhập/ chơi đầu tiên.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>Activity: (1,2,2016-03-01,5), (1,2,2016-05-02,11)</code></div>
+                <div class="ex-line"><span>Out</span><code>player_id=1, first_date=2016-03-01</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>Hai player khác ngày đầu</code></div>
+                <div class="ex-line"><span>Out</span><code>Mỗi player một dòng MIN(event_date)</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">SELECT player_id, MIN(event_date) AS first_login FROM Activity GROUP BY player_id.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,15 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
-<span class="ty">public</span>:
-};</pre>
+                            <pre class="code-block" id="code-block-c">/* SQL GROUP BY MIN date */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># SQL</span>
+SELECT player_id, MIN(event_date) AS first_login
+FROM Activity
+GROUP BY player_id;</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// SQL</span>
+SELECT player_id, MIN(event_date) AS first_login
+FROM Activity
+GROUP BY player_id;</pre>
                         </div>
                     </div>
                 </div>
@@ -105,17 +113,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Database</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — SELECT player_id, MIN AS first_login FROM Activity GROUP BY player_id.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>MIN(event_date) theo player_id cho ngày đầu tiên chính xác.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một dòng mỗi player</span><span class="analysis-tag edge">Nhiều device cùng ngày</span><span class="analysis-tag pit">SELECT * thay vì MIN</span><span class="analysis-tag pit">Quên GROUP BY player_id</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>First event per user = GROUP BY id + MIN.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +140,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Game%20Play%20Analysis%20I&lc_id=511&embed=true"></iframe>

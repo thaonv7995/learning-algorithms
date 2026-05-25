@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Employee Bonus (LeetCode #577) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Employee LEFT JOIN Bonus. Liệt kê name nhân viên không có bonus hoặc bonus < 1000.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "Employee có bonus NULL",
+      "output": "Tên employee đó"
+    },
+    {
+      "input": "Bonus 500",
+      "output": "Tên employee bonus < 1000"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "SELECT e.name FROM Employee e LEFT JOIN Bonus b ON e.empId=b.empId WHERE b.bonus IS NULL OR b.bonus<1000.",
+  "memoryTip": "Employee bonus = LEFT JOIN + filter NULL or low bonus.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT e.name\nFROM Employee e\nLEFT JOIN Bonus b ON e.empId = b.empId\nWHERE b.bonus IS NULL OR b.bonus < 1000;",
+    "cpp": "// SQL\nSELECT e.name\nFROM Employee e\nLEFT JOIN Bonus b ON e.empId = b.empId\nWHERE b.bonus IS NULL OR b.bonus < 1000;",
+    "c": "/* SQL LEFT JOIN filter — xem SQL */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "LEFT JOIN giữ employee không bonus; điều kiện OR cover cả hai case.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Mọi người bonus cao → rỗng",
+      "Bonus đúng 1000 không liệt kê"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "INNER JOIN mất no-bonus",
+      "So sánh NULL với <1000 sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

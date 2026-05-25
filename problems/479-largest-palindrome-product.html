@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #479</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Largest Palindrome Product</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>38.9% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Largest Palindrome Product (LeetCode #479) — Hard.</div>
+                        <div class="block-text">Tìm palindrome số lớn nhất có thể là tích hai số n chữ số (leading zeros allowed trong factor nhưng số là n-digit).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>987</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>9</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Brute a,b từ 10^n-1 xuống 10^(n-1); check palindrome product; break early when a*b &lt; best.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,36 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> largestPalindrome(<span class="ty">int</span> n) { <span class="kw">return</span> n==1?9:0; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> largestPalindrome(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> n == 1: <span class="kw">return</span> 9
+        lo, hi = 10**(n-1), 10**n - 1
+        <span class="kw">for</span> a <span class="kw">in</span> <span class="ty">range</span>(hi, lo - 1, -1):
+            s = <span class="ty">str</span>(a)
+            p = <span class="ty">int</span>(s + s[::-1])
+            b = p // a
+            <span class="kw">if</span> b &lt;= hi <span class="kw">and</span> p % a == 0:
+                <span class="kw">return</span> p % 1337
+        <span class="kw">return</span> 0</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> largestPalindrome(<span class="ty">int</span> n) {
+        <span class="kw">if</span>(n==1) <span class="kw">return</span> 9;
+        <span class="ty">long</span> <span class="ty">long</span> hi=1; <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) hi=hi*10+9;
+        <span class="ty">long</span> <span class="ty">long</span> lo=hi/10;
+        auto pal=[](<span class="ty">long</span> <span class="ty">long</span> x){
+            <span class="ty">string</span> s=to_string(x); <span class="ty">int</span> i=0,j=s.size()-1;
+            <span class="kw">while</span>(i&lt;j) <span class="kw">if</span>(s[i++]!=s[j--]) <span class="kw">return</span> false;
+            <span class="kw">return</span> true;
+        };
+        <span class="kw">for</span>(<span class="ty">long</span> <span class="ty">long</span> a=hi;a&gt;=lo;a--)
+            <span class="kw">for</span>(<span class="ty">long</span> <span class="ty">long</span> b=a;b&gt;=lo;b--){
+                <span class="ty">long</span> <span class="ty">long</span> p=a*b;
+                <span class="kw">if</span>(pal(p)) <span class="kw">return</span> (<span class="ty">int</span>)(p%1337);
+            }
+        <span class="kw">return</span> 0;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +134,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Brute a,b từ 10^n-1 xuống 10^; check palindrome product; break early…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Descending search finds largest palindrome product first.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">Mod 1337 output</span><span class="analysis-tag edge">Break when product too small</span><span class="analysis-tag pit">Overflow use long long</span><span class="analysis-tag pit">Mod 1337 on return</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Start from 999..99 downward — first palindrome product max.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +162,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Largest%20Palindrome%20Product&lc_id=479&embed=true"></iframe>

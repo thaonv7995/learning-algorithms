@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #593</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Valid Square</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Valid Square (LeetCode #593) — Medium.</div>
+                        <div class="block-text">Cho 4 điểm 2D. Kiểm tra có tạo thành hình vuông hợp lệ (4 cạnh bằng, 2 đường chéo bằng, không trùng điểm).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>points = [[0,0],[1,1],[1,0],[0,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>points = [[0,0],[1,1],[1,0],[2,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>points = [[1,0],[0,1],[1,1],[0,0]]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Tính 6 khoảng cách bình; multiset phải có 4 cạnh bằng + 2 diagonal bằng (diagonal = 2*cạnh).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Six distances pattern — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> validSquare(<span class="ty">self</span>, p1: <span class="ty">List</span>[<span class="ty">int</span>], p2: <span class="ty">List</span>[<span class="ty">int</span>], p3: <span class="ty">List</span>[<span class="ty">int</span>], p4: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        pts = [p1,p2,p3,p4]
+        dists = []
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(4):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i+1,4):
+                dx=pts[i][0]-pts[j][0]; dy=pts[i][1]-pts[j][1]
+                dists.append(dx*dx+dy*dy)
+        dists.sort()
+        <span class="kw">return</span> dists[0]&gt;0 <span class="kw">and</span> dists[0]==dists[1]==dists[2]==dists[3] <span class="kw">and</span> dists[4]==dists[5]==2*dists[0]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> dist(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; b) {
+        <span class="kw">return</span> (a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1]);
+    }
 <span class="ty">public</span>:
+    <span class="ty">bool</span> validSquare(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; p1, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; p2, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; p3, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; p4) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;*&gt; pts = {&amp;p1,&amp;p2,&amp;p3,&amp;p4};
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; d;
+        <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;4;i++) <span class="kw">for</span> (<span class="ty">int</span> j=i+1;j&lt;4;j++) d.push_back(dist(*pts[i],*pts[j]));
+        sort(d.begin(), d.end());
+        <span class="kw">return</span> d[0]&gt;0 &amp;&amp; d[0]==d[1]&amp;&amp;d[1]==d[2]&amp;&amp;d[2]==d[3] &amp;&amp; d[4]==d[5]&amp;&amp;d[5]==2*d[0];
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +132,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Tính 6 khoảng cách bình; multiset phải có 4 cạnh bằng + 2 diagonal bằng…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Hình vuông có đúng 2 loại dist: cạnh (4 lần) và diagonal (2 lần, gấp đôi).</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Điểm trùng → dist 0 fail</span><span class="analysis-tag edge">Hình thoi không vuông fail</span><span class="analysis-tag pit">So sánh cạnh không sqrt cần bình</span><span class="analysis-tag pit">Chỉ check 4 cạnh bỏ diagonal</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Valid square = 4 equal side^2 and 2 equal diagonal^2 in 6 pairwise dists.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +160,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Valid%20Square&lc_id=593&embed=true"></iframe>

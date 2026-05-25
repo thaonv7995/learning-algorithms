@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #476</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Bit Manipulation</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Number Complement</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>70.4% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Number Complement (LeetCode #476) — Easy.</div>
+                        <div class="block-text">Complement của số nguyên không âm num — đảo mọi bit trong biểu diễn binary (leading zeros của num không đếm).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>num = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>num = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>num = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Tìm mask bit cao nhất của num; complement trong mask = mask ^ num.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,28 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findComplement(<span class="ty">int</span> num) {
+    <span class="kw">if</span>(!num) <span class="kw">return</span> 1;
+    <span class="ty">unsigned</span> mask=num;
+    mask |= mask&gt;&gt;1; mask |= mask&gt;&gt;2; mask |= mask&gt;&gt;4;
+    mask |= mask&gt;&gt;8; mask |= mask&gt;&gt;16;
+    <span class="kw">return</span> num ^ mask;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findComplement(<span class="ty">self</span>, num: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> num == 0: <span class="kw">return</span> 1
+        mask = 1
+        <span class="kw">while</span> mask &lt; num: mask = (mask &lt;&lt; 1) | 1
+        <span class="kw">return</span> num ^ mask</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findComplement(<span class="ty">int</span> num) {
+        <span class="kw">if</span>(!num) <span class="kw">return</span> 1;
+        <span class="ty">int</span> mask=num;
+        mask |= mask&gt;&gt;1; mask |= mask&gt;&gt;2; mask |= mask&gt;&gt;4;
+        mask |= mask&gt;&gt;8; mask |= mask&gt;&gt;16;
+        <span class="kw">return</span> num ^ mask;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +131,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Bit Manipulation</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Tìm mask bit cao nhất của num; complement trong mask = mask ^ num.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mask covers all bits of num; XOR flips them.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">num=0 special → 1</span><span class="analysis-tag edge">Power of two</span><span class="analysis-tag edge">All bits 1</span><span class="analysis-tag pit">Flip 32 bits wrong</span><span class="analysis-tag pit">~num in two complement wrong</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>XOR with all-1s mask of same bit-length as num.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +159,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Number%20Complement&lc_id=476&embed=true"></iframe>

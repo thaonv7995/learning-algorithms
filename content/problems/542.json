@@ -3,32 +3,36 @@
   "title": "01 Matrix",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "01 Matrix (LeetCode #542) — Medium.",
+  "timeComplexity": "O(m * n)",
+  "spaceComplexity": "O(m * n)",
+  "description": "Ma trận 0/1. Trả ma trận khoảng cách Manhattan tới ô 0 gần nhất (ô 0 có dist 0).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "mat = [[0,0,0],[0,1,0],[1,1,1]]",
+      "output": "[[0,0,0],[0,1,0],[1,2,1]]"
+    },
+    {
+      "input": "mat = [[0,1],[1,0]]",
+      "output": "[[0,1],[1,0]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Multi-source BFS: enqueue mọi ô 0 dist=0; lan 4 hướng gán dist+1.",
+  "memoryTip": "01 Matrix = BFS từ tất cả zeros đồng thời, không DP từng ô riêng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:\n        m, n = len(mat), len(mat[0])\n        dist = [[10**9]*n for _ in range(m)]\n        from collections import deque\n        q = deque()\n        for i in range(m):\n            for j in range(n):\n                if mat[i][j] == 0:\n                    dist[i][j] = 0\n                    q.append((i,j))\n        dirs = [(1,0),(-1,0),(0,1),(0,-1)]\n        while q:\n            r,c = q.popleft()\n            for dr,dc in dirs:\n                nr, nc = r+dr, c+dc\n                if 0<=nr<m and 0<=nc<n and dist[nr][nc] > dist[r][c]+1:\n                    dist[nr][nc] = dist[r][c]+1\n                    q.append((nr,nc))\n        return dist",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {\n        int m = mat.size(), n = mat[0].size();\n        vector<vector<int>> dist(m, vector<int>(n, 1e9));\n        queue<pair<int,int>> q;\n        for (int i = 0; i < m; i++)\n            for (int j = 0; j < n; j++)\n                if (!mat[i][j]) { dist[i][j] = 0; q.push({i,j}); }\n        int d[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};\n        while (!q.empty()) {\n            auto [r,c] = q.front(); q.pop();\n            for (auto& dd : d) {\n                int nr=r+dd[0], nc=c+dd[1];\n                if (nr>=0&&nr<m&&nc>=0&&nc<n && dist[nr][nc]>dist[r][c]+1) {\n                    dist[nr][nc]=dist[r][c]+1; q.push({nr,nc});\n                }\n            }\n        }\n        return dist;\n    }\n};",
+    "c": "/* Multi-source BFS — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "BFS layer đầu tiên tới mỗi ô cho dist tối thiểu tới 0.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Toàn 0",
+      "Một 0 góc"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DP 4 chiều phức tạp hơn cần",
+      "Không init dist lớn"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

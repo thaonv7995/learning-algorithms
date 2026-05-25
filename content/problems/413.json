@@ -2,33 +2,42 @@
   "id": 413,
   "title": "Arithmetic Slices",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Arithmetic Slices (LeetCode #413) — Medium.",
+  "description": "Arithmetic slice là subarray dài ≥3 mà các phần tử cách đều nhau. Đếm tổng số arithmetic slice trong nums.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,2,3,4]",
+      "output": "3"
+    },
+    {
+      "input": "nums = [1]",
+      "output": "0"
+    },
+    {
+      "input": "nums = [1,2,3,4,5]",
+      "output": "6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "dp[i] = số slice kết thúc tại i (dài ≥3). Nếu nums[i]-nums[i-1]==nums[i-1]-nums[i-2] thì dp[i]=dp[i-1]+1. Cộng dồn dp.",
+  "memoryTip": "Slice mới kéo dài từ i-1 thêm 1 phần tử → +dp[i-1] slice.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numberOfArithmeticSlices(self, nums: List[int]) -> int:\n        if len(nums) < 3: return 0\n        dp = ans = 0\n        for i in range(2, len(nums)):\n            if nums[i] - nums[i-1] == nums[i-1] - nums[i-2]:\n                dp += 1\n                ans += dp\n            else:\n                dp = 0\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int numberOfArithmeticSlices(vector<int>& nums) {\n        if (nums.size() < 3) return 0;\n        int dp = 0, ans = 0;\n        for (int i = 2; i < (int)nums.size(); i++) {\n            if (nums[i]-nums[i-1] == nums[i-1]-nums[i-2]) { dp++; ans += dp; }\n            else dp = 0;\n        }\n        return ans;\n    }\n};",
+    "c": "int numberOfArithmeticSlices(int* nums, int n) {\n    if (n < 3) return 0;\n    int dp = 0, ans = 0;\n    for (int i = 2; i < n; i++) {\n        if (nums[i]-nums[i-1] == nums[i-1]-nums[i-2]) { dp++; ans += dp; }\n        else dp = 0;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "dp[i] đếm slice ending at i; tổng dp là mọi slice.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n<3 → 0",
+      "Diff thay đổi reset dp",
+      "Cùng diff dài"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Đếm subarray dài 3 only",
+      "Không reset khi diff đứt"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

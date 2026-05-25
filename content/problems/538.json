@@ -4,31 +4,35 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Convert BST to Greater Tree (LeetCode #538) — Medium.",
+  "spaceComplexity": "O(h)",
+  "description": "Biến BST thành Greater Tree: mỗi node.val = tổng tất cả giá trị lớn hơn hoặc bằng node cũ (bao gồm chính nó).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]",
+      "output": "[30,36,21,36,35,26,16,null,null,null,33,null,null,null,8]"
+    },
+    {
+      "input": "root = [0,null,1]",
+      "output": "[1, null, 1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Reverse inorder (phải → gốc → trái): cộng dồn sum, gán node.val = sum.",
+  "memoryTip": "Convert BST greater = reverse inorder accumulate sum right-first.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def convertBST(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        self.s = 0\n        def dfs(n):\n            if not n: return\n            dfs(n.right)\n            self.s += n.val\n            n.val = self.s\n            dfs(n.left)\n        dfs(root)\n        return root",
+    "cpp": "class Solution {\n    int sum = 0;\n    void revInorder(TreeNode* n) {\n        if (!n) return;\n        revInorder(n->right);\n        sum += n->val;\n        n->val = sum;\n        revInorder(n->left);\n    }\npublic:\n    TreeNode* convertBST(TreeNode* root) {\n        revInorder(root);\n        return root;\n    }\n};",
+    "c": "/* Reverse inorder sum — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Duyệt giảm dần inorder đảm bảo cộng đủ mọi giá trị lớn hơn trước khi gán.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một nút",
+      "Chỉ nhánh phải"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Inorder thường (trái trước) sai thứ tự",
+      "Không cộng dồn global"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -5,30 +5,34 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Array Nesting (LeetCode #565) — Medium.",
+  "description": "Mảng là permutation 0..n-1. nums[i] trỏ tới nums[nums[i]]. Tìm độ dài nesting dài nhất (chu trình).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [5,4,0,3,1,6,2]",
+      "output": "4"
+    },
+    {
+      "input": "nums = [0,1,2]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt i chưa visit; đi theo nums[i] đếm bước trong cycle; đánh dấu visited.",
+  "memoryTip": "Array nesting = find max cycle length in functional graph.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def arrayNesting(self, nums: List[int]) -> int:\n        seen = [False]*len(nums)\n        ans = 0\n        for i in range(len(nums)):\n            if seen[i]: continue\n            cnt = 0\n            j = i\n            while not seen[j]:\n                seen[j] = True\n                j = nums[j]\n                cnt += 1\n            ans = max(ans, cnt)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int arrayNesting(vector<int>& nums) {\n        vector<bool> seen(nums.size());\n        int ans = 0;\n        for (int i = 0; i < (int)nums.size(); i++) {\n            if (seen[i]) continue;\n            int cnt = 0, j = i;\n            while (!seen[j]) { seen[j]=true; j=nums[j]; cnt++; }\n            ans = max(ans, cnt);\n        }\n        return ans;\n    }\n};",
+    "c": "/* Cycle detection walk — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi phần tử thuộc đúng một cycle; max cycle length là đáp án.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một phần tử → 1",
+      "Một cycle toàn bộ mảng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS stack overflow với visited sai",
+      "Đếm lại node đã visit"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #482</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">License Key Formatting</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">License Key Formatting (LeetCode #482) — Easy.</div>
+                        <div class="block-text">Format license key: bỏ dash, uppercase, chia nhóm k ký tự từ trái (nhóm đầu có thể ngắn hơn).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>S = &quot;5F3Z-2e-9&quot;, k = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;5F3Z-2E9&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>S = &quot;2-5g-3-J&quot;, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;2-5G-3J&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>S = &quot;1&quot;, k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;1&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Lọc alnum uppercase; rem=len%k; nhóm rem rồi các block k nối dash.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* licenseKeyFormatting(<span class="ty">char</span>* s, <span class="ty">int</span> k) {
+    <span class="ty">char</span> t[2000]; <span class="ty">int</span> p=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;s[i];i++) <span class="kw">if</span>(s[i]!='-') t[p++]=toupper((<span class="ty">unsigned</span> <span class="ty">char</span>)s[i]);
+    t[p]=0; <span class="kw">if</span>(!p){ <span class="ty">char</span>* r=<span class="kw">malloc</span>(1); r[0]=0; <span class="kw">return</span> r; }
+    <span class="ty">int</span> rem=p%k; <span class="ty">char</span>* ans=<span class="kw">malloc</span>(p+p/k+2); <span class="ty">int</span> q=0, i=0;
+    <span class="kw">if</span>(rem){ memcpy(ans,t,rem); q=rem; i=rem; <span class="kw">if</span>(i&lt;p) ans[q++]='-'; }
+    <span class="kw">for</span>(;i&lt;p;i+=k){ memcpy(ans+q,t+i,k); q+=k; <span class="kw">if</span>(i+k&lt;p) ans[q++]='-'; }
+    ans[q]=0; <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> licenseKeyFormatting(<span class="ty">self</span>, s: <span class="ty">str</span>, k: <span class="ty">int</span>) -&gt; <span class="ty">str</span>:
+        t = &quot;&quot;.join(ch.upper() <span class="kw">for</span> ch <span class="kw">in</span> s <span class="kw">if</span> ch != &quot;-&quot;)
+        <span class="kw">if</span> <span class="kw">not</span> t: <span class="kw">return</span> &quot;&quot;
+        rem = <span class="ty">len</span>(t) % k
+        parts = []
+        <span class="kw">if</span> rem: parts.append(t[:rem])
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(rem, <span class="ty">len</span>(t), k):
+            parts.append(t[i:i+k])
+        <span class="kw">return</span> &quot;-&quot;.join(parts)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> licenseKeyFormatting(<span class="ty">string</span> s, <span class="ty">int</span> k) {
+        <span class="ty">string</span> t;
+        <span class="kw">for</span>(<span class="ty">char</span> c:s) <span class="kw">if</span>(c!='-') t.push_back(toupper(c));
+        <span class="kw">if</span>(t.empty()) <span class="kw">return</span> &quot;&quot;;
+        <span class="ty">int</span> rem=t.size()%k; <span class="ty">string</span> ans;
+        <span class="ty">int</span> i=0;
+        <span class="kw">if</span>(rem){ ans=t.substr(0,rem); i=rem; <span class="kw">if</span>(i&lt;(<span class="ty">int</span>)t.size()) ans+='-'; }
+        <span class="kw">for</span>(;i&lt;(<span class="ty">int</span>)t.size();i+=k){ ans+=t.substr(i,k); <span class="kw">if</span>(i+k&lt;(<span class="ty">int</span>)t.size()) ans+='-'; }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +141,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Lọc alnum uppercase; rem=len%k; nhóm rem rồi các block k nối dash.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Filtered string partitioned with first group size len mod k.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Empty after filter</span><span class="analysis-tag edge">k=1</span><span class="analysis-tag edge">Single char</span><span class="analysis-tag pit">Groups from wrong side</span><span class="analysis-tag pit">Keep original dashes</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>First segment length rem — rest fixed k chars.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=License%20Key%20Formatting&lc_id=482&embed=true"></iframe>

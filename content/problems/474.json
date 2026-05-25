@@ -2,33 +2,38 @@
   "id": 474,
   "title": "Ones and Zeroes",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Ones and Zeroes (LeetCode #474) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n*m*maxM)",
+  "spaceComplexity": "O(m*maxM)",
+  "description": "Mỗi strs[i] có m[i] số 0 và n[i] số 1. Chọn tối đa bao nhiêu chuỗi với tổng 0≤m và 1≤n.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "strs = [\"10\",\"0001\",\"111001\",\"1\",\"0\"], m = 5, n = 3",
+      "output": "4"
+    },
+    {
+      "input": "strs = [\"10\",\"0\",\"1\"], m = 1, n = 1",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "2D knapsack dp[i][j] = max strings with i zeros j ones; for each string update dp backward.",
+  "memoryTip": "0/1 knapsack 2 resources — dp[m+1][n+1].",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:\n        dp = [[0]*(n+1) for _ in range(m+1)]\n        for s in strs:\n            a = s.count(\"0\"); b = len(s)-a\n            for i in range(m, a-1, -1):\n                for j in range(n, b-1, -1):\n                    dp[i][j] = max(dp[i][j], dp[i-a][j-b]+1)\n        return dp[m][n]",
+    "cpp": "class Solution {\npublic:\n    int findMaxForm(vector<string>& strs, int m, int n) {\n        vector<vector<int>> dp(m+1, vector<int>(n+1));\n        for(auto& s:strs){\n            int a=count(s.begin(),s.end(),'0'), b=s.size()-a;\n            for(int i=m;i>=a;i--)\n                for(int j=n;j>=b;j--)\n                    dp[i][j]=max(dp[i][j], dp[i-a][j-b]+1);\n        }\n        return dp[m][n];\n    }\n};",
+    "c": "int findMaxForm(char** strs, int sn, int m, int n) {\n    int dp[101][101]={0};\n    for(int k=0;k<sn;k++){\n        int a=0; for(char* p=strs[k];*p;p++) if(*p=='0') a++;\n        int b=strlen(strs[k])-a;\n        for(int i=m;i>=a;i--) for(int j=n;j>=b;j--)\n            if(dp[i-a][j-b]+1>dp[i][j]) dp[i][j]=dp[i-a][j-b]+1;\n    }\n    return dp[m][n];\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "2D 0/1 knapsack counts max items within (m,n) budget.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "m=n=0",
+      "String too heavy skip",
+      "All strings fit"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Forward loop reuse item",
+      "Count chars wrong"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

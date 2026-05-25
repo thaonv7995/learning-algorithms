@@ -2,33 +2,38 @@
   "id": 463,
   "title": "Island Perimeter",
   "difficulty": "Easy",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Matrix",
+  "timeComplexity": "O(mn)",
   "spaceComplexity": "O(1)",
-  "description": "Island Perimeter (LeetCode #463) — Easy.",
+  "description": "Grid 0=nước, 1=đất. Một đảo là khối 1 liên thông. Tính chu vi đảo (cạnh tiếp giáp nước hoặc biên).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "grid = [[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]",
+      "output": "16"
+    },
+    {
+      "input": "grid = [[1]]",
+      "output": "4"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mỗi ô 1: +4; trừ 2 cho mỗi neighbor 1 (chia sẻ cạnh).",
+  "memoryTip": "Perimeter = 4*cells - 2*shared_edges — no DFS needed.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def islandPerimeter(self, grid: List[List[int]]) -> int:\n        m, n = len(grid), len(grid[0])\n        ans = 0\n        for i in range(m):\n            for j in range(n):\n                if grid[i][j]:\n                    ans += 4\n                    if i and grid[i-1][j]: ans -= 2\n                    if j and grid[i][j-1]: ans -= 2\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int islandPerimeter(vector<vector<int>>& g) {\n        int m=g.size(), n=g[0].size(), ans=0;\n        for(int i=0;i<m;i++) for(int j=0;j<n;j++) if(g[i][j]){\n            ans+=4;\n            if(i&&g[i-1][j]) ans-=2;\n            if(j&&g[i][j-1]) ans-=2;\n        }\n        return ans;\n    }\n};",
+    "c": "int islandPerimeter(int** grid, int m, int* cs, int n) {\n    int ans=0;\n    for(int i=0;i<m;i++) for(int j=0;j<n;j++) if(grid[i][j]){\n        ans+=4;\n        if(i&&grid[i-1][j]) ans-=2;\n        if(j&&grid[i][j-1]) ans-=2;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Each land cell 4 edges minus double-counted internal borders.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Single cell island",
+      "No land → 0",
+      "Multiple islands sum all"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS flood fill unnecessary",
+      "Count water edges separately wrong"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -4,31 +4,39 @@
   "difficulty": "Medium",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Subarray Sum Equals K (LeetCode #560) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Đếm số subarray liên tiếp có tổng bằng k (có thể có số âm).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,1,1], k = 2",
+      "output": "2"
+    },
+    {
+      "input": "nums = [1,2,3], k = 3",
+      "output": "2"
+    },
+    {
+      "input": "nums = [1,-1,0], k = 0",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix sum + hash: freq[prefix]; mỗi bước cộng freq[sum-k] vào answer.",
+  "memoryTip": "Subarray sum K = prefix map count of (currentSum - k).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def subarraySum(self, nums: List[int], k: int) -> int:\n        from collections import defaultdict\n        cnt = defaultdict(int)\n        cnt[0] = 1\n        s = ans = 0\n        for x in nums:\n            s += x\n            ans += cnt[s - k]\n            cnt[s] += 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int subarraySum(vector<int>& nums, int k) {\n        unordered_map<int,int> cnt{{0,1}};\n        long long s = 0;\n        int ans = 0;\n        for (int x : nums) {\n            s += x;\n            if (cnt.count(s - k)) ans += cnt[s - k];\n            cnt[s]++;\n        }\n        return ans;\n    }\n};",
+    "c": "/* Prefix sum hash — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi prefix trước có sum = cur-k tạo một subarray tổng k.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=0 với prefix lặp",
+      "Toàn số âm"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên khởi tạo cnt[0]=1",
+      "Dùng sliding window chỉ khi dương"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

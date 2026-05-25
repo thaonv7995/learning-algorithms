@@ -2,33 +2,42 @@
   "id": 415,
   "title": "Add Strings",
   "difficulty": "Easy",
-  "category": "Math",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Add Strings (LeetCode #415) — Easy.",
+  "category": "String",
+  "timeComplexity": "O(max(m,n))",
+  "spaceComplexity": "O(max(m,n))",
+  "description": "Cộng hai số không âm num1 và num2 (chuỗi chữ số). Trả tổng dạng chuỗi, không dùng BigInteger.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num1 = \"11\", num2 = \"123\"",
+      "output": "\"134\""
+    },
+    {
+      "input": "num1 = \"456\", num2 = \"77\"",
+      "output": "\"533\""
+    },
+    {
+      "input": "num1 = \"0\", num2 = \"0\"",
+      "output": "\"0\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers từ cuối, cộng digit + carry, build kết quả đảo ngược.",
+  "memoryTip": "Giống add binary — carry và pad khi hết chữ số.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def addStrings(self, num1: str, num2: str) -> str:\n        i, j, carry, ans = len(num1)-1, len(num2)-1, 0, []\n        while i >= 0 or j >= 0 or carry:\n            d = carry\n            if i >= 0: d += ord(num1[i]) - 48; i -= 1\n            if j >= 0: d += ord(num2[j]) - 48; j -= 1\n            ans.append(chr(d % 10 + 48)); carry = d // 10\n        return \"\".join(reversed(ans))",
+    "cpp": "class Solution {\npublic:\n    string addStrings(string num1, string num2) {\n        int i=num1.size()-1, j=num2.size()-1, carry=0;\n        string ans;\n        while(i>=0||j>=0||carry){\n            int d=carry;\n            if(i>=0) d+=num1[i--]-'0';\n            if(j>=0) d+=num2[j--]-'0';\n            ans.push_back('0'+d%10); carry=d/10;\n        }\n        reverse(ans.begin(), ans.end());\n        return ans;\n    }\n};",
+    "c": "char* addStrings(char* num1, char* num2) {\n    int i=strlen(num1)-1, j=strlen(num2)-1, carry=0, cap=2000;\n    char* ans=malloc(cap); int p=0;\n    while(i>=0||j>=0||carry){\n        int d=carry;\n        if(i>=0) d+=num1[i--]-'0';\n        if(j>=0) d+=num2[j--]-'0';\n        ans[p++]='0'+d%10; carry=d/10;\n    }\n    ans[p]=0; for(int a=0,b=p-1;a<b;a++,b--){ char t=ans[a]; ans[a]=ans[b]; ans[b]=t; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Digit-by-digit addition đúng mọi độ dài; carry propagate hết.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "\"0\"+\"0\"",
+      "Độ dài chênh lớn",
+      "Carry tạo digit mới"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Parse int overflow",
+      "Quên reverse kết quả"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

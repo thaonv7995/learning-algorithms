@@ -2,33 +2,37 @@
   "id": 522,
   "title": "Longest Uncommon Subsequence II",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Longest Uncommon Subsequence II (LeetCode #522) — Medium.",
+  "category": "String",
+  "timeComplexity": "O(n^2 * L)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng strs. Trả độ dài subsequence không chung dài nhất xuất hiện trong đúng một chuỗi (không phải subsequence của chuỗi khác).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "strs = [\"aba\",\"cdc\",\"eae\"]",
+      "output": "3"
+    },
+    {
+      "input": "strs = [\"aaa\",\"aaa\",\"aa\"]",
+      "output": "-1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort strs theo length giảm dần. Với mỗi s, kiểm tra có phải subsequence của chuỗi khác không; nếu không → trả len(s).",
+  "memoryTip": "LUS II: sort by len desc, first string not subseq of any other wins.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findLUSlength(self, strs: List[str]) -> int:\n        def subseq(a, b):\n            i = 0\n            for c in b:\n                if i < len(a) and a[i] == c:\n                    i += 1\n            return i == len(a)\n        strs.sort(key=len, reverse=True)\n        for i, s in enumerate(strs):\n            if all(i == j or not subseq(s, strs[j]) for j in range(len(strs))):\n                return len(s)\n        return -1",
+    "cpp": "class Solution {\n    bool isSub(const string& a, const string& b) {\n        int i = 0;\n        for (char c : b) if (i < (int)a.size() && a[i] == c) i++;\n        return i == (int)a.size();\n    }\npublic:\n    int findLUSlength(vector<string>& strs) {\n        sort(strs.begin(), strs.end(), [](auto& x, auto& y){ return x.size() > y.size(); });\n        for (int i = 0; i < (int)strs.size(); i++) {\n            bool ok = true;\n            for (int j = 0; j < (int)strs.size(); j++)\n                if (i != j && isSub(strs[i], strs[j])) { ok = false; break; }\n            if (ok) return strs[i].size();\n        }\n        return -1;\n    }\n};",
+    "c": "/* Sort + subsequence check — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Chuỗi dài nhất không phải subseq của ai là LUS tối ưu; sort đảm bảo thử dài trước.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Mọi chuỗi giống nhau → -1",
+      "Một chuỗi unique dài nhất"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không sort → bỏ sót đáp án dài hơn",
+      "Subsequence check sai chiều a,b"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

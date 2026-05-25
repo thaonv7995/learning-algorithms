@@ -2,33 +2,38 @@
   "id": 500,
   "title": "Keyboard Row",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Hash Table",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Keyboard Row (LeetCode #500) — Easy.",
+  "description": "Trả các từ trong words chỉ dùng ký tự trên cùng một hàng bàn phím QWERTY (3 hàng cho phép).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "words = [\"Hello\",\"Alaska\",\"Dad\",\"Peace\"]",
+      "output": "[\"Alaska\",\"Dad\"]"
+    },
+    {
+      "input": "words = [\"omk\"]",
+      "output": "[]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map mỗi chữ cái → row 0/1/2; word valid nếu mọi chữ cùng row.",
+  "memoryTip": "Keyboard rows hash — check homogenous row set per word.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findWords(self, words: List[str]) -> List[str]:\n        rows = [\"qwertyuiop\",\"asdfghjkl\",\"zxcvbnm\"]\n        mp = {c: i for i, r in enumerate(rows) for c in r}\n        ans = []\n        for w in words:\n            r0 = mp[w[0].lower()]\n            if all(mp[c.lower()] == r0 for c in w):\n                ans.append(w)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<string> findWords(vector<string>& words) {\n        string rows[3]={\"qwertyuiop\",\"asdfghjkl\",\"zxcvbnm\"};\n        int mp[256]; memset(mp,-1,sizeof mp);\n        for(int i=0;i<3;i++) for(char c:rows[i]) mp[c]=i;\n        vector<string> ans;\n        for(auto& w:words){\n            int r=mp[tolower(w[0])]; bool ok=1;\n            for(char c:w) if(mp[tolower(c)]!=r){ ok=0; break; }\n            if(ok) ans.push_back(w);\n        }\n        return ans;\n    }\n};",
+    "c": "char** findWords(char** words, int n, int* rs) {\n    const char* rows[3]={\"qwertyuiop\",\"asdfghjkl\",\"zxcvbnm\"};\n    int mp[256]; for(int i=0;i<256;i++) mp[i]=-1;\n    for(int i=0;i<3;i++) for(int j=0;rows[i][j];j++) mp[(unsigned char)rows[i][j]]=i;\n    char** ans=malloc(n*sizeof(char*)); *rs=0;\n    for(int i=0;i<n;i++){\n        int r=mp[(unsigned char)tolower(words[i][0])]; int ok=1;\n        for(char* p=words[i];*p;p++) if(mp[(unsigned char)tolower(*p)]!=r){ ok=0; break; }\n        if(ok) ans[(*rs)++]=words[i];\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Case-insensitive row check — all letters same row index.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Mixed case",
+      "Single letter word",
+      "No matches"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Forget lowercase map",
+      "Wrong keyboard layout"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

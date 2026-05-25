@@ -2,33 +2,38 @@
   "id": 447,
   "title": "Number of Boomerangs",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Number of Boomerangs (LeetCode #447) — Medium.",
+  "category": "Hash Table",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n)",
+  "description": "Đếm boomerang: bộ ba (i,j,k) distinct sao dist(i,j)==dist(i,k). Mỗi boomerang đếm ordered triple.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "points = [[0,0],[1,0],[2,0]]",
+      "output": "2"
+    },
+    {
+      "input": "points = [[1,1],[2,2],[3,3]]",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Với mỗi i, map dist² tới j: cộng ans += cnt*(cnt-1) khi thêm dist trùng.",
+  "memoryTip": "Pivot i — pairs same distance form boomerangs count k*(k-1).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numberOfBoomerangs(self, points: List[List[int]]) -> int:\n        ans = 0\n        for x1, y1 in points:\n            cnt = defaultdict(int)\n            for x2, y2 in points:\n                d = (x1-x2)**2 + (y1-y2)**2\n                cnt[d] += 1\n            for c in cnt.values():\n                ans += c * (c - 1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int numberOfBoomerangs(vector<vector<int>>& p) {\n        int ans=0;\n        for(auto& a:p){\n            unordered_map<int,int> cnt;\n            for(auto& b:p){\n                int d=(a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1]);\n                ans += 2*cnt[d]; cnt[d]++;\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int numberOfBoomerangs(int** points, int n, int* cs) {\n    int ans=0;\n    for(int i=0;i<n;i++){\n        int cnt[200000]={0};\n        for(int j=0;j<n;j++){\n            int dx=points[i][0]-points[j][0], dy=points[i][1]-points[j][1];\n            int d=dx*dx+dy*dy;\n            ans += 2*cnt[d+100000]; cnt[d+100000]++;\n        }\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Ordered pairs j,k same dist from i → k*(k-1) per distance bucket.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n<3 → 0",
+      "Trùng tọa độ dist=0",
+      "Large coords use dist²"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Undirected count /6",
+      "Float distance precision"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

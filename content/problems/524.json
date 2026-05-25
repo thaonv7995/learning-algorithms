@@ -2,33 +2,37 @@
   "id": 524,
   "title": "Longest Word in Dictionary through Deleting",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "String",
+  "timeComplexity": "O(n * L^2)",
   "spaceComplexity": "O(1)",
-  "description": "Longest Word in Dictionary through Deleting (LeetCode #524) — Medium.",
+  "description": "Cho s và mảng dictionary. Trả từ dài nhất trong dictionary là subsequence của s (xóa ký tự không cần); nếu nhiều từ cùng dài nhất chọn lex nhỏ nhất.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"abpcplea\", dictionary = [\"ale\",\"apple\",\"monkey\",\"plea\"]",
+      "output": "\"apple\""
+    },
+    {
+      "input": "s = \"abpcplea\", dictionary = [\"a\",\"b\",\"c\"]",
+      "output": "\"a\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort dictionary: length desc, lex asc. Trả từ đầu tiên là subsequence của s.",
+  "memoryTip": "Longest word deleting: sort (len desc, word asc) + two-pointer subseq check.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findLongestWord(self, s: str, dictionary: List[str]) -> str:\n        def subseq(w):\n            i = 0\n            for c in s:\n                if i < len(w) and w[i] == c:\n                    i += 1\n            return i == len(w)\n        for w in sorted(dictionary, key=lambda x: (-len(x), x)):\n            if subseq(w):\n                return w\n        return \"\"",
+    "cpp": "class Solution {\n    bool subseq(const string& w, const string& s) {\n        int i = 0;\n        for (char c : s) if (i < (int)w.size() && w[i] == c) i++;\n        return i == (int)w.size();\n    }\npublic:\n    string findLongestWord(string s, vector<string>& d) {\n        sort(d.begin(), d.end(), [](auto& a, auto& b){\n            if (a.size() != b.size()) return a.size() > b.size();\n            return a < b;\n        });\n        for (auto& w : d) if (subseq(w, s)) return w;\n        return \"\";\n    }\n};",
+    "c": "/* Sort dict + subseq — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Thứ tự sort đảm bảo từ dài nhất lex nhỏ nhất được thử trước.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không từ nào match → \"\"",
+      "Nhiều cùng length"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort chỉ theo length bỏ tie-break lex",
+      "Subsequence direction sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

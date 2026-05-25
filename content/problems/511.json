@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Game Play Analysis I (LeetCode #511) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Activity(player_id, device_id, event_date, games_played). Tìm player_id đầu tiên (nhỏ nhất) của mỗi người chơi — ngày đăng nhập/ chơi đầu tiên.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "Activity: (1,2,2016-03-01,5), (1,2,2016-05-02,11)",
+      "output": "player_id=1, first_date=2016-03-01"
+    },
+    {
+      "input": "Hai player khác ngày đầu",
+      "output": "Mỗi player một dòng MIN(event_date)"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "SELECT player_id, MIN(event_date) AS first_login FROM Activity GROUP BY player_id.",
+  "memoryTip": "First event per user = GROUP BY id + MIN(date).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT player_id, MIN(event_date) AS first_login\nFROM Activity\nGROUP BY player_id;",
+    "cpp": "// SQL\nSELECT player_id, MIN(event_date) AS first_login\nFROM Activity\nGROUP BY player_id;",
+    "c": "/* SQL GROUP BY MIN date */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "MIN(event_date) theo player_id cho ngày đầu tiên chính xác.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một dòng mỗi player",
+      "Nhiều device cùng ngày"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "SELECT * thay vì MIN",
+      "Quên GROUP BY player_id"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

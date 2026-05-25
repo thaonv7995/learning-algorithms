@@ -2,33 +2,42 @@
   "id": 435,
   "title": "Non-overlapping Intervals",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Greedy",
+  "timeComplexity": "O(n log n)",
   "spaceComplexity": "O(1)",
-  "description": "Non-overlapping Intervals (LeetCode #435) — Medium.",
+  "description": "Cho intervals[i]=[start,end]. Xóa tối thiểu interval để phần còn lại không overlap.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "intervals = [[1,2],[2,3],[3,4],[1,3]]",
+      "output": "1"
+    },
+    {
+      "input": "intervals = [[1,2],[1,2],[1,2]]",
+      "output": "2"
+    },
+    {
+      "input": "intervals = [[1,2],[2,3]]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort theo end tăng; greedy giữ interval, bỏ interval tiếp theo nếu start < end đang giữ.",
+  "memoryTip": "Activity selection — sort by finish time, count removals.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:\n        intervals.sort(key=lambda x: x[1])\n        end, removed = float(\"-inf\"), 0\n        for s, e in intervals:\n            if s >= end: end = e\n            else: removed += 1\n        return removed",
+    "cpp": "class Solution {\npublic:\n    int eraseOverlapIntervals(vector<vector<int>>& v) {\n        sort(v.begin(), v.end(), [](auto& a, auto& b){ return a[1] < b[1]; });\n        int end=INT_MIN, rem=0;\n        for(auto& p:v) if(p[0]>=end) end=p[1]; else rem++;\n        return rem;\n    }\n};",
+    "c": "int cmp(const void* a, const void* b) { return (*(int**)a)[1] - (*(int**)b)[1]; }\nint eraseOverlapIntervals(int** iv, int n, int* cs) {\n    qsort(iv, n, sizeof(int*), cmp);\n    int end=INT_MIN, rem=0;\n    for(int i=0;i<n;i++) if(iv[i][0]>=end) end=iv[i][1]; else rem++;\n    return rem;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Greedy earliest finish maximizes kept intervals — n - max kept = min removed.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không overlap → 0",
+      "Nested intervals",
+      "Trùng nhau"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort by start",
+      "So sánh <= vs < sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

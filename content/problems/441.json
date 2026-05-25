@@ -2,33 +2,42 @@
   "id": 441,
   "title": "Arranging Coins",
   "difficulty": "Easy",
-  "category": "Math",
-  "timeComplexity": "O(n)",
+  "category": "Binary Search",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Arranging Coins (LeetCode #441) — Easy.",
+  "description": "Sắp xếp n đồng xếp thành tam giác: hàng k có k xu. Trả số hàng hoàn chỉnh tối đa (phần dư bỏ qua).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 5",
+      "output": "2"
+    },
+    {
+      "input": "n = 8",
+      "output": "3"
+    },
+    {
+      "input": "n = 1",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Binary search h: tổng 1+2+...+h = h(h+1)/2 ≤ n.",
+  "memoryTip": "Triangular number — binary search on rows.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def arrangeCoins(self, n: int) -> int:\n        lo, hi = 0, n\n        while lo < hi:\n            mid = (lo + hi + 1) // 2\n            if mid * (mid + 1) // 2 <= n: lo = mid\n            else: hi = mid - 1\n        return lo",
+    "cpp": "class Solution {\npublic:\n    int arrangeCoins(int n) {\n        long lo=0, hi=n;\n        while(lo<hi){\n            long mid=(lo+hi+1)/2;\n            if(mid*(mid+1)/2<=n) lo=mid; else hi=mid-1;\n        }\n        return lo;\n    }\n};",
+    "c": "int arrangeCoins(int n) {\n    long lo=0, hi=n;\n    while(lo<hi){\n        long mid=(lo+hi+1)/2;\n        if(mid*(mid+1)/2<=n) lo=mid; else hi=mid-1;\n    }\n    return lo;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Max h với triangular sum ≤ n — monotone binary search.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1",
+      "n=triangular exact",
+      "n between triangular"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Loop mid wrong bias",
+      "int overflow h*(h+1)"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

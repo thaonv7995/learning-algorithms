@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #519</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Random Flip Matrix</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) amortized per flip</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Random Flip Matrix (LeetCode #519) — Medium.</div>
+                        <div class="block-text">Ma trận m×n, flip ngẫu nhiên một ô chưa flip (uniform). reset() đưa về chưa flip. Implement class với flip() và reset().</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>RandomFlipMatrix(1,2); flip(); flip(); reset()</code></div>
+                <div class="ex-line"><span>Out</span><code>Hai ô khác nhau rồi reset</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>m=2,n=2 nhiều flip</code></div>
+                <div class="ex-line"><span>Out</span><code>Mỗi ô chưa flip có xác suất bằng nhau</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Map index đã flip sang slot mới; pool = m*n - flipped. Chọn r ngẫu nhiên, hoán đổi với phần tử cuối pool (Fisher-Yates ảo).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Random flip hash map — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, m: <span class="ty">int</span>, n: <span class="ty">int</span>):
+        <span class="ty">self</span>.m, <span class="ty">self</span>.n = m, n
+        <span class="ty">self</span>.total = m * n
+        <span class="ty">self</span>.avail = <span class="ty">self</span>.total
+        <span class="ty">self</span>.idx_map = {}
+        <span class="ty">self</span>.reset()
+    <span class="kw">def</span> flip(<span class="ty">self</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        <span class="kw">import</span> random
+        r = random.randint(0, <span class="ty">self</span>.avail - 1)
+        idx = <span class="ty">self</span>.idx_map.get(r, r)
+        <span class="ty">self</span>.idx_map[r] = <span class="ty">self</span>.idx_map.get(<span class="ty">self</span>.avail - 1, <span class="ty">self</span>.avail - 1)
+        <span class="ty">self</span>.avail -= 1
+        <span class="kw">return</span> [idx // <span class="ty">self</span>.n, idx % <span class="ty">self</span>.n]
+    <span class="kw">def</span> reset(<span class="ty">self</span>) -&gt; <span class="kw">None</span>:
+        <span class="ty">self</span>.avail = <span class="ty">self</span>.total
+        <span class="ty">self</span>.idx_map.clear()</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> m, n, total, avail;
+    unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; mp;
 <span class="ty">public</span>:
+    Solution(<span class="ty">int</span> m, <span class="ty">int</span> n): m(m), n(n), total(m*n), avail(total) {}
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; flip() {
+        <span class="ty">int</span> r = rand() % avail;
+        <span class="ty">int</span> idx = mp.count(r) ? mp[r] : r;
+        mp[r] = mp.count(avail-1) ? mp[avail-1] : avail-1;
+        avail--;
+        <span class="kw">return</span> {idx / n, idx % n};
+    }
+    <span class="ty">void</span> reset() { avail = total; mp.clear(); }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +135,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Map index đã flip sang slot mới; pool = m*n - flipped.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Chọn r ngẫu nhiên, hoán đổi với phần tử cuối pool .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Hoán đổi ảo đảm bảo mọi ô chưa chọn có xác suất đều mỗi flip.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">1x1 chỉ một ô</span><span class="analysis-tag edge">Reset khôi phục pool đầy</span><span class="analysis-tag pit">Lưu bitmask O(mn) memory</span><span class="analysis-tag pit">Không remap khi chọn r</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Random flip = reservoir trên chỉ số chưa dùng + hash remap khi reset lazy.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Random%20Flip%20Matrix&lc_id=519&embed=true"></iframe>

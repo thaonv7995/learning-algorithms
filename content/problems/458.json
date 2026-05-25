@@ -3,32 +3,37 @@
   "title": "Poor Pigs",
   "difficulty": "Hard",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Poor Pigs (LeetCode #458) — Hard.",
+  "description": "Có buckets và pigs để test poison trong một bucket. Mỗi pig uống mix buckets, 15 phút sau biết sống/chết. Min pigs để xác định poison bucket trong t minutes.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "buckets = 1000, minutesToTest = 15, minutesToDie = 60",
+      "output": "5"
+    },
+    {
+      "input": "buckets = 1, minutesToTest = 1, minutesToDie = 1",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mỗi pig có states = rounds+1 (sống/chết mỗi round). Tổng states^pigs ≥ buckets → min pigs.",
+  "memoryTip": "Information theory — (t/test + 1)^pigs ≥ buckets.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def poorPigs(self, buckets: int, minutesToTest: int, minutesToDie: int) -> int:\n        states = minutesToDie // minutesToTest + 1\n        pigs = 0\n        while states ** pigs < buckets:\n            pigs += 1\n        return pigs",
+    "cpp": "class Solution {\npublic:\n    int poorPigs(int buckets, int minutesToTest, int minutesToDie) {\n        int states=minutesToDie/minutesToTest+1, pigs=0;\n        int cap=1;\n        while(cap<buckets){ pigs++; cap*=states; }\n        return pigs;\n    }\n};",
+    "c": "int poorPigs(int buckets, int minutesToTest, int minutesToDie) {\n    int states=minutesToDie/minutesToTest+1, pigs=0, cap=1;\n    while(cap<buckets){ pigs++; cap*=states; }\n    return pigs;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Each pig encodes base-(rounds+1) digit — product covers all bucket outcomes.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "buckets=1 → 0 pigs",
+      "Large buckets",
+      "test= die → 2 states"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Binary search pigs wrong model",
+      "Quên +1 rounds"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

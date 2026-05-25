@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #430</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Linked List</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Flatten a Multilevel Doubly Linked List</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Flatten a Multilevel Doubly Linked List (LeetCode #430) — Medium.</div>
+                        <div class="block-text">Flatten danh sách kép đa cấp: mỗi node có next, prev, child (head list con). Trả list phẳng theo thứ tự pre-order, dùng next/prev nối liền.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,3,4,5,6,null,null,null,7,8,9,10,null,null,11,12]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2,3,7,8,11,12,9,10,4,5,6]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,null,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,3,2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS: flatten(child) trước; nối child list vào giữa node và node.next; prev pointer cập nhật.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> Node* flatten(<span class="ty">struct</span> Node* head) { <span class="kw">return</span> head; /* doubly linked — see C++ */ }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> flatten(<span class="ty">self</span>, head: Node) -&gt; Node:
+        <span class="kw">if</span> <span class="kw">not</span> head: <span class="kw">return</span> head
+        cur = head
+        <span class="kw">while</span> cur:
+            <span class="kw">if</span> cur.child:
+                nxt = cur.next
+                child = <span class="ty">self</span>.flatten(cur.child)
+                cur.next = child
+                child.prev = cur
+                tail = child
+                <span class="kw">while</span> tail.next: tail = tail.next
+                tail.next = nxt
+                <span class="kw">if</span> nxt: nxt.prev = tail
+                cur.child = <span class="kw">None</span>
+            cur = cur.next
+        <span class="kw">return</span> head</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    Node* flatten(Node* head) {
+        <span class="kw">if</span> (!head) <span class="kw">return</span> head;
+        Node* cur = head;
+        <span class="kw">while</span> (cur) {
+            <span class="kw">if</span> (cur-&gt;child) {
+                Node* nxt = cur-&gt;next;
+                Node* ch = flatten(cur-&gt;child);
+                cur-&gt;next = ch; ch-&gt;prev = cur;
+                Node* tail = ch;
+                <span class="kw">while</span> (tail-&gt;next) tail = tail-&gt;next;
+                tail-&gt;next = nxt; <span class="kw">if</span> (nxt) nxt-&gt;prev = tail;
+                cur-&gt;child = <span class="kw">nullptr</span>;
+            }
+            cur = cur-&gt;next;
+        }
+        <span class="kw">return</span> head;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +145,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DFS: flatten trước; nối child list vào giữa node và node.next; prev…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Pre-order flatten: child chèn ngay sau node, phần còn lại nối sau tail child.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không child</span><span class="analysis-tag edge">Child sâu nhiều cấp</span><span class="analysis-tag edge">Null head</span><span class="analysis-tag pit">Quên set child=null</span><span class="analysis-tag pit">Prev pointer sai</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Tail của child list nối với old next — giữ prev khi duyệt.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=3&problem=Flatten%20a%20Multilevel%20Doubly%20Linked%20List&lc_id=430&embed=true"></iframe>

@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #553</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Optimal Division</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Optimal Division (LeetCode #553) — Medium.</div>
+                        <div class="block-text">Cho mảng số dương. Ghép biểu thức a/b/c/... với ngoặc tối ưu để giá trị lớn nhất. Trả chuỗi biểu thức.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1000,100,10,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;1000/(10/2)&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [2,3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;2/(3/4)&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">n=1 trả s0; n=2 trả a/b; n≥3 luôn a/(b/c/d...) — mẫu số nhỏ tối đa hóa thương.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,23 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Format a/(b/c/...) — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> optimalDivision(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">str</span>:
+        <span class="kw">if</span> <span class="ty">len</span>(nums) == 1:
+            <span class="kw">return</span> <span class="ty">str</span>(nums[0])
+        <span class="kw">if</span> <span class="ty">len</span>(nums) == 2:
+            <span class="kw">return</span> f&quot;{nums[0]}/{nums[1]}&quot;
+        <span class="kw">return</span> f&quot;{nums[0]}/({'/'.join(map(<span class="ty">str</span>, nums[1:]))})&quot;</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> optimalDivision(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="kw">if</span> (nums.size() == 1) <span class="kw">return</span> to_string(nums[0]);
+        <span class="kw">if</span> (nums.size() == 2) <span class="kw">return</span> to_string(nums[0]) + &quot;/&quot; + to_string(nums[1]);
+        <span class="ty">string</span> s = to_string(nums[0]) + &quot;/(&quot; + to_string(nums[1]);
+        <span class="kw">for</span> (size_t i = 2; i &lt; nums.size(); i++) s += &quot;/&quot; + to_string(nums[i]);
+        <span class="kw">return</span> s + &quot;)&quot;;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +125,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — n=1 trả s0; n=2 trả a/b; n≥3 luôn a/ — mẫu số nhỏ tối đa hóa thương.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Chia liên tiếp trái sang phải nhỏ nhất khi nhóm mẫu số từ phần tử 2.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">2 phần tử không cần ngoặc</span><span class="analysis-tag edge">1 phần tử</span><span class="analysis-tag pit">DP không cần — pattern cố định</span><span class="analysis-tag pit">Thiếu ngoặc với n≥3</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Optimal division: first/ — only one optimal pattern.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +149,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Optimal%20Division&lc_id=553&embed=true"></iframe>

@@ -4,31 +4,39 @@
   "difficulty": "Hard",
   "category": "Dynamic Programming",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Student Attendance Record II (LeetCode #552) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Đếm số chuỗi attendance hợp lệ độ dài n (P/L/A) với tối đa 1 A và không LLL. Trả mod 10^9+7.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 1",
+      "output": "3"
+    },
+    {
+      "input": "n = 2",
+      "output": "8"
+    },
+    {
+      "input": "n = 3",
+      "output": "19"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP theo (pos, absent used, late streak 0..2): thêm P reset late; L tăng streak; A nếu chưa absent.",
+  "memoryTip": "Attendance II = DP dimensions length × absent flag × late count 0-2.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def checkRecord(self, n: int) -> int:\n        MOD = 10**9+7\n        dp = [[0]*3 for _ in range(2)]\n        dp[0][0] = 1\n        for _ in range(n):\n            ndp = [[0]*3 for _ in range(2)]\n            for a in range(2):\n                for l in range(3):\n                    v = dp[a][l]\n                    if not v: continue\n                    ndp[a][0] = (ndp[a][0]+v)%MOD\n                    if l+1 < 3: ndp[a][l+1] = (ndp[a][l+1]+v)%MOD\n                    if a == 0: ndp[1][0] = (ndp[1][0]+v)%MOD\n            dp = ndp\n        return sum(sum(row) for row in dp) % MOD",
+    "cpp": "class Solution {\npublic:\n    int checkRecord(int n) {\n        const int MOD = 1e9+7;\n        long long dp[2][3] = {};\n        dp[0][0] = 1;\n        while (n--) {\n            long long ndp[2][3] = {};\n            for (int a = 0; a < 2; a++)\n                for (int l = 0; l < 3; l++) if (dp[a][l]) {\n                    ndp[a][0] = (ndp[a][0]+dp[a][l])%MOD;\n                    if (l+1<3) ndp[a][l+1]=(ndp[a][l+1]+dp[a][l])%MOD;\n                    if (!a) ndp[1][0]=(ndp[1][0]+dp[a][l])%MOD;\n                }\n            memcpy(dp, ndp, sizeof dp);\n        }\n        long long ans=0;\n        for (int a=0;a<2;a++) for(int l=0;l<3;l++) ans=(ans+dp[a][l])%MOD;\n        return ans;\n    }\n};",
+    "c": "/* DP absent/late — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "State machine cover mọi chuỗi hợp lệ; modulo ở mỗi bước.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1 → P,L,A",
+      "n lớn cần mod"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên mod",
+      "Late streak >2 không cắt"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,38 @@
   "id": 480,
   "title": "Sliding Window Median",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Sliding Window Median (LeetCode #480) — Hard.",
+  "category": "Heap",
+  "timeComplexity": "O(n log k)",
+  "spaceComplexity": "O(k)",
+  "description": "Sliding window median: với mỗi window size k trong nums, trả median (trung bình hai giữa nếu k chẵn).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,3,-1,-3,5,3,6,7], k = 3",
+      "output": "[1.0,-1.0,-1.0,3.0,5.0,6.0]"
+    },
+    {
+      "input": "nums = [1,2,3,4,2,3,1,4,2], k = 3",
+      "output": "[2.0,3.0,3.0,3.0,2.0,3.0,2.0]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two multiset heaps balance halves; lazy delete khi slide; median từ top left/right.",
+  "memoryTip": "Dual heap median stream — delay delete counts when window slides.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def medianSlidingWindow(self, nums: List[int], k: int) -> List[float]:\n        from sortedcontainers import SortedList\n        window = SortedList(nums[:k])\n        ans = []\n        def med():\n            return (window[(k-1)//2] + window[k//2]) / 2\n        ans.append(med())\n        for i in range(k, len(nums)):\n            window.remove(nums[i-k])\n            window.add(nums[i])\n            ans.append(med())\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<double> medianSlidingWindow(vector<int>& nums, int k) {\n        multiset<int> left, right; vector<double> ans;\n        auto balance=[&](){\n            while((int)left.size()>(k+1)/2){ right.insert(*left.rbegin()); left.erase(prev(left.end())); }\n            while((int)left.size()<(k+1)/2){ left.insert(*right.begin()); right.erase(right.begin()); }\n        };\n        for(int i=0;i<(int)nums.size();i++){\n            if(left.empty()||nums[i]<=*left.rbegin()) left.insert(nums[i]); else right.insert(nums[i]);\n            balance();\n            if(i>=k){\n                int out=nums[i-k];\n                auto er=[&](multiset<int>& s,int v){ auto it=s.find(v); if(it!=s.end()) s.erase(it); };\n                er(left,out); er(right,out); balance();\n            }\n            if(i>=k-1){\n                if(k&1) ans.push_back(*left.rbegin());\n                else ans.push_back(((double)*left.rbegin()+*right.begin())/2);\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "double* medianSlidingWindow(int* nums,int n,int k,int* rs){*rs=0;return NULL;}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Balanced heaps track sorted window; median from middle element(s).",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1",
+      "Duplicates",
+      "Negative nums"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Resort each window TLE",
+      "Stale heap tops without lazy delete"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -3,32 +3,36 @@
   "title": "Longest Palindromic Subsequence",
   "difficulty": "Medium",
   "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Longest Palindromic Subsequence (LeetCode #516) — Medium.",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Cho chuỗi s. Trả độ dài subsequence palindrome dài nhất (không cần liên tiếp).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"bbbab\"",
+      "output": "4"
+    },
+    {
+      "input": "s = \"cbbd\"",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[i][j]: LPS trong s[i..j]. Nếu s[i]==s[j]: 2+dp[i+1][j-1]; else max(dp[i+1][j], dp[i][j-1]).",
+  "memoryTip": "LPS interval DP: khớp hai đầu +2, không khớp max bỏ một đầu.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def longestPalindromeSubseq(self, s: str) -> int:\n        n = len(s)\n        dp = [[0]*n for _ in range(n)]\n        for i in range(n-1, -1, -1):\n            dp[i][i] = 1\n            for j in range(i+1, n):\n                if s[i] == s[j]:\n                    dp[i][j] = 2 + dp[i+1][j-1]\n                else:\n                    dp[i][j] = max(dp[i+1][j], dp[i][j-1])\n        return dp[0][n-1]",
+    "cpp": "class Solution {\npublic:\n    int longestPalindromeSubseq(string s) {\n        int n = s.size();\n        vector<vector<int>> dp(n, vector<int>(n));\n        for (int i = n-1; i >= 0; i--) {\n            dp[i][i] = 1;\n            for (int j = i+1; j < n; j++) {\n                if (s[i] == s[j]) dp[i][j] = 2 + dp[i+1][j-1];\n                else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);\n            }\n        }\n        return dp[0][n-1];\n    }\n};",
+    "c": "/* Interval DP LPS — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP interval đầy đủ cho mọi đoạn con; base dp[i][i]=1.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một ký tự → 1",
+      "Toàn giống nhau → n"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm với longest palindrome substring",
+      "Thứ tự vòng i,j sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

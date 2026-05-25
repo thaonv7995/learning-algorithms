@@ -4,31 +4,40 @@
   "difficulty": "Easy",
   "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Repeated Substring Pattern (LeetCode #459) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Kiểm tra s có thể tạo bằng cách lặp một substring ít nhất hai lần liên tiếp.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"abab\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"aba\"",
+      "output": "false"
+    },
+    {
+      "input": "s = \"abcabcabcabc\"",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "s in (s+s)[1:-1] iff có repeated pattern covering whole string length>1.",
+  "memoryTip": "Trick: s+s remove first and last char — contains s iff periodic.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def repeatedSubstringPattern(self, s: str) -> bool:\n        t = s + s\n        return s in t[1:-1]",
+    "cpp": "class Solution {\npublic:\n    bool repeatedSubstringPattern(string s) {\n        string t = s + s;\n        return t.find(s, 1) < s.size();\n    }\n};",
+    "c": "bool repeatedSubstringPattern(char* s) {\n    int n=strlen(s); if(n<2) return false;\n    char* t=malloc(2*n+1); strcpy(t,s); strcat(t,s);\n    t[2*n]=0;\n    char* p=strstr(t+1,s);\n    int ok = p && p < t+n;\n    free(t); return ok;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Periodic string appears in rotated doubled string interior iff built from repeats.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Length 1 → false",
+      "Full repeat odd times",
+      "KMP alternative"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Check divisors only O(n²)",
+      "s in s+s includes trivial"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

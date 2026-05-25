@@ -2,33 +2,37 @@
   "id": 541,
   "title": "Reverse String II",
   "difficulty": "Easy",
-  "category": "Two Pointers",
+  "category": "String",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Reverse String II (LeetCode #541) — Easy.",
+  "description": "Cho s và k. Đảo chuỗi theo khối 2k: mỗi 2k ký tự đảo k ký tự đầu; đoạn cuối <2k thì đảo k đầu (hoặc hết nếu ngắn hơn).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"abcdefg\", k = 2",
+      "output": "\"bacdfeg\""
+    },
+    {
+      "input": "s = \"abcd\", k = 2",
+      "output": "\"bacd\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt i += 2k; reverse s[i..i+k-1] bằng two-pointer.",
+  "memoryTip": "Reverse II: for i step 2k, reverse subrange [i, i+k).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reverseStr(self, s: str, k: int) -> str:\n        a = list(s)\n        for i in range(0, len(a), 2 * k):\n            a[i:i+k] = reversed(a[i:i+k])\n        return \"\".join(a)",
+    "cpp": "class Solution {\npublic:\n    string reverseStr(string s, int k) {\n        for (int i = 0; i < (int)s.size(); i += 2 * k) {\n            reverse(s.begin() + i, s.begin() + min(i + k, (int)s.size()));\n        }\n        return s;\n    }\n};",
+    "c": "/* Reverse every 2k block — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi khối 2k chỉ đảo đúng k ký tự đầu theo đề.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1 đảo từng ký tự xen kẽ",
+      "Đoạn cuối < k"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Đảo cả 2k thay vì k",
+      "Off-by-one trên đoạn cuối"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

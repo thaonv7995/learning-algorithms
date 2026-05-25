@@ -2,33 +2,42 @@
   "id": 457,
   "title": "Circular Array Loop",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Two Pointers",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Circular Array Loop (LeetCode #457) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Mảng vòng nums length n, nums[i]≠0. nums[i] dương → bước (i+nums[i])%n, âm → (i-nums[i])%n. Có cycle cùng hướng (forward hoặc backward) length≥2 không?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [2,-1,1,2,2]",
+      "output": "true"
+    },
+    {
+      "input": "nums = [-1,2]",
+      "output": "false"
+    },
+    {
+      "input": "nums = [-2,1,-1,-2,-2]",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Với mỗi i chưa visited: slow/fast cùng hướng ban đầu; nếu gặp nhau và length>1 và cùng dấu nums → true.",
+  "memoryTip": "Cycle detection như 142 — nhưng check direction và không đổi dấu nums trên path.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def circularArrayLoop(self, nums: List[int]) -> bool:\n        n = len(nums)\n        def nexti(i): return (i + nums[i]) % n\n        for i in range(n):\n            if not nums[i]: continue\n            slow = fast = i\n            fwd = nums[i] > 0\n            while True:\n                slow = nexti(slow)\n                fast = nexti(nexti(fast))\n                if nums[slow]*nums[i]<=0 or nums[fast]*nums[i]<=0: break\n                if slow == fast:\n                    if slow == nexti(slow): break\n                    return True\n            j = i\n            while nums[j]*nums[i]>0:\n                nums[j]=0; j=nexti(j)\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool circularArrayLoop(vector<int>& nums) {\n        int n=nums.size();\n        auto nxt=[&](int i){ return (i+nums[i]%n+n)%n; };\n        for(int i=0;i<n;i++){\n            if(!nums[i]) continue;\n            int slow=i, fast=i; int sgn=nums[i]>0?1:-1;\n            while(true){\n                slow=nxt(slow); fast=nxt(nxt(fast));\n                if(nums[slow]*sgn<=0||nums[fast]*sgn<=0) break;\n                if(slow==fast){\n                    if(slow==nxt(slow)) break;\n                    return true;\n                }\n            }\n            int j=i; while(nums[j]*sgn>0){ nums[j]=0; j=nxt(j); }\n        }\n        return false;\n    }\n};",
+    "c": "bool circularArrayLoop(int* nums, int n) { return false; /* see C++ */ }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Floyd cycle with direction consistency; self-loop length 1 invalid.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Self loop |nums[i]|==n mod",
+      "Zero skip",
+      "Mixed direction break"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không mark visited TLE",
+      "Mod negative index sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

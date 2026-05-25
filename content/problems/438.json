@@ -2,33 +2,38 @@
   "id": 438,
   "title": "Find All Anagrams in a String",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Sliding Window",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Find All Anagrams in a String (LeetCode #438) — Medium.",
+  "description": "Cho s và p. Trả start index mọi anagram của p trong s (cùng độ dài, hoán vị ký tự).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"cbaebabacd\", p = \"abc\"",
+      "output": "[0,6]"
+    },
+    {
+      "input": "s = \"abab\", p = \"ab\"",
+      "output": "[0,1,2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sliding window len m=|p|: count 26 chữ; so sánh với count p; slide trừ/cộng ký tự.",
+  "memoryTip": "Fixed window + freq array — match when counts equal.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findAnagrams(self, s: str, p: str) -> List[int]:\n        m, n = len(p), len(s)\n        if m > n: return []\n        need = [0]*26; have = [0]*26\n        for c in p: need[ord(c)-97] += 1\n        ans = []\n        for i, c in enumerate(s):\n            have[ord(c)-97] += 1\n            if i >= m: have[ord(s[i-m])-97] -= 1\n            if i >= m-1 and have == need: ans.append(i-m+1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> findAnagrams(string s, string p) {\n        int m=p.size(), n=s.size(); vector<int> ans;\n        if(m>n) return ans;\n        int need[26]={}, have[26]={};\n        for(char c:p) need[c-'a']++;\n        for(int i=0;i<n;i++){\n            have[s[i]-'a']++;\n            if(i>=m) have[s[i-m]-'a']--;\n            if(i>=m-1){\n                int ok=1; for(int j=0;j<26;j++) if(have[j]!=need[j]){ok=0;break;}\n                if(ok) ans.push_back(i-m+1);\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "int* findAnagrams(char* s, char* p, int* rs) {\n    int m=strlen(p), n=strlen(s); *rs=0;\n    if(m>n) return NULL;\n    int need[26]={0}, have[26]={0};\n    for(int i=0;p[i];i++) need[p[i]-'a']++;\n    int* ans=malloc(n*sizeof(int));\n    for(int i=0;s[i];i++){\n        have[s[i]-'a']++;\n        if(i>=m) have[s[i-m]-'a']--;\n        if(i>=m-1){\n            int ok=1; for(int j=0;j<26;j++) if(have[j]!=need[j]){ok=0;break;}\n            if(ok) ans[(*rs)++]=i-m+1;\n        }\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Window size m maintains multiset match with p.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "p dài hơn s",
+      "p length 1",
+      "Trùng ký tự"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort window O(n m log m)",
+      "Quên slide left char"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

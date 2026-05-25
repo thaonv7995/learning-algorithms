@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Classes With at Least 5 Students (LeetCode #596) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Courses(student, class). Trả các class có ≥5 học sinh (student có thể trùng class).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "class A có 5 student",
+      "output": "A"
+    },
+    {
+      "input": "class B có 4 student",
+      "output": "Không liệt kê B"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "SELECT class FROM Courses GROUP BY class HAVING COUNT(DISTINCT student) >= 5 (hoặc COUNT(*) nếu mỗi row unique).",
+  "memoryTip": "Classes 5+ students = GROUP BY class HAVING COUNT >= 5.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT class\nFROM Courses\nGROUP BY class\nHAVING COUNT(*) >= 5;",
+    "cpp": "// SQL\nSELECT class\nFROM Courses\nGROUP BY class\nHAVING COUNT(*) >= 5;",
+    "c": "/* SQL GROUP BY HAVING — xem SQL */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "GROUP BY class đếm enrollment đủ 5.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Nhiều class đủ điều kiện",
+      "Student trùng class nhiều lần — dùng DISTINCT nếu cần"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "WHERE COUNT sai chỗ",
+      "Ngưỡng 5 dùng > thay >="
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

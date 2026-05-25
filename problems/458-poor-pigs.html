@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #458</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Poor Pigs</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.1% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Poor Pigs (LeetCode #458) — Hard.</div>
+                        <div class="block-text">Có buckets và pigs để test poison trong một bucket. Mỗi pig uống mix buckets, 15 phút sau biết sống/chết. Min pigs để xác định poison bucket trong t minutes.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>buckets = 1000, minutesToTest = 15, minutesToDie = 60</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>buckets = 1, minutesToTest = 1, minutesToDie = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Mỗi pig có states = rounds+1 (sống/chết mỗi round). Tổng states^pigs ≥ buckets → min pigs.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,26 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> poorPigs(<span class="ty">int</span> buckets, <span class="ty">int</span> minutesToTest, <span class="ty">int</span> minutesToDie) {
+    <span class="ty">int</span> states=minutesToDie/minutesToTest+1, pigs=0, cap=1;
+    <span class="kw">while</span>(cap&lt;buckets){ pigs++; cap*=states; }
+    <span class="kw">return</span> pigs;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> poorPigs(<span class="ty">self</span>, buckets: <span class="ty">int</span>, minutesToTest: <span class="ty">int</span>, minutesToDie: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        states = minutesToDie // minutesToTest + 1
+        pigs = 0
+        <span class="kw">while</span> states ** pigs &lt; buckets:
+            pigs += 1
+        <span class="kw">return</span> pigs</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> poorPigs(<span class="ty">int</span> buckets, <span class="ty">int</span> minutesToTest, <span class="ty">int</span> minutesToDie) {
+        <span class="ty">int</span> states=minutesToDie/minutesToTest+1, pigs=0;
+        <span class="ty">int</span> cap=1;
+        <span class="kw">while</span>(cap&lt;buckets){ pigs++; cap*=states; }
+        <span class="kw">return</span> pigs;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +124,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Mỗi pig có states = rounds+1 .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Tổng states^pigs ≥ buckets → min pigs.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Each pig encodes base-(rounds+1) digit — product covers all bucket outcomes.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">buckets=1 → 0 pigs</span><span class="analysis-tag edge">Large buckets</span><span class="analysis-tag edge">test= die → 2 states</span><span class="analysis-tag pit">Binary search pigs wrong model</span><span class="analysis-tag pit">Quên +1 rounds</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Information theory — ^pigs ≥ buckets.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +152,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Poor%20Pigs&lc_id=458&embed=true"></iframe>

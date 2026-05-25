@@ -2,33 +2,42 @@
   "id": 494,
   "title": "Target Sum",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Target Sum (LeetCode #494) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n * sum)",
+  "spaceComplexity": "O(sum)",
+  "description": "Gán dấu + hoặc - cho mỗi nums[i] sao tổng bằng target. Đếm số cách.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,1,1,1,1], target = 3",
+      "output": "5"
+    },
+    {
+      "input": "nums = [1], target = 1",
+      "output": "1"
+    },
+    {
+      "input": "nums = [1], target = -1",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Subset sum: sum(P)-sum(N)=target → sum(P)=(target+sum)/2; dp count ways to reach sum.",
+  "memoryTip": "Target sum = subset sum to (target+total)/2 — classic DP knapsack count.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findTargetSumWays(self, nums: List[int], target: int) -> int:\n        s = sum(nums)\n        if (target + s) % 2 or abs(target) > s: return 0\n        t = (target + s) // 2\n        dp = [0] * (t + 1)\n        dp[0] = 1\n        for x in nums:\n            for j in range(t, x - 1, -1):\n                dp[j] += dp[j - x]\n        return dp[t]",
+    "cpp": "class Solution {\npublic:\n    int findTargetSumWays(vector<int>& nums, int target) {\n        int s=accumulate(nums.begin(),nums.end(),0);\n        if((target+s)%2||abs(target)>s) return 0;\n        int t=(target+s)/2; vector<int> dp(t+1); dp[0]=1;\n        for(int x:nums) for(int j=t;j>=x;j--) dp[j]+=dp[j-x];\n        return dp[t];\n    }\n};",
+    "c": "int findTargetSumWays(int* nums, int n, int target) {\n    long s=0; for(int i=0;i<n;i++) s+=nums[i];\n    if((target+s)%2||abs(target)>s) return 0;\n    int t=(target+s)/2;\n    int* dp=calloc(t+1,sizeof(int)); dp[0]=1;\n    for(int i=0;i<n;i++) for(int j=t;j>=nums[i];j--) dp[j]+=dp[j-nums[i]];\n    int ans=dp[t]; free(dp); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Bijection between sign assignments and subset summing to transformed target.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "target unreachable → 0",
+      "nums có 0",
+      "Negative target"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Exponential backtrack TLE",
+      "Forget parity check"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

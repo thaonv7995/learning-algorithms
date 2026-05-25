@@ -5,30 +5,35 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Find All Duplicates in an Array (LeetCode #442) — Medium.",
+  "description": "Mảng nums độ dài n, mỗi phần tử trong [1,n]. Một số giá trị xuất hiện hai lần, còn lại một lần. Trả danh sách các số xuất hiện hai lần. O(n) thời gian, O(1) bộ nhớ phụ.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [4,3,2,7,8,2,3,1]",
+      "output": "[5,6]"
+    },
+    {
+      "input": "nums = [1,1]",
+      "output": "[2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đánh dấu: với x đặt nums[abs(x)-1] âm; cuối cùng index i dương → thiếu i+1.",
+  "memoryTip": "Index as hash — negative mark visited (448 same pattern).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findDuplicates(self, nums: List[int]) -> List[int]:\n        ans = []\n        for x in nums:\n            i = abs(x) - 1\n            if nums[i] < 0:\n                ans.append(i + 1)\n            else:\n                nums[i] = -nums[i]\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> findDuplicates(vector<int>& nums) {\n        vector<int> ans;\n        for(int x:nums){\n            int i=abs(x)-1;\n            if(nums[i]<0) ans.push_back(i+1);\n            else nums[i]=-nums[i];\n        }\n        return ans;\n    }\n};",
+    "c": "int* findDuplicates(int* nums, int n, int* rs) {\n    *rs=0; int cap=n; int* ans=malloc(cap*sizeof(int));\n    for(int i=0;i<n;i++){\n        int j=abs(nums[i])-1;\n        if(nums[j]<0) ans[(*rs)++]=j+1;\n        else nums[j]=-nums[j];\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Lần thứ hai đánh dấu index → số đó là duplicate; đánh dấu âm không cần extra array.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một duplicate",
+      "Nhiều duplicate",
+      "Dùng abs khi index"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Trả số thiếu nhầm 448",
+      "Quên abs khi lấy index"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -4,31 +4,39 @@
   "difficulty": "Hard",
   "category": "String",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Tag Validator (LeetCode #591) — Hard.",
+  "spaceComplexity": "O(n)",
+  "description": "Kiểm tra chuỗi code hợp lệ: tag XML đóng mở khớp, tên tag chỉ chữ cái, độ dài tag 1..9, nội dung giữa tag và CDATA theo quy tắc LeetCode.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "code = \"<DIV>This is the first line <![CDATA[<div>]]></DIV>\"",
+      "output": "true"
+    },
+    {
+      "input": "code = \"<DIV>>>  ![cdata[]] <div>></div>]]>]]>>]</DIV>\"",
+      "output": "true"
+    },
+    {
+      "input": "code = \"<A>  <B> such a nonsense </B>   <A>\"",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack tag names; parse <TAG>, </TAG>, <![CDATA[...]]>; kiểm tra ký tự ngoài tag và CDATA.",
+  "memoryTip": "Tag validator = stack + state machine for CDATA vs normal content.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isValid(self, code: str) -> bool:\n        if not code.startswith(\"<\") or code[0] != \"<\" or not code.endswith(\">\"):\n            return False\n        stack = []\n        i = 0\n        while i < len(code):\n            if stack and code[i] not in \"<\":\n                i += 1\n                continue\n            if code.startswith(\"<![CDATA[\", i):\n                j = code.find(\"]]>\", i)\n                if j == -1 or not stack: return False\n                i = j + 3\n            elif code.startswith(\"</\", i):\n                j = code.find(\">\", i)\n                if j == -1: return False\n                tag = code[i+2:j]\n                if not stack or stack.pop() != tag: return False\n                i = j + 1\n                if not stack and i != len(code): return False\n            elif code.startswith(\"<\", i):\n                j = code.find(\">\", i)\n                if j == -1: return False\n                tag = code[i+1:j]\n                if not tag or len(tag) > 9 or not tag[0].isupper() or not tag.isalpha():\n                    return False\n                stack.append(tag)\n                i = j + 1\n            else:\n                return False\n        return not stack",
+    "cpp": "class Solution {\npublic:\n    bool isValid(string code) {\n        if (code.empty() || code[0] != '<' || code.back() != '>') return false;\n        vector<string> st;\n        for (int i = 0; i < (int)code.size(); ) {\n            if (!st.empty() && code[i] != '<') { i++; continue; }\n            if (code.compare(i, 9, \"<![CDATA[\") == 0) {\n                size_t j = code.find(\"]]>\", i);\n                if (j == string::npos || st.empty()) return false;\n                i = j + 3;\n            } else if (code.compare(i, 2, \"</\") == 0) {\n                size_t j = code.find('>', i);\n                if (j == string::npos) return false;\n                string tag = code.substr(i+2, j-i-2);\n                if (st.empty() || st.back() != tag) return false;\n                st.pop_back();\n                i = j + 1;\n                if (st.empty() && i != (int)code.size()) return false;\n            } else if (code[i] == '<') {\n                size_t j = code.find('>', i);\n                if (j == string::npos) return false;\n                string tag = code.substr(i+1, j-i-1);\n                if (tag.empty() || tag.size()>9 || !isupper(tag[0])) return false;\n                for (char c : tag) if (!isalpha(c)) return false;\n                st.push_back(tag);\n                i = j + 1;\n            } else return false;\n        }\n        return st.empty();\n    }\n};",
+    "c": "/* Stack tag parser — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Stack đảm bảo tag lồng khớp; CDATA chỉ hợp lệ trong tag mở.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một tag bọc toàn bộ",
+      "CDATA chứa >"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên kiểm tra hết chuỗi sau đóng root",
+      "Tag name có số"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

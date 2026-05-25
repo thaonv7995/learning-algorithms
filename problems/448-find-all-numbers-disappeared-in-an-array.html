@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #448</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Find All Numbers Disappeared in an Array</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Find All Numbers Disappeared in an Array (LeetCode #448) — Easy.</div>
+                        <div class="block-text">nums length n, giá trị [1,n]. Trả mọi số trong [1,n] không xuất hiện trong nums. O(n) O(1) extra.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [4,3,2,7,8,2,3,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[5,6]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đánh dấu âm tại index abs(x)-1; index i còn dương → thiếu i+1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,26 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* findDisappearedNumbers(<span class="ty">int</span>* nums, <span class="ty">int</span> n, <span class="ty">int</span>* rs) {
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){ <span class="ty">int</span> j=abs(nums[i])-1; nums[j]=-abs(nums[j]); }
+    <span class="ty">int</span>* ans=<span class="kw">malloc</span>(n*<span class="kw">sizeof</span>(<span class="ty">int</span>)); *rs=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">if</span>(nums[i]&gt;0) ans[(*rs)++]=i+1;
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findDisappearedNumbers(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            i = abs(x) - 1
+            nums[i] = -abs(nums[i])
+        <span class="kw">return</span> [i+1 <span class="kw">for</span> i,v <span class="kw">in</span> enumerate(nums) <span class="kw">if</span> v &gt; 0]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findDisappearedNumbers(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="kw">for</span>(<span class="ty">int</span> x:nums){ <span class="ty">int</span> i=abs(x)-1; nums[i]=-abs(nums[i]); }
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)nums.size();i++) <span class="kw">if</span>(nums[i]&gt;0) ans.push_back(i+1);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +128,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Đánh dấu âm tại index abs-1; index i còn dương → thiếu i+1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Negative mark visited values; positive index means missing number.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không thiếu</span><span class="analysis-tag edge">Thiếu tất cả</span><span class="analysis-tag edge">Duplicate vẫn mark</span><span class="analysis-tag pit">Extra boolean array</span><span class="analysis-tag pit">Quên abs when marking</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Cyclic marking — same as find duplicates without collecting dup.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +152,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Find%20All%20Numbers%20Disappeared%20in%20an%20Array&lc_id=448&embed=true"></iframe>

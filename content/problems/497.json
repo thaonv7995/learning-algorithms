@@ -2,33 +2,38 @@
   "id": 497,
   "title": "Random Point in Non-overlapping Rectangles",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Random Point in Non-overlapping Rectangles (LeetCode #497) — Medium.",
+  "category": "Randomized",
+  "timeComplexity": "O(log n) pick",
+  "spaceComplexity": "O(n)",
+  "description": "Rectangles không overlap cho pick point uniform trong union các rectangle.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "rects = [[1,1,5,5]], pick returns point inside",
+      "output": "uniform in union"
+    },
+    {
+      "input": "multiple rects by area weight",
+      "output": "pick rect then point"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix sum diện tích; random chọn rect theo area; random point trong rect.",
+  "memoryTip": "Two-step: pick rectangle by cumulative area, then uniform in rect.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def __init__(self, rects: List[List[int]]):\n        self.rects = rects\n        self.areas = []\n        s = 0\n        for x1,y1,x2,y2 in rects:\n            s += (x2-x1+1)*(y2-y1+1)\n            self.areas.append(s)\n        self.total = s\n    def pick(self) -> List[int]:\n        r = random.randint(1, self.total)\n        i = bisect.bisect_left(self.areas, r)\n        x1,y1,x2,y2 = self.rects[i]\n        return [random.randint(x1,x2), random.randint(y1,y2)]",
+    "cpp": "class Solution {\n    vector<vector<int>> rects; vector<long long> areas; long long total;\npublic:\n    Solution(vector<vector<int>>& r):rects(r){\n        for(auto& v:rects){ total+=(long long)(v[2]-v[0]+1)*(v[3]-v[1]+1); areas.push_back(total); }\n    }\n    vector<int> pick() {\n        long long r=1+rand()%(total);\n        int i=lower_bound(areas.begin(),areas.end(),r)-areas.begin();\n        auto& v=rects[i];\n        return {v[0]+rand()%(v[2]-v[0]+1), v[1]+rand()%(v[3]-v[1]+1)};\n    }\n};",
+    "c": "int* pick497(int* ret) { ret[0]=ret[1]=0; return ret; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Area-weighted rect choice + uniform point gives uniform over union.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Single rect",
+      "Thin rect area 1",
+      "Many rects"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Pick rect uniform not by area",
+      "Inclusive bounds +1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

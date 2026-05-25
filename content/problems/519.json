@@ -3,32 +3,36 @@
   "title": "Random Flip Matrix",
   "difficulty": "Medium",
   "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Random Flip Matrix (LeetCode #519) — Medium.",
+  "timeComplexity": "O(1) amortized per flip",
+  "spaceComplexity": "O(k)",
+  "description": "Ma trận m×n, flip ngẫu nhiên một ô chưa flip (uniform). reset() đưa về chưa flip. Implement class với flip() và reset().",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "RandomFlipMatrix(1,2); flip(); flip(); reset()",
+      "output": "Hai ô khác nhau rồi reset"
+    },
+    {
+      "input": "m=2,n=2 nhiều flip",
+      "output": "Mỗi ô chưa flip có xác suất bằng nhau"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map index đã flip sang slot mới; pool = m*n - flipped. Chọn r ngẫu nhiên, hoán đổi với phần tử cuối pool (Fisher-Yates ảo).",
+  "memoryTip": "Random flip = reservoir trên chỉ số chưa dùng + hash remap khi reset lazy.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def __init__(self, m: int, n: int):\n        self.m, self.n = m, n\n        self.total = m * n\n        self.avail = self.total\n        self.idx_map = {}\n        self.reset()\n    def flip(self) -> List[int]:\n        import random\n        r = random.randint(0, self.avail - 1)\n        idx = self.idx_map.get(r, r)\n        self.idx_map[r] = self.idx_map.get(self.avail - 1, self.avail - 1)\n        self.avail -= 1\n        return [idx // self.n, idx % self.n]\n    def reset(self) -> None:\n        self.avail = self.total\n        self.idx_map.clear()",
+    "cpp": "class Solution {\n    int m, n, total, avail;\n    unordered_map<int,int> mp;\npublic:\n    Solution(int m, int n): m(m), n(n), total(m*n), avail(total) {}\n    vector<int> flip() {\n        int r = rand() % avail;\n        int idx = mp.count(r) ? mp[r] : r;\n        mp[r] = mp.count(avail-1) ? mp[avail-1] : avail-1;\n        avail--;\n        return {idx / n, idx % n};\n    }\n    void reset() { avail = total; mp.clear(); }\n};",
+    "c": "/* Random flip hash map — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Hoán đổi ảo đảm bảo mọi ô chưa chọn có xác suất đều mỗi flip.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "1x1 chỉ một ô",
+      "Reset khôi phục pool đầy"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Lưu bitmask O(mn) memory",
+      "Không remap khi chọn r"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

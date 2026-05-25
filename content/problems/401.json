@@ -3,32 +3,41 @@
   "title": "Binary Watch",
   "difficulty": "Easy",
   "category": "Backtracking",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Binary Watch (LeetCode #401) — Easy.",
+  "description": "Đồng hồ nhị phân có 4 bit giờ (0–11) và 6 bit phút (0–59). Cho num là số LED bật. Liệt kê mọi thời gian hợp lệ dùng đúng num bit 1, định dạng \"H:MM\" (phút luôn 2 chữ số).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "turnedOn = 1",
+      "output": "[\"0:01\",\"0:02\",\"0:04\",\"0:08\",\"0:16\",\"0:32\",\"1:00\",\"2:00\",\"4:00\",\"8:00\"]"
+    },
+    {
+      "input": "turnedOn = 9",
+      "output": "[]"
+    },
+    {
+      "input": "turnedOn = 0",
+      "output": "[\"0:00\"]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt h=0..11, m=0..59; nếu popcount(h)+popcount(m)==turnedOn thì format \"h:MM\" vào kết quả.",
+  "memoryTip": "Chỉ 12×60 tổ hợp — brute popcount nhanh hơn backtrack cho bài nhỏ.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def readBinaryWatch(self, turnedOn: int) -> List[str]:\n        def bits(x):\n            return bin(x).count(\"1\")\n        ans = []\n        for h in range(12):\n            for m in range(60):\n                if bits(h) + bits(m) == turnedOn:\n                    ans.append(f\"{h}:{m:02d}\")\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<string> readBinaryWatch(int turnedOn) {\n        auto bits = [](int x){ return __builtin_popcount(x); };\n        vector<string> ans;\n        for (int h = 0; h < 12; h++)\n            for (int m = 0; m < 60; m++)\n                if (bits(h) + bits(m) == turnedOn) {\n                    char buf[16];\n                    snprintf(buf, sizeof(buf), \"%d:%02d\", h, m);\n                    ans.push_back(buf);\n                }\n        return ans;\n    }\n};",
+    "c": "static int popc(int x){ int c=0; while(x){ c+=x&1; x>>=1; } return c; }\nchar** readBinaryWatch(int turnedOn, int* retSize) {\n    char** ans = malloc(720 * sizeof(char*)); *retSize = 0;\n    for (int h=0; h<12; h++) for (int m=0; m<60; m++)\n        if (popc(h)+popc(m)==turnedOn) {\n            ans[*retSize] = malloc(8);\n            snprintf(ans[(*retSize)++], 8, \"%d:%02d\", h, m);\n        }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mọi (h,m) hợp lệ được kiểm tra popcount — không bỏ sót hay thừa.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "turnedOn=0 → 0:00",
+      "turnedOn>10 → rỗng",
+      "Giờ 11:59 cần nhiều bit"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên zero-pad phút",
+      "Giới hạn giờ 0–11 không phải 0–12"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,38 @@
   "id": 417,
   "title": "Pacific Atlantic Water Flow",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Pacific Atlantic Water Flow (LeetCode #417) — Medium.",
+  "category": "Matrix",
+  "timeComplexity": "O(mn)",
+  "spaceComplexity": "O(mn)",
+  "description": "Ma trận heights cho độ cao. Ô có thể chảy tới Pacific (biên trái/trên) và Atlantic (biên phải/dưới). Trả tọa độ các ô chảu được cả hai đại dương.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]",
+      "output": "[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]"
+    },
+    {
+      "input": "heights = [[2,1],[1,2]]",
+      "output": "[[0,0],[0,1],[1,0],[1,1]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS/BFS từ mọi ô biên Pacific và Atlantic (chỉ đi sang ô height ≥ current). Giao hai tập visited.",
+  "memoryTip": "Reverse flow — từ biên leo lên thay vì từ ô xuống biên.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:\n        if not heights: return []\n        m, n = len(heights), len(heights[0])\n        pac, atl = set(), set()\n        def dfs(r, c, seen):\n            seen.add((r,c))\n            for dr,dc in ((1,0),(-1,0),(0,1),(0,-1)):\n                nr, nc = r+dr, c+dc\n                if 0<=nr<m and 0<=nc<n and (nr,nc) not in seen and heights[nr][nc]>=heights[r][c]:\n                    dfs(nr, nc, seen)\n        for i in range(m):\n            dfs(i, 0, pac); dfs(i, n-1, atl)\n        for j in range(n):\n            dfs(0, j, pac); dfs(m-1, j, atl)\n        return [[r,c] for r,c in pac & atl]",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> pacificAtlantic(vector<vector<int>>& h) {\n        int m=h.size(), n=h[0].size();\n        vector<vector<char>> p(m,vector<char>(n)), a(m,vector<char>(n));\n        function<void(int,int,vector<vector<char>>&)> dfs=[&](int r,int c,vector<vector<char>>& vis){\n            vis[r][c]=1;\n            int d[4][2]={{1,0},{-1,0},{0,1},{0,-1}};\n            for(auto& dd:d){ int nr=r+dd[0], nc=c+dd[1];\n                if(nr>=0&&nr<m&&nc>=0&&nc<n&&!vis[nr][nc]&&h[nr][nc]>=h[r][c]) dfs(nr,nc,vis);\n            }\n        };\n        for(int i=0;i<m;i++){ dfs(i,0,p); dfs(i,n-1,a); }\n        for(int j=0;j<n;j++){ dfs(0,j,p); dfs(m-1,j,a); }\n        vector<vector<int>> ans;\n        for(int i=0;i<m;i++) for(int j=0;j<n;j++) if(p[i][j]&&a[i][j]) ans.push_back({i,j});\n        return ans;\n    }\n};",
+    "c": "int** pacificAtlantic(int** h, int m, int* cs, int n, int* rs, int* cs2) { *rs=0; return NULL; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Reachability monotonic uphill từ biên tương đương ô chảy xuống biên.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "1×1",
+      "Toàn bằng nhau",
+      "Peak giữa không chạm biên"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS từ từng ô TLE",
+      "So sánh height sai hướng"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

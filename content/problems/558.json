@@ -2,33 +2,37 @@
   "id": 558,
   "title": "Logical OR of Two Binary Grids Represented as Quad-Trees",
   "difficulty": "Medium",
-  "category": "Divide and Conquer",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Logical OR of Two Binary Grids Represented as Quad-Trees (LeetCode #558) — Medium.",
+  "spaceComplexity": "O(log n)",
+  "description": "Hai lưới n×n và quad-tree. Trả quad-tree là OR logic của hai lưới (leaf 0/1 hoặc merge 4 con).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "grid1, grid2 2x2",
+      "output": "Quad-tree OR từng ô"
+    },
+    {
+      "input": "Một grid toàn 0",
+      "output": "Leaf val=0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đệ quy chia 4 góc phần tư; nếu vùng uniform trả leaf; else internal 4 children OR đệ quy.",
+  "memoryTip": "Quad-tree OR = divide 4 quadrants, uniform → leaf else internal node.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def intersect(self, quadTree1: Node, quadTree2: Node) -> Node:\n        if quadTree1.isLeaf:\n            return quadTree1 if quadTree1.val else quadTree2\n        if quadTree2.isLeaf:\n            return quadTree2 if quadTree2.val else quadTree1\n        return Node(True, False,\n            self.intersect(quadTree1.topLeft, quadTree2.topLeft),\n            self.intersect(quadTree1.topRight, quadTree2.topRight),\n            self.intersect(quadTree1.bottomLeft, quadTree2.bottomLeft),\n            self.intersect(quadTree1.bottomRight, quadTree2.bottomRight))",
+    "cpp": "/* LC558 OR quad-tree — build from grids then merge */\nclass Solution {\n    Node* build(vector<vector<int>>& g, int x, int y, int len) {\n        if (len == 1) return new Node(g[x][y], true, nullptr,nullptr,nullptr,nullptr);\n        auto tl=build(g,x,y,len/2), tr=build(g,x,y+len/2,len/2);\n        auto bl=build(g,x+len/2,y,len/2), br=build(g,x+len/2,y+len/2,len/2);\n        if (tl->isLeaf&&tr->isLeaf&&bl->isLeaf&&br->isLeaf && tl->val==tr->val&&tl->val==bl->val&&tl->val==br->val)\n            return new Node(tl->val,true,nullptr,nullptr,nullptr,nullptr);\n        return new Node(false,false,tl,tr,bl,br);\n    }\npublic:\n    Node* intersect(Node* a, Node* b) {\n        if (a->isLeaf) return a->val ? a : b;\n        if (b->isLeaf) return b->val ? b : a;\n        return new Node(true,false,\n            intersect(a->topLeft,b->topLeft), intersect(a->topRight,b->topRight),\n            intersect(a->bottomLeft,b->bottomLeft), intersect(a->bottomRight,b->bottomRight));\n    }\n};",
+    "c": "/* Quad-tree OR recursive — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "OR: leaf 1 dominate; hai leaf 0 → 0; internal merge 4 nhánh.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Grid 1x1",
+      "Một tree leaf 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm AND vs OR",
+      "Không compress uniform children"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

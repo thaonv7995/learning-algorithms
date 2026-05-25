@@ -5,30 +5,34 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Optimal Division (LeetCode #553) — Medium.",
+  "description": "Cho mảng số dương. Ghép biểu thức a/b/c/... với ngoặc tối ưu để giá trị lớn nhất. Trả chuỗi biểu thức.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1000,100,10,2]",
+      "output": "\"1000/(10/2)\""
+    },
+    {
+      "input": "nums = [2,3,4]",
+      "output": "\"2/(3/4)\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "n=1 trả s0; n=2 trả a/b; n≥3 luôn a/(b/c/d...) — mẫu số nhỏ tối đa hóa thương.",
+  "memoryTip": "Optimal division: first/(second/rest joined by /) — only one optimal pattern.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def optimalDivision(self, nums: List[int]) -> str:\n        if len(nums) == 1:\n            return str(nums[0])\n        if len(nums) == 2:\n            return f\"{nums[0]}/{nums[1]}\"\n        return f\"{nums[0]}/({'/'.join(map(str, nums[1:]))})\"",
+    "cpp": "class Solution {\npublic:\n    string optimalDivision(vector<int>& nums) {\n        if (nums.size() == 1) return to_string(nums[0]);\n        if (nums.size() == 2) return to_string(nums[0]) + \"/\" + to_string(nums[1]);\n        string s = to_string(nums[0]) + \"/(\" + to_string(nums[1]);\n        for (size_t i = 2; i < nums.size(); i++) s += \"/\" + to_string(nums[i]);\n        return s + \")\";\n    }\n};",
+    "c": "/* Format a/(b/c/...) — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Chia liên tiếp trái sang phải nhỏ nhất khi nhóm mẫu số từ phần tử 2.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "2 phần tử không cần ngoặc",
+      "1 phần tử"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DP không cần — pattern cố định",
+      "Thiếu ngoặc với n≥3"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

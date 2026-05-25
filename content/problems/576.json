@@ -3,32 +3,36 @@
   "title": "Out of Boundary Paths",
   "difficulty": "Medium",
   "category": "Dynamic Programming",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Out of Boundary Paths (LeetCode #576) — Medium.",
+  "timeComplexity": "O(m * n * N)",
+  "spaceComplexity": "O(m * n * N)",
+  "description": "Lưới m×n, bắt đầu (0,0), N bước di chuyển U/D/L/R. Đếm số path ra ngoài biên (out of boundary). Mod 10^9+7.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "m=2, n=2, N=2, start=(0,0)",
+      "output": "6"
+    },
+    {
+      "input": "m=1, n=3, N=3",
+      "output": "12"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[step][i][j] = số cách ở (i,j) sau step bước; chuyển 4 hướng, cộng out khi ra ngoài.",
+  "memoryTip": "Out of boundary paths = 3D DP steps × position, add when move OOB.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findPaths(self, m: int, n: int, maxMove: int, startRow: int, startColumn: int) -> int:\n        MOD = 10**9+7\n        dp = [[[0]*n for _ in range(m)] for _ in range(maxMove+1)]\n        dp[0][startRow][startColumn] = 1\n        ans = 0\n        dirs = [(1,0),(-1,0),(0,1),(0,-1)]\n        for s in range(maxMove):\n            for i in range(m):\n                for j in range(n):\n                    v = dp[s][i][j]\n                    if not v: continue\n                    for di,dj in dirs:\n                        ni, nj = i+di, j+dj\n                        if 0<=ni<m and 0<=nj<n:\n                            dp[s+1][ni][nj] = (dp[s+1][ni][nj]+v)%MOD\n                        else:\n                            ans = (ans+v)%MOD\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findPaths(int m, int n, int maxMove, int sr, int sc) {\n        const int MOD = 1e9+7;\n        vector<vector<vector<int>>> dp(maxMove+1, vector<vector<int>>(m, vector<int>(n)));\n        dp[0][sr][sc] = 1;\n        long long ans = 0;\n        int d[4][2]={{1,0},{-1,0},{0,1},{0,-1}};\n        for (int s=0;s<maxMove;s++)\n            for (int i=0;i<m;i++)\n                for (int j=0;j<n;j++) if (dp[s][i][j])\n                    for (auto& dd:d) {\n                        int ni=i+dd[0], nj=j+dd[1];\n                        if (ni>=0&&ni<m&&nj>=0&&nj<n) dp[s+1][ni][nj]=(dp[s+1][ni][nj]+dp[s][i][j])%MOD;\n                        else ans=(ans+dp[s][i][j])%MOD;\n                    }\n        return ans;\n    }\n};",
+    "c": "/* DP paths OOB — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP đếm mọi walk đúng N bước; ra biên tại bước bất kỳ cộng vào ans.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "N=0 không di chuyển",
+      "Grid 1x1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên mod",
+      "Nhầm in-bound paths vs out-bound"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

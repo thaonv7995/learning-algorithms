@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Diameter of Binary Tree (LeetCode #543) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Trả đường kính cây nhị phân (số cạnh dài nhất giữa hai nút bất kỳ).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [1,2,3,4,5]",
+      "output": "3"
+    },
+    {
+      "input": "root = [1,2]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS: tại mỗi node, diameter candidate = depth(left)+depth(right); trả max depth lên parent.",
+  "memoryTip": "Tree diameter: postorder depth, update global max leftDepth+rightDepth.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:\n        self.ans = 0\n        def depth(n):\n            if not n: return 0\n            l = depth(n.left)\n            r = depth(n.right)\n            self.ans = max(self.ans, l + r)\n            return 1 + max(l, r)\n        depth(root)\n        return self.ans",
+    "cpp": "class Solution {\n    int ans = 0;\n    int depth(TreeNode* n) {\n        if (!n) return 0;\n        int l = depth(n->left), r = depth(n->right);\n        ans = max(ans, l + r);\n        return 1 + max(l, r);\n    }\npublic:\n    int diameterOfBinaryTree(TreeNode* root) {\n        depth(root);\n        return ans;\n    }\n};",
+    "c": "/* DFS diameter depth — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Đường kính qua node = tổng chiều cao hai nhánh con; max over nodes.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một nút → 0",
+      "Đường kính không qua root"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm đường kính với chiều cao",
+      "Không cập nhật global ans"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

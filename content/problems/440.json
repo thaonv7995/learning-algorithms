@@ -2,33 +2,42 @@
   "id": 440,
   "title": "K-th Smallest in Lexicographical Order",
   "difficulty": "Hard",
-  "category": "Trie",
-  "timeComplexity": "O(n)",
+  "category": "Math",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "K-th Smallest in Lexicographical Order (LeetCode #440) — Hard.",
+  "description": "Trả số thứ k (1-indexed) trong thứ tự lexicographical của số 1..n.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 13, k = 2",
+      "output": "10"
+    },
+    {
+      "input": "n = 1, k = 1",
+      "output": "1"
+    },
+    {
+      "input": "n = 20, k = 5",
+      "output": "14"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Trie walk: tại prefix cur đếm số trong [cur, cur+1) ≤ n; nếu count<k thì cur++, else k-=count và cur*=10.",
+  "memoryTip": "Lex order = preorder on decimal trie — count steps without building tree.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findKthNumber(self, n: int, k: int) -> int:\n        def count(cur, n):\n            s, nxt = 0, cur + 1\n            while cur <= n:\n                s += min(n + 1, nxt) - cur\n                cur *= 10; nxt *= 10\n            return s\n        cur = 1; k -= 1\n        while k:\n            cnt = count(cur, n)\n            if cnt <= k: k -= cnt; cur += 1\n            else: cur *= 10; k -= 1\n        return cur",
+    "cpp": "class Solution {\npublic:\n    long long count(long long cur, long long n){\n        long long s=0, nxt=cur+1;\n        while(cur<=n){ s+=min(n+1,nxt)-cur; cur*=10; nxt*=10; }\n        return s;\n    }\n    int findKthNumber(int n, int k) {\n        long long cur=1; k--;\n        while(k){\n            long long cnt=count(cur,n);\n            if(cnt<=k){ k-=cnt; cur++; }\n            else { cur*=10; k--; }\n        }\n        return cur;\n    }\n};",
+    "c": "long long countSteps(long long cur, long long n){\n    long long s=0,nxt=cur+1;\n    while(cur<=n){ s+=(n+1<nxt?n+1:nxt)-cur; cur*=10; nxt*=10; }\n    return s;\n}\nint findKthNumber(int n, int k){\n    long long cur=1; k--;\n    while(k){\n        long long cnt=countSteps(cur,n);\n        if(cnt<=k){ k-=cnt; cur++; } else { cur*=10; k--; }\n    }\n    return (int)cur;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Preorder digit trie — mỗi bước chọn nhánh hoặc đi sâu.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=1 → 1",
+      "n=1",
+      "k=n"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort strings TLE",
+      "Count prefix sai overflow"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -5,30 +5,39 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Max Consecutive Ones (LeetCode #485) — Easy.",
+  "description": "Độ dài subarray liên tiếp dài nhất chỉ chứa số 1 trong mảng nhị phân nums.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,1,0,1,1,1]",
+      "output": "3"
+    },
+    {
+      "input": "nums = [1,0,1,1,0,1]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [0]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt: gặp 1 thì cur++; gặp 0 reset; ans=max(ans,cur).",
+  "memoryTip": "Run-length of ones — reset streak at zero.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMaxConsecutiveOnes(self, nums: List[int]) -> int:\n        ans = cur = 0\n        for x in nums:\n            if x: cur += 1; ans = max(ans, cur)\n            else: cur = 0\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findMaxConsecutiveOnes(vector<int>& nums) {\n        int ans=0, cur=0;\n        for(int x:nums){ if(x){ cur++; ans=max(ans,cur);} else cur=0; }\n        return ans;\n    }\n};",
+    "c": "int findMaxConsecutiveOnes(int* nums, int n) {\n    int ans=0, cur=0;\n    for(int i=0;i<n;i++){ if(nums[i]){ cur++; if(cur>ans) ans=cur; } else cur=0; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Single pass tracks maximum consecutive 1-run.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "All zeros",
+      "All ones",
+      "Ends with ones"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Window unnecessary",
+      "Forget reset on 0"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

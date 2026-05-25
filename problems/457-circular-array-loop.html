@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #457</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Two Pointers</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Circular Array Loop</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>37.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Circular Array Loop (LeetCode #457) — Medium.</div>
+                        <div class="block-text">Mảng vòng nums length n, nums[i]≠0. nums[i] dương → bước (i+nums[i])%n, âm → (i-nums[i])%n. Có cycle cùng hướng (forward hoặc backward) length≥2 không?</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [2,-1,1,2,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [-1,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [-2,1,-1,-2,-2]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Với mỗi i chưa visited: slow/fast cùng hướng ban đầu; nếu gặp nhau và length&gt;1 và cùng dấu nums → true.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,46 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> circularArrayLoop(<span class="ty">int</span>* nums, <span class="ty">int</span> n) { <span class="kw">return</span> false; /* see C++ */ }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> circularArrayLoop(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        n = <span class="ty">len</span>(nums)
+        <span class="kw">def</span> nexti(i): <span class="kw">return</span> (i + nums[i]) % n
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            <span class="kw">if</span> <span class="kw">not</span> nums[i]: continue
+            slow = fast = i
+            fwd = nums[i] &gt; 0
+            <span class="kw">while</span> <span class="kw">True</span>:
+                slow = nexti(slow)
+                fast = nexti(nexti(fast))
+                <span class="kw">if</span> nums[slow]*nums[i]&lt;=0 <span class="kw">or</span> nums[fast]*nums[i]&lt;=0: break
+                <span class="kw">if</span> slow == fast:
+                    <span class="kw">if</span> slow == nexti(slow): break
+                    <span class="kw">return</span> <span class="kw">True</span>
+            j = i
+            <span class="kw">while</span> nums[j]*nums[i]&gt;0:
+                nums[j]=0; j=nexti(j)
+        <span class="kw">return</span> <span class="kw">False</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> circularArrayLoop(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> n=nums.size();
+        auto nxt=[&amp;](<span class="ty">int</span> i){ <span class="kw">return</span> (i+nums[i]%n+n)%n; };
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){
+            <span class="kw">if</span>(!nums[i]) continue;
+            <span class="ty">int</span> slow=i, fast=i; <span class="ty">int</span> sgn=nums[i]&gt;0?1:-1;
+            <span class="kw">while</span>(true){
+                slow=nxt(slow); fast=nxt(nxt(fast));
+                <span class="kw">if</span>(nums[slow]*sgn&lt;=0||nums[fast]*sgn&lt;=0) break;
+                <span class="kw">if</span>(slow==fast){
+                    <span class="kw">if</span>(slow==nxt(slow)) break;
+                    <span class="kw">return</span> true;
+                }
+            }
+            <span class="ty">int</span> j=i; <span class="kw">while</span>(nums[j]*sgn&gt;0){ nums[j]=0; j=nxt(j); }
+        }
+        <span class="kw">return</span> false;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +148,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Two Pointers</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Với mỗi i chưa visited: slow/fast cùng hướng ban đầu; nếu gặp nhau và…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Floyd cycle with direction consistency; self-loop length 1 invalid.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Self loop |nums[i]|==n mod</span><span class="analysis-tag edge">Zero skip</span><span class="analysis-tag edge">Mixed direction break</span><span class="analysis-tag pit">Không mark visited TLE</span><span class="analysis-tag pit">Mod negative index sai</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Cycle detection như 142 — nhưng check direction và không đổi dấu nums trên path.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +177,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Circular%20Array%20Loop&lc_id=457&embed=true"></iframe>

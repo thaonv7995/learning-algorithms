@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #475</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Binary Search</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Heaters</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n + m log m)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>41.9% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Heaters (LeetCode #475) — Medium.</div>
+                        <div class="block-text">houses và heaters trên trục số. Minimize max distance từ mỗi house tới heater gần nhất (radius tối thiểu).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>houses = [1,2,3], heaters = [2]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>houses = [1,2,3,4], heaters = [1,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sort both; với mỗi house binary search lower_bound heater; dist = min(|h-heater|).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,45 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findRadius(<span class="ty">int</span>* houses, <span class="ty">int</span> hn, <span class="ty">int</span>* heaters, <span class="ty">int</span> hen) {
+    qsort(houses,hn,<span class="kw">sizeof</span>(<span class="ty">int</span>),cmpi);
+    qsort(heaters,hen,<span class="kw">sizeof</span>(<span class="ty">int</span>),cmpi);
+    <span class="ty">int</span> ans=0;
+    <span class="kw">for</span>(<span class="ty">int</span> hi=0;hi&lt;hn;hi++){
+        <span class="ty">int</span> h=houses[hi], d=INT_MAX;
+        <span class="ty">int</span> l=0,r=hen;
+        <span class="kw">while</span>(l&lt;r){ <span class="ty">int</span> m=(l+r)/2; <span class="kw">if</span>(heaters[m]&lt;h) l=m+1; <span class="kw">else</span> r=m; }
+        <span class="kw">if</span>(l&lt;hen){ <span class="ty">int</span> t=heaters[l]-h; <span class="kw">if</span>(t&lt;d) d=t; }
+        <span class="kw">if</span>(l&gt;0){ <span class="ty">int</span> t=h-heaters[l-1]; <span class="kw">if</span>(t&lt;d) d=t; }
+        <span class="kw">if</span>(d&gt;ans) ans=d;
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findRadius(<span class="ty">self</span>, houses: <span class="ty">List</span>[<span class="ty">int</span>], heaters: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        houses.sort(); heaters.sort()
+        ans = 0
+        <span class="kw">for</span> h <span class="kw">in</span> houses:
+            i = bisect.bisect_left(heaters, h)
+            d = float(&quot;inf&quot;)
+            <span class="kw">if</span> i &lt; <span class="ty">len</span>(heaters): d = <span class="ty">min</span>(d, abs(heaters[i]-h))
+            <span class="kw">if</span> i: d = <span class="ty">min</span>(d, abs(heaters[i-1]-h))
+            ans = <span class="ty">max</span>(ans, d)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findRadius(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; houses, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; heaters) {
+        sort(houses.begin(), houses.end()); sort(heaters.begin(), heaters.end());
+        <span class="ty">int</span> ans=0;
+        <span class="kw">for</span>(<span class="ty">int</span> h:houses){
+            auto it=lower_bound(heaters.begin(), heaters.end(), h);
+            <span class="ty">int</span> d=INT_MAX;
+            <span class="kw">if</span>(it!=heaters.end()) d=min(d, abs(*it-h));
+            <span class="kw">if</span>(it!=heaters.begin()) d=min(d, abs(*prev(it)-h));
+            ans=max(ans,d);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +142,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">Binary Search</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n + m log m)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sort both; với mỗi house binary search lower_bound heater; dist = min.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Min distance per house to nearest heater; max over houses is radius.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">One heater many houses</span><span class="analysis-tag edge">House equals heater → 0</span><span class="analysis-tag edge">Heater outside range</span><span class="analysis-tag pit">Linear scan heaters TLE</span><span class="analysis-tag pit">Forget check i-1</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>For each house nearest heater — binary search on sorted heaters.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Heaters&lc_id=475&embed=true"></iframe>

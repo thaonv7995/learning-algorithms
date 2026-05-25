@@ -3,32 +3,37 @@
   "title": "Add Two Numbers II",
   "difficulty": "Medium",
   "category": "Linked List",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Add Two Numbers II (LeetCode #445) — Medium.",
+  "timeComplexity": "O(m+n)",
+  "spaceComplexity": "O(m+n)",
+  "description": "Hai linked list không rỗng biểu diễn số không âm (digit reverse). Trả sum dạng list (không reverse input).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "l1 = [7,2,4,3], l2 = [5,6,4]",
+      "output": "[7,8,0,7]"
+    },
+    {
+      "input": "l1 = [0], l2 = [0]",
+      "output": "[0]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Push digits vào stack cả hai list; pop + carry build result list đầu.",
+  "memoryTip": "MSB at head — stack hoặc reverse lists rồi add như LC 2.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:\n        s1, s2 = [], []\n        while l1: s1.append(l1.val); l1 = l1.next\n        while l2: s2.append(l2.val); l2 = l2.next\n        carry, head = 0, None\n        while s1 or s2 or carry:\n            carry += (s1.pop() if s1 else 0) + (s2.pop() if s2 else 0)\n            node = ListNode(carry % 10)\n            node.next = head; head = node\n            carry //= 10\n        return head",
+    "cpp": "class Solution {\npublic:\n    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {\n        stack<int> s1,s2;\n        while(l1){ s1.push(l1->val); l1=l1->next; }\n        while(l2){ s2.push(l2->val); l2=l2->next; }\n        ListNode* head=nullptr; int carry=0;\n        while(!s1.empty()||!s2.empty()||carry){\n            if(!s1.empty()){ carry+=s1.top(); s1.pop(); }\n            if(!s2.empty()){ carry+=s2.top(); s2.pop(); }\n            auto* n=new ListNode(carry%10); n->next=head; head=n; carry/=10;\n        }\n        return head;\n    }\n};",
+    "c": "struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) { return NULL; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Stack gives MSB-first addition order matching list direction.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Khác độ dài",
+      "Carry tạo digit mới",
+      "Cả hai 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Add như LC2 (reverse)",
+      "Quên carry cuối"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

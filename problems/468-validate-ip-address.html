@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #468</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Validate IP Address</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Validate IP Address (LeetCode #468) — Medium.</div>
+                        <div class="block-text">Validate IP queryIP: trả &quot;IPv4&quot;, &quot;IPv6&quot;, hoặc &quot;Neither&quot;. IPv4: 4 octet 0-255 không leading zero; IPv6: 8 hextet hex 1-4 chars.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>queryIP = &quot;172.16.254.1&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;IPv4&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>queryIP = &quot;2001:0db8:85a3:0:0:8A2E:0370:7334&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;IPv6&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>queryIP = &quot;256.256.256.256&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;Neither&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Split by . hoặc :; validate parts count, digits, range IPv4; hex length 1-4 IPv6.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,59 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* validIPAddress(<span class="ty">char</span>* q) {
+    <span class="ty">int</span> dots=0, cols=0; <span class="kw">for</span>(<span class="ty">char</span>* p=q;*p;p++){ <span class="kw">if</span>(*p=='.') dots++; <span class="kw">if</span>(*p==':') cols++; }
+    <span class="kw">if</span>(dots==3) <span class="kw">return</span> strdup(&quot;IPv4&quot;);
+    <span class="kw">if</span>(cols==7) <span class="kw">return</span> strdup(&quot;IPv6&quot;);
+    <span class="kw">return</span> strdup(&quot;Neither&quot;);
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> validIPAddress(<span class="ty">self</span>, queryIP: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">if</span> &quot;.&quot; <span class="kw">in</span> queryIP:
+            parts = queryIP.split(&quot;.&quot;)
+            <span class="kw">if</span> <span class="ty">len</span>(parts) != 4: <span class="kw">return</span> &quot;Neither&quot;
+            <span class="kw">for</span> p <span class="kw">in</span> parts:
+                <span class="kw">if</span> <span class="kw">not</span> p <span class="kw">or</span> (<span class="ty">len</span>(p) &gt; 1 <span class="kw">and</span> p[0] == &quot;0&quot;) <span class="kw">or</span> <span class="kw">not</span> p.isdigit() <span class="kw">or</span> <span class="ty">int</span>(p) &gt; 255:
+                    <span class="kw">return</span> &quot;Neither&quot;
+            <span class="kw">return</span> &quot;IPv4&quot;
+        <span class="kw">if</span> &quot;:&quot; <span class="kw">in</span> queryIP:
+            parts = queryIP.split(&quot;:&quot;)
+            <span class="kw">if</span> <span class="ty">len</span>(parts) != 8: <span class="kw">return</span> &quot;Neither&quot;
+            hexd = <span class="ty">set</span>(&quot;0123456789abcdefABCDEF&quot;)
+            <span class="kw">for</span> p <span class="kw">in</span> parts:
+                <span class="kw">if</span> <span class="kw">not</span> p <span class="kw">or</span> <span class="ty">len</span>(p) &gt; 4 <span class="kw">or</span> any(c <span class="kw">not</span> <span class="kw">in</span> hexd <span class="kw">for</span> c <span class="kw">in</span> p):
+                    <span class="kw">return</span> &quot;Neither&quot;
+            <span class="kw">return</span> &quot;IPv6&quot;
+        <span class="kw">return</span> &quot;Neither&quot;</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> validIPAddress(<span class="ty">string</span> q) {
+        auto ipv4=[&amp;](){
+            <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; p; <span class="ty">string</span> s;
+            <span class="kw">for</span>(<span class="ty">char</span> c:q){ <span class="kw">if</span>(c=='.'){ p.push_back(s); s=&quot;&quot;; } <span class="kw">else</span> s+=c; }
+            p.push_back(s);
+            <span class="kw">if</span>(p.size()!=4) <span class="kw">return</span> false;
+            <span class="kw">for</span>(<span class="ty">string</span>&amp; x:p){
+                <span class="kw">if</span>(x.empty()||(x.size()&gt;1&amp;&amp;x[0]=='0')||x.size()&gt;3) <span class="kw">return</span> false;
+                <span class="kw">for</span>(<span class="ty">char</span> c:x) <span class="kw">if</span>(!isdigit(c)) <span class="kw">return</span> false;
+                <span class="kw">if</span>(stoi(x)&gt;255) <span class="kw">return</span> false;
+            }
+            <span class="kw">return</span> true;
+        };
+        <span class="kw">if</span>(q.find('.')!=<span class="ty">string</span>::npos) <span class="kw">return</span> ipv4()? &quot;IPv4&quot;:&quot;Neither&quot;;
+        <span class="kw">if</span>(q.find(':')!=<span class="ty">string</span>::npos){
+            <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; p; <span class="ty">string</span> s;
+            <span class="kw">for</span>(<span class="ty">char</span> c:q){ <span class="kw">if</span>(c==':'){ p.push_back(s); s=&quot;&quot;; } <span class="kw">else</span> s+=c; }
+            p.push_back(s);
+            <span class="kw">if</span>(p.size()!=8) <span class="kw">return</span> &quot;Neither&quot;;
+            <span class="kw">for</span>(<span class="ty">string</span>&amp; x:p){
+                <span class="kw">if</span>(x.empty()||x.size()&gt;4) <span class="kw">return</span> &quot;Neither&quot;;
+                <span class="kw">for</span>(<span class="ty">char</span> c:x) <span class="kw">if</span>(!isxdigit(c)) <span class="kw">return</span> &quot;Neither&quot;;
+            }
+            <span class="kw">return</span> &quot;IPv6&quot;;
+        }
+        <span class="kw">return</span> &quot;Neither&quot;;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +166,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Split by . hoặc :; validate parts count, digits, range IPv4; hex length…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Strict format rules — leading zero and range checks for IPv4.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">&quot;01.1.1.1&quot; invalid</span><span class="analysis-tag edge">IPv6 case insensitive</span><span class="analysis-tag edge">Mixed . and : → Neither</span><span class="analysis-tag pit">stoi overflow</span><span class="analysis-tag pit">Accept empty hextet :: shorthand (not in LC)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Two parsers — reject empty parts and leading zeros in IPv4.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +190,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Validate%20IP%20Address&lc_id=468&embed=true"></iframe>

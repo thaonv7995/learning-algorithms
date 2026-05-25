@@ -2,33 +2,38 @@
   "id": 496,
   "title": "Next Greater Element I",
   "difficulty": "Easy",
-  "category": "Array",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Next Greater Element I (LeetCode #496) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "nums1 là subset của nums2. Với mỗi nums1[i], trả next greater element trong nums2 (phần tử lớn hơn đầu tiên bên phải), không có thì -1.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums1 = [4,1,2], nums2 = [1,3,4,2]",
+      "output": "[-1,3,-1]"
+    },
+    {
+      "input": "nums1 = [2,4], nums2 = [1,2,3,4]",
+      "output": "[3,-1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Monotonic stack trên nums2 build map next greater; lookup nums1.",
+  "memoryTip": "NGE template on nums2 — hash answer for queries nums1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:\n        nxt = {}\n        st = []\n        for x in nums2:\n            while st and st[-1] < x:\n                nxt[st.pop()] = x\n            st.append(x)\n        return [nxt.get(x, -1) for x in nums1]",
+    "cpp": "class Solution {\npublic:\n    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {\n        unordered_map<int,int> nxt; stack<int> st;\n        for(int x:nums2){\n            while(!st.empty()&&st.top()<x){ nxt[st.top()]=x; st.pop(); }\n            st.push(x);\n        }\n        vector<int> ans;\n        for(int x:nums1) ans.push_back(nxt.count(x)?nxt[x]:-1);\n        return ans;\n    }\n};",
+    "c": "int* nextGreaterElement(int* nums1,int n1,int* nums2,int n2,int* rs){\n    int* nxt=malloc(10001*sizeof(int)); for(int i=0;i<10001;i++) nxt[i]=-1;\n    int st[1000], top=0;\n    for(int i=0;i<n2;i++){\n        while(top&&st[top-1]<nums2[i]) nxt[st[--top]]=nums2[i];\n        st[top++]=nums2[i];\n    }\n    int* ans=malloc(n1*sizeof(int)); *rs=n1;\n    for(int i=0;i<n1;i++) ans[i]=nxt[nums1[i]+5000<10001?nums1[i]:nums1[i]];\n    for(int i=0;i<n1;i++){ int v=nums1[i], j; ans[i]=-1;\n        for(j=0;j<n2;j++) if(nums2[j]==v) break;\n        for(int k=j+1;k<n2;k++) if(nums2[k]>v){ ans[i]=nums2[k]; break; }\n    }\n    free(nxt); return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Monotonic decreasing stack records first greater to right.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Decreasing nums2 all -1",
+      "nums1 duplicate",
+      "Last element no NGE"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Scan nums1 in nums2 O(n²)",
+      "Wrong stack direction"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

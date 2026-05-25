@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #450</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Delete Node in a BST</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(h)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>54.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Delete Node in a BST (LeetCode #450) — Medium.</div>
+                        <div class="block-text">Xóa node có key trong BST. Trả root sau khi xóa (có thể đổi root).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [5,3,6,2,4,null,7], key = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>[5,4,6,2,null,null,7]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [5,3,6,2,4,null,7], key = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>[5,3,6,2,4,null,7]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Tìm node: nếu key&lt;val vào trái, &gt;val phải; bằng thì thay bằng successor (min phải) hoặc con duy nhất.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> TreeNode* deleteNode(<span class="ty">struct</span> TreeNode* root, <span class="ty">int</span> key) {
+    <span class="kw">if</span>(!root) <span class="kw">return</span> NULL;
+    <span class="kw">if</span>(key&lt;root-&gt;val) root-&gt;left=deleteNode(root-&gt;left,key);
+    <span class="kw">else</span> <span class="kw">if</span>(key&gt;root-&gt;val) root-&gt;right=deleteNode(root-&gt;right,key);
+    <span class="kw">else</span> {
+        <span class="kw">if</span>(!root-&gt;left){ <span class="ty">struct</span> TreeNode* t=root-&gt;right; <span class="kw">free</span>(root); <span class="kw">return</span> t; }
+        <span class="kw">if</span>(!root-&gt;right){ <span class="ty">struct</span> TreeNode* t=root-&gt;left; <span class="kw">free</span>(root); <span class="kw">return</span> t; }
+        <span class="ty">struct</span> TreeNode* s=root-&gt;right; <span class="kw">while</span>(s-&gt;left) s=s-&gt;left;
+        root-&gt;val=s-&gt;val;
+        root-&gt;right=deleteNode(root-&gt;right,s-&gt;val);
+    }
+    <span class="kw">return</span> root;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> deleteNode(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>], key: <span class="ty">int</span>) -&gt; <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]:
+        <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> <span class="kw">None</span>
+        <span class="kw">if</span> key &lt; root.val: root.left = <span class="ty">self</span>.deleteNode(root.left, key)
+        <span class="kw">elif</span> key &gt; root.val: root.right = <span class="ty">self</span>.deleteNode(root.right, key)
+        <span class="kw">else</span>:
+            <span class="kw">if</span> <span class="kw">not</span> root.left: <span class="kw">return</span> root.right
+            <span class="kw">if</span> <span class="kw">not</span> root.right: <span class="kw">return</span> root.left
+            succ = root.right
+            <span class="kw">while</span> succ.left: succ = succ.left
+            root.val = succ.val
+            root.right = <span class="ty">self</span>.deleteNode(root.right, succ.val)
+        <span class="kw">return</span> root</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    TreeNode* deleteNode(TreeNode* root, <span class="ty">int</span> key) {
+        <span class="kw">if</span>(!root) <span class="kw">return</span> <span class="kw">nullptr</span>;
+        <span class="kw">if</span>(key&lt;root-&gt;val) root-&gt;left=deleteNode(root-&gt;left,key);
+        <span class="kw">else</span> <span class="kw">if</span>(key&gt;root-&gt;val) root-&gt;right=deleteNode(root-&gt;right,key);
+        <span class="kw">else</span>{
+            <span class="kw">if</span>(!root-&gt;left) <span class="kw">return</span> root-&gt;right;
+            <span class="kw">if</span>(!root-&gt;right) <span class="kw">return</span> root-&gt;left;
+            TreeNode* s=root-&gt;right; <span class="kw">while</span>(s-&gt;left) s=s-&gt;left;
+            root-&gt;val=s-&gt;val;
+            root-&gt;right=deleteNode(root-&gt;right,s-&gt;val);
+        }
+        <span class="kw">return</span> root;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +145,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(h)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Tìm node: nếu key&lt;val vào trái, &gt;val phải; bằng thì thay bằng successor…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BST property preserved after standard three delete cases.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Key không tồn tại</span><span class="analysis-tag edge">Xóa root</span><span class="analysis-tag edge">Node hai con</span><span class="analysis-tag pit">Chỉ swap val không xóa successor</span><span class="analysis-tag pit">Mất subtree</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Delete: 0 child null, 1 child link up, 2 children swap with inorder successor.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Delete%20Node%20in%20a%20BST&lc_id=450&embed=true"></iframe>

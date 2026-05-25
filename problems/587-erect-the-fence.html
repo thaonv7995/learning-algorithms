@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #587</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Erect the Fence</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>53% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Erect the Fence (LeetCode #587) — Hard.</div>
+                        <div class="block-text">Cho tập điểm 2D. Trả các điểm trên convex hull (fence) theo thứ tự ngược chiều kim đồng hồ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>points = [[0,0],[0,1],[1,1],[1,0]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,0],[1,0],[1,1],[0,1]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>points = [[1,1],[2,2],[3,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1,1],[2,2],[3,3]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Andrew monotone chain: sort points, build lower và upper hull, loại duplicate cuối.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,44 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Convex hull Andrew — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> outerTrees(<span class="ty">self</span>, points: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        pts = sorted(<span class="ty">set</span>(map(tuple, points)))
+        <span class="kw">if</span> <span class="ty">len</span>(pts) &lt;= 1:
+            <span class="kw">return</span> [<span class="ty">list</span>(p) <span class="kw">for</span> p <span class="kw">in</span> pts]
+        <span class="kw">def</span> cross(o,a,b):
+            <span class="kw">return</span> (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0])
+        lower=[]
+        <span class="kw">for</span> p <span class="kw">in</span> pts:
+            <span class="kw">while</span> <span class="ty">len</span>(lower)&gt;=2 <span class="kw">and</span> cross(lower[-2],lower[-1],p)&lt;0: lower.pop()
+            lower.append(p)
+        upper=[]
+        <span class="kw">for</span> p <span class="kw">in</span> reversed(pts):
+            <span class="kw">while</span> <span class="ty">len</span>(upper)&gt;=2 <span class="kw">and</span> cross(upper[-2],upper[-1],p)&lt;0: upper.pop()
+            upper.append(p)
+        <span class="kw">return</span> [<span class="ty">list</span>(p) <span class="kw">for</span> p <span class="kw">in</span> lower[:-1]+upper[:-1]]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">long</span> <span class="ty">long</span> cross(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; o, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; b) {
+        <span class="kw">return</span> (<span class="ty">long</span> <span class="ty">long</span>)(a[0]-o[0])*(b[1]-o[1]) - (<span class="ty">long</span> <span class="ty">long</span>)(a[1]-o[1])*(b[0]-o[0]);
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; outerTrees(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; points) {
+        sort(points.begin(), points.end());
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; lower, upper;
+        <span class="kw">for</span> (auto&amp; p : points) {
+            <span class="kw">while</span> (lower.size()&gt;=2 &amp;&amp; cross(lower[lower.size()-2], lower.back(), p) &lt; 0) lower.pop_back();
+            lower.push_back(p);
+        }
+        <span class="kw">for</span> (<span class="ty">int</span> i=points.size()-1;i&gt;=0;i--) {
+            auto&amp; p = points[i];
+            <span class="kw">while</span> (upper.size()&gt;=2 &amp;&amp; cross(upper[upper.size()-2], upper.back(), p) &lt; 0) upper.pop_back();
+            upper.push_back(p);
+        }
+        lower.pop_back(); upper.pop_back();
+        lower.insert(lower.end(), upper.begin(), upper.end());
+        <span class="kw">return</span> lower;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +142,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Andrew monotone chain: sort points, build lower và upper hull, loại…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Monotone chain cho convex hull; cross product loại điểm lõm.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Collinear trên cạnh — giữ điểm đầu cuối</span><span class="analysis-tag edge">≤2 điểm</span><span class="analysis-tag pit">Graham scan sort angle phức tạp</span><span class="analysis-tag pit">Cross sign ngược chiều hull</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Erect the fence = convex hull Andrew scan, cross product &gt; 0 pop.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Erect%20the%20Fence&lc_id=587&embed=true"></iframe>

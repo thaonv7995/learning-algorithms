@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #413</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Arithmetic Slices</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Arithmetic Slices (LeetCode #413) — Medium.</div>
+                        <div class="block-text">Arithmetic slice là subarray dài ≥3 mà các phần tử cách đều nhau. Đếm tổng số arithmetic slice trong nums.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">dp[i] = số slice kết thúc tại i (dài ≥3). Nếu nums[i]-nums[i-1]==nums[i-1]-nums[i-2] thì dp[i]=dp[i-1]+1. Cộng dồn dp.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> numberOfArithmeticSlices(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="kw">if</span> (n &lt; 3) <span class="kw">return</span> 0;
+    <span class="ty">int</span> dp = 0, ans = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 2; i &lt; n; i++) {
+        <span class="kw">if</span> (nums[i]-nums[i-1] == nums[i-1]-nums[i-2]) { dp++; ans += dp; }
+        <span class="kw">else</span> dp = 0;
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> numberOfArithmeticSlices(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> <span class="ty">len</span>(nums) &lt; 3: <span class="kw">return</span> 0
+        dp = ans = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(2, <span class="ty">len</span>(nums)):
+            <span class="kw">if</span> nums[i] - nums[i-1] == nums[i-1] - nums[i-2]:
+                dp += 1
+                ans += dp
+            <span class="kw">else</span>:
+                dp = 0
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> numberOfArithmeticSlices(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="kw">if</span> (nums.size() &lt; 3) <span class="kw">return</span> 0;
+        <span class="ty">int</span> dp = 0, ans = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 2; i &lt; (<span class="ty">int</span>)nums.size(); i++) {
+            <span class="kw">if</span> (nums[i]-nums[i-1] == nums[i-1]-nums[i-2]) { dp++; ans += dp; }
+            <span class="kw">else</span> dp = 0;
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +139,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — dp[i] = số slice kết thúc tại i .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu nums[i]-nums[i-1]==nums[i-1]-nums[i-2] thì…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>dp[i] đếm slice ending at i; tổng dp là mọi slice.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n&lt;3 → 0</span><span class="analysis-tag edge">Diff thay đổi reset dp</span><span class="analysis-tag edge">Cùng diff dài</span><span class="analysis-tag pit">Đếm subarray dài 3 only</span><span class="analysis-tag pit">Không reset khi diff đứt</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Slice mới kéo dài từ i-1 thêm 1 phần tử → +dp[i-1] slice.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Arithmetic%20Slices&lc_id=413&embed=true"></iframe>

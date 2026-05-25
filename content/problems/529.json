@@ -3,32 +3,36 @@
   "title": "Minesweeper",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Minesweeper (LeetCode #529) — Medium.",
+  "timeComplexity": "O(m * n)",
+  "spaceComplexity": "O(m * n)",
+  "description": "Bảng Minesweeper: 'M' mìn, 'E' ô trống chưa mở. Click (click,r,c): mở ô; nếu ô trống thì mở lan các ô kề không mìn và ghi số mìn kề.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "board=[[\"E\",\"E\",\"E\"],[\"E\",\"E\",\"M\"],[\"E\",\"E\",\"E\"]], click=[0,0]",
+      "output": "Lan mở với số mìn kề"
+    },
+    {
+      "input": "click vào M",
+      "output": "Giữ M"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS/BFS từ click: nếu M return; đếm mìn kề 8 hướng; nếu 0 thì tiếp tục DFS ô kề 'E'.",
+  "memoryTip": "Minesweeper DFS: count neighbors, nếu 0 thì flood fill 8 directions.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def updateBoard(self, board: List[List[str]], click: List[int]) -> List[List[str]]:\n        m, n = len(board), len(board[0])\n        r, c = click\n        if board[r][c] == \"M\":\n            board[r][c] = \"X\"\n            return board\n        dirs = [(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]\n        def count(r,c):\n            cnt = 0\n            for dr,dc in dirs:\n                nr, nc = r+dr, c+dc\n                if 0<=nr<m and 0<=nc<n and board[nr][nc] in \"MX\":\n                    cnt += 1\n            return cnt\n        def dfs(r,c):\n            if board[r][c] != \"E\": return\n            mines = count(r,c)\n            board[r][c] = str(mines) if mines else \"B\"\n            if mines == 0:\n                for dr,dc in dirs:\n                    dfs(r+dr, c+dc)\n        dfs(r,c)\n        return board",
+    "cpp": "class Solution {\n    int m, n;\n    int dirs[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};\n    int count(vector<vector<char>>& b, int r, int c) {\n        int cnt = 0;\n        for (auto& d : dirs) {\n            int nr = r+d[0], nc = c+d[1];\n            if (nr>=0&&nr<m&&nc>=0&&nc<n && (b[nr][nc]=='M'||b[nr][nc]=='X')) cnt++;\n        }\n        return cnt;\n    }\n    void dfs(vector<vector<char>>& b, int r, int c) {\n        if (b[r][c] != 'E') return;\n        int mines = count(b,r,c);\n        b[r][c] = mines ? ('0'+mines) : 'B';\n        if (!mines) for (auto& d : dirs) dfs(b, r+d[0], c+d[1]);\n    }\npublic:\n    vector<vector<char>> updateBoard(vector<vector<char>>& board, vector<int>& click) {\n        m = board.size(); n = board[0].size();\n        if (board[click[0]][click[1]] == 'M') { board[click[0]][click[1]] = 'X'; return board; }\n        dfs(board, click[0], click[1]);\n        return board;\n    }\n};",
+    "c": "/* DFS flood fill mines — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DFS chỉ lan khi ô trống 0 mìn kề; số mìn đếm đủ 8 hướng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Click mìn → X",
+      "Board 1x1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Lan khi mines>0",
+      "Không đánh dấu visited → vòng lặp"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

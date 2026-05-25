@@ -3,32 +3,41 @@
   "title": "Construct the Rectangle",
   "difficulty": "Easy",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(sqrt(area))",
   "spaceComplexity": "O(1)",
-  "description": "Construct the Rectangle (LeetCode #492) — Easy.",
+  "description": "Diện tích area hình chữ nhật. Trả [length, width] với length≥width và lệch nhau tối thiểu (gần sqrt nhất).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "area = 4",
+      "output": "[2,2]"
+    },
+    {
+      "input": "area = 37",
+      "output": "[37,1]"
+    },
+    {
+      "input": "area = 122122",
+      "output": "[427,286]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "i từ floor(sqrt(area)) xuống 1; nếu area%i==0 return [area/i, i].",
+  "memoryTip": "Closest factors to sqrt — iterate w from sqrt down.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def constructRectangle(self, area: int) -> List[int]:\n        w = int(area ** 0.5)\n        while area % w: w -= 1\n        return [area // w, w]",
+    "cpp": "class Solution {\npublic:\n    vector<int> constructRectangle(int area) {\n        int w=sqrt(area);\n        while(area%w) w--;\n        return {area/w, w};\n    }\n};",
+    "c": "int* constructRectangle(int area, int* rs) {\n    static int ans[2];\n    int w=(int)sqrt(area);\n    while(area%w) w--;\n    ans[0]=area/w; ans[1]=w; *rs=2; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "First divisor w near sqrt gives minimal difference L-w.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Prime area → [area,1]",
+      "Perfect square",
+      "Large area"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Return [w,L] wrong order",
+      "Float sqrt precision"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

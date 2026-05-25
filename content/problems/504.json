@@ -3,32 +3,40 @@
   "title": "Base 7",
   "difficulty": "Easy",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(log n)",
   "spaceComplexity": "O(1)",
-  "description": "Base 7 (LeetCode #504) — Easy.",
+  "description": "Cho số nguyên num. Trả về biểu diễn base-7 dạng chuỗi (kể cả số âm, thêm dấu trừ). num=0 trả \"0\".",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num = 100",
+      "output": "\"134\""
+    },
+    {
+      "input": "num = -7",
+      "output": "\"-10\""
+    },
+    {
+      "input": "num = 0",
+      "output": "\"0\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Lặp lấy num % 7 và num // 7 (Python) hoặc xử lý dấu riêng với C++ % âm.",
+  "memoryTip": "Base-7: chia dư 7 đảo chuỗi; số âm xử lý dấu trước vòng lặp.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def convertToBase7(self, num: int) -> str:\n        if num == 0:\n            return \"0\"\n        neg = num < 0\n        num = abs(num)\n        s = []\n        while num:\n            s.append(str(num % 7))\n            num //= 7\n        res = \"\".join(reversed(s))\n        return \"-\" + res if neg else res",
+    "cpp": "class Solution {\npublic:\n    string convertToBase7(int num) {\n        if (num == 0) return \"0\";\n        bool neg = num < 0;\n        long long n = abs((long long)num);\n        string s;\n        while (n) { s.push_back('0' + n % 7); n /= 7; }\n        reverse(s.begin(), s.end());\n        return neg ? \"-\" + s : s;\n    }\n};",
+    "c": "/* Chia dư base 7 — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Thuật toán chuyển cơ số chuẩn với xử lý dấu và num=0.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "num=0",
+      "num âm lớn"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "C++ % với số âm",
+      "Quên reverse chuỗi digit"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

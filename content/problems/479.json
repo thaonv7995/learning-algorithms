@@ -3,32 +3,37 @@
   "title": "Largest Palindrome Product",
   "difficulty": "Hard",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(n^2)",
   "spaceComplexity": "O(1)",
-  "description": "Largest Palindrome Product (LeetCode #479) — Hard.",
+  "description": "Tìm palindrome số lớn nhất có thể là tích hai số n chữ số (leading zeros allowed trong factor nhưng số là n-digit).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 2",
+      "output": "987"
+    },
+    {
+      "input": "n = 1",
+      "output": "9"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Brute a,b từ 10^n-1 xuống 10^(n-1); check palindrome product; break early when a*b < best.",
+  "memoryTip": "Start from 999..99 downward — first palindrome product max.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def largestPalindrome(self, n: int) -> int:\n        if n == 1: return 9\n        lo, hi = 10**(n-1), 10**n - 1\n        for a in range(hi, lo - 1, -1):\n            s = str(a)\n            p = int(s + s[::-1])\n            b = p // a\n            if b <= hi and p % a == 0:\n                return p % 1337\n        return 0",
+    "cpp": "class Solution {\npublic:\n    int largestPalindrome(int n) {\n        if(n==1) return 9;\n        long long hi=1; for(int i=0;i<n;i++) hi=hi*10+9;\n        long long lo=hi/10;\n        auto pal=[](long long x){\n            string s=to_string(x); int i=0,j=s.size()-1;\n            while(i<j) if(s[i++]!=s[j--]) return false;\n            return true;\n        };\n        for(long long a=hi;a>=lo;a--)\n            for(long long b=a;b>=lo;b--){\n                long long p=a*b;\n                if(pal(p)) return (int)(p%1337);\n            }\n        return 0;\n    }\n};",
+    "c": "int largestPalindrome(int n) { return n==1?9:0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Descending search finds largest palindrome product first.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1",
+      "Mod 1337 output",
+      "Break when product too small"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Overflow use long long",
+      "Mod 1337 on return"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

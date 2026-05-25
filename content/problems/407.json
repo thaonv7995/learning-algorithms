@@ -2,33 +2,38 @@
   "id": 407,
   "title": "Trapping Rain Water II",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Trapping Rain Water II (LeetCode #407) — Hard.",
+  "category": "Heap",
+  "timeComplexity": "O(mn log(mn))",
+  "spaceComplexity": "O(mn)",
+  "description": "Ma trận heightMap m×n cho độ cao. Tính lượng nước mưa giữ lại sau khi nước chảy ra biên (không qua điểm cao hơn mực nước local).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "heightMap = [[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]",
+      "output": "4"
+    },
+    {
+      "input": "heightMap = [[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]",
+      "output": "10"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Min-heap từ mọi ô biên; pop ô thấp nhất, lan sang láng giềng chưa thăm: nước += max(0, wallHeight - neighborHeight), push neighbor với height max(neighbor, wall).",
+  "memoryTip": "Giống trapping rain I nhưng BFS từ biên vào — mực nước = min path tới biên.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def trapRainWater(self, heightMap: List[List[int]]) -> int:\n        if not heightMap or not heightMap[0]: return 0\n        m, n = len(heightMap), len(heightMap[0])\n        vis = [[False]*n for _ in range(m)]\n        heap = []\n        for i in range(m):\n            for j in (0, n-1):\n                heapq.heappush(heap, (heightMap[i][j], i, j)); vis[i][j]=True\n        for j in range(1, n-1):\n            for i in (0, m-1):\n                heapq.heappush(heap, (heightMap[i][j], i, j)); vis[i][j]=True\n        ans = 0\n        while heap:\n            h, r, c = heapq.heappop(heap)\n            for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):\n                nr, nc = r+dr, c+dc\n                if 0<=nr<m and 0<=nc<n and not vis[nr][nc]:\n                    vis[nr][nc]=True\n                    ans += max(0, h - heightMap[nr][nc])\n                    heapq.heappush(heap, (max(h, heightMap[nr][nc]), nr, nc))\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int trapRainWater(vector<vector<int>>& hm) {\n        int m=hm.size(); if(!m) return 0; int n=hm[0].size();\n        vector<vector<char>> vis(m, vector<char>(n));\n        priority_queue<array<int,3>, vector<array<int,3>>, greater<>> pq;\n        auto push=[&](int r,int c){ vis[r][c]=1; pq.push({hm[r][c],r,c}); };\n        for(int i=0;i<m;i++){ push(i,0); push(i,n-1); }\n        for(int j=1;j<n-1;j++){ push(0,j); push(m-1,j); }\n        int ans=0, d[4][2]={{1,0},{-1,0},{0,1},{0,-1}};\n        while(!pq.empty()){\n            auto [h,r,c]=pq.top(); pq.pop();\n            for(auto& dd:d){ int nr=r+dd[0], nc=c+dd[1];\n                if(nr>=0&&nr<m&&nc>=0&&nc<n&&!vis[nr][nc]){\n                    vis[nr][nc]=1; ans+=max(0,h-hm[nr][nc]);\n                    pq.push({max(h,hm[nr][nc]),nr,nc});\n                }\n            }\n        }\n        return ans;\n    }\n};",
+    "c": "typedef struct { int h, r, c; } Cell;\nstatic int cmpCell(const void* a, const void* b) {\n    return ((Cell*)a)->h - ((Cell*)b)->h;\n}\nint trapRainWater(int** hm, int m, int* cs, int n) {\n    if (!m || !n) return 0;\n    char** vis = (char**)malloc(m * sizeof(char*));\n    Cell* heap = (Cell*)malloc(m * n * sizeof(Cell));\n    int hlen = 0, ans = 0;\n    for (int i = 0; i < m; i++) {\n        vis[i] = (char*)calloc(n, 1);\n        vis[i][0] = vis[i][n-1] = 1;\n        heap[hlen++] = (Cell){hm[i][0], i, 0};\n        heap[hlen++] = (Cell){hm[i][n-1], i, n-1};\n    }\n    for (int j = 1; j < n - 1; j++) {\n        vis[0][j] = vis[m-1][j] = 1;\n        heap[hlen++] = (Cell){hm[0][j], 0, j};\n        heap[hlen++] = (Cell){hm[m-1][j], m-1, j};\n    }\n    int dr[4] = {1,-1,0,0}, dc[4] = {0,0,1,-1};\n    while (hlen) {\n        qsort(heap, hlen, sizeof(Cell), cmpCell);\n        Cell cur = heap[0];\n        memmove(heap, heap + 1, (--hlen) * sizeof(Cell));\n        for (int k = 0; k < 4; k++) {\n            int nr = cur.r + dr[k], nc = cur.c + dc[k];\n            if (nr < 0 || nr >= m || nc < 0 || nc >= n || vis[nr][nc]) continue;\n            vis[nr][nc] = 1;\n            if (hm[nr][nc] < cur.h) ans += cur.h - hm[nr][nc];\n            int nh = hm[nr][nc] > cur.h ? hm[nr][nc] : cur.h;\n            heap[hlen++] = (Cell){nh, nr, nc};\n        }\n    }\n    for (int i = 0; i < m; i++) free(vis[i]);\n    free(vis); free(heap);\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Priority flood-fill — ô được fill tới min boundary height trên mọi đường ra biên.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "1×1 → 0",
+      "Toàn bằng nhau → 0",
+      "Biên cao giữ nước trong"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS không đảm bảo min wall",
+      "Quên seed toàn biên"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

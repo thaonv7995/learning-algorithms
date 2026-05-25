@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #417</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Matrix</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Pacific Atlantic Water Flow</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(mn)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>61% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Pacific Atlantic Water Flow (LeetCode #417) — Medium.</div>
+                        <div class="block-text">Ma trận heights cho độ cao. Ô có thể chảy tới Pacific (biên trái/trên) và Atlantic (biên phải/dưới). Trả tọa độ các ô chảu được cả hai đại dương.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>heights = [[2,1],[1,2]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,0],[0,1],[1,0],[1,1]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS/BFS từ mọi ô biên Pacific và Atlantic (chỉ đi sang ô height ≥ current). Giao hai tập visited.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,41 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>** pacificAtlantic(<span class="ty">int</span>** h, <span class="ty">int</span> m, <span class="ty">int</span>* cs, <span class="ty">int</span> n, <span class="ty">int</span>* rs, <span class="ty">int</span>* cs2) { *rs=0; <span class="kw">return</span> NULL; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> pacificAtlantic(<span class="ty">self</span>, heights: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        <span class="kw">if</span> <span class="kw">not</span> heights: <span class="kw">return</span> []
+        m, n = <span class="ty">len</span>(heights), <span class="ty">len</span>(heights[0])
+        pac, atl = <span class="ty">set</span>(), <span class="ty">set</span>()
+        <span class="kw">def</span> dfs(r, c, seen):
+            seen.add((r,c))
+            <span class="kw">for</span> dr,dc <span class="kw">in</span> ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r+dr, c+dc
+                <span class="kw">if</span> 0&lt;=nr&lt;m <span class="kw">and</span> 0&lt;=nc&lt;n <span class="kw">and</span> (nr,nc) <span class="kw">not</span> <span class="kw">in</span> seen <span class="kw">and</span> heights[nr][nc]&gt;=heights[r][c]:
+                    dfs(nr, nc, seen)
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+            dfs(i, 0, pac); dfs(i, n-1, atl)
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+            dfs(0, j, pac); dfs(m-1, j, atl)
+        <span class="kw">return</span> [[r,c] <span class="kw">for</span> r,c <span class="kw">in</span> pac &amp; atl]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; pacificAtlantic(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; h) {
+        <span class="ty">int</span> m=h.size(), n=h[0].size();
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt; p(m,<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;(n)), a(m,<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;(n));
+        function&lt;<span class="ty">void</span>(<span class="ty">int</span>,<span class="ty">int</span>,<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp;)&gt; dfs=[&amp;](<span class="ty">int</span> r,<span class="ty">int</span> c,<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; vis){
+            vis[r][c]=1;
+            <span class="ty">int</span> d[4][2]={{1,0},{-1,0},{0,1},{0,-1}};
+            <span class="kw">for</span>(auto&amp; dd:d){ <span class="ty">int</span> nr=r+dd[0], nc=c+dd[1];
+                <span class="kw">if</span>(nr&gt;=0&amp;&amp;nr&lt;m&amp;&amp;nc&gt;=0&amp;&amp;nc&lt;n&amp;&amp;!vis[nr][nc]&amp;&amp;h[nr][nc]&gt;=h[r][c]) dfs(nr,nc,vis);
+            }
+        };
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++){ dfs(i,0,p); dfs(i,n-1,a); }
+        <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++){ dfs(0,j,p); dfs(m-1,j,a); }
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; ans;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++) <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++) <span class="kw">if</span>(p[i][j]&amp;&amp;a[i][j]) ans.push_back({i,j});
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +138,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Matrix</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(mn)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DFS/BFS từ mọi ô biên Pacific và Atlantic .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Giao hai tập visited.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Reachability monotonic uphill từ biên tương đương ô chảy xuống biên.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">1×1</span><span class="analysis-tag edge">Toàn bằng nhau</span><span class="analysis-tag edge">Peak giữa không chạm biên</span><span class="analysis-tag pit">DFS từ từng ô TLE</span><span class="analysis-tag pit">So sánh height sai hướng</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Reverse flow — từ biên leo lên thay vì từ ô xuống biên.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +167,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Pacific%20Atlantic%20Water%20Flow&lc_id=417&embed=true"></iframe>

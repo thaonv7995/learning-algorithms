@@ -3,32 +3,36 @@
   "title": "Erect the Fence",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Erect the Fence (LeetCode #587) — Hard.",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho tập điểm 2D. Trả các điểm trên convex hull (fence) theo thứ tự ngược chiều kim đồng hồ.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "points = [[0,0],[0,1],[1,1],[1,0]]",
+      "output": "[[0,0],[1,0],[1,1],[0,1]]"
+    },
+    {
+      "input": "points = [[1,1],[2,2],[3,3]]",
+      "output": "[[1,1],[2,2],[3,3]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Andrew monotone chain: sort points, build lower và upper hull, loại duplicate cuối.",
+  "memoryTip": "Erect the fence = convex hull Andrew scan, cross product > 0 pop.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def outerTrees(self, points: List[List[int]]) -> List[List[int]]:\n        pts = sorted(set(map(tuple, points)))\n        if len(pts) <= 1:\n            return [list(p) for p in pts]\n        def cross(o,a,b):\n            return (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0])\n        lower=[]\n        for p in pts:\n            while len(lower)>=2 and cross(lower[-2],lower[-1],p)<0: lower.pop()\n            lower.append(p)\n        upper=[]\n        for p in reversed(pts):\n            while len(upper)>=2 and cross(upper[-2],upper[-1],p)<0: upper.pop()\n            upper.append(p)\n        return [list(p) for p in lower[:-1]+upper[:-1]]",
+    "cpp": "class Solution {\n    long long cross(vector<int>& o, vector<int>& a, vector<int>& b) {\n        return (long long)(a[0]-o[0])*(b[1]-o[1]) - (long long)(a[1]-o[1])*(b[0]-o[0]);\n    }\npublic:\n    vector<vector<int>> outerTrees(vector<vector<int>>& points) {\n        sort(points.begin(), points.end());\n        vector<vector<int>> lower, upper;\n        for (auto& p : points) {\n            while (lower.size()>=2 && cross(lower[lower.size()-2], lower.back(), p) < 0) lower.pop_back();\n            lower.push_back(p);\n        }\n        for (int i=points.size()-1;i>=0;i--) {\n            auto& p = points[i];\n            while (upper.size()>=2 && cross(upper[upper.size()-2], upper.back(), p) < 0) upper.pop_back();\n            upper.push_back(p);\n        }\n        lower.pop_back(); upper.pop_back();\n        lower.insert(lower.end(), upper.begin(), upper.end());\n        return lower;\n    }\n};",
+    "c": "/* Convex hull Andrew — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Monotone chain cho convex hull; cross product loại điểm lõm.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Collinear trên cạnh — giữ điểm đầu cuối",
+      "≤2 điểm"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Graham scan sort angle phức tạp",
+      "Cross sign ngược chiều hull"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,42 @@
   "id": 412,
   "title": "Fizz Buzz",
   "difficulty": "Easy",
-  "category": "Math",
+  "category": "Simulation",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Fizz Buzz (LeetCode #412) — Easy.",
+  "description": "In các số từ 1 đến n: chia hết 3 và 5 → \"FizzBuzz\", 3 → \"Fizz\", 5 → \"Buzz\", còn lại số dạng chuỗi.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 3",
+      "output": "[\"1\",\"2\",\"Fizz\"]"
+    },
+    {
+      "input": "n = 5",
+      "output": "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\"]"
+    },
+    {
+      "input": "n = 15",
+      "output": "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\",\"Fizz\",\"7\",\"8\",\"Fizz\",\"Buzz\",\"11\",\"Fizz\",\"13\",\"14\",\"FizzBuzz\"]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Loop i=1..n: kiểm tra %15, %3, %5 theo thứ tự ưu tiên FizzBuzz trước.",
+  "memoryTip": "Mod 15 trước — tránh nhánh Fizz/Buzz riêng khi cả hai.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def fizzBuzz(self, n: int) -> List[str]:\n        ans = []\n        for i in range(1, n+1):\n            if i % 15 == 0: ans.append(\"FizzBuzz\")\n            elif i % 3 == 0: ans.append(\"Fizz\")\n            elif i % 5 == 0: ans.append(\"Buzz\")\n            else: ans.append(str(i))\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<string> fizzBuzz(int n) {\n        vector<string> ans;\n        for (int i=1;i<=n;i++) {\n            if (i%15==0) ans.push_back(\"FizzBuzz\");\n            else if (i%3==0) ans.push_back(\"Fizz\");\n            else if (i%5==0) ans.push_back(\"Buzz\");\n            else ans.push_back(to_string(i));\n        }\n        return ans;\n    }\n};",
+    "c": "char** fizzBuzz(int n, int* retSize) {\n    char** ans = malloc(n * sizeof(char*)); *retSize = n;\n    for (int i=1;i<=n;i++) {\n        ans[i-1] = malloc(9);\n        if (i%15==0) strcpy(ans[i-1], \"FizzBuzz\");\n        else if (i%3==0) strcpy(ans[i-1], \"Fizz\");\n        else if (i%5==0) strcpy(ans[i-1], \"Buzz\");\n        else sprintf(ans[i-1], \"%d\", i);\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Quy tắc if-else đúng thứ tự 15 trước 3 và 5.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1",
+      "n=15 đủ case",
+      "Chỉ Fizz hoặc Buzz"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Kiểm tra 3 và 5 trước 15",
+      "Trả int thay string"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

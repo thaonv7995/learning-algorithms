@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #433</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Breadth-First Search</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Minimum Genetic Mutation</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * 8^L)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>56.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Minimum Genetic Mutation (LeetCode #433) — Medium.</div>
+                        <div class="block-text">Gene start, end, bank (mutations hợp lệ). Mỗi bước đổi đúng 1 ký tự A/C/G/T. Trả số bước mutation tối thiểu start→end, -1 nếu không được.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>start = &quot;AACCGGTT&quot;, end = &quot;AACCGGTA&quot;, bank = [&quot;AACCGGTA&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>start = &quot;AACCGGTT&quot;, end = &quot;AAACGGTA&quot;, bank = [&quot;AACCGGTA&quot;,&quot;AACCGCTA&quot;,&quot;AAACGGTA&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS từ start; với mỗi gene thử đổi từng vị trí 4 ký tự; nếu trong bank và chưa thăm thì enqueue.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> minMutation(<span class="ty">char</span>* start, <span class="ty">char</span>* end, <span class="ty">char</span>** bank, <span class="ty">int</span> n) {
+    /* BFS — use C++ <span class="kw">for</span> <span class="ty">string</span> set */
+    <span class="kw">return</span> -1;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> minMutation(<span class="ty">self</span>, startGene: <span class="ty">str</span>, endGene: <span class="ty">str</span>, bank: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">int</span>:
+        bank = <span class="ty">set</span>(bank)
+        <span class="kw">if</span> endGene <span class="kw">not</span> <span class="kw">in</span> bank: <span class="kw">return</span> -1
+        q = deque([(startGene, 0)])
+        seen = {startGene}
+        genes = &quot;ACGT&quot;
+        <span class="kw">while</span> q:
+            g, d = q.popleft()
+            <span class="kw">if</span> g == endGene: <span class="kw">return</span> d
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(g)):
+                <span class="kw">for</span> c <span class="kw">in</span> genes:
+                    <span class="kw">if</span> c == g[i]: continue
+                    ng = g[:i] + c + g[i+1:]
+                    <span class="kw">if</span> ng <span class="kw">in</span> bank <span class="kw">and</span> ng <span class="kw">not</span> <span class="kw">in</span> seen:
+                        seen.add(ng); q.append((ng, d+1))
+        <span class="kw">return</span> -1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> minMutation(<span class="ty">string</span> start, <span class="ty">string</span> end, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; bank) {
+        unordered_set&lt;<span class="ty">string</span>&gt; B(bank.begin(), bank.end());
+        <span class="kw">if</span> (!B.count(end)) <span class="kw">return</span> -1;
+        queue&lt;pair&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt;&gt; q; q.push({start,0});
+        unordered_set&lt;<span class="ty">string</span>&gt; seen={start};
+        <span class="ty">string</span> genes=&quot;ACGT&quot;;
+        <span class="kw">while</span>(!q.empty()){
+            auto [g,d]=q.front(); q.pop();
+            <span class="kw">if</span>(g==end) <span class="kw">return</span> d;
+            <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)g.size();i++)
+                <span class="kw">for</span>(<span class="ty">char</span> c:genes){
+                    <span class="kw">if</span>(c==g[i]) continue;
+                    <span class="ty">string</span> ng=g; ng[i]=c;
+                    <span class="kw">if</span>(B.count(ng)&amp;&amp;!seen.count(ng)){ seen.insert(ng); q.push({ng,d+1}); }
+                }
+        }
+        <span class="kw">return</span> -1;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +144,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Breadth-First Search</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * 8^L)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — BFS từ start; với mỗi gene thử đổi từng vị trí 4 ký tự; nếu trong bank…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BFS đảm bảo số bước mutation nhỏ nhất.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">end không trong bank</span><span class="analysis-tag edge">start==end</span><span class="analysis-tag edge">Không có đường</span><span class="analysis-tag pit">DFS không shortest</span><span class="analysis-tag pit">Quên check end in bank</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Word ladder trên gene — BFS shortest path.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Minimum%20Genetic%20Mutation&lc_id=433&embed=true"></iframe>

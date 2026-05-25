@@ -2,33 +2,42 @@
   "id": 402,
   "title": "Remove K Digits",
   "difficulty": "Medium",
-  "category": "String",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Remove K Digits (LeetCode #402) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi số num và số nguyên k. Xóa đúng k chữ số sao cho chuỗi còn lại nhỏ nhất theo thứ tự số (không có số 0 đứng đầu trừ khi chỉ còn \"0\").",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num = \"1432219\", k = 3",
+      "output": "\"1219\""
+    },
+    {
+      "input": "num = \"10200\", k = 1",
+      "output": "\"200\""
+    },
+    {
+      "input": "num = \"10\", k = 2",
+      "output": "\"0\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Monotonic stack tăng: push từng digit; khi top > digit hiện tại và còn k thì pop. Nếu còn k thì cắt đuôi. Bỏ số 0 đầu.",
+  "memoryTip": "Giống 316 Remove Duplicate Letters — stack giữ thứ tự tăng để số nhỏ nhất.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def removeKdigits(self, num: str, k: int) -> str:\n        st = []\n        for ch in num:\n            while k and st and st[-1] > ch:\n                st.pop(); k -= 1\n            st.append(ch)\n        st = st[:len(st)-k] if k else st\n        return (\"\".join(st).lstrip(\"0\") or \"0\")",
+    "cpp": "class Solution {\npublic:\n    string removeKdigits(string num, int k) {\n        string st;\n        for (char ch : num) {\n            while (k && !st.empty() && st.back() > ch) { st.pop_back(); k--; }\n            st.push_back(ch);\n        }\n        if (k) st.resize(st.size() - k);\n        size_t i = st.find_first_not_of('0');\n        return i == string::npos ? \"0\" : st.substr(i);\n    }\n};",
+    "c": "char* removeKdigits(char* num, int k) {\n    int n = strlen(num), top = 0;\n    char* st = malloc(n + 2);\n    for (int i = 0; i < n; i++) {\n        while (k && top && st[top-1] > num[i]) { top--; k--; }\n        st[top++] = num[i];\n    }\n    top -= k; if (top < 0) top = 0;\n    int s = 0; while (s < top && st[s] == '0') s++;\n    if (s == top) { st[0]='0'; st[1]=0; return st; }\n    memmove(st, st+s, top-s+1);\n    return st;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Invariant stack không giảm — mỗi pop loại digit lớn hơn bên phải nên số lex nhỏ hơn.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=0 giữ nguyên",
+      "Xóa hết → \"0\"",
+      "Toàn số 0 sau trim"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không cắt đuôi khi stack vẫn tăng",
+      "Quên lstrip số 0 đầu"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

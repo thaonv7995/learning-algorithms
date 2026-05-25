@@ -2,33 +2,37 @@
   "id": 535,
   "title": "Encode and Decode TinyURL",
   "difficulty": "Medium",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Encode and Decode TinyURL (LeetCode #535) — Medium.",
+  "category": "Design",
+  "timeComplexity": "O(1) encode/decode",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế hệ thống rút gọn URL: encode(longUrl) trả shortUrl ngẫu nhiên; decode(shortUrl) trả longUrl gốc.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "encode(\"https://example.com/long/path\")",
+      "output": "short key vd. \"http://tinyurl.com/0\""
+    },
+    {
+      "input": "decode short key",
+      "output": "longUrl ban đầu"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map bidirectional: long→short và short→long. Sinh key ngẫu nhiên hoặc tăng dần counter cho path.",
+  "memoryTip": "TinyURL = 2 hash maps + random/base62 key; decode tra short→long.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Codec:\n    def __init__(self):\n        self.l2s = {}\n        self.s2l = {}\n        self.base = \"http://tinyurl.com/\"\n    def encode(self, longUrl: str) -> str:\n        if longUrl in self.l2s:\n            return self.l2s[longUrl]\n        key = str(len(self.l2s))\n        short = self.base + key\n        self.l2s[longUrl] = short\n        self.s2l[short] = longUrl\n        return short\n    def decode(self, shortUrl: str) -> str:\n        return self.s2l[shortUrl]",
+    "cpp": "class Codec {\n    unordered_map<string,string> l2s, s2l;\n    string base = \"http://tinyurl.com/\";\npublic:\n    string encode(string longUrl) {\n        if (l2s.count(longUrl)) return l2s[longUrl];\n        string key = to_string(l2s.size());\n        string shortUrl = base + key;\n        l2s[longUrl] = shortUrl;\n        s2l[shortUrl] = longUrl;\n        return shortUrl;\n    }\n    string decode(string shortUrl) { return s2l[shortUrl]; }\n};",
+    "c": "/* Bidirectional hash map — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi longUrl map 1-1 shortUrl; decode tra ngược chính xác.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Encode cùng URL hai lần → cùng short",
+      "URL dài bất kỳ"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ map một chiều",
+      "Key collision không xử lý"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

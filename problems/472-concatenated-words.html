@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #472</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Trie</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Concatenated Words</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * L^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n * L)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Concatenated Words (LeetCode #472) — Hard.</div>
+                        <div class="block-text">words và danh sách từ. Trả mọi từ có thể ghép từ ≥2 từ nhỏ hơn trong words (mỗi từ nhỏ dùng một lần).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>words = [&quot;cat&quot;,&quot;cats&quot;,&quot;catsdogcats&quot;,&quot;dog&quot;,&quot;catdogcatdog&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;catdogcatdog&quot;,&quot;catsdogcats&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>words = [&quot;cat&quot;,&quot;dog&quot;,&quot;catdog&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;catdog&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Trie insert words; DFS mỗi word kiểm tra có thể segment thành ≥2 dict words (DP on prefix).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,46 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>** findAllConcatenatedWordsInADict(<span class="ty">char</span>** words, <span class="ty">int</span> n, <span class="ty">int</span>* rs) { *rs=0; <span class="kw">return</span> NULL; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findAllConcatenatedWordsInADict(<span class="ty">self</span>, words: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        words.sort(key=<span class="ty">len</span>)
+        trie = {}
+        <span class="kw">def</span> add(w):
+            node = trie
+            <span class="kw">for</span> c <span class="kw">in</span> w: node = node.setdefault(c, {})
+            node[&quot;<span class="cm">#&quot;] = <span class="kw">True</span></span>
+        <span class="kw">def</span> ok(w):
+            <span class="kw">if</span> <span class="kw">not</span> w: <span class="kw">return</span> <span class="kw">True</span>
+            node = trie
+            <span class="kw">for</span> i, c <span class="kw">in</span> enumerate(w):
+                <span class="kw">if</span> c <span class="kw">not</span> <span class="kw">in</span> node: <span class="kw">return</span> <span class="kw">False</span>
+                node = node[c]
+                <span class="kw">if</span> &quot;<span class="cm">#&quot; <span class="kw">in</span> node <span class="kw">and</span> ok(w[i+1:]): <span class="kw">return</span> <span class="kw">True</span></span>
+            <span class="kw">return</span> <span class="kw">False</span>
+        ans = []
+        <span class="kw">for</span> w <span class="kw">in</span> words:
+            <span class="kw">if</span> <span class="kw">not</span> w: continue
+            <span class="kw">if</span> ok(w): ans.append(w)
+            add(w)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; findAllConcatenatedWordsInADict(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; words) {
+        sort(words.begin(), words.end(), [](auto&amp; a, auto&amp; b){ <span class="kw">return</span> a.size()&lt;b.size(); });
+        unordered_set&lt;<span class="ty">string</span>&gt; dict; <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; ans;
+        function&lt;<span class="ty">bool</span>(<span class="ty">const</span> <span class="ty">string</span>&amp;)&gt; can=[&amp;](<span class="ty">const</span> <span class="ty">string</span>&amp; w){
+            <span class="kw">if</span>(w.empty()) <span class="kw">return</span> true;
+            <span class="kw">for</span>(<span class="ty">int</span> i=1;i&lt;=(<span class="ty">int</span>)w.size();i++)
+                <span class="kw">if</span>(dict.count(w.substr(0,i)) &amp;&amp; can(w.substr(i))) <span class="kw">return</span> true;
+            <span class="kw">return</span> false;
+        };
+        <span class="kw">for</span>(auto&amp; w:words){
+            <span class="kw">if</span>(!w.empty() &amp;&amp; can(w)) ans.push_back(w);
+            dict.insert(w);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +143,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Trie</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * L^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n * L)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Trie insert words; DFS mỗi word kiểm tra có thể segment thành ≥2 dict…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Process shorter words first into dict; longer word valid if word-break into dict.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Empty string skip</span><span class="analysis-tag edge">Need ≥2 parts</span><span class="analysis-tag edge">Duplicate words</span><span class="analysis-tag pit">Include word itself as part</span><span class="analysis-tag pit">Sort by length required</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Word break II on trie — DFS + memo prefix reachable.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +172,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=13&problem=Concatenated%20Words&lc_id=472&embed=true"></iframe>

@@ -2,33 +2,42 @@
   "id": 419,
   "title": "Battleships in a Board",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Matrix",
+  "timeComplexity": "O(mn)",
   "spaceComplexity": "O(1)",
-  "description": "Battleships in a Board (LeetCode #419) — Medium.",
+  "description": "Bảng 'X' (tàu) và '.' (nước). Đếm số battleship — mỗi tàu là một khối 'X' liên thông ngang/dọc, không chéo.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "board = [[\"X\",\".\",\".\",\"X\"],[\".\",\".\",\".\",\"X\"],[\".\",\".\",\".\",\"X\"]]",
+      "output": "2"
+    },
+    {
+      "input": "board = [[\".\"]]",
+      "output": "0"
+    },
+    {
+      "input": "board = [[\"X\"]]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm 'X' mà ô trên hoặc trái không phải 'X' — mỗi ship chỉ có một góc trên-trái.",
+  "memoryTip": "Không DFS — ship count = số 'X' không có neighbor trên/trái là 'X'.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countBattleships(self, board: List[List[str]]) -> int:\n        m, n = len(board), len(board[0])\n        ans = 0\n        for i in range(m):\n            for j in range(n):\n                if board[i][j] != \"X\": continue\n                if i > 0 and board[i-1][j] == \"X\": continue\n                if j > 0 and board[i][j-1] == \"X\": continue\n                ans += 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int countBattleships(vector<vector<char>>& board) {\n        int m=board.size(), n=board[0].size(), ans=0;\n        for(int i=0;i<m;i++) for(int j=0;j<n;j++){\n            if(board[i][j]!='X') continue;\n            if(i>0&&board[i-1][j]=='X') continue;\n            if(j>0&&board[i][j-1]=='X') continue;\n            ans++;\n        }\n        return ans;\n    }\n};",
+    "c": "int countBattleships(char** board, int m, int* cs, int n) {\n    int ans=0;\n    for(int i=0;i<m;i++) for(int j=0;j<n;j++){\n        if(board[i][j]!='X') continue;\n        if(i>0&&board[i-1][j]=='X') continue;\n        if(j>0&&board[i][j-1]=='X') continue;\n        ans++;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi connected component có đúng một cell không có X phía trên/trái trong component.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không có X",
+      "Hàng ngang dài 1 ship",
+      "Cột dọc"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS modify board",
+      "Đếm mọi X"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

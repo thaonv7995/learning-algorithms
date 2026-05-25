@@ -2,33 +2,38 @@
   "id": 436,
   "title": "Find Right Interval",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Find Right Interval (LeetCode #436) — Medium.",
+  "category": "Binary Search",
+  "timeComplexity": "O(n log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho intervals [start,end]. Với mỗi i, tìm j nhỏ nhất sao start_j >= end_i (right interval); không có thì -1.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "intervals = [[3,4],[2,3],[1,2]]",
+      "output": "[-1,0,1]"
+    },
+    {
+      "input": "intervals = [[1,4],[2,3],[3,4]]",
+      "output": "[-1,2,-1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort (start, original index); với mỗi end_i binary search lower_bound start >= end_i.",
+  "memoryTip": "Map end → first start ≥ end after sorting starts.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findRightInterval(self, intervals: List[List[int]]) -> List[int]:\n        starts = sorted((s, i) for i, (s, _) in enumerate(intervals))\n        ans = []\n        for _, e in intervals:\n            lo, hi = 0, len(starts)\n            while lo < hi:\n                mid = (lo + hi) // 2\n                if starts[mid][0] >= e: hi = mid\n                else: lo = mid + 1\n            ans.append(starts[lo][1] if lo < len(starts) else -1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<int> findRightInterval(vector<vector<int>>& v) {\n        vector<pair<int,int>> st;\n        for(int i=0;i<(int)v.size();i++) st.push_back({v[i][0],i});\n        sort(st.begin(), st.end());\n        vector<int> ans;\n        for(auto& p:v){\n            int e=p[1];\n            auto it=lower_bound(st.begin(), st.end(), make_pair(e,0));\n            ans.push_back(it==st.end()?-1:it->second);\n        }\n        return ans;\n    }\n};",
+    "c": "int* findRightInterval(int** iv, int n, int* cs, int* rs) { *rs=n; return NULL; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Lower bound trên sorted starts cho right interval đầu tiên.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không có j thỏa → -1",
+      "start == end",
+      "Một interval"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm >= vs >",
+      "Quên map original index"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

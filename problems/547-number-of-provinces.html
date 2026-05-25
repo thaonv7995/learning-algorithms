@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #547</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Depth-First Search</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Number of Provinces</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>70.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Number of Provinces (LeetCode #547) — Medium.</div>
+                        <div class="block-text">Ma trận n×n isConnected: isConnected[i][j]=1 nếu thành phố i,j cùng tỉnh. Đếm số tỉnh (connected components).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>isConnected = [[1,1,0],[1,1,0],[0,0,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>isConnected = [[1,0,0],[0,1,0],[0,0,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS/BFS hoặc Union-Find: duyệt i=0..n-1, nếu chưa thăm thì dfs lan và tăng count.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DFS components — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findCircleNum(<span class="ty">self</span>, isConnected: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        n = <span class="ty">len</span>(isConnected)
+        seen = [<span class="kw">False</span>]*n
+        <span class="kw">def</span> dfs(u):
+            seen[u] = <span class="kw">True</span>
+            <span class="kw">for</span> v <span class="kw">in</span> <span class="ty">range</span>(n):
+                <span class="kw">if</span> isConnected[u][v] <span class="kw">and</span> <span class="kw">not</span> seen[v]:
+                    dfs(v)
+        ans = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            <span class="kw">if</span> <span class="kw">not</span> seen[i]:
+                dfs(i)
+                ans += 1
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findCircleNum(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; isConnected) {
+        <span class="ty">int</span> n = isConnected.size();
+        <span class="ty">vector</span>&lt;<span class="ty">bool</span>&gt; seen(n);
+        function&lt;<span class="ty">void</span>(<span class="ty">int</span>)&gt; dfs = [&amp;](<span class="ty">int</span> u) {
+            seen[u] = true;
+            <span class="kw">for</span> (<span class="ty">int</span> v = 0; v &lt; n; v++)
+                <span class="kw">if</span> (isConnected[u][v] &amp;&amp; !seen[v]) dfs(v);
+        };
+        <span class="ty">int</span> ans = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++)
+            <span class="kw">if</span> (!seen[i]) { dfs(i); ans++; }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +134,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Depth-First Search</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Graph</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DFS/BFS hoặc Union-Find: duyệt i=0..n-1, nếu chưa thăm thì dfs lan và…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi DFS thăm trọn một component; đếm số lần khởi dfs.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1 → 1</span><span class="analysis-tag edge">Toàn kết nối → 1</span><span class="analysis-tag pit">Chỉ xét cạnh i,i+1</span><span class="analysis-tag pit">Quên matrix đối xứng vẫn dfs đủ</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Number of provinces = count connected components in adjacency matrix.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Number%20of%20Provinces&lc_id=547&embed=true"></iframe>

@@ -2,33 +2,38 @@
   "id": 454,
   "title": "4Sum II",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "4Sum II (LeetCode #454) — Medium.",
+  "category": "Hash Table",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Bốn mảng A,B,C,D cùng length n. Đếm số bộ (i,j,k,l) sao A[i]+B[j]+C[k]+D[l]=0.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "A = [1,2], B = [-2,-1], C = [-1,2], D = [0,2]",
+      "output": "2"
+    },
+    {
+      "input": "A = [0], B = [0], C = [0], D = [0]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Map tổng a+b; duyệt c+d, cộng count[-(c+d)].",
+  "memoryTip": "4Sum II = 2Sum on split AB | CD — hash pair sums.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def fourSumCount(self, A: List[int], B: List[int], C: List[int], D: List[int]) -> int:\n        ab = Counter(a+b for a in A for b in B)\n        return sum(ab.get(-c-d, 0) for c in C for d in D)",
+    "cpp": "class Solution {\npublic:\n    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {\n        unordered_map<int,int> ab;\n        for(int a:A) for(int b:B) ab[a+b]++;\n        int ans=0;\n        for(int c:C) for(int d:D) ans+=ab[-(c+d)];\n        return ans;\n    }\n};",
+    "c": "int fourSumCount(int* A,int na,int* B,int nb,int* C,int nc,int* D,int nd){\n    /* hash map — use C++ for large n */\n    int ans=0;\n    for(int i=0;i<na;i++) for(int j=0;j<nb;j++)\n        for(int k=0;k<nc;k++) for(int l=0;l<nd;l++)\n            if(A[i]+B[j]+C[k]+D[l]==0) ans++;\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Partition into AB and CD sums — count complementary pairs.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=1",
+      "Many zero sums",
+      "Negative values"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n^4) TLE",
+      "Quên negate c+d"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

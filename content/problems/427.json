@@ -2,33 +2,38 @@
   "id": 427,
   "title": "Construct Quad Tree",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Construct Quad Tree (LeetCode #427) — Medium.",
+  "spaceComplexity": "O(log n)",
+  "description": "Cho ma trận grid n×n (n là lũy thừa 2). Xây Quad-Tree: mỗi node có val (0/1), isLeaf, và 4 con topLeft/topRight/bottomLeft/bottomRight nếu vùng không đồng nhất.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "grid = [[0,1],[1,0]]",
+      "output": "Quad-Tree root isLeaf=false, 4 children"
+    },
+    {
+      "input": "grid = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]]",
+      "output": "Root isLeaf=true, val=1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đệ quy vùng (r,c,size): nếu mọi ô cùng giá trị → leaf; else node nội với 4 con size/2.",
+  "memoryTip": "Divide grid thành 4 góc — base case uniform region.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def construct(self, grid: List[List[int]]) -> Node:\n        def build(r, c, s):\n            if all(grid[r+dr][c+dc]==grid[r][c] for dr in range(s) for dc in range(s)):\n                return Node(grid[r][c]==1, True)\n            half = s//2\n            return Node(True, False,\n                build(r,c,half), build(r,c+half,half),\n                build(r+half,c,half), build(r+half,c+half,half))\n        return build(0,0,len(grid))",
+    "cpp": "class Solution {\npublic:\n    Node* construct(vector<vector<int>>& g) {\n        function<Node*(int,int,int)> build=[&](int r,int c,int s)->Node*{\n            int v=g[r][c];\n            for(int i=r;i<r+s;i++) for(int j=c;j<c+s;j++) if(g[i][j]!=v)\n                return new Node(true,false,\n                    build(r,c,s/2), build(r,c+s/2,s/2),\n                    build(r+s/2,c,s/2), build(r+s/2,c+s/2,s/2));\n            return new Node(v==1,true);\n        };\n        return build(0,0,g.size());\n    }\n};",
+    "c": "struct Node* construct(int** grid, int n) { return NULL; /* tree API — use C++ */ }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Đệ quy chia đều — leaf iff vùng đồng nhất.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "1×1 grid",
+      "Toàn 0 hoặc 1",
+      "Checkerboard 2×2"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm thứ tự 4 con",
+      "isLeaf val khi không đồng nhất"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

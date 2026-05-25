@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #501</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Find Mode in Binary Search Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Find Mode in Binary Search Tree (LeetCode #501) — Easy.</div>
+                        <div class="block-text">Cho cây BST. Trả về tất cả giá trị mode (xuất hiện nhiều nhất). Nếu nhiều mode thì trả tất cả, thứ tự tăng dần. Duyệt inorder vì BST cho thứ tự đã sort.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [1,null,2,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [0]</code></div>
+                <div class="ex-line"><span>Out</span><code>[0]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>root = [1,1,2,2,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Inorder duyệt tăng dần: đếm tần suất liên tiếp, cập nhật maxCount và danh sách modes khi gặp tần suất mới hoặc bằng max.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Inorder đếm run — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findMode(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        <span class="ty">self</span>.prev = <span class="kw">None</span>
+        <span class="ty">self</span>.maxCnt = <span class="ty">self</span>.cnt = 0
+        <span class="ty">self</span>.modes = []
+        <span class="kw">def</span> dfs(n):
+            <span class="kw">if</span> <span class="kw">not</span> n: <span class="kw">return</span>
+            dfs(n.left)
+            <span class="kw">if</span> <span class="ty">self</span>.prev is <span class="kw">None</span>:
+                <span class="ty">self</span>.cnt = 1
+            <span class="kw">elif</span> n.val == <span class="ty">self</span>.prev:
+                <span class="ty">self</span>.cnt += 1
+            <span class="kw">else</span>:
+                <span class="ty">self</span>.cnt = 1
+            <span class="kw">if</span> <span class="ty">self</span>.cnt &gt; <span class="ty">self</span>.maxCnt:
+                <span class="ty">self</span>.maxCnt = <span class="ty">self</span>.cnt
+                <span class="ty">self</span>.modes = [n.val]
+            <span class="kw">elif</span> <span class="ty">self</span>.cnt == <span class="ty">self</span>.maxCnt:
+                <span class="ty">self</span>.modes.append(n.val)
+            <span class="ty">self</span>.prev = n.val
+            dfs(n.right)
+        dfs(root)
+        <span class="kw">return</span> <span class="ty">self</span>.modes</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    TreeNode* prev = <span class="kw">nullptr</span>;
+    <span class="ty">int</span> maxCnt = 0, cnt = 0;
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; modes;
+    <span class="ty">void</span> inorder(TreeNode* n) {
+        <span class="kw">if</span> (!n) <span class="kw">return</span>;
+        inorder(n-&gt;left);
+        cnt = (!prev || n-&gt;val == prev-&gt;val) ? cnt + 1 : 1;
+        <span class="kw">if</span> (cnt &gt; maxCnt) { maxCnt = cnt; modes = {n-&gt;val}; }
+        <span class="kw">else</span> <span class="kw">if</span> (cnt == maxCnt) modes.push_back(n-&gt;val);
+        prev = n;
+        inorder(n-&gt;right);
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findMode(TreeNode* root) {
+        inorder(root);
+        <span class="kw">return</span> modes;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +152,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Inorder duyệt tăng dần: đếm tần suất liên tiếp, cập nhật maxCount và…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Inorder liệt kê giá trị không giảm; đếm run cho tần suất chính xác trên BST.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút → mode là giá trị đó</span><span class="analysis-tag edge">Nhiều mode cùng tần suất max</span><span class="analysis-tag pit">Dùng hash bỏ qua thứ tự tăng dần output</span><span class="analysis-tag pit">Quên reset cnt khi giá trị đổi</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>BST mode = inorder + đếm run liên tiếp, không cần hash toàn cây nếu chỉ cần mode trên giá trị sort.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +179,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Find%20Mode%20in%20Binary%20Search%20Tree&lc_id=501&embed=true"></iframe>

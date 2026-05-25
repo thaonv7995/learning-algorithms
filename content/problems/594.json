@@ -4,31 +4,39 @@
   "difficulty": "Easy",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Longest Harmonious Subsequence (LeetCode #594) — Easy.",
+  "spaceComplexity": "O(n)",
+  "description": "Harmonious subsequence: max-min=1. Trả độ dài subsequence hài hòa dài nhất (không cần liên tiếp).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,3,2,2,5,2,3,7]",
+      "output": "5"
+    },
+    {
+      "input": "nums = [1,2,3,4]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [1,1,1,1]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm freq mỗi số; với mỗi x nếu có x+1 thì ans = max(ans, freq[x]+freq[x+1]).",
+  "memoryTip": "Harmonious = count(x)+count(x+1) for each x in freq map.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findLHS(self, nums: List[int]) -> int:\n        from collections import Counter\n        cnt = Counter(nums)\n        ans = 0\n        for x in cnt:\n            if x+1 in cnt:\n                ans = max(ans, cnt[x] + cnt[x+1])\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findLHS(vector<int>& nums) {\n        unordered_map<int,int> cnt;\n        for (int x : nums) cnt[x]++;\n        int ans = 0;\n        for (auto& p : cnt)\n            if (cnt.count(p.first+1))\n                ans = max(ans, p.second + cnt[p.first+1]);\n        return ans;\n    }\n};",
+    "c": "/* Freq pair x x+1 — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Subsequence hài hòa chỉ gồm hai giá trị liền kề; tổng freq là max length.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không cặp liền kề → 0",
+      "Nhiều cặp chọn max"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sliding window trên sorted (subsequence không liên tiếp)",
+      "Check x-1 và x+1 double count"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

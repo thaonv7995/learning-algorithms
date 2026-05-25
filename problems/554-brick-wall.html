@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #554</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Brick Wall</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * m)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>56% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Brick Wall (LeetCode #554) — Medium.</div>
+                        <div class="block-text">Tường gạch: mỗi hàng là list vị trí seam (ngoại trừ 0 và width). Tìm seam dọc sao số gạch cắt qua ít nhất (max rows không cắt).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>wall = [[1,2,2,1],[3,1,2],[1,3,2],[2,4],[3,1,2],[1,3,1,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>wall = [[1],[1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Prefix sum mỗi hàng; hash đếm tổng prefix tại mỗi seam; answer = n - max count.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,34 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Prefix seam count — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> leastBricks(<span class="ty">self</span>, wall: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        <span class="kw">from</span> collections <span class="kw">import</span> Counter
+        cnt = Counter()
+        <span class="kw">for</span> row <span class="kw">in</span> wall:
+            s = 0
+            <span class="kw">for</span> b <span class="kw">in</span> row[:-1]:
+                s += b
+                cnt[s] += 1
+        <span class="kw">if</span> <span class="kw">not</span> cnt:
+            <span class="kw">return</span> <span class="ty">len</span>(wall)
+        <span class="kw">return</span> <span class="ty">len</span>(wall) - cnt.most_common(1)[0][1]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> leastBricks(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; wall) {
+        unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; cnt;
+        <span class="kw">for</span> (auto&amp; row : wall) {
+            <span class="ty">int</span> s = 0;
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i + 1 &lt; (<span class="ty">int</span>)row.size(); i++) {
+                s += row[i];
+                cnt[s]++;
+            }
+        }
+        <span class="ty">int</span> best = 0;
+        <span class="kw">for</span> (auto&amp; p : cnt) best = max(best, p.second);
+        <span class="kw">return</span> wall.size() - best;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +132,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * m)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Prefix sum mỗi hàng; hash đếm tổng prefix tại mỗi seam; answer = n -…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Seam chung nhiều hàng nhất = max rows không phải cắt gạch.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Mỗi hàng 1 gạch → 0 seam chung</span><span class="analysis-tag edge">Tất cả cùng pattern</span><span class="analysis-tag pit">Tính cả seam cuối hàng</span><span class="analysis-tag pit">Trả max thay vì n-max</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Brick wall = count prefix sums at seams, max alignment → n - max.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +160,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Brick%20Wall&lc_id=554&embed=true"></iframe>

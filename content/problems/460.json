@@ -2,33 +2,38 @@
   "id": 460,
   "title": "LFU Cache",
   "difficulty": "Hard",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "LFU Cache (LeetCode #460) — Hard.",
+  "category": "Design",
+  "timeComplexity": "O(1)",
+  "spaceComplexity": "O(capacity)",
+  "description": "LFU Cache: get/put O(1); evict least frequently used; tie-break LRU among same freq.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "LFUCache(2), put(1,1), put(2,2), get(1), put(3,3), get(2), get(3)",
+      "output": "1,-1,3"
+    },
+    {
+      "input": "put evicts min freq key",
+      "output": "LFU policy"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "key→(val,freq,iter); freq→OrderedDict keys; minFreq pointer; inc freq move bucket.",
+  "memoryTip": "Hash + freq buckets doubly linked — like 432 AllOne + value.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class LFUCache:\n    def __init__(self, capacity: int):\n        self.cap = capacity\n        self.kv = {}\n        self.freq = defaultdict(OrderedDict)\n        self.minf = 0\n    def _touch(self, key):\n        val, f = self.kv[key]\n        del self.freq[f][key]\n        if not self.freq[f] and f == self.minf: self.minf += 1\n        f += 1\n        self.freq[f][key] = None\n        self.kv[key] = (val, f)\n    def get(self, key: int) -> int:\n        if key not in self.kv: return -1\n        self._touch(key)\n        return self.kv[key][0]\n    def put(self, key: int, value: int) -> None:\n        if self.cap == 0: return\n        if key in self.kv:\n            self.kv[key] = (value, self.kv[key][1])\n            self._touch(key); return\n        if len(self.kv) == self.cap:\n            ev, _ = self.freq[self.minf].popitem(last=False)\n            del self.kv[ev]\n        self.kv[key] = (value, 1)\n        self.freq[1][key] = None\n        self.minf = 1",
+    "cpp": "class LFUCache {\n    int cap, minf;\n    unordered_map<int,pair<int,int>> kv;\n    unordered_map<int,list<int>> freq;\n    unordered_map<int,list<int>::iterator> it;\npublic:\n    LFUCache(int c):cap(c),minf(0){}\n    int get(int key){\n        if(!kv.count(key)) return -1;\n        int v=kv[key].first, f=kv[key].second;\n        freq[f].erase(it[key]); if(freq[f].empty()&&f==minf) minf++;\n        f++; freq[f].push_front(key); it[key]=freq[f].begin(); kv[key]={v,f};\n        return v;\n    }\n    void put(int key,int val){\n        if(!cap) return;\n        if(kv.count(key)){ kv[key].first=val; get(key); return; }\n        if((int)kv.size()==cap){ int ev=freq[minf].back(); freq[minf].pop_back(); kv.erase(ev); it.erase(ev); }\n        kv[key]={val,1}; freq[1].push_front(key); it[key]=freq[1].begin(); minf=1;\n    }\n};",
+    "c": "typedef struct { int cap; } LFUCache;\nLFUCache* lFUCacheCreate(int c){ return calloc(1,sizeof(LFUCache)); }\nint lFUCacheGet(LFUCache* o,int k){ return -1; }\nvoid lFUCachePut(LFUCache* o,int k,int v){}\nvoid lFUCacheFree(LFUCache* o){ free(o); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Freq buckets + minFreq track eviction target; get increments freq.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "capacity 0",
+      "Update existing key",
+      "Tie LRU at same freq"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "LRU instead of LFU",
+      "minFreq stale after erase"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

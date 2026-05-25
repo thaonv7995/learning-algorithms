@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #558</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Divide and Conquer</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Tree</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Logical OR of Two Binary Grids Represented as Quad-Trees</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(log n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>52.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Logical OR of Two Binary Grids Represented as Quad-Trees (LeetCode #558) — Medium.</div>
+                        <div class="block-text">Hai lưới n×n và quad-tree. Trả quad-tree là OR logic của hai lưới (leaf 0/1 hoặc merge 4 con).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>grid1, grid2 2x2</code></div>
+                <div class="ex-line"><span>Out</span><code>Quad-tree OR từng ô</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>Một grid toàn 0</code></div>
+                <div class="ex-line"><span>Out</span><code>Leaf val=0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đệ quy chia 4 góc phần tư; nếu vùng uniform trả leaf; else internal 4 children OR đệ quy.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,36 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Quad-tree OR recursive — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="kw">def</span> intersect(<span class="ty">self</span>, quadTree1: Node, quadTree2: Node) -&gt; Node:
+        <span class="kw">if</span> quadTree1.isLeaf:
+            <span class="kw">return</span> quadTree1 <span class="kw">if</span> quadTree1.val <span class="kw">else</span> quadTree2
+        <span class="kw">if</span> quadTree2.isLeaf:
+            <span class="kw">return</span> quadTree2 <span class="kw">if</span> quadTree2.val <span class="kw">else</span> quadTree1
+        <span class="kw">return</span> Node(<span class="kw">True</span>, <span class="kw">False</span>,
+            <span class="ty">self</span>.intersect(quadTree1.topLeft, quadTree2.topLeft),
+            <span class="ty">self</span>.intersect(quadTree1.topRight, quadTree2.topRight),
+            <span class="ty">self</span>.intersect(quadTree1.bottomLeft, quadTree2.bottomLeft),
+            <span class="ty">self</span>.intersect(quadTree1.bottomRight, quadTree2.bottomRight))</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none">/* LC558 OR quad-tree — build from grids then merge */
+<span class="ty">class</span> Solution {
+    Node* build(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; g, <span class="ty">int</span> x, <span class="ty">int</span> y, <span class="ty">int</span> len) {
+        <span class="kw">if</span> (len == 1) <span class="kw">return</span> <span class="kw">new</span> Node(g[x][y], true, <span class="kw">nullptr</span>,<span class="kw">nullptr</span>,<span class="kw">nullptr</span>,<span class="kw">nullptr</span>);
+        auto tl=build(g,x,y,len/2), tr=build(g,x,y+len/2,len/2);
+        auto bl=build(g,x+len/2,y,len/2), br=build(g,x+len/2,y+len/2,len/2);
+        <span class="kw">if</span> (tl-&gt;isLeaf&amp;&amp;tr-&gt;isLeaf&amp;&amp;bl-&gt;isLeaf&amp;&amp;br-&gt;isLeaf &amp;&amp; tl-&gt;val==tr-&gt;val&amp;&amp;tl-&gt;val==bl-&gt;val&amp;&amp;tl-&gt;val==br-&gt;val)
+            <span class="kw">return</span> <span class="kw">new</span> Node(tl-&gt;val,true,<span class="kw">nullptr</span>,<span class="kw">nullptr</span>,<span class="kw">nullptr</span>,<span class="kw">nullptr</span>);
+        <span class="kw">return</span> <span class="kw">new</span> Node(false,false,tl,tr,bl,br);
+    }
 <span class="ty">public</span>:
+    Node* intersect(Node* a, Node* b) {
+        <span class="kw">if</span> (a-&gt;isLeaf) <span class="kw">return</span> a-&gt;val ? a : b;
+        <span class="kw">if</span> (b-&gt;isLeaf) <span class="kw">return</span> b-&gt;val ? b : a;
+        <span class="kw">return</span> <span class="kw">new</span> Node(true,false,
+            intersect(a-&gt;topLeft,b-&gt;topLeft), intersect(a-&gt;topRight,b-&gt;topRight),
+            intersect(a-&gt;bottomLeft,b-&gt;bottomLeft), intersect(a-&gt;bottomRight,b-&gt;bottomRight));
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +133,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Divide and Conquer</span>
+                        <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(log n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Đệ quy chia 4 góc phần tư; nếu vùng uniform trả leaf; else internal 4…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>OR: leaf 1 dominate; hai leaf 0 → 0; internal merge 4 nhánh.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Grid 1x1</span><span class="analysis-tag edge">Một tree leaf 1</span><span class="analysis-tag pit">Nhầm AND vs OR</span><span class="analysis-tag pit">Không compress uniform children</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Quad-tree OR = divide 4 quadrants, uniform → leaf else internal node.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +162,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Logical%20OR%20of%20Two%20Binary%20Grids%20Represented%20as%20Quad-Trees&lc_id=558&embed=true"></iframe>

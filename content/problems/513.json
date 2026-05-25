@@ -4,31 +4,35 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Find Bottom Left Tree Value (LeetCode #513) — Medium.",
+  "spaceComplexity": "O(w)",
+  "description": "Cho cây nhị phân. Trả giá trị nút ở góc dưới-trái (deepest level, ưu tiên trái nếu cùng depth).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [2,1,3]",
+      "output": "1"
+    },
+    {
+      "input": "root = [1,2,3,4,null,5,6,null,null,7]",
+      "output": "7"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS level-order: lưu nút đầu mỗi hàng; sau cùng trả val nút đầu hàng cuối (hoặc DFS ưu tiên trái depth max).",
+  "memoryTip": "Bottom-left = BFS lấy phần tử đầu mỗi level, cập nhật đến level cuối.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findBottomLeftValue(self, root: Optional[TreeNode]) -> int:\n        from collections import deque\n        q = deque([root])\n        left = root.val\n        while q:\n            left = q[0].val\n            for _ in range(len(q)):\n                n = q.popleft()\n                if n.left: q.append(n.left)\n                if n.right: q.append(n.right)\n        return left",
+    "cpp": "class Solution {\npublic:\n    int findBottomLeftValue(TreeNode* root) {\n        queue<TreeNode*> q;\n        q.push(root);\n        int left = root->val;\n        while (!q.empty()) {\n            left = q.front()->val;\n            int sz = q.size();\n            while (sz--) {\n                auto* n = q.front(); q.pop();\n                if (n->left) q.push(n->left);\n                if (n->right) q.push(n->right);\n            }\n        }\n        return left;\n    }\n};",
+    "c": "/* BFS level first node — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "BFS duyệt theo level; nút đầu level cuối là bottom-left theo định nghĩa.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Chỉ root",
+      "Chỉ nhánh trái"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "DFS không ưu tiên trái cùng depth",
+      "Lấy nút cuối level thay vì đầu"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -4,31 +4,39 @@
   "difficulty": "Medium",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "K-diff Pairs in an Array (LeetCode #532) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng nums và số k. Đếm số cặp (i,j) với i<j sao nums[i]-nums[j]=k hoặc nums[j]-nums[i]=k. Mỗi cặp giá trị chỉ đếm một lần.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [3,1,4,1,5], k = 2",
+      "output": "2"
+    },
+    {
+      "input": "nums = [1,2,3,4,5], k = 1",
+      "output": "4"
+    },
+    {
+      "input": "nums = [1,3,1,5,4], k = 0",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "HashMap đếm tần suất. Với mỗi x, cộng count[x+k] + (k==0 ? count[x]-1 : count[x-k]?) — chuẩn: duyệt x, cộng seen[x-k], rồi tăng seen[x].",
+  "memoryTip": "K-diff pairs: duyệt nums, ans += freq[x-k], rồi freq[x]++ (k=0 xử lý trùng).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findPairs(self, nums: List[int], k: int) -> int:\n        from collections import Counter\n        cnt = Counter()\n        ans = 0\n        for x in nums:\n            if k == 0:\n                if cnt[x]:\n                    ans += 1\n            elif cnt[x - k]:\n                ans += 1\n            cnt[x] += 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findPairs(vector<int>& nums, int k) {\n        unordered_map<int,int> cnt;\n        int ans = 0;\n        for (int x : nums) {\n            if (k == 0) { if (cnt[x]) ans++; }\n            else if (cnt.count(x - k)) ans++;\n            cnt[x]++;\n        }\n        return ans;\n    }\n};",
+    "c": "/* Hash freq x-k — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi cặp được đếm khi gặp phần tử thứ hai; freq tránh double count.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=0 đếm cặp trùng giá trị",
+      "Không cặp → 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Đếm cả (i,j) và (j,i)",
+      "Dùng set bỏ sót duplicate values"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

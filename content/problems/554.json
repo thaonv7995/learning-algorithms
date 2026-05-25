@@ -3,32 +3,36 @@
   "title": "Brick Wall",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Brick Wall (LeetCode #554) — Medium.",
+  "timeComplexity": "O(n * m)",
+  "spaceComplexity": "O(m)",
+  "description": "Tường gạch: mỗi hàng là list vị trí seam (ngoại trừ 0 và width). Tìm seam dọc sao số gạch cắt qua ít nhất (max rows không cắt).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "wall = [[1,2,2,1],[3,1,2],[1,3,2],[2,4],[3,1,2],[1,3,1,1]]",
+      "output": "2"
+    },
+    {
+      "input": "wall = [[1],[1]]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix sum mỗi hàng; hash đếm tổng prefix tại mỗi seam; answer = n - max count.",
+  "memoryTip": "Brick wall = count prefix sums at seams, max alignment → n - max.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def leastBricks(self, wall: List[List[int]]) -> int:\n        from collections import Counter\n        cnt = Counter()\n        for row in wall:\n            s = 0\n            for b in row[:-1]:\n                s += b\n                cnt[s] += 1\n        if not cnt:\n            return len(wall)\n        return len(wall) - cnt.most_common(1)[0][1]",
+    "cpp": "class Solution {\npublic:\n    int leastBricks(vector<vector<int>>& wall) {\n        unordered_map<int,int> cnt;\n        for (auto& row : wall) {\n            int s = 0;\n            for (int i = 0; i + 1 < (int)row.size(); i++) {\n                s += row[i];\n                cnt[s]++;\n            }\n        }\n        int best = 0;\n        for (auto& p : cnt) best = max(best, p.second);\n        return wall.size() - best;\n    }\n};",
+    "c": "/* Prefix seam count — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Seam chung nhiều hàng nhất = max rows không phải cắt gạch.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Mỗi hàng 1 gạch → 0 seam chung",
+      "Tất cả cùng pattern"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Tính cả seam cuối hàng",
+      "Trả max thay vì n-max"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

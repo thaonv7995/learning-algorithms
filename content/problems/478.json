@@ -3,32 +3,37 @@
   "title": "Generate Random Point in a Circle",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1) avg",
   "spaceComplexity": "O(1)",
-  "description": "Generate Random Point in a Circle (LeetCode #478) — Medium.",
+  "description": "Generate uniform random point trong hình tròn radius radius tâm (x_center, y_center).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "radius=1, x_center=0, y_center=0",
+      "output": "points in unit disk uniform"
+    },
+    {
+      "input": "radius=0",
+      "output": "always center"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Rejection: sample square [cx-r,cx+r]×[cy-r,cy+r] until inside circle; hoặc polar sqrt(U)*r.",
+  "memoryTip": "sqrt(random) for radius — uniform area not uniform r.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def __init__(self, radius: float, x_center: float, y_center: float):\n        self.r, self.xc, self.yc = radius, x_center, y_center\n    def randPoint(self) -> List[float]:\n        while True:\n            x = random.uniform(self.xc-self.r, self.xc+self.r)\n            y = random.uniform(self.yc-self.r, self.yc+self.r)\n            if (x-self.xc)**2 + (y-self.yc)**2 <= self.r**2:\n                return [x, y]",
+    "cpp": "class Solution {\n    double r, xc, yc;\npublic:\n    Solution(double radius, double x_center, double y_center):r(radius),xc(x_center),yc(y_center){}\n    vector<double> randPoint() {\n        while(true){\n            double x=((double)rand()/RAND_MAX*2-1)*r+xc;\n            double y=((double)rand()/RAND_MAX*2-1)*r+yc;\n            if((x-xc)*(x-xc)+(y-yc)*(y-yc)<=r*r) return {x,y};\n        }\n    }\n};",
+    "c": "double* randPoint478(double* ret) { ret[0]=ret[1]=0; return ret; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Rejection in bounding square gives uniform area measure in disk.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "radius=0",
+      "Large radius",
+      "Polar method alternative"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Uniform angle+radius biases center",
+      "Wrong square bounds"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

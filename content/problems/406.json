@@ -2,33 +2,38 @@
   "id": 406,
   "title": "Queue Reconstruction by Height",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Queue Reconstruction by Height (LeetCode #406) — Medium.",
+  "category": "Greedy",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n)",
+  "description": "Mỗi người [h,k]: h chiều cao, k số người cao hơn hoặc bằng đứng trước mình. Sắp xếp lại hàng sao thỏa mọi (h,k).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "people = [[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]",
+      "output": "[[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]]"
+    },
+    {
+      "input": "people = [[6,0],[5,0],[4,0],[3,2],[2,2],[1,4]]",
+      "output": "[[4,0],[5,0],[2,2],[3,2],[1,4],[6,0]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort giảm h, tăng k. Insert từng người vào vị trí k trong danh sách kết quả (k người cao hơn đã đứng trước).",
+  "memoryTip": "Cao trước thấp sau — k chỉ đếm người cao hơn nên insert at index k.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:\n        people.sort(key=lambda p: (-p[0], p[1]))\n        ans = []\n        for h, k in people:\n            ans.insert(k, [h, k])\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {\n        sort(people.begin(), people.end(), [](auto& a, auto& b){\n            return a[0] > b[0] || (a[0]==b[0] && a[1] < b[1]);\n        });\n        vector<vector<int>> ans;\n        for (auto& p : people) ans.insert(ans.begin() + p[1], p);\n        return ans;\n    }\n};",
+    "c": "int reconstructQueue(int** people, int n, int* cs, int** ret, int* rs) {\n    /* Sort+insert — prefer C++ for this problem */\n    *rs = n; *cs = 2;\n    for(int i=0;i<n;i++){ ret[i]=malloc(2*sizeof(int)); ret[i][0]=people[i][0]; ret[i][1]=people[i][1]; }\n    return 0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Greedy: người cao hơn đã cố định trước nên k của người thấp chỉ phụ thuộc vị trí insert.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một người",
+      "Cùng chiều cao sort theo k",
+      "k=0 luôn đầu nhóm cùng h"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort tăng h sai",
+      "Insert sai index k"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

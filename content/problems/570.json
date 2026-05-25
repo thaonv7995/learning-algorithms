@@ -4,31 +4,35 @@
   "difficulty": "Medium",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Managers with at Least 5 Direct Reports (LeetCode #570) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Employee(id, name, salary, managerId). Liệt kê tên manager có ≥5 direct reports.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "Manager 101 có 5 nhân viên trực tiếp",
+      "output": "Tên manager 101"
+    },
+    {
+      "input": "Không manager nào ≥5",
+      "output": "Rỗng"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "GROUP BY managerId HAVING COUNT(*)>=5 JOIN Employee lấy name manager.",
+  "memoryTip": "Managers 5+ reports = GROUP BY managerId HAVING COUNT >= 5.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT name\nFROM Employee\nWHERE id IN (\n  SELECT managerId FROM Employee\n  WHERE managerId IS NOT NULL\n  GROUP BY managerId HAVING COUNT(*) >= 5\n);",
+    "cpp": "// SQL\nSELECT name\nFROM Employee\nWHERE id IN (\n  SELECT managerId FROM Employee\n  WHERE managerId IS NOT NULL\n  GROUP BY managerId HAVING COUNT(*) >= 5\n);",
+    "c": "/* SQL GROUP BY managerId — xem SQL */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "managerId group count đúng số direct reports; join lấy tên.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "managerId NULL bỏ qua",
+      "Nhiều manager đủ điều kiện"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Đếm cả indirect reports",
+      "Quên IS NOT NULL"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

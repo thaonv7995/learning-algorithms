@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #538</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Convert BST to Greater Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>71.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Convert BST to Greater Tree (LeetCode #538) — Medium.</div>
+                        <div class="block-text">Biến BST thành Greater Tree: mỗi node.val = tổng tất cả giá trị lớn hơn hoặc bằng node cũ (bao gồm chính nó).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]</code></div>
+                <div class="ex-line"><span>Out</span><code>[30,36,21,36,35,26,16,null,null,null,33,null,null,null,8]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [0,null,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1, null, 1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Reverse inorder (phải → gốc → trái): cộng dồn sum, gán node.val = sum.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,32 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Reverse inorder sum — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> convertBST(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]:
+        <span class="ty">self</span>.s = 0
+        <span class="kw">def</span> dfs(n):
+            <span class="kw">if</span> <span class="kw">not</span> n: <span class="kw">return</span>
+            dfs(n.right)
+            <span class="ty">self</span>.s += n.val
+            n.val = <span class="ty">self</span>.s
+            dfs(n.left)
+        dfs(root)
+        <span class="kw">return</span> root</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> sum = 0;
+    <span class="ty">void</span> revInorder(TreeNode* n) {
+        <span class="kw">if</span> (!n) <span class="kw">return</span>;
+        revInorder(n-&gt;right);
+        sum += n-&gt;val;
+        n-&gt;val = sum;
+        revInorder(n-&gt;left);
+    }
 <span class="ty">public</span>:
+    TreeNode* convertBST(TreeNode* root) {
+        revInorder(root);
+        <span class="kw">return</span> root;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +131,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Reverse inorder : cộng dồn sum, gán node.val = sum.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Duyệt giảm dần inorder đảm bảo cộng đủ mọi giá trị lớn hơn trước khi gán.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút</span><span class="analysis-tag edge">Chỉ nhánh phải</span><span class="analysis-tag pit">Inorder thường (trái trước) sai thứ tự</span><span class="analysis-tag pit">Không cộng dồn global</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Convert BST greater = reverse inorder accumulate sum right-first.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +158,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Convert%20BST%20to%20Greater%20Tree&lc_id=538&embed=true"></iframe>

@@ -3,32 +3,40 @@
   "title": "Valid Square",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Valid Square (LeetCode #593) — Medium.",
+  "description": "Cho 4 điểm 2D. Kiểm tra có tạo thành hình vuông hợp lệ (4 cạnh bằng, 2 đường chéo bằng, không trùng điểm).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "points = [[0,0],[1,1],[1,0],[0,1]]",
+      "output": "true"
+    },
+    {
+      "input": "points = [[0,0],[1,1],[1,0],[2,1]]",
+      "output": "false"
+    },
+    {
+      "input": "points = [[1,0],[0,1],[1,1],[0,0]]",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tính 6 khoảng cách bình; multiset phải có 4 cạnh bằng + 2 diagonal bằng (diagonal = 2*cạnh).",
+  "memoryTip": "Valid square = 4 equal side^2 and 2 equal diagonal^2 in 6 pairwise dists.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def validSquare(self, p1: List[int], p2: List[int], p3: List[int], p4: List[int]) -> bool:\n        pts = [p1,p2,p3,p4]\n        dists = []\n        for i in range(4):\n            for j in range(i+1,4):\n                dx=pts[i][0]-pts[j][0]; dy=pts[i][1]-pts[j][1]\n                dists.append(dx*dx+dy*dy)\n        dists.sort()\n        return dists[0]>0 and dists[0]==dists[1]==dists[2]==dists[3] and dists[4]==dists[5]==2*dists[0]",
+    "cpp": "class Solution {\n    int dist(vector<int>& a, vector<int>& b) {\n        return (a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1]);\n    }\npublic:\n    bool validSquare(vector<int>& p1, vector<int>& p2, vector<int>& p3, vector<int>& p4) {\n        vector<vector<int>*> pts = {&p1,&p2,&p3,&p4};\n        vector<int> d;\n        for (int i=0;i<4;i++) for (int j=i+1;j<4;j++) d.push_back(dist(*pts[i],*pts[j]));\n        sort(d.begin(), d.end());\n        return d[0]>0 && d[0]==d[1]&&d[1]==d[2]&&d[2]==d[3] && d[4]==d[5]&&d[5]==2*d[0];\n    }\n};",
+    "c": "/* Six distances pattern — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Hình vuông có đúng 2 loại dist: cạnh (4 lần) và diagonal (2 lần, gấp đôi).",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Điểm trùng → dist 0 fail",
+      "Hình thoi không vuông fail"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "So sánh cạnh không sqrt cần bình",
+      "Chỉ check 4 cạnh bỏ diagonal"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

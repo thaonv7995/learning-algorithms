@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #524</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">String</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Longest Word in Dictionary through Deleting</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * L^2)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>52.7% AC</span>
                     </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Longest Word in Dictionary through Deleting (LeetCode #524) — Medium.</div>
+                        <div class="block-text">Cho s và mảng dictionary. Trả từ dài nhất trong dictionary là subsequence của s (xóa ký tự không cần); nếu nhiều từ cùng dài nhất chọn lex nhỏ nhất.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;abpcplea&quot;, dictionary = [&quot;ale&quot;,&quot;apple&quot;,&quot;monkey&quot;,&quot;plea&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;apple&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;abpcplea&quot;, dictionary = [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;a&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sort dictionary: length desc, lex asc. Trả từ đầu tiên là subsequence của s.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,34 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Sort dict + subseq — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findLongestWord(<span class="ty">self</span>, s: <span class="ty">str</span>, dictionary: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">str</span>:
+        <span class="kw">def</span> subseq(w):
+            i = 0
+            <span class="kw">for</span> c <span class="kw">in</span> s:
+                <span class="kw">if</span> i &lt; <span class="ty">len</span>(w) <span class="kw">and</span> w[i] == c:
+                    i += 1
+            <span class="kw">return</span> i == <span class="ty">len</span>(w)
+        <span class="kw">for</span> w <span class="kw">in</span> sorted(dictionary, key=lambda x: (-<span class="ty">len</span>(x), x)):
+            <span class="kw">if</span> subseq(w):
+                <span class="kw">return</span> w
+        <span class="kw">return</span> &quot;&quot;</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> subseq(<span class="ty">const</span> <span class="ty">string</span>&amp; w, <span class="ty">const</span> <span class="ty">string</span>&amp; s) {
+        <span class="ty">int</span> i = 0;
+        <span class="kw">for</span> (<span class="ty">char</span> c : s) <span class="kw">if</span> (i &lt; (<span class="ty">int</span>)w.size() &amp;&amp; w[i] == c) i++;
+        <span class="kw">return</span> i == (<span class="ty">int</span>)w.size();
+    }
 <span class="ty">public</span>:
+    <span class="ty">string</span> findLongestWord(<span class="ty">string</span> s, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; d) {
+        sort(d.begin(), d.end(), [](auto&amp; a, auto&amp; b){
+            <span class="kw">if</span> (a.size() != b.size()) <span class="kw">return</span> a.size() &gt; b.size();
+            <span class="kw">return</span> a &lt; b;
+        });
+        <span class="kw">for</span> (auto&amp; w : d) <span class="kw">if</span> (subseq(w, s)) <span class="kw">return</span> w;
+        <span class="kw">return</span> &quot;&quot;;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +131,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="pattern-chip">String</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * L^2)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Sort dictionary: length desc, lex asc.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Trả từ đầu tiên là subsequence của s.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Thứ tự sort đảm bảo từ dài nhất lex nhỏ nhất được thử trước.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không từ nào match → &quot;&quot;</span><span class="analysis-tag edge">Nhiều cùng length</span><span class="analysis-tag pit">Sort chỉ theo length bỏ tie-break lex</span><span class="analysis-tag pit">Subsequence direction sai</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Longest word deleting: sort + two-pointer subseq check.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +160,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Longest%20Word%20in%20Dictionary%20through%20Deleting&lc_id=524&embed=true"></iframe>

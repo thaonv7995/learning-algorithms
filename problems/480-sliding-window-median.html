@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #480</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Heap</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Sliding Window Median</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>39% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Sliding Window Median (LeetCode #480) — Hard.</div>
+                        <div class="block-text">Sliding window median: với mỗi window size k trong nums, trả median (trung bình hai giữa nếu k chẵn).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,3,-1,-3,5,3,6,7], k = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>[1.0,-1.0,-1.0,3.0,5.0,6.0]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4,2,3,1,4,2], k = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>[2.0,3.0,3.0,3.0,2.0,3.0,2.0]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Two multiset heaps balance halves; lazy delete khi slide; median từ top left/right.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">double</span>* medianSlidingWindow(<span class="ty">int</span>* nums,<span class="ty">int</span> n,<span class="ty">int</span> k,<span class="ty">int</span>* rs){*rs=0;<span class="kw">return</span> NULL;}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> medianSlidingWindow(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[float]:
+        <span class="kw">from</span> sortedcontainers <span class="kw">import</span> SortedList
+        window = SortedList(nums[:k])
+        ans = []
+        <span class="kw">def</span> med():
+            <span class="kw">return</span> (window[(k-1)//2] + window[k//2]) / 2
+        ans.append(med())
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(k, <span class="ty">len</span>(nums)):
+            window.remove(nums[i-k])
+            window.add(nums[i])
+            ans.append(med())
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">double</span>&gt; medianSlidingWindow(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> k) {
+        multiset&lt;<span class="ty">int</span>&gt; left, right; <span class="ty">vector</span>&lt;<span class="ty">double</span>&gt; ans;
+        auto balance=[&amp;](){
+            <span class="kw">while</span>((<span class="ty">int</span>)left.size()&gt;(k+1)/2){ right.insert(*left.rbegin()); left.erase(prev(left.end())); }
+            <span class="kw">while</span>((<span class="ty">int</span>)left.size()&lt;(k+1)/2){ left.insert(*right.begin()); right.erase(right.begin()); }
+        };
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)nums.size();i++){
+            <span class="kw">if</span>(left.empty()||nums[i]&lt;=*left.rbegin()) left.insert(nums[i]); <span class="kw">else</span> right.insert(nums[i]);
+            balance();
+            <span class="kw">if</span>(i&gt;=k){
+                <span class="ty">int</span> out=nums[i-k];
+                auto er=[&amp;](multiset&lt;<span class="ty">int</span>&gt;&amp; s,<span class="ty">int</span> v){ auto it=s.find(v); <span class="kw">if</span>(it!=s.end()) s.erase(it); };
+                er(left,out); er(right,out); balance();
+            }
+            <span class="kw">if</span>(i&gt;=k-1){
+                <span class="kw">if</span>(k&amp;1) ans.push_back(*left.rbegin());
+                <span class="kw">else</span> ans.push_back(((<span class="ty">double</span>)*left.rbegin()+*right.begin())/2);
+            }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +140,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Heap</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Two multiset heaps balance halves; lazy delete khi slide; median từ top…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Balanced heaps track sorted window; median from middle element(s).</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1</span><span class="analysis-tag edge">Duplicates</span><span class="analysis-tag edge">Negative nums</span><span class="analysis-tag pit">Resort each window TLE</span><span class="analysis-tag pit">Stale heap tops without lazy delete</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Dual heap median stream — delay delete counts when window slides.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Sliding%20Window%20Median&lc_id=480&embed=true"></iframe>

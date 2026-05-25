@@ -3,32 +3,36 @@
   "title": "Delete Operation for Two Strings",
   "difficulty": "Medium",
   "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Delete Operation for Two Strings (LeetCode #583) — Medium.",
+  "timeComplexity": "O(m * n)",
+  "spaceComplexity": "O(m * n)",
+  "description": "Xóa tối thiểu ký tự ở word1 và word2 để hai chuỗi còn lại giống nhau. Trả số ký tự xóa tối thiểu.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "word1 = \"sea\", word2 = \"eat\"",
+      "output": "2"
+    },
+    {
+      "input": "word1 = \"leetcode\", word2 = \"etco\"",
+      "output": "4"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "LCS length L; answer = len1 + len2 - 2*L.",
+  "memoryTip": "Delete ops two strings = m+n - 2*LCS (giữ common subsequence).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minDistance(self, word1: str, word2: str) -> int:\n        m, n = len(word1), len(word2)\n        dp = [[0]*(n+1) for _ in range(m+1)]\n        for i in range(1,m+1):\n            for j in range(1,n+1):\n                if word1[i-1]==word2[j-1]: dp[i][j]=dp[i-1][j-1]+1\n                else: dp[i][j]=max(dp[i-1][j], dp[i][j-1])\n        return m+n-2*dp[m][n]",
+    "cpp": "class Solution {\npublic:\n    int minDistance(string word1, string word2) {\n        int m=word1.size(), n=word2.size();\n        vector<vector<int>> dp(m+1, vector<int>(n+1));\n        for (int i=1;i<=m;i++)\n            for (int j=1;j<=n;j++)\n                dp[i][j]=word1[i-1]==word2[j-1]?dp[i-1][j-1]+1:max(dp[i-1][j],dp[i][j-1]);\n        return m+n-2*dp[m][n];\n    }\n};",
+    "c": "/* LCS delete count — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Giữ LCS tối đa; xóa phần còn lại hai bên.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một chuỗi rỗng → len kia",
+      "Giống hệt → 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Edit distance nhầm (insert+delete)",
+      "Không nhân 2 cho LCS"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

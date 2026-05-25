@@ -2,33 +2,42 @@
   "id": 421,
   "title": "Maximum XOR of Two Numbers in an Array",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Maximum XOR of Two Numbers in an Array (LeetCode #421) — Medium.",
+  "category": "Trie",
+  "timeComplexity": "O(n * 32)",
+  "spaceComplexity": "O(n * 32)",
+  "description": "Cho mảng nums. Trả max(nums[i] XOR nums[j]) với i ≠ j.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [3,10,5,25,2,8]",
+      "output": "28"
+    },
+    {
+      "input": "nums = [14,70,53]",
+      "output": "70"
+    },
+    {
+      "input": "nums = [0,1]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Trie 32 bit: insert từng số; query mỗi số chọn bit ngược ở mỗi level nếu có nhánh.",
+  "memoryTip": "Max XOR pair — trie greedy opposite bit từ MSB.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMaximumXOR(self, nums: List[int]) -> int:\n        root = {}\n        ans = 0\n        for x in nums:\n            node = root\n            for i in range(31, -1, -1):\n                b = (x >> i) & 1\n                node = node.setdefault(b, {})\n        for x in nums:\n            node, val = root, 0\n            for i in range(31, -1, -1):\n                b = (x >> i) & 1\n                want = 1 - b\n                if want in node:\n                    val |= 1 << i\n                    node = node[want]\n                else:\n                    node = node[b]\n            ans = max(ans, val)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findMaximumXOR(vector<int>& nums) {\n        struct Node { Node* ch[2]{}; };\n        Node root; int ans=0;\n        for(int x:nums){\n            Node* cur=&root;\n            for(int i=31;i>=0;i--){ int b=(x>>i)&1; if(!cur->ch[b]) cur->ch[b]=new Node(); cur=cur->ch[b]; }\n        }\n        for(int x:nums){\n            Node* cur=&root; int val=0;\n            for(int i=31;i>=0;i--){\n                int b=(x>>i)&1, w=1-b;\n                if(cur->ch[w]){ val|=1<<i; cur=cur->ch[w]; } else cur=cur->ch[b];\n            }\n            ans=max(ans,val);\n        }\n        return ans;\n    }\n};",
+    "c": "int findMaximumXOR(int* nums, int n) {\n    int ans=0;\n    for(int i=0;i<n;i++) for(int j=i+1;j<n;j++){\n        int v=nums[i]^nums[j]; if(v>ans) ans=v;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Trie query tối đa hóa XOR từng bit MSB→LSB — đạt global max pair.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Hai phần tử",
+      "Có 0",
+      "Trùng giá trị"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n²) TLE",
+      "Quên 32-bit unsigned"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

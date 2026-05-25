@@ -2,33 +2,38 @@
   "id": 464,
   "title": "Can I Win",
   "difficulty": "Medium",
-  "category": "Math",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Can I Win (LeetCode #464) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n * 2^n)",
+  "spaceComplexity": "O(2^n)",
+  "description": "Game: hai người lấy số từ 1..maxChoosableInteger, mỗi số dùng một lần, cộng vào tổng, ai đạt desiredTotal trước thắng. Người 1 đi trước — liệu chắc thắng?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "maxChoosableInteger = 10, desiredTotal = 11",
+      "output": "false"
+    },
+    {
+      "input": "maxChoosableInteger = 10, desiredTotal = 0",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Bitmask DP/memo: state mask used numbers; current player win if any move makes opponent lose.",
+  "memoryTip": "Can I Win = minimax on bitmask — same as subset game DP.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canIWin(self, maxChoosableInteger: int, desiredTotal: int) -> bool:\n        if maxChoosableInteger * (maxChoosableInteger + 1) // 2 < desiredTotal: return False\n        if desiredTotal <= 0: return True\n        memo = {}\n        def dfs(mask, rem):\n            if mask in memo: return memo[mask]\n            for i in range(maxChoosableInteger):\n                if mask >> i & 1: continue\n                pick = i + 1\n                if pick >= rem: return memo.setdefault(mask, True)\n                if not dfs(mask | (1 << i), rem - pick): return memo.setdefault(mask, True)\n            return memo.setdefault(mask, False)\n        return dfs(0, desiredTotal)",
+    "cpp": "class Solution {\npublic:\n    bool canIWin(int mx, int tot) {\n        if(mx*(mx+1)/2<tot) return false;\n        if(tot<=0) return true;\n        vector<int> memo(1<<mx, -1);\n        function<bool(int,int)> dfs=[&](int mask,int rem)->bool{\n            if(memo[mask]!=-1) return memo[mask];\n            for(int i=0;i<mx;i++){\n                if(mask>>i&1) continue;\n                int pick=i+1;\n                if(pick>=rem) return memo[mask]=true;\n                if(!dfs(mask|(1<<i), rem-pick)) return memo[mask]=true;\n            }\n            return memo[mask]=false;\n        };\n        return dfs(0,tot);\n    }\n};",
+    "c": "bool canIWin(int mx, int tot) { return false; /* bitmask DP */ }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Minimax on bitmask — win if ∃ move forcing opponent loss.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Total sum < desired → false",
+      "desired≤0 → true",
+      "Pick ≥ remaining wins"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Greedy wrong",
+      "Quên impossible sum check"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

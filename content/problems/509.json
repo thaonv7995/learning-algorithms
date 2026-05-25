@@ -5,30 +5,38 @@
   "category": "Math",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Fibonacci Number (LeetCode #509) — Easy.",
+  "description": "Tính số Fibonacci thứ n (F0=0, F1=1, Fn=F(n-1)+F(n-2)). 0 ≤ n ≤ 30.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "n = 2",
+      "output": "1"
+    },
+    {
+      "input": "n = 3",
+      "output": "2"
+    },
+    {
+      "input": "n = 4",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Lặp từ 2 đến n: cập nhật (a,b) = (b, a+b) — O(1) space.",
+  "memoryTip": "Fib iterative: rolling two biến, không cần mảng dp khi n ≤ 30.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def fib(self, n: int) -> int:\n        if n <= 1:\n            return n\n        a, b = 0, 1\n        for _ in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+    "cpp": "class Solution {\npublic:\n    int fib(int n) {\n        if (n <= 1) return n;\n        int a = 0, b = 1;\n        for (int i = 2; i <= n; i++) {\n            int c = a + b;\n            a = b;\n            b = c;\n        }\n        return b;\n    }\n};",
+    "c": "/* Rolling fib — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Invariant a=F(i-1), b=F(i) sau mỗi vòng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n=0 → 0",
+      "n=1 → 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Recursion không memo → TLE",
+      "Off-by-one vòng lặp"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

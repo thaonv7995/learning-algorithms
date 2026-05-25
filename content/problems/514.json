@@ -3,32 +3,36 @@
   "title": "Freedom Trail",
   "difficulty": "Hard",
   "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Freedom Trail (LeetCode #514) — Hard.",
+  "timeComplexity": "O(n * m^2)",
+  "spaceComplexity": "O(n * m)",
+  "description": "Ring chứa key (có thể lặp ký tự). Bắt đầu tại 'A', di chuyển tối thiểu trên ring để gõ key. Trả tổng bước (di chuyển + bấm phím).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "ring = \"godding\", key = \"gd\"",
+      "output": "4"
+    },
+    {
+      "input": "ring = \"godding\", key = \"godding\"",
+      "output": "13"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[i][j]: min cost gõ key[0..i) khi tay ở vị trí j trên ring. Precompute khoảng cách vòng giữa mọi cặp vị trí cùng ký tự.",
+  "memoryTip": "Freedom Trail = DP trên (index key, vị trí ring) + dist vòng tròn min(clock, counter).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findRotateSteps(self, ring: str, key: str) -> int:\n        from collections import defaultdict\n        pos = defaultdict(list)\n        for i, c in enumerate(ring):\n            pos[c].append(i)\n        n, m = len(ring), len(key)\n        INF = 10**9\n        dp = [[INF] * n for _ in range(len(key) + 1)]\n        dp[0][0] = 0\n        for i in range(len(key)):\n            for j in range(n):\n                if dp[i][j] == INF:\n                    continue\n                for k in pos[key[i]]:\n                    step = min(abs(k - j), n - abs(k - j)) + 1\n                    dp[i + 1][k] = min(dp[i + 1][k], dp[i][j] + step)\n        return min(dp[len(key)])\n",
+    "cpp": "class Solution {\npublic:\n    int findRotateSteps(string ring, string key) {\n        int n = ring.size();\n        vector<vector<int>> pos(26);\n        for (int i = 0; i < n; i++) pos[ring[i]-'a'].push_back(i);\n        int m = key.size();\n        const int INF = 1e9;\n        vector<vector<int>> dp(m+1, vector<int>(n, INF));\n        dp[0][0] = 0;\n        for (int i = 0; i < m; i++) {\n            for (int j = 0; j < n; j++) if (dp[i][j] < INF) {\n                for (int k : pos[key[i]-'a']) {\n                    int step = min(abs(k-j), n-abs(k-j)) + 1;\n                    dp[i+1][k] = min(dp[i+1][k], dp[i][j] + step);\n                }\n            }\n        }\n        return *min_element(dp[m].begin(), dp[m].end());\n    }\n};",
+    "c": "/* DP ring + key — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP thử mọi vị trí ring khớp ký tự key, cộng bước xoay tối thiểu + 1 bấm.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "key một ký tự",
+      "Nhiều vị trí cùng chữ trên ring"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên +1 bấm phím",
+      "Dist vòng sai (không min hai chiều)"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

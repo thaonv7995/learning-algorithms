@@ -5,30 +5,35 @@
   "category": "Two Pointers",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "String Compression (LeetCode #443) — Medium.",
+  "description": "Nén chars in-place: nhóm ký tự liên tiếp thành ký tự + số lần (nếu >1). Trả độ dài mới.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "chars = [\"a\",\"a\",\"b\",\"b\",\"c\",\"c\",\"c\"]",
+      "output": "6, chars = [\"a\",\"2\",\"b\",\"2\",\"c\",\"3\"]"
+    },
+    {
+      "input": "chars = [\"a\"]",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers write: read group, write char rồi count string nếu len>1.",
+  "memoryTip": "Read pointer scan groups — write pointer builds compressed.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def compress(self, chars: List[str]) -> int:\n        w = i = 0\n        while i < len(chars):\n            ch = chars[i]; j = i\n            while j < len(chars) and chars[j] == ch: j += 1\n            chars[w] = ch; w += 1\n            cnt = j - i\n            if cnt > 1:\n                for c in str(cnt): chars[w] = c; w += 1\n            i = j\n        return w",
+    "cpp": "class Solution {\npublic:\n    int compress(vector<char>& c) {\n        int w=0, i=0, n=c.size();\n        while(i<n){\n            char ch=c[i]; int j=i;\n            while(j<n&&c[j]==ch) j++;\n            c[w++]=ch; int cnt=j-i;\n            if(cnt>1){ string s=to_string(cnt); for(char x:s) c[w++]=x; }\n            i=j;\n        }\n        return w;\n    }\n};",
+    "c": "int compress(char* chars, int n) {\n    int w=0,i=0;\n    while(i<n){\n        char ch=chars[i]; int j=i;\n        while(j<n&&chars[j]==ch) j++;\n        chars[w++]=ch; int cnt=j-i;\n        if(cnt>1){\n            char buf[12]; sprintf(buf,\"%d\",cnt);\n            for(int k=0;buf[k];k++) chars[w++]=buf[k];\n        }\n        i=j;\n    }\n    return w;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "In-place write không overlap vì compressed ≤ original.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một ký tự",
+      "Count >9 nhiều chữ số",
+      "Không cần số nếu count=1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Ghi count khi =1",
+      "Buffer overflow write"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

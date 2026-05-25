@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #529</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Minesweeper</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m * n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m * n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Minesweeper (LeetCode #529) — Medium.</div>
+                        <div class="block-text">Bảng Minesweeper: 'M' mìn, 'E' ô trống chưa mở. Click (click,r,c): mở ô; nếu ô trống thì mở lan các ô kề không mìn và ghi số mìn kề.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>board=[[&quot;E&quot;,&quot;E&quot;,&quot;E&quot;],[&quot;E&quot;,&quot;E&quot;,&quot;M&quot;],[&quot;E&quot;,&quot;E&quot;,&quot;E&quot;]], click=[0,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>Lan mở với số mìn kề</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>click vào M</code></div>
+                <div class="ex-line"><span>Out</span><code>Giữ M</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS/BFS từ click: nếu M return; đếm mìn kề 8 hướng; nếu 0 thì tiếp tục DFS ô kề 'E'.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,55 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DFS flood fill mines — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> updateBoard(<span class="ty">self</span>, board: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]], click: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]:
+        m, n = <span class="ty">len</span>(board), <span class="ty">len</span>(board[0])
+        r, c = click
+        <span class="kw">if</span> board[r][c] == &quot;M&quot;:
+            board[r][c] = &quot;X&quot;
+            <span class="kw">return</span> board
+        dirs = [(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]
+        <span class="kw">def</span> count(r,c):
+            cnt = 0
+            <span class="kw">for</span> dr,dc <span class="kw">in</span> dirs:
+                nr, nc = r+dr, c+dc
+                <span class="kw">if</span> 0&lt;=nr&lt;m <span class="kw">and</span> 0&lt;=nc&lt;n <span class="kw">and</span> board[nr][nc] <span class="kw">in</span> &quot;MX&quot;:
+                    cnt += 1
+            <span class="kw">return</span> cnt
+        <span class="kw">def</span> dfs(r,c):
+            <span class="kw">if</span> board[r][c] != &quot;E&quot;: <span class="kw">return</span>
+            mines = count(r,c)
+            board[r][c] = <span class="ty">str</span>(mines) <span class="kw">if</span> mines <span class="kw">else</span> &quot;B&quot;
+            <span class="kw">if</span> mines == 0:
+                <span class="kw">for</span> dr,dc <span class="kw">in</span> dirs:
+                    dfs(r+dr, c+dc)
+        dfs(r,c)
+        <span class="kw">return</span> board</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> m, n;
+    <span class="ty">int</span> dirs[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
+    <span class="ty">int</span> count(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; b, <span class="ty">int</span> r, <span class="ty">int</span> c) {
+        <span class="ty">int</span> cnt = 0;
+        <span class="kw">for</span> (auto&amp; d : dirs) {
+            <span class="ty">int</span> nr = r+d[0], nc = c+d[1];
+            <span class="kw">if</span> (nr&gt;=0&amp;&amp;nr&lt;m&amp;&amp;nc&gt;=0&amp;&amp;nc&lt;n &amp;&amp; (b[nr][nc]=='M'||b[nr][nc]=='X')) cnt++;
+        }
+        <span class="kw">return</span> cnt;
+    }
+    <span class="ty">void</span> dfs(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; b, <span class="ty">int</span> r, <span class="ty">int</span> c) {
+        <span class="kw">if</span> (b[r][c] != 'E') <span class="kw">return</span>;
+        <span class="ty">int</span> mines = count(b,r,c);
+        b[r][c] = mines ? ('0'+mines) : 'B';
+        <span class="kw">if</span> (!mines) <span class="kw">for</span> (auto&amp; d : dirs) dfs(b, r+d[0], c+d[1]);
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt; updateBoard(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt;&amp; board, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; click) {
+        m = board.size(); n = board[0].size();
+        <span class="kw">if</span> (board[click[0]][click[1]] == 'M') { board[click[0]][click[1]] = 'X'; <span class="kw">return</span> board; }
+        dfs(board, click[0], click[1]);
+        <span class="kw">return</span> board;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +153,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m * n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m * n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DFS/BFS từ click: nếu M return; đếm mìn kề 8 hướng; nếu 0 thì tiếp tục…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DFS chỉ lan khi ô trống 0 mìn kề; số mìn đếm đủ 8 hướng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Click mìn → X</span><span class="analysis-tag edge">Board 1x1</span><span class="analysis-tag pit">Lan khi mines&gt;0</span><span class="analysis-tag pit">Không đánh dấu visited → vòng lặp</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Minesweeper DFS: count neighbors, nếu 0 thì flood fill 8 directions.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +181,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Minesweeper&lc_id=529&embed=true"></iframe>

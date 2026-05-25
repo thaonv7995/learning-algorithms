@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #429</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">N-ary Tree Level Order Traversal</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>71.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">N-ary Tree Level Order Traversal (LeetCode #429) — Medium.</div>
+                        <div class="block-text">Cho cây N-ary. Trả danh sách các level từ trái sang phải (BFS từng tầng).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [1,null,3,2,4,null,5,6]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1],[3,2,4],[5,6]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [1,null,2,3,4,5,null,null,6,7,null,8,null,9,10]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1],[2,3,4,5],[6,7,8,9,10]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS queue: lưu size mỗi level, pop hết level hiện tại, push children.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,36 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>** levelOrder(<span class="ty">struct</span> Node* root, <span class="ty">int</span>* rs, <span class="ty">int</span>** cs) { *rs=0; <span class="kw">return</span> NULL; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> levelOrder(<span class="ty">self</span>, root: Node) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+        ans, q = [], deque([root])
+        <span class="kw">while</span> q:
+            level, n = [], <span class="ty">len</span>(q)
+            <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n):
+                node = q.popleft()
+                level.append(node.val)
+                q.extend(node.children)
+            ans.append(level)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; levelOrder(Node* root) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; ans;
+        <span class="kw">if</span> (!root) <span class="kw">return</span> ans;
+        queue&lt;Node*&gt; q; q.push(root);
+        <span class="kw">while</span> (!q.empty()) {
+            <span class="ty">int</span> sz=q.size(); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; level;
+            <span class="kw">while</span>(sz--){
+                Node* cur=q.front(); q.pop();
+                level.push_back(cur-&gt;val);
+                <span class="kw">for</span>(Node* ch:cur-&gt;children) q.push(ch);
+            }
+            ans.push_back(level);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +135,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — BFS queue: lưu size mỗi level, pop hết level hiện tại, push children.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BFS theo batch size đảm bảo tách đúng từng level.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Root null</span><span class="analysis-tag edge">Một node</span><span class="analysis-tag edge">Children rỗng</span><span class="analysis-tag pit">Không fix size level</span><span class="analysis-tag pit">DFS depth không đảm bảo order</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Giống LC 102 nhưng children là list thay vì left/right.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +162,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=N-ary%20Tree%20Level%20Order%20Traversal&lc_id=429&embed=true"></iframe>

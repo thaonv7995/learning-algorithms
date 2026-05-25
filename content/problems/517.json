@@ -5,30 +5,34 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Super Washing Machines (LeetCode #517) — Hard.",
+  "description": "n máy giặt, mỗi máy có lượng quần áo. Có thể chuyển quần giữa máy kề. Tìm số lần chuyển tối thiểu để mọi máy bằng nhau; không thể thì -1.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "machines = [1,0,5]",
+      "output": "3"
+    },
+    {
+      "input": "machines = [0,3,0]",
+      "output": "-1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tổng phải chia hết n. Target t = sum/n. Prefix balance: mỗi bước cần |prefix| tối đa để cân; answer = max over positions.",
+  "memoryTip": "Washing machines: sum%n≠0 → -1; else max |prefix excess| và |simultaneous load|.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMinMoves(self, machines: List[int]) -> int:\n        total = sum(machines)\n        n = len(machines)\n        if total % n:\n            return -1\n        target = total // n\n        ans = bal = 0\n        for m in machines:\n            diff = m - target\n            bal += diff\n            ans = max(ans, abs(bal), abs(diff))\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findMinMoves(vector<int>& machines) {\n        long long sum = 0;\n        for (int x : machines) sum += x;\n        int n = machines.size();\n        if (sum % n) return -1;\n        int target = sum / n;\n        long long bal = 0;\n        int ans = 0;\n        for (int m : machines) {\n            int diff = m - target;\n            bal += diff;\n            ans = max({ans, (int)abs(bal), abs(diff)});\n        }\n        return ans;\n    }\n};",
+    "c": "/* Prefix balance max — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Cân bằng prefix và diff tại từng máy giới hạn số lần chuyển đồng thời cần thiết.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "sum không chia n → -1",
+      "Một máy"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ xét prefix không xét |diff|",
+      "Quên kiểm tra sum % n"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

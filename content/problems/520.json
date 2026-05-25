@@ -5,30 +5,38 @@
   "category": "String",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Detect Capital (LeetCode #520) — Easy.",
+  "description": "Kiểm tra chuỗi word có đúng một trong ba dạng: toàn chữ thường, toàn HOA, hoặc chỉ chữ cái đầu HOA còn lại thường.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "word = \"USA\"",
+      "output": "true"
+    },
+    {
+      "input": "word = \"FlaG\"",
+      "output": "false"
+    },
+    {
+      "input": "word = \"google\"",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm số chữ HOA. OK nếu caps==0, caps==len, hoặc caps==1 và word[0] upper.",
+  "memoryTip": "Detect capital: count upper ∈ {0, 1, n} với n==1 phải là index 0.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def detectCapitalUse(self, word: str) -> bool:\n        caps = sum(1 for c in word if c.isupper())\n        return caps == 0 or caps == len(word) or (caps == 1 and word[0].isupper())",
+    "cpp": "class Solution {\npublic:\n    bool detectCapitalUse(string word) {\n        int caps = 0;\n        for (char c : word) if (isupper(c)) caps++;\n        return caps == 0 || caps == (int)word.size() || (caps == 1 && isupper(word[0]));\n    }\n};",
+    "c": "/* Count uppercase — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Ba pattern capital hóa được cover bởi điều kiện đếm HOA.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một ký tự",
+      "Số không có trong word"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ check first upper + rest lower bỏ sót ALL CAPS",
+      "isupper trên non-alpha"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #576</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Dynamic Programming</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Out of Boundary Paths</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m * n * N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m * n * N)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>48.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Out of Boundary Paths (LeetCode #576) — Medium.</div>
+                        <div class="block-text">Lưới m×n, bắt đầu (0,0), N bước di chuyển U/D/L/R. Đếm số path ra ngoài biên (out of boundary). Mod 10^9+7.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>m=2, n=2, N=2, start=(0,0)</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>m=1, n=3, N=3</code></div>
+                <div class="ex-line"><span>Out</span><code>12</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[step][i][j] = số cách ở (i,j) sau step bước; chuyển 4 hướng, cộng out khi ra ngoài.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,44 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DP paths OOB — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findPaths(<span class="ty">self</span>, m: <span class="ty">int</span>, n: <span class="ty">int</span>, maxMove: <span class="ty">int</span>, startRow: <span class="ty">int</span>, startColumn: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        MOD = 10**9+7
+        dp = [[[0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m)] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(maxMove+1)]
+        dp[0][startRow][startColumn] = 1
+        ans = 0
+        dirs = [(1,0),(-1,0),(0,1),(0,-1)]
+        <span class="kw">for</span> s <span class="kw">in</span> <span class="ty">range</span>(maxMove):
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+                <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+                    v = dp[s][i][j]
+                    <span class="kw">if</span> <span class="kw">not</span> v: continue
+                    <span class="kw">for</span> di,dj <span class="kw">in</span> dirs:
+                        ni, nj = i+di, j+dj
+                        <span class="kw">if</span> 0&lt;=ni&lt;m <span class="kw">and</span> 0&lt;=nj&lt;n:
+                            dp[s+1][ni][nj] = (dp[s+1][ni][nj]+v)%MOD
+                        <span class="kw">else</span>:
+                            ans = (ans+v)%MOD
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findPaths(<span class="ty">int</span> m, <span class="ty">int</span> n, <span class="ty">int</span> maxMove, <span class="ty">int</span> sr, <span class="ty">int</span> sc) {
+        <span class="ty">const</span> <span class="ty">int</span> MOD = 1e9+7;
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&gt; dp(maxMove+1, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;(m, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n)));
+        dp[0][sr][sc] = 1;
+        <span class="ty">long</span> <span class="ty">long</span> ans = 0;
+        <span class="ty">int</span> d[4][2]={{1,0},{-1,0},{0,1},{0,-1}};
+        <span class="kw">for</span> (<span class="ty">int</span> s=0;s&lt;maxMove;s++)
+            <span class="kw">for</span> (<span class="ty">int</span> i=0;i&lt;m;i++)
+                <span class="kw">for</span> (<span class="ty">int</span> j=0;j&lt;n;j++) <span class="kw">if</span> (dp[s][i][j])
+                    <span class="kw">for</span> (auto&amp; dd:d) {
+                        <span class="ty">int</span> ni=i+dd[0], nj=j+dd[1];
+                        <span class="kw">if</span> (ni&gt;=0&amp;&amp;ni&lt;m&amp;&amp;nj&gt;=0&amp;&amp;nj&lt;n) dp[s+1][ni][nj]=(dp[s+1][ni][nj]+dp[s][i][j])%MOD;
+                        <span class="kw">else</span> ans=(ans+dp[s][i][j])%MOD;
+                    }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +142,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m * n * N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m * n * N)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP[step][i][j] = số cách ở sau step bước; chuyển 4 hướng, cộng out khi…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DP đếm mọi walk đúng N bước; ra biên tại bước bất kỳ cộng vào ans.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">N=0 không di chuyển</span><span class="analysis-tag edge">Grid 1x1</span><span class="analysis-tag pit">Quên mod</span><span class="analysis-tag pit">Nhầm in-bound paths vs out-bound</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Out of boundary paths = 3D DP steps × position, add when move OOB.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Out%20of%20Boundary%20Paths&lc_id=576&embed=true"></iframe>

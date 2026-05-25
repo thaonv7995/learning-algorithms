@@ -2,33 +2,37 @@
   "id": 567,
   "title": "Permutation in String",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "String",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Permutation in String (LeetCode #567) — Medium.",
+  "description": "Kiểm tra s2 có chứa permutation của s1 (cùng độ dài, đa tập ký tự) không.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s1 = \"ab\", s2 = \"eidbaooo\"",
+      "output": "true"
+    },
+    {
+      "input": "s1 = \"ab\", s2 = \"eidboaoo\"",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sliding window len |s1| trên s2: so sánh freq 26 chữ cái; matches==26.",
+  "memoryTip": "Permutation in string = fixed window char count diff/matches.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def checkInclusion(self, s1: str, s2: str) -> bool:\n        if len(s1) > len(s2): return False\n        need = [0]*26\n        win = [0]*26\n        for c in s1: need[ord(c)-97] += 1\n        for i, c in enumerate(s2):\n            win[ord(c)-97] += 1\n            if i >= len(s1):\n                win[ord(s2[i-len(s1)])-97] -= 1\n            if i >= len(s1)-1:\n                if win == need: return True\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool checkInclusion(string s1, string s2) {\n        if (s1.size() > s2.size()) return false;\n        vector<int> need(26), win(26);\n        for (char c : s1) need[c-'a']++;\n        for (int i = 0; i < (int)s2.size(); i++) {\n            win[s2[i]-'a']++;\n            if (i >= (int)s1.size()) win[s2[i-s1.size()]-'a']--;\n            if (i >= (int)s1.size()-1 && win == need) return true;\n        }\n        return false;\n    }\n};",
+    "c": "/* Sliding window freq — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Window size cố định |s1|; freq khớp iff permutation tồn tại.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "s1 dài hơn s2",
+      "Trùng hoàn toàn substring"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort substring O(n log n)",
+      "Quên shrink window"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

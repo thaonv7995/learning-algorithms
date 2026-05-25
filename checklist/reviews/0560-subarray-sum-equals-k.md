@@ -1,0 +1,8 @@
+# LC #560 — Subarray Sum Equals K — Review
+
+**Status:** done | **Date:** 2026-05-25
+
+- [x] Content VI + C/Py/C++
+- [x] Sandbox `visualizers/lc501-600.js`
+- [x] Output `R[560]` via `lc-outputs.js` `outFromState`
+- [x] Phân tích tab

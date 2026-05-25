@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #535</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Encode and Decode TinyURL</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) encode/decode</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>86.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Encode and Decode TinyURL (LeetCode #535) — Medium.</div>
+                        <div class="block-text">Thiết kế hệ thống rút gọn URL: encode(longUrl) trả shortUrl ngẫu nhiên; decode(shortUrl) trả longUrl gốc.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>encode(&quot;https://example.com/long/path&quot;)</code></div>
+                <div class="ex-line"><span>Out</span><code>short key vd. &quot;http://tinyurl.com/0&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>decode short key</code></div>
+                <div class="ex-line"><span>Out</span><code>longUrl ban đầu</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Map bidirectional: long→short và short→long. Sinh key ngẫu nhiên hoặc tăng dần counter cho path.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">/* Bidirectional hash map — xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Codec:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.l2s = {}
+        <span class="ty">self</span>.s2l = {}
+        <span class="ty">self</span>.base = &quot;http://tinyurl.com/&quot;
+    <span class="kw">def</span> encode(<span class="ty">self</span>, longUrl: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">if</span> longUrl <span class="kw">in</span> <span class="ty">self</span>.l2s:
+            <span class="kw">return</span> <span class="ty">self</span>.l2s[longUrl]
+        key = <span class="ty">str</span>(<span class="ty">len</span>(<span class="ty">self</span>.l2s))
+        short = <span class="ty">self</span>.base + key
+        <span class="ty">self</span>.l2s[longUrl] = short
+        <span class="ty">self</span>.s2l[short] = longUrl
+        <span class="kw">return</span> short
+    <span class="kw">def</span> decode(<span class="ty">self</span>, shortUrl: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">return</span> <span class="ty">self</span>.s2l[shortUrl]</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Codec {
+    unordered_map&lt;<span class="ty">string</span>,<span class="ty">string</span>&gt; l2s, s2l;
+    <span class="ty">string</span> base = &quot;http:<span class="cm">//tinyurl.com/&quot;;</span>
 <span class="ty">public</span>:
+    <span class="ty">string</span> encode(<span class="ty">string</span> longUrl) {
+        <span class="kw">if</span> (l2s.count(longUrl)) <span class="kw">return</span> l2s[longUrl];
+        <span class="ty">string</span> key = to_string(l2s.size());
+        <span class="ty">string</span> shortUrl = base + key;
+        l2s[longUrl] = shortUrl;
+        s2l[shortUrl] = longUrl;
+        <span class="kw">return</span> shortUrl;
+    }
+    <span class="ty">string</span> decode(<span class="ty">string</span> shortUrl) { <span class="kw">return</span> s2l[shortUrl]; }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +132,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Map bidirectional: long→short và short→long.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Sinh key ngẫu nhiên hoặc tăng dần counter cho path.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi longUrl map 1-1 shortUrl; decode tra ngược chính xác.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Encode cùng URL hai lần → cùng short</span><span class="analysis-tag edge">URL dài bất kỳ</span><span class="analysis-tag pit">Chỉ map một chiều</span><span class="analysis-tag pit">Key collision không xử lý</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>TinyURL = 2 hash maps + random/base62 key; decode tra short→long.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +161,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Encode%20and%20Decode%20TinyURL&lc_id=535&embed=true"></iframe>

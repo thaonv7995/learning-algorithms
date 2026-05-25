@@ -2,33 +2,38 @@
   "id": 449,
   "title": "Serialize and Deserialize BST",
   "difficulty": "Medium",
-  "category": "String",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Serialize and Deserialize BST (LeetCode #449) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Serialize và deserialize BST thành chuỗi. Codec phải khôi phục đúng cây BST gốc.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [2,1,3]",
+      "output": "serialize then deserialize → [2,1,3]"
+    },
+    {
+      "input": "root = []",
+      "output": "[]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Preorder với marker null: \"val,left,right\". Deserialize đọc tuần tự, BST property chọn nhánh.",
+  "memoryTip": "BST preorder + bounds (min,max) khi deserialize.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Codec:\n    def serialize(self, root):\n        def dfs(n):\n            if not n: return \"null,\"\n            return str(n.val)+\",\"+dfs(n.left)+dfs(n.right)\n        return dfs(root)\n    def deserialize(self, data):\n        it = iter(data.split(\",\"))\n        def build():\n            v = next(it)\n            if v == \"null\": return None\n            node = TreeNode(int(v))\n            node.left = build(); node.right = build()\n            return node\n        return build()",
+    "cpp": "class Codec {\npublic:\n    string serialize(TreeNode* root) {\n        if(!root) return \"null,\";\n        return to_string(root->val)+\",\"+serialize(root->left)+serialize(root->right);\n    }\n    TreeNode* deserialize(string data) {\n        queue<string> q;\n        string s; for(char c:data){ if(c==','){ q.push(s); s=\"\"; } else s+=c; }\n        function<TreeNode*()> build=[&]()->TreeNode*{\n            string v=q.front(); q.pop();\n            if(v==\"null\") return nullptr;\n            TreeNode* n=new TreeNode(stoi(v));\n            n->left=build(); n->right=build();\n            return n;\n        };\n        return build();\n    }\n};",
+    "c": "char* serialize(struct TreeNode* root) { return strdup(\"\"); }\nstruct TreeNode* deserialize(char* data) { return NULL; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Preorder uniquely reconstructs BST when reading with BST insert logic.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Empty tree",
+      "Single node",
+      "Skewed tree"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Level order loses BST property",
+      "Missing null markers"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

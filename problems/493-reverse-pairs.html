@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #493</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Divide and Conquer</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Reverse Pairs</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>34.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Reverse Pairs (LeetCode #493) — Hard.</div>
+                        <div class="block-text">Cho mảng nums. Đếm reverse pairs: cặp chỉ số (i,j) với i&lt;j và nums[i] &gt; 2*nums[j]. Trả tổng số cặp thỏa điều kiện.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,3,2,3,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [2,4,3,5,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Merge sort: khi merge, với mỗi left[i] đếm right[j] sao nums[i]&gt;2*nums[j].</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,43 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> reversePairs(<span class="ty">int</span>* nums, <span class="ty">int</span> n) { <span class="kw">return</span> 0; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> reversePairs(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        ans = 0
+        <span class="kw">def</span> sort(arr):
+            nonlocal ans
+            <span class="kw">if</span> <span class="ty">len</span>(arr) &lt;= 1: <span class="kw">return</span> arr
+            mid = <span class="ty">len</span>(arr)//2
+            L, R = sort(arr[:mid]), sort(arr[mid:])
+            i = 0
+            <span class="kw">for</span> x <span class="kw">in</span> L:
+                <span class="kw">while</span> i &lt; <span class="ty">len</span>(R) <span class="kw">and</span> x &gt; 2*R[i]: i += 1
+                ans += i
+            <span class="kw">return</span> merge(L, R)
+        <span class="kw">def</span> merge(a,b):
+            out=[]; i=j=0
+            <span class="kw">while</span> i&lt;<span class="ty">len</span>(a) <span class="kw">and</span> j&lt;<span class="ty">len</span>(b):
+                <span class="kw">if</span> a[i]&lt;=b[j]: out.append(a[i]); i+=1
+                <span class="kw">else</span>: out.append(b[j]); j+=1
+            <span class="kw">return</span> out+a[i:]+b[j:]
+        sort(nums); <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> reversePairs(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="kw">return</span> mergeSort(nums, 0, nums.size()-1);
+    }
+    <span class="ty">long</span> <span class="ty">long</span> mergeSort(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; a, <span class="ty">int</span> l, <span class="ty">int</span> r){
+        <span class="kw">if</span>(l&gt;=r) <span class="kw">return</span> 0;
+        <span class="ty">int</span> m=l+(r-l)/2; <span class="ty">long</span> <span class="ty">long</span> ans=mergeSort(a,l,m)+mergeSort(a,m+1,r);
+        <span class="ty">int</span> j=m+1;
+        <span class="kw">for</span>(<span class="ty">int</span> i=l;i&lt;=m;i++){
+            <span class="kw">while</span>(j&lt;=r &amp;&amp; (<span class="ty">long</span> <span class="ty">long</span>)a[i]&gt;2LL*a[j]) j++;
+            ans += j-(m+1);
+        }
+        inplace_merge(a.begin()+l, a.begin()+m+1, a.begin()+r+1);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +140,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Divide and Conquer</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Merge sort: khi merge, với mỗi left[i] đếm right[j] sao…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Merge sort counts cross half pairs satisfying i&lt;j and nums[i]&gt;2*nums[j].</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Negative numbers</span><span class="analysis-tag edge">Equal not counted unless &gt;2x</span><span class="analysis-tag edge">Single element</span><span class="analysis-tag pit">O(n²) TLE</span><span class="analysis-tag pit">Use long long for 2*a[j]</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Modified merge sort — count cross pairs before merge step.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Reverse%20Pairs&lc_id=493&embed=true"></iframe>

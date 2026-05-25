@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #464</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Can I Win</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n * 2^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(2^n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>31.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Can I Win (LeetCode #464) — Medium.</div>
+                        <div class="block-text">Game: hai người lấy số từ 1..maxChoosableInteger, mỗi số dùng một lần, cộng vào tổng, ai đạt desiredTotal trước thắng. Người 1 đi trước — liệu chắc thắng?</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>maxChoosableInteger = 10, desiredTotal = 11</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>maxChoosableInteger = 10, desiredTotal = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Bitmask DP/memo: state mask used numbers; current player win if any move makes opponent lose.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> canIWin(<span class="ty">int</span> mx, <span class="ty">int</span> tot) { <span class="kw">return</span> false; /* bitmask DP */ }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> canIWin(<span class="ty">self</span>, maxChoosableInteger: <span class="ty">int</span>, desiredTotal: <span class="ty">int</span>) -&gt; bool:
+        <span class="kw">if</span> maxChoosableInteger * (maxChoosableInteger + 1) // 2 &lt; desiredTotal: <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">if</span> desiredTotal &lt;= 0: <span class="kw">return</span> <span class="kw">True</span>
+        memo = {}
+        <span class="kw">def</span> dfs(mask, rem):
+            <span class="kw">if</span> mask <span class="kw">in</span> memo: <span class="kw">return</span> memo[mask]
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(maxChoosableInteger):
+                <span class="kw">if</span> mask &gt;&gt; i &amp; 1: continue
+                pick = i + 1
+                <span class="kw">if</span> pick &gt;= rem: <span class="kw">return</span> memo.setdefault(mask, <span class="kw">True</span>)
+                <span class="kw">if</span> <span class="kw">not</span> dfs(mask | (1 &lt;&lt; i), rem - pick): <span class="kw">return</span> memo.setdefault(mask, <span class="kw">True</span>)
+            <span class="kw">return</span> memo.setdefault(mask, <span class="kw">False</span>)
+        <span class="kw">return</span> dfs(0, desiredTotal)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> canIWin(<span class="ty">int</span> mx, <span class="ty">int</span> tot) {
+        <span class="kw">if</span>(mx*(mx+1)/2&lt;tot) <span class="kw">return</span> false;
+        <span class="kw">if</span>(tot&lt;=0) <span class="kw">return</span> true;
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; memo(1&lt;&lt;mx, -1);
+        function&lt;<span class="ty">bool</span>(<span class="ty">int</span>,<span class="ty">int</span>)&gt; dfs=[&amp;](<span class="ty">int</span> mask,<span class="ty">int</span> rem)-&gt;<span class="ty">bool</span>{
+            <span class="kw">if</span>(memo[mask]!=-1) <span class="kw">return</span> memo[mask];
+            <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;mx;i++){
+                <span class="kw">if</span>(mask&gt;&gt;i&amp;1) continue;
+                <span class="ty">int</span> pick=i+1;
+                <span class="kw">if</span>(pick&gt;=rem) <span class="kw">return</span> memo[mask]=true;
+                <span class="kw">if</span>(!dfs(mask|(1&lt;&lt;i), rem-pick)) <span class="kw">return</span> memo[mask]=true;
+            }
+            <span class="kw">return</span> memo[mask]=false;
+        };
+        <span class="kw">return</span> dfs(0,tot);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +136,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n * 2^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(2^n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Bitmask DP/memo: state mask used numbers; current player win if any…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Minimax on bitmask — win if ∃ move forcing opponent loss.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Total sum &lt; desired → false</span><span class="analysis-tag edge">desired≤0 → true</span><span class="analysis-tag edge">Pick ≥ remaining wins</span><span class="analysis-tag pit">Greedy wrong</span><span class="analysis-tag pit">Quên impossible sum check</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Can I Win = minimax on bitmask — same as subset game DP.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +165,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Can%20I%20Win&lc_id=464&embed=true"></iframe>

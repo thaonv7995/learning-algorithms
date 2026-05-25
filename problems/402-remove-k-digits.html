@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #402</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Remove K Digits</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>36.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Remove K Digits (LeetCode #402) — Medium.</div>
+                        <div class="block-text">Cho chuỗi số num và số nguyên k. Xóa đúng k chữ số sao cho chuỗi còn lại nhỏ nhất theo thứ tự số (không có số 0 đứng đầu trừ khi chỉ còn &quot;0&quot;).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>num = &quot;1432219&quot;, k = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;1219&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>num = &quot;10200&quot;, k = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;200&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>num = &quot;10&quot;, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;0&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Monotonic stack tăng: push từng digit; khi top &gt; digit hiện tại và còn k thì pop. Nếu còn k thì cắt đuôi. Bỏ số 0 đầu.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* removeKdigits(<span class="ty">char</span>* num, <span class="ty">int</span> k) {
+    <span class="ty">int</span> n = strlen(num), top = 0;
+    <span class="ty">char</span>* st = <span class="kw">malloc</span>(n + 2);
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="kw">while</span> (k &amp;&amp; top &amp;&amp; st[top-1] &gt; num[i]) { top--; k--; }
+        st[top++] = num[i];
+    }
+    top -= k; <span class="kw">if</span> (top &lt; 0) top = 0;
+    <span class="ty">int</span> s = 0; <span class="kw">while</span> (s &lt; top &amp;&amp; st[s] == '0') s++;
+    <span class="kw">if</span> (s == top) { st[0]='0'; st[1]=0; <span class="kw">return</span> st; }
+    memmove(st, st+s, top-s+1);
+    <span class="kw">return</span> st;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> removeKdigits(<span class="ty">self</span>, num: <span class="ty">str</span>, k: <span class="ty">int</span>) -&gt; <span class="ty">str</span>:
+        st = []
+        <span class="kw">for</span> ch <span class="kw">in</span> num:
+            <span class="kw">while</span> k <span class="kw">and</span> st <span class="kw">and</span> st[-1] &gt; ch:
+                st.pop(); k -= 1
+            st.append(ch)
+        st = st[:<span class="ty">len</span>(st)-k] <span class="kw">if</span> k <span class="kw">else</span> st
+        <span class="kw">return</span> (&quot;&quot;.join(st).lstrip(&quot;0&quot;) <span class="kw">or</span> &quot;0&quot;)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> removeKdigits(<span class="ty">string</span> num, <span class="ty">int</span> k) {
+        <span class="ty">string</span> st;
+        <span class="kw">for</span> (<span class="ty">char</span> ch : num) {
+            <span class="kw">while</span> (k &amp;&amp; !st.empty() &amp;&amp; st.back() &gt; ch) { st.pop_back(); k--; }
+            st.push_back(ch);
+        }
+        <span class="kw">if</span> (k) st.resize(st.size() - k);
+        size_t i = st.find_first_not_of('0');
+        <span class="kw">return</span> i == <span class="ty">string</span>::npos ? &quot;0&quot; : st.substr(i);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +142,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
+                        <span class="pattern-chip">Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Monotonic stack tăng: push từng digit; khi top &gt; digit…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu còn k thì cắt đuôi.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Invariant stack không giảm — mỗi pop loại digit lớn hơn bên phải nên số lex nhỏ hơn.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=0 giữ nguyên</span><span class="analysis-tag edge">Xóa hết → &quot;0&quot;</span><span class="analysis-tag edge">Toàn số 0 sau trim</span><span class="analysis-tag pit">Không cắt đuôi khi stack vẫn tăng</span><span class="analysis-tag pit">Quên lstrip số 0 đầu</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Giống 316 Remove Duplicate Letters — stack giữ thứ tự tăng để số nhỏ nhất.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Remove%20K%20Digits&lc_id=402&embed=true"></iframe>

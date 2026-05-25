@@ -4,31 +4,40 @@
   "difficulty": "Medium",
   "category": "Hash Table",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Sort Characters By Frequency (LeetCode #451) — Medium.",
+  "spaceComplexity": "O(k)",
+  "description": "Sắp xếp ký tự trong s theo tần suất giảm dần; cùng tần suất giữ thứ tự bất kỳ.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"tree\"",
+      "output": "\"eert\""
+    },
+    {
+      "input": "s = \"cccaaa\"",
+      "output": "\"aaaccc\""
+    },
+    {
+      "input": "s = \"Aabb\"",
+      "output": "\"bbAa\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm freq; bucket sort: bucket[i] chứa chars freq i; ghép từ freq cao xuống.",
+  "memoryTip": "Bucket by frequency O(n) — faster than heap for lowercase letters.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def frequencySort(self, s: str) -> str:\n        cnt = Counter(s)\n        buckets = [[] for _ in range(len(s)+1)]\n        for ch, f in cnt.items(): buckets[f].append(ch)\n        ans = []\n        for f in range(len(s), 0, -1):\n            for ch in buckets[f]: ans.append(ch * f)\n        return \"\".join(ans)",
+    "cpp": "class Solution {\npublic:\n    string frequencySort(string s) {\n        int cnt[128]={};\n        for(char c:s) cnt[c]++;\n        vector<string> b(s.size()+1);\n        for(int i=0;i<128;i++) if(cnt[i]) b[cnt[i]]+=char(i);\n        string ans;\n        for(int f=s.size();f;f--) for(char c:b[f]) ans+=string(cnt[c],c);\n        return ans;\n    }\n};",
+    "c": "char* frequencySort(char* s) {\n    int cnt[128]={0}; for(int i=0;s[i];i++) cnt[(unsigned char)s[i]]++;\n    char* ans=malloc(strlen(s)+1); int p=0, n=strlen(s);\n    for(int f=n;f>0;f--) for(int c=0;c<128;c++) if(cnt[c]==f)\n        for(int k=0;k<f;k++) ans[p++]=(char)c;\n    ans[p]=0; return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Bucket sort by freq produces non-increasing frequency order.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một ký tự",
+      "Tất cả unique",
+      "Mixed case"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Stable sort không bắt buộc",
+      "Heap O(n log n) vẫn OK"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

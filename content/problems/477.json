@@ -2,33 +2,38 @@
   "id": 477,
   "title": "Total Hamming Distance",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
+  "category": "Bit Manipulation",
+  "timeComplexity": "O(n * 32)",
   "spaceComplexity": "O(1)",
-  "description": "Total Hamming Distance (LeetCode #477) — Medium.",
+  "description": "Tổng Hamming distance giữa mọi cặp phần tử trong nums.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [4,14,2]",
+      "output": "6"
+    },
+    {
+      "input": "nums = [4,14,4]",
+      "output": "4"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Với mỗi bit b: count ones c; contribution c*(n-c).",
+  "memoryTip": "Sum pairwise HD = sum over bits of ones * zeros at that bit.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def totalHammingDistance(self, nums: List[int]) -> int:\n        ans = 0\n        for b in range(32):\n            c = sum((x >> b) & 1 for x in nums)\n            ans += c * (len(nums) - c)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int totalHammingDistance(vector<int>& nums) {\n        long long ans=0; int n=nums.size();\n        for(int b=0;b<32;b++){\n            int c=0;\n            for(int x:nums) c+=(x>>b)&1;\n            ans+=1LL*c*(n-c);\n        }\n        return ans;\n    }\n};",
+    "c": "int totalHammingDistance(int* nums, int n) {\n    long long ans=0;\n    for(int b=0;b<32;b++){\n        int c=0; for(int i=0;i<n;i++) c+=(nums[i]>>b)&1;\n        ans+=(long long)c*(n-c);\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Each differing bit at position b contributes once per pair split by 0/1.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "n<2 → 0",
+      "Duplicates OK",
+      "Large n use long long"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n²) pair loop TLE",
+      "Forget 32 bits"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

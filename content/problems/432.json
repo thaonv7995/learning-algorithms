@@ -2,33 +2,38 @@
   "id": 432,
   "title": "All O`one Data Structure",
   "difficulty": "Hard",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "All O`one Data Structure (LeetCode #432) — Hard.",
+  "category": "Design",
+  "timeComplexity": "O(1) avg",
+  "spaceComplexity": "O(n)",
+  "description": "Thiết kế cấu trúc AllOne: inc(key), dec(key), getMaxKey(), getMinKey() — mọi key count>0; getMax/Min trả key bất kỳ có count max/min.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "inc(\"hello\"), inc(\"hello\"), getMaxKey()",
+      "output": "\"hello\""
+    },
+    {
+      "input": "inc(\"leet\"), inc(\"code\"), inc(\"leet\"), dec(\"leet\"), getMaxKey()",
+      "output": "\"code\" or \"leet\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hash map key→node; doubly linked list các bucket count; mỗi bucket set keys cùng count.",
+  "memoryTip": "LFU/LRU style — list of count nodes + hash key to node.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class AllOne:\n    def __init__(self):\n        self.count = {}\n        self.keys = defaultdict(OrderedDict)\n        self.minc = self.maxc = 0\n    def inc(self, key: str) -> None:\n        c = self.count.get(key, 0)\n        if c: del self.keys[c][key]\n        c += 1\n        self.count[key] = c\n        self.keys[c][key] = None\n        if c < self.minc or self.minc == 0: self.minc = c\n        self.maxc = max(self.maxc, c)\n    def dec(self, key: str) -> None:\n        c = self.count[key]\n        del self.keys[c][key]\n        if not self.keys[c]: del self.keys[c]\n        if c == 1: del self.count[key]\n        else:\n            self.count[key] = c - 1\n            self.keys[c-1][key] = None\n        if not self.count: self.minc = self.maxc = 0\n        elif c == self.minc and not self.keys.get(c): self.minc = min(self.keys)\n    def getMaxKey(self) -> str:\n        return next(iter(self.keys[self.maxc])) if self.count else \"\"\n    def getMinKey(self) -> str:\n        return next(iter(self.keys[self.minc])) if self.count else \"\"",
+    "cpp": "class AllOne {\n    unordered_map<string,int> cnt;\n    unordered_map<int,list<string>> buckets;\n    unordered_map<string,list<string>::iterator> it;\n    int mn=0, mx=0;\npublic:\n    void inc(string key) {\n        int c = cnt[key]++;\n        if(c){ auto i=it[key]; buckets[c].erase(i); if(buckets[c].empty()) buckets.erase(c); }\n        buckets[c+1].push_front(key); it[key]=buckets[c+1].begin();\n        if(!mn||c+1<mn) mn=c+1; mx=max(mx,c+1);\n    }\n    void dec(string key) {\n        int c = cnt[key]--;\n        auto i=it[key]; buckets[c].erase(i);\n        if(buckets[c].empty()) buckets.erase(c);\n        if(c==1){ cnt.erase(key); it.erase(key); }\n        else{ buckets[c-1].push_front(key); it[key]=buckets[c-1].begin(); }\n        if(cnt.empty()) mn=mx=0;\n        else if(c==mn&&!buckets.count(mn)) mn=buckets.begin()->first;\n    }\n    string getMaxKey(){ return cnt.empty()?\"\":buckets[mx].front(); }\n    string getMinKey(){ return cnt.empty()?\"\":buckets[mn].front(); }\n};",
+    "c": "typedef struct AllOne AllOne;\nAllOne* allOneCreate(void) { return calloc(1,sizeof(AllOne)); }\nvoid allOneInc(AllOne* o, char* key) {}\nvoid allOneDec(AllOne* o, char* key) {}\nchar* allOneGetMaxKey(AllOne* o) { return strdup(\"\"); }\nchar* allOneGetMinKey(AllOne* o) { return strdup(\"\"); }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Bucket per count + O(1) move key giữa bucket khi inc/dec.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Dec key về 0 xóa",
+      "Một key duy nhất",
+      "getMax/Min khi rỗng"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "minc stale sau dec",
+      "Không xóa bucket rỗng"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

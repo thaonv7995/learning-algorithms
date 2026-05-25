@@ -3,32 +3,36 @@
   "title": "Minimum Index Sum of Two Lists",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Minimum Index Sum of Two Lists (LeetCode #599) — Easy.",
+  "timeComplexity": "O(n + m)",
+  "spaceComplexity": "O(n + m)",
+  "description": "Hai list đều không trùng tên trong từng list. Tìm tên xuất hiện cả hai list sao indexSum = index1+index2 nhỏ nhất.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "list1=[\"Shogun\",\"Tapioca\",\"Burger\"], list2=[\"Piatti\",\"The Grill\",\"Trousers\",\"Overstock\"]",
+      "output": "[\"Shogun\"]"
+    },
+    {
+      "input": "Cùng indexSum nhiều tên",
+      "output": "Tất cả tên có min sum"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hash map tên→index list1; duyệt list2, nếu chung thì cập nhật min sum và danh sách kết quả.",
+  "memoryTip": "Min index sum two lists = hash index list1 + scan list2.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findRestaurant(self, list1: List[str], list2: List[str]) -> List[str]:\n        idx = {w:i for i,w in enumerate(list1)}\n        best = 10**9\n        ans = []\n        for j, w in enumerate(list2):\n            if w in idx:\n                s = idx[w] + j\n                if s < best:\n                    best = s\n                    ans = [w]\n                elif s == best:\n                    ans.append(w)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {\n        unordered_map<string,int> idx;\n        for (int i=0;i<(int)list1.size();i++) idx[list1[i]]=i;\n        int best = INT_MAX;\n        vector<string> ans;\n        for (int j=0;j<(int)list2.size();j++) {\n            auto it = idx.find(list2[j]);\n            if (it==idx.end()) continue;\n            int s = it->second + j;\n            if (s < best) { best = s; ans = {list2[j]}; }\n            else if (s == best) ans.push_back(list2[j]);\n        }\n        return ans;\n    }\n};",
+    "c": "/* Hash index intersection — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Min sum index chỉ cần duyệt giao tên; tie thu hết tên cùng sum.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không chung tên → []",
+      "Một chung tên"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nested loop O(n*m)",
+      "Quên reset ans khi sum nhỏ hơn"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

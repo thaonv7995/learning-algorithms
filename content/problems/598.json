@@ -5,30 +5,34 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Range Addition II (LeetCode #598) — Easy.",
+  "description": "Ma trận m×n ban đầu toàn 0. Mỗi op [r,c] cộng 1 mọi ô (i,j) với 0≤i<r, 0≤j<c. Trả số ô có giá trị lớn nhất.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "m=3, n=3, ops=[[2,2],[3,3]]",
+      "output": "4"
+    },
+    {
+      "input": "m=3, n=3, ops=[]",
+      "output": "9"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Mọi op cộng hình chữ nhật góc trên; max count = min(r)*min(c) over all ops (hoặc m*n nếu rỗng).",
+  "memoryTip": "Range Addition II = answer is minRow * minCol across ops.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxCount(self, m: int, n: int, ops: List[List[int]]) -> int:\n        if not ops:\n            return m * n\n        mr = min(op[0] for op in ops)\n        mc = min(op[1] for op in ops)\n        return mr * mc",
+    "cpp": "class Solution {\npublic:\n    int maxCount(int m, int n, vector<vector<int>>& ops) {\n        if (ops.empty()) return m * n;\n        int mr = m, mc = n;\n        for (auto& op : ops) { mr = min(mr, op[0]); mc = min(mc, op[1]); }\n        return mr * mc;\n    }\n};",
+    "c": "/* min r min c product — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Giao mọi hình chữ nhật op là [0,minR)×[0,minC); mọi ô đó nhận mọi op.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "ops rỗng → m*n",
+      "Op nhỏ hơn ma trận"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Simulate matrix O(mn*ops)",
+      "Max thay vì min trên ops"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

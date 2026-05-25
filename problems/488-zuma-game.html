@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #488</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Breadth-First Search</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Zuma Game</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(states)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(states)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>29.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Zuma Game (LeetCode #488) — Hard.</div>
+                        <div class="block-text">Zuma: chèn bóng từ hand vào board để gom ≥3 cùng màu liên tiếp (cascade). Min số bóng để clear board, -1 nếu không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>board = &quot;WRRBBW&quot;, hand = &quot;RB&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>-1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>board = &quot;WWRRBBWW&quot;, hand = &quot;WRBRW&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS (board, hand): thử insert từng màu tại mọi vị trí hợp lệ; collapse ≥3 lặp đến ổn.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,68 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findMinStep(<span class="ty">char</span>* board, <span class="ty">char</span>* hand) { <span class="kw">return</span> -1; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findMinStep(<span class="ty">self</span>, board: <span class="ty">str</span>, hand: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">def</span> clean(s):
+            i = 0
+            <span class="kw">while</span> i &lt; <span class="ty">len</span>(s):
+                j = i
+                <span class="kw">while</span> j &lt; <span class="ty">len</span>(s) <span class="kw">and</span> s[j] == s[i]: j += 1
+                <span class="kw">if</span> j - i &gt;= 3: <span class="kw">return</span> clean(s[:i] + s[j:])
+                i = j
+            <span class="kw">return</span> s
+        hand = &quot;&quot;.join(sorted(hand))
+        q = deque([(board, hand, 0)])
+        seen = {(board, hand)}
+        <span class="kw">while</span> q:
+            b, h, steps = q.popleft()
+            <span class="kw">if</span> <span class="kw">not</span> b: <span class="kw">return</span> steps
+            <span class="kw">if</span> <span class="kw">not</span> h: continue
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(b)+1):
+                <span class="kw">for</span> j, c <span class="kw">in</span> enumerate(h):
+                    <span class="kw">if</span> i &gt; 0 <span class="kw">and</span> b[i-1] == c: continue
+                    <span class="kw">if</span> i &lt; <span class="ty">len</span>(b) <span class="kw">and</span> b[i] == c: continue
+                    nb = clean(b[:i]+c+b[i:])
+                    nh = h[:j]+h[j+1:]
+                    key = (nb, nh)
+                    <span class="kw">if</span> key <span class="kw">not</span> <span class="kw">in</span> seen:
+                        seen.add(key); q.append((nb, nh, steps+1))
+        <span class="kw">return</span> -1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findMinStep(<span class="ty">string</span> board, <span class="ty">string</span> hand) {
+        sort(hand.begin(), hand.end());
+        queue&lt;tuple&lt;<span class="ty">string</span>,<span class="ty">string</span>,<span class="ty">int</span>&gt;&gt; q;
+        set&lt;pair&lt;<span class="ty">string</span>,<span class="ty">string</span>&gt;&gt; seen;
+        auto clean=[](<span class="ty">string</span> s){
+            <span class="ty">bool</span> ch=1;
+            <span class="kw">while</span>(ch){
+                ch=0;
+                <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)s.size();){
+                    <span class="ty">int</span> j=i; <span class="kw">while</span>(j&lt;(<span class="ty">int</span>)s.size()&amp;&amp;s[j]==s[i]) j++;
+                    <span class="kw">if</span>(j-i&gt;=3){ s=s.substr(0,i)+s.substr(j); ch=1; break; }
+                    i=j;
+                }
+            }
+            <span class="kw">return</span> s;
+        };
+        q.push({board,hand,0}); seen.insert({board,hand});
+        <span class="kw">while</span>(!q.empty()){
+            auto [b,h,steps]=q.front(); q.pop();
+            <span class="kw">if</span>(b.empty()) <span class="kw">return</span> steps;
+            <span class="kw">if</span>(h.empty()) continue;
+            <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;=(<span class="ty">int</span>)b.size();i++)
+                <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;(<span class="ty">int</span>)h.size();j++){
+                    <span class="kw">if</span>(i&amp;&amp;b[i-1]==h[j]) continue;
+                    <span class="kw">if</span>(i&lt;(<span class="ty">int</span>)b.size()&amp;&amp;b[i]==h[j]) continue;
+                    <span class="ty">string</span> nb=clean(b.substr(0,i)+h[j]+b.substr(i));
+                    <span class="ty">string</span> nh=h; nh.erase(nh.begin()+j);
+                    <span class="kw">if</span>(!seen.count({nb,nh})){ seen.insert({nb,nh}); q.push({nb,nh,steps+1}); }
+                }
+        }
+        <span class="kw">return</span> -1;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +165,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Breadth-First Search</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(states)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(states)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — BFS : thử insert từng màu tại mọi vị trí hợp lệ; collapse ≥3 lặp đến ổn.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BFS finds minimum balls; clean removes runs until stable each insert.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Impossible -1</span><span class="analysis-tag edge">Multi-round cascade</span><span class="analysis-tag edge">Prune redundant inserts</span><span class="analysis-tag pit">DFS not shortest</span><span class="analysis-tag pit">Single-pass collapse only</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Shortest inserts BFS — skip insert between same color neighbors.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +194,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Zuma%20Game&lc_id=488&embed=true"></iframe>

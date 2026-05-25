@@ -5,30 +5,39 @@
   "category": "Hash Table",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Longest Palindrome (LeetCode #409) — Easy.",
+  "description": "Cho chuỗi s gồm chữ thường. Dùng các ký tự (hoán vị) để ghép palindrome dài nhất. Trả độ dài palindrome tối đa.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"abccccdd\"",
+      "output": "7"
+    },
+    {
+      "input": "s = \"a\"",
+      "output": "1"
+    },
+    {
+      "input": "s = \"bb\"",
+      "output": "2"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm tần suất 26 chữ; mỗi chữ c chẵn count cộng hết, lẻ cộng count-1; nếu có bất kỳ count lẻ thì +1 cho ký tự giữa.",
+  "memoryTip": "Palindrome chấp nhận tối đa một ký tự lẻ ở giữa.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def longestPalindrome(self, s: str) -> int:\n        cnt = Counter(s)\n        ans = odd = 0\n        for c in cnt.values():\n            ans += c // 2 * 2\n            odd |= c & 1\n        return ans + odd",
+    "cpp": "class Solution {\npublic:\n    int longestPalindrome(string s) {\n        int cnt[26]={};\n        for(char c:s) cnt[c-'a']++;\n        int ans=0, odd=0;\n        for(int x:cnt){ ans += x/2*2; if(x&1) odd=1; }\n        return ans+odd;\n    }\n};",
+    "c": "int longestPalindrome(char* s) {\n    int cnt[26]={0};\n    for(;*s;s++) cnt[*s-'a']++;\n    int ans=0, odd=0;\n    for(int i=0;i<26;i++){ ans+=cnt[i]/2*2; if(cnt[i]&1) odd=1; }\n    return ans+odd;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Ghép cặp đối xứng tối đa; một ký tự lẻ còn lại đặt giữa.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một ký tự",
+      "Tất cả chẵn",
+      "Không có lẻ"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Trả chuỗi thay vì độ dài",
+      "Quên +1 khi có count lẻ"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #474</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Ones and Zeroes</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n*m*maxM)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m*maxM)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>53.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Ones and Zeroes (LeetCode #474) — Medium.</div>
+                        <div class="block-text">Mỗi strs[i] có m[i] số 0 và n[i] số 1. Chọn tối đa bao nhiêu chuỗi với tổng 0≤m và 1≤n.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>strs = [&quot;10&quot;,&quot;0001&quot;,&quot;111001&quot;,&quot;1&quot;,&quot;0&quot;], m = 5, n = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>strs = [&quot;10&quot;,&quot;0&quot;,&quot;1&quot;], m = 1, n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">2D knapsack dp[i][j] = max strings with i zeros j ones; for each string update dp backward.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findMaxForm(<span class="ty">char</span>** strs, <span class="ty">int</span> sn, <span class="ty">int</span> m, <span class="ty">int</span> n) {
+    <span class="ty">int</span> dp[101][101]={0};
+    <span class="kw">for</span>(<span class="ty">int</span> k=0;k&lt;sn;k++){
+        <span class="ty">int</span> a=0; <span class="kw">for</span>(<span class="ty">char</span>* p=strs[k];*p;p++) <span class="kw">if</span>(*p=='0') a++;
+        <span class="ty">int</span> b=strlen(strs[k])-a;
+        <span class="kw">for</span>(<span class="ty">int</span> i=m;i&gt;=a;i--) <span class="kw">for</span>(<span class="ty">int</span> j=n;j&gt;=b;j--)
+            <span class="kw">if</span>(dp[i-a][j-b]+1&gt;dp[i][j]) dp[i][j]=dp[i-a][j-b]+1;
+    }
+    <span class="kw">return</span> dp[m][n];
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findMaxForm(<span class="ty">self</span>, strs: <span class="ty">List</span>[<span class="ty">str</span>], m: <span class="ty">int</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        dp = [[0]*(n+1) <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m+1)]
+        <span class="kw">for</span> s <span class="kw">in</span> strs:
+            a = s.count(&quot;0&quot;); b = <span class="ty">len</span>(s)-a
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m, a-1, -1):
+                <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n, b-1, -1):
+                    dp[i][j] = <span class="ty">max</span>(dp[i][j], dp[i-a][j-b]+1)
+        <span class="kw">return</span> dp[m][n]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findMaxForm(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; strs, <span class="ty">int</span> m, <span class="ty">int</span> n) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(m+1, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n+1));
+        <span class="kw">for</span>(auto&amp; s:strs){
+            <span class="ty">int</span> a=count(s.begin(),s.end(),'0'), b=s.size()-a;
+            <span class="kw">for</span>(<span class="ty">int</span> i=m;i&gt;=a;i--)
+                <span class="kw">for</span>(<span class="ty">int</span> j=n;j&gt;=b;j--)
+                    dp[i][j]=max(dp[i][j], dp[i-a][j-b]+1);
+        }
+        <span class="kw">return</span> dp[m][n];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +134,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n*m*maxM)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m*maxM)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — 2D knapsack dp[i][j] = max strings with i zeros j ones; for each string…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>2D 0/1 knapsack counts max items within (m,n) budget.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">m=n=0</span><span class="analysis-tag edge">String too heavy skip</span><span class="analysis-tag edge">All strings fit</span><span class="analysis-tag pit">Forward loop reuse item</span><span class="analysis-tag pit">Count chars wrong</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>0/1 knapsack 2 resources — dp[m+1][n+1].</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +163,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Ones%20and%20Zeroes&lc_id=474&embed=true"></iframe>

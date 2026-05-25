@@ -2,33 +2,37 @@
   "id": 508,
   "title": "Most Frequent Subtree Sum",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Most Frequent Subtree Sum (LeetCode #508) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho cây nhị phân. Tính tổng mỗi subtree; trả mọi giá trị tổng xuất hiện nhiều nhất (bất kỳ thứ tự).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [5,2,-3]",
+      "output": "[2,-3,4]"
+    },
+    {
+      "input": "root = [5,2,-5]",
+      "output": "[2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Postorder: tổng subtree = val + trái + phải; hash đếm tần suất; thu max và thu thập keys.",
+  "memoryTip": "Subtree sum frequency = postorder sum + Counter, giống mode trên mảng tổng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findFrequentTreeSum(self, root: Optional[TreeNode]) -> List[int]:\n        from collections import Counter\n        cnt = Counter()\n        def dfs(n):\n            if not n: return 0\n            s = n.val + dfs(n.left) + dfs(n.right)\n            cnt[s] += 1\n            return s\n        dfs(root)\n        if not cnt: return []\n        mx = max(cnt.values())\n        return [k for k, v in cnt.items() if v == mx]",
+    "cpp": "class Solution {\n    unordered_map<int,int> cnt;\n    int dfs(TreeNode* n) {\n        if (!n) return 0;\n        int s = n->val + dfs(n->left) + dfs(n->right);\n        cnt[s]++;\n        return s;\n    }\npublic:\n    vector<int> findFrequentTreeSum(TreeNode* root) {\n        dfs(root);\n        int mx = 0;\n        for (auto& p : cnt) mx = max(mx, p.second);\n        vector<int> ans;\n        for (auto& p : cnt) if (p.second == mx) ans.push_back(p.first);\n        return ans;\n    }\n};",
+    "c": "/* Postorder + hash count — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi subtree sum được đếm đúng một lần qua postorder.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một nút → tổng là val",
+      "Nhiều tổng cùng max freq"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Quên cộng subtree con",
+      "Không thu hết keys có max count"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

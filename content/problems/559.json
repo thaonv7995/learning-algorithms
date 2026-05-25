@@ -4,31 +4,35 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Maximum Depth of N-ary Tree (LeetCode #559) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Trả độ sâu tối đa của cây N-ary (mỗi node có list children).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [1,null,3,2,4,null,5,6]",
+      "output": "3"
+    },
+    {
+      "input": "root = [1,null,2,3,4,5,null,null,6,7,null,8,null,9,10]",
+      "output": "5"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS/BFS: depth = 1 + max depth con (hoặc BFS level count).",
+  "memoryTip": "N-ary max depth = 1 + max(child depths) recursive.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxDepth(self, root: Node) -> int:\n        if not root:\n            return 0\n        if not root.children:\n            return 1\n        return 1 + max(self.maxDepth(c) for c in root.children)",
+    "cpp": "class Solution {\npublic:\n    int maxDepth(Node* root) {\n        if (!root) return 0;\n        int d = 0;\n        for (auto* c : root->children) d = max(d, maxDepth(c));\n        return 1 + d;\n    }\n};",
+    "c": "/* DFS max child depth — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Độ sâu cây = 1 + max subtree depth over children.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "null → 0",
+      "Chỉ root → 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng left/right binary",
+      "Quên leaf depth 1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

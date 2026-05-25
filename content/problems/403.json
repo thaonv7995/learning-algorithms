@@ -2,33 +2,42 @@
   "id": 403,
   "title": "Frog Jump",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Frog Jump (LeetCode #403) — Hard.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Ếch nhảy trên các đá stones (tọa độ tăng dần). Từ đá đầu chỉ nhảy 1 đơn vị. Từ đá trước đó đã nhảy k đơn vị, lần sau nhảy k-1, k hoặc k+1. Trả true nếu tới được đá cuối.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "stones = [0,1,3,5,6,8,12,17]",
+      "output": "true"
+    },
+    {
+      "input": "stones = [0,1,2,3,4,8,9,11]",
+      "output": "false"
+    },
+    {
+      "input": "stones = [0]",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[i][k] = có thể tới stones[i] bằng bước k (k≤200). Map pos→index; từ mỗi (i,k) thử nhảy k-1,k,k+1 tới đá kế.",
+  "memoryTip": "Bước nhảy phụ thuộc bước trước — DP 2 chiều pos × lastJump, không chỉ pos.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canCross(self, stones: List[int]) -> bool:\n        pos = {s: i for i, s in enumerate(stones)}\n        n = len(stones)\n        dp = [set() for _ in range(n)]\n        dp[0].add(0)\n        for i in range(n):\n            for k in dp[i]:\n                for nk in (k-1, k, k+1):\n                    if nk <= 0: continue\n                    j = stones[i] + nk\n                    if j in pos:\n                        dp[pos[j]].add(nk)\n        return bool(dp[n-1])",
+    "cpp": "class Solution {\npublic:\n    bool canCross(vector<int>& stones) {\n        unordered_map<int,int> pos;\n        for (int i=0;i<(int)stones.size();i++) pos[stones[i]]=i;\n        int n=stones.size();\n        vector<unordered_set<int>> dp(n);\n        dp[0].insert(0);\n        for (int i=0;i<n;i++)\n            for (int k : dp[i])\n                for (int nk : {k-1,k,k+1})\n                    if (nk>0 && pos.count(stones[i]+nk))\n                        dp[pos[stones[i]+nk]].insert(nk);\n        return !dp[n-1].empty();\n    }\n};",
+    "c": "bool canCross(int* stones, int n) {\n    int dp[2000][210] = {0};\n    int idx[2001]; for(int i=0;i<2001;i++) idx[i]=-1;\n    for(int i=0;i<n;i++) idx[stones[i]]=i;\n    dp[0][1]=1;\n    for(int i=0;i<n;i++) for(int k=1;k<=200;k++) if(dp[i][k]){\n        int p=stones[i]+k; if(p>2000||idx[p]<0) continue;\n        dp[idx[p]][k]=1; if(k>1) dp[idx[p]][k-1]=1; dp[idx[p]][k+1]=1;\n    }\n    for(int k=1;k<=200;k++) if(dp[n-1][k]) return true;\n    return n==1;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP mô phỏng mọi bước nhảy hợp lệ từ từng đá — đạt cuối iff có state.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một đá → true",
+      "Khoảng cách đầu ≠1 → false",
+      "Nhảy lùi k-1=0 bị cấm"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "BFS không lưu last jump",
+      "Quên ràng buộc k>0 sau bước đầu"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

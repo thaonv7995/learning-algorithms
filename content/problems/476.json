@@ -3,32 +3,41 @@
   "title": "Number Complement",
   "difficulty": "Easy",
   "category": "Bit Manipulation",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Number Complement (LeetCode #476) — Easy.",
+  "description": "Complement của số nguyên không âm num — đảo mọi bit trong biểu diễn binary (leading zeros của num không đếm).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num = 5",
+      "output": "2"
+    },
+    {
+      "input": "num = 1",
+      "output": "0"
+    },
+    {
+      "input": "num = 0",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tìm mask bit cao nhất của num; complement trong mask = mask ^ num.",
+  "memoryTip": "XOR with all-1s mask of same bit-length as num.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findComplement(self, num: int) -> int:\n        if num == 0: return 1\n        mask = 1\n        while mask < num: mask = (mask << 1) | 1\n        return num ^ mask",
+    "cpp": "class Solution {\npublic:\n    int findComplement(int num) {\n        if(!num) return 1;\n        int mask=num;\n        mask |= mask>>1; mask |= mask>>2; mask |= mask>>4;\n        mask |= mask>>8; mask |= mask>>16;\n        return num ^ mask;\n    }\n};",
+    "c": "int findComplement(int num) {\n    if(!num) return 1;\n    unsigned mask=num;\n    mask |= mask>>1; mask |= mask>>2; mask |= mask>>4;\n    mask |= mask>>8; mask |= mask>>16;\n    return num ^ mask;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mask covers all bits of num; XOR flips them.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "num=0 special → 1",
+      "Power of two",
+      "All bits 1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Flip 32 bits wrong",
+      "~num in two complement wrong"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

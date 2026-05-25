@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #456</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">132 Pattern</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>34.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">132 Pattern (LeetCode #456) — Medium.</div>
+                        <div class="block-text">Kiểm tra tồn tại bộ ba chỉ số i&lt;j&lt;k sao nums[i]&lt;nums[k]&lt;nums[j] (132 pattern).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [3,1,4,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [-1,3,2,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt từ phải: stack giữ candidates cho j; third = max popped &lt; nums[i] là k; nếu nums[i] &lt; third → true.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> find132pattern(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span>* st=<span class="kw">malloc</span>(n*<span class="kw">sizeof</span>(<span class="ty">int</span>)); <span class="ty">int</span> top=0, third=INT_MIN;
+    <span class="kw">for</span>(<span class="ty">int</span> i=n-1;i&gt;=0;i--){
+        <span class="kw">if</span>(nums[i]&lt;third){ <span class="kw">free</span>(st); <span class="kw">return</span> true; }
+        <span class="kw">while</span>(top&amp;&amp;nums[i]&gt;st[top-1]) third=st[--top];
+        st[top++]=nums[i];
+    }
+    <span class="kw">free</span>(st); <span class="kw">return</span> false;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> find132pattern(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        stack, third = [], float(&quot;-inf&quot;)
+        <span class="kw">for</span> x <span class="kw">in</span> reversed(nums):
+            <span class="kw">if</span> x &lt; third: <span class="kw">return</span> <span class="kw">True</span>
+            <span class="kw">while</span> stack <span class="kw">and</span> x &gt; stack[-1]:
+                third = stack.pop()
+            stack.append(x)
+        <span class="kw">return</span> <span class="kw">False</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> find132pattern(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        stack&lt;<span class="ty">int</span>&gt; st; <span class="ty">int</span> third=INT_MIN;
+        <span class="kw">for</span>(<span class="ty">int</span> i=nums.size()-1;i&gt;=0;i--){
+            <span class="kw">if</span>(nums[i]&lt;third) <span class="kw">return</span> true;
+            <span class="kw">while</span>(!st.empty()&amp;&amp;nums[i]&gt;st.top()){ third=st.top(); st.pop(); }
+            st.push(nums[i]);
+        }
+        <span class="kw">return</span> false;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +137,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Stack</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Duyệt từ phải: stack giữ candidates cho j; third = max popped &lt; nums[i]…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Right scan builds j&gt;k pairs with third as max k for current i.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Tăng dần → false</span><span class="analysis-tag edge">Duplicate values</span><span class="analysis-tag edge">n&lt;3</span><span class="analysis-tag pit">O(n²) TLE</span><span class="analysis-tag pit">Nhầm 132 vs 312 pattern</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>132 from right: maintain decreasing stack of potential j, track best k.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +166,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=132%20Pattern&lc_id=456&embed=true"></iframe>

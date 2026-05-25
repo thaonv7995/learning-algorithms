@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #541</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Two Pointers</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">String</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Reverse String II</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Reverse String II (LeetCode #541) — Easy.</div>
+                        <div class="block-text">Cho s và k. Đảo chuỗi theo khối 2k: mỗi 2k ký tự đảo k ký tự đầu; đoạn cuối &lt;2k thì đảo k đầu (hoặc hết nếu ngắn hơn).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;abcdefg&quot;, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;bacdfeg&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;abcd&quot;, k = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;bacd&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt i += 2k; reverse s[i..i+k-1] bằng two-pointer.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,21 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Reverse every 2k block — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> reverseStr(<span class="ty">self</span>, s: <span class="ty">str</span>, k: <span class="ty">int</span>) -&gt; <span class="ty">str</span>:
+        a = <span class="ty">list</span>(s)
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(0, <span class="ty">len</span>(a), 2 * k):
+            a[i:i+k] = reversed(a[i:i+k])
+        <span class="kw">return</span> &quot;&quot;.join(a)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> reverseStr(<span class="ty">string</span> s, <span class="ty">int</span> k) {
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)s.size(); i += 2 * k) {
+            reverse(s.begin() + i, s.begin() + min(i + k, (<span class="ty">int</span>)s.size()));
+        }
+        <span class="kw">return</span> s;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +118,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Two Pointers</span>
+                        <span class="pattern-chip">String</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Duyệt i += 2k; reverse s[i..i+k-1] bằng two-pointer.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi khối 2k chỉ đảo đúng k ký tự đầu theo đề.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">k=1 đảo từng ký tự xen kẽ</span><span class="analysis-tag edge">Đoạn cuối &lt; k</span><span class="analysis-tag pit">Đảo cả 2k thay vì k</span><span class="analysis-tag pit">Off-by-one trên đoạn cuối</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Reverse II: for i step 2k, reverse subrange [i, i+k).</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +147,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Reverse%20String%20II&lc_id=541&embed=true"></iframe>

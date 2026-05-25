@@ -5,30 +5,38 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Shortest Unsorted Continuous Subarray (LeetCode #581) — Medium.",
+  "description": "Tìm độ dài subarray liên tiếp ngắn nhất cần sort để cả mảng non-decreasing.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [2,6,4,8,10,9,15]",
+      "output": "5"
+    },
+    {
+      "input": "nums = [1,2,3,4]",
+      "output": "0"
+    },
+    {
+      "input": "nums = [1]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tìm left: điểm đầu unsorted; right: điểm cuối unsorted bằng scan min/max suffix/prefix.",
+  "memoryTip": "Shortest unsorted subarray: expand left/right then shrink with min/max bounds.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findUnsortedSubarray(self, nums: List[int]) -> int:\n        n = len(nums)\n        lo, hi = 0, n-1\n        while lo < n-1 and nums[lo] <= nums[lo+1]: lo += 1\n        if lo == n-1: return 0\n        while hi > 0 and nums[hi] >= nums[hi-1]: hi -= 1\n        submax = max(nums[lo:hi+1])\n        submin = min(nums[lo:hi+1])\n        while lo > 0 and nums[lo-1] > submin: lo -= 1\n        while hi < n-1 and nums[hi+1] < submax: hi += 1\n        return hi - lo + 1",
+    "cpp": "class Solution {\npublic:\n    int findUnsortedSubarray(vector<int>& nums) {\n        int n = nums.size(), lo=0, hi=n-1;\n        while (lo<n-1 && nums[lo]<=nums[lo+1]) lo++;\n        if (lo==n-1) return 0;\n        while (hi>0 && nums[hi]>=nums[hi-1]) hi--;\n        int submax=*max_element(nums.begin()+lo, nums.begin()+hi+1);\n        int submin=*min_element(nums.begin()+lo, nums.begin()+hi+1);\n        while (lo>0 && nums[lo-1]>submin) lo--;\n        while (hi<n-1 && nums[hi+1]<submax) hi++;\n        return hi-lo+1;\n    }\n};",
+    "c": "/* Expand unsorted bounds — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Core unsorted [lo,hi] mở rộng để mọi phần tử ngoài không vi phạm sort.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Đã sorted → 0",
+      "Toàn mảng unsorted"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort copy O(n log n) chấp nhận nhưng có O(n)",
+      "Min/max subarray sai biên"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

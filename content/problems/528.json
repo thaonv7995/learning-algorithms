@@ -3,32 +3,36 @@
   "title": "Random Pick with Weight",
   "difficulty": "Medium",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Random Pick with Weight (LeetCode #528) — Medium.",
+  "timeComplexity": "O(log n) per pick",
+  "spaceComplexity": "O(n)",
+  "description": "Implement pickIndex() trả index i với xác suất w[i]/sum(w). Gọi nhiều lần.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "w=[1], pickIndex() nhiều lần",
+      "output": "Luôn 0"
+    },
+    {
+      "input": "w=[1,3], pickIndex()",
+      "output": "Index 1 ~75%, index 0 ~25%"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix sum của w; random target in [0,total); binary search index đầu tiên prefix ≥ target.",
+  "memoryTip": "Weighted pick = prefix sums + binary search trên cumulative weights.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def __init__(self, w: List[int]):\n        self.prefix = []\n        s = 0\n        for x in w:\n            s += x\n            self.prefix.append(s)\n        self.total = s\n    def pickIndex(self) -> int:\n        import random, bisect\n        r = random.random() * self.total\n        return bisect.bisect_left(self.prefix, r)",
+    "cpp": "class Solution {\n    vector<int> pre;\n    int total;\npublic:\n    Solution(vector<int>& w) {\n        for (int x : w) { total += x; pre.push_back(total); }\n    }\n    int pickIndex() {\n        int r = rand() % total;\n        return lower_bound(pre.begin(), pre.end(), r + 1) - pre.begin();\n    }\n};",
+    "c": "/* Prefix + binary search — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi index chiếm đoạn trên [0,total) dài w[i] → đúng phân phối.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một phần tử",
+      "Weight lớn lệch xác suất"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Binary search trên r thay vì r+1",
+      "Không dùng prefix cumulative"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

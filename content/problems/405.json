@@ -2,33 +2,42 @@
   "id": 405,
   "title": "Convert a Number to Hexadecimal",
   "difficulty": "Easy",
-  "category": "Math",
-  "timeComplexity": "O(n)",
+  "category": "Bit Manipulation",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Convert a Number to Hexadecimal (LeetCode #405) — Easy.",
+  "description": "Cho số nguyên num (32-bit signed). Trả chuỗi biểu diễn hexadecimal của num coi như unsigned 32-bit (chữ thường a–f).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num = 26",
+      "output": "\"1a\""
+    },
+    {
+      "input": "num = -1",
+      "output": "\"ffffffff\""
+    },
+    {
+      "input": "num = 0",
+      "output": "\"0\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Ép unsigned: u = num & 0xFFFFFFFF. Lặp lấy 4 bit cuối, map 0–15 → hex, đảo chuỗi.",
+  "memoryTip": "Số âm trong C/Java → unsigned 32-bit trước khi chia 16.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def toHex(self, num: int) -> str:\n        if num == 0: return \"0\"\n        u = num & 0xFFFFFFFF\n        digits = \"0123456789abcdef\"\n        ans = []\n        while u:\n            ans.append(digits[u & 15])\n            u >>= 4\n        return \"\".join(reversed(ans))",
+    "cpp": "class Solution {\npublic:\n    string toHex(int num) {\n        if (num == 0) return \"0\";\n        unsigned u = num;\n        string d = \"0123456789abcdef\", ans;\n        while (u) { ans.push_back(d[u & 15]); u >>= 4; }\n        reverse(ans.begin(), ans.end());\n        return ans;\n    }\n};",
+    "c": "char* toHex(int num) {\n    if (num == 0) { char* r=malloc(2); r[0]='0'; r[1]=0; return r; }\n    unsigned u = (unsigned)num;\n    char* ans = malloc(9); int p=0;\n    const char* d = \"0123456789abcdef\";\n    while (u) { ans[p++] = d[u & 15]; u >>= 4; }\n    ans[p]=0; for(int i=0,j=p-1;i<j;i++,j--){ char t=ans[i]; ans[i]=ans[j]; ans[j]=t; }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Xử lý unsigned đúng cho -1 → ffffffff; mọi bit được nhóm 4.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "num=0",
+      "num=-1 full bits",
+      "Không có leading zero"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng signed shift sai với âm",
+      "Uppercase hex không đúng đề"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #414</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Third Maximum Number</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Third Maximum Number (LeetCode #414) — Easy.</div>
+                        <div class="block-text">Trả giá trị lớn thứ ba khác nhau trong mảng nums. Nếu không đủ 3 giá trị khác nhau thì trả max.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [3,2,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [2,2,3,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Giữ ba biến first, second, third (long min). Duyệt x: cập nhật nếu x lớn hơn từng mức, bỏ qua trùng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,38 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> thirdMax(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">long</span> a=LLONG_MIN,b=LLONG_MIN,c=LLONG_MIN;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){
+        <span class="ty">long</span> x=nums[i];
+        <span class="kw">if</span>(x==a||x==b||x==c) continue;
+        <span class="kw">if</span>(x&gt;a){ c=b;b=a;a=x; }
+        <span class="kw">else</span> <span class="kw">if</span>(x&gt;b){ c=b;b=x; }
+        <span class="kw">else</span> <span class="kw">if</span>(x&gt;c) c=x;
+    }
+    <span class="kw">return</span> c&gt;LLONG_MIN/2 ? (<span class="ty">int</span>)c : (<span class="ty">int</span>)a;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> thirdMax(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        a = b = c = -10**18
+        <span class="kw">for</span> x <span class="kw">in</span> nums:
+            <span class="kw">if</span> x == a <span class="kw">or</span> x == b <span class="kw">or</span> x == c: continue
+            <span class="kw">if</span> x &gt; a: a, b, c = x, a, b
+            <span class="kw">elif</span> x &gt; b: b, c = x, b
+            <span class="kw">elif</span> x &gt; c: c = x
+        <span class="kw">return</span> c <span class="kw">if</span> c &gt; -10**17 <span class="kw">else</span> a</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> thirdMax(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">long</span> a=LLONG_MIN,b=LLONG_MIN,c=LLONG_MIN;
+        <span class="kw">for</span>(<span class="ty">long</span> x:nums){
+            <span class="kw">if</span>(x==a||x==b||x==c) continue;
+            <span class="kw">if</span>(x&gt;a) { c=b; b=a; a=x; }
+            <span class="kw">else</span> <span class="kw">if</span>(x&gt;b) { c=b; b=x; }
+            <span class="kw">else</span> <span class="kw">if</span>(x&gt;c) c=x;
+        }
+        <span class="kw">return</span> c&gt;LLONG_MIN/2 ? (<span class="ty">int</span>)c : (<span class="ty">int</span>)a;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +145,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Giữ ba biến first, second, third .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Duyệt x: cập nhật nếu x lớn hơn từng mức, bỏ qua trùng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Ba biến luôn là top 3 distinct seen; thiếu third thì trả first.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">INT_MIN trong mảng</span><span class="analysis-tag edge">Chỉ 1 distinct</span><span class="analysis-tag edge">Trùng lặp nhiều</span><span class="analysis-tag pit">Sort unique sai tie</span><span class="analysis-tag pit">Quên case &lt;3 distinct → max</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Third max — track top 3 distinct, không sort O cần thiết.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Third%20Maximum%20Number&lc_id=414&embed=true"></iframe>

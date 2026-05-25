@@ -2,33 +2,42 @@
   "id": 424,
   "title": "Longest Repeating Character Replacement",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Sliding Window",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Longest Repeating Character Replacement (LeetCode #424) — Medium.",
+  "description": "Cho chuỗi s và k. Trả độ dài substring dài nhất chỉ gồm một ký tự sau khi được phép thay tối đa k ký tự thành ký tự đó.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"ABAB\", k = 2",
+      "output": "4"
+    },
+    {
+      "input": "s = \"AABABBA\", k = 1",
+      "output": "4"
+    },
+    {
+      "input": "s = \"AAAA\", k = 0",
+      "output": "4"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sliding window: count ký tự phổ biến nhất trong window; shrink khi len - maxCount > k.",
+  "memoryTip": "Replacements = windowLen - maxFreq — không cần biết ký tự nào được thay.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def characterReplacement(self, s: str, k: int) -> int:\n        cnt = [0]*26\n        l = maxf = ans = 0\n        for r, ch in enumerate(s):\n            cnt[ord(ch)-65] += 1\n            maxf = max(maxf, cnt[ord(ch)-65])\n            while r - l + 1 - maxf > k:\n                cnt[ord(s[l])-65] -= 1\n                l += 1\n            ans = max(ans, r - l + 1)\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int characterReplacement(string s, int k) {\n        int cnt[26]={}, l=0, maxf=0, ans=0;\n        for(int r=0;r<(int)s.size();r++){\n            cnt[s[r]-'A']++;\n            maxf=max(maxf,cnt[s[r]-'A']);\n            while(r-l+1-maxf>k){ cnt[s[l]-'A']--; l++; }\n            ans=max(ans,r-l+1);\n        }\n        return ans;\n    }\n};",
+    "c": "int characterReplacement(char* s, int k) {\n    int cnt[26]={0}, l=0, maxf=0, ans=0, n=strlen(s);\n    for(int r=0;r<n;r++){\n        cnt[s[r]-'A']++; if(cnt[s[r]-'A']>maxf) maxf=cnt[s[r]-'A'];\n        while(r-l+1-maxf>k){ cnt[s[l]-'A']--; l++; }\n        if(r-l+1>ans) ans=r-l+1;\n    }\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Window hợp lệ iff số thay thế ≤ k; maxf có thể stale nhưng ans vẫn đúng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=0",
+      "Một ký tự",
+      "k lớn → full string"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Shrink sai điều kiện",
+      "Case sensitive — đề dùng uppercase"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

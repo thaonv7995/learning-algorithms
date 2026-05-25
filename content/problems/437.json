@@ -3,32 +3,37 @@
   "title": "Path Sum III",
   "difficulty": "Medium",
   "category": "Tree",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Path Sum III (LeetCode #437) — Medium.",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n)",
+  "description": "Đếm số path trong cây nhị phân (không nhất thiết qua root) có tổng bằng targetSum.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [10,5,-3,3,2,null,11,3,-2,null,1], targetSum = 8",
+      "output": "3"
+    },
+    {
+      "input": "root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix sum trên path root→node: DFS với map count prefix; tại node cộng map[curr-target].",
+  "memoryTip": "Giống subarray sum k — prefix sum + hashmap trên đường đi.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:\n        cnt = defaultdict(int); cnt[0] = 1\n        def dfs(node, s):\n            if not node: return 0\n            s += node.val\n            ans = cnt[s - targetSum]\n            cnt[s] += 1\n            ans += dfs(node.left, s) + dfs(node.right, s)\n            cnt[s] -= 1\n            return ans\n        return dfs(root, 0)",
+    "cpp": "class Solution {\npublic:\n    int pathSum(TreeNode* root, int t) {\n        unordered_map<long long,int> cnt; cnt[0]=1;\n        function<int(TreeNode*,long long)> dfs=[&](TreeNode* n,long long s)->int{\n            if(!n) return 0;\n            s+=n->val; int ans=cnt[s-t];\n            cnt[s]++; ans+=dfs(n->left,s)+dfs(n->right,s); cnt[s]--;\n            return ans;\n        };\n        return dfs(root,0);\n    }\n};",
+    "c": "int pathSum(struct TreeNode* root, int targetSum) { return 0; }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Prefix sum trên mọi path downward — backtrack map khi return.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "target=0",
+      "Giá trị âm",
+      "Single node match"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ path qua root",
+      "Quên cnt[0]=1"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

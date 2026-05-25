@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #486</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Predict the Winner</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>56.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Predict the Winner (LeetCode #486) — Medium.</div>
+                        <div class="block-text">Hai người lấy từ đầu hoặc cuối nums, cộng score. Người 1 đi trước — có thắng (score ≥ đối thủ) không?</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,5,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [1,5,233,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [0,0,7,6]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[l][r]=max diff current-opponent trên đoạn; win nếu dp[0][n-1]≥0.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> predictTheWinner(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> dp[20][20]={0};
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) dp[i][i]=nums[i];
+    <span class="kw">for</span>(<span class="ty">int</span> len=2;len&lt;=n;len++)
+        <span class="kw">for</span>(<span class="ty">int</span> l=0;l+len-1&lt;n;l++){
+            <span class="ty">int</span> r=l+len-1;
+            <span class="ty">int</span> a=nums[l]-dp[l+1][r], b=nums[r]-dp[l][r-1];
+            dp[l][r]=a&gt;b?a:b;
+        }
+    <span class="kw">return</span> dp[0][n-1]&gt;=0;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> PredictTheWinner(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        n = <span class="ty">len</span>(nums)
+        dp = [[0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n)]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n): dp[i][i] = nums[i]
+        <span class="kw">for</span> ln <span class="kw">in</span> <span class="ty">range</span>(2, n+1):
+            <span class="kw">for</span> l <span class="kw">in</span> <span class="ty">range</span>(n-ln+1):
+                r = l+ln-1
+                dp[l][r] = <span class="ty">max</span>(nums[l]-dp[l+1][r], nums[r]-dp[l][r-1])
+        <span class="kw">return</span> dp[0][n-1] &gt;= 0</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> PredictTheWinner(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        <span class="ty">int</span> n=nums.size(); <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dp(n, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n));
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) dp[i][i]=nums[i];
+        <span class="kw">for</span>(<span class="ty">int</span> len=2;len&lt;=n;len++)
+            <span class="kw">for</span>(<span class="ty">int</span> l=0;l+len-1&lt;n;l++){
+                <span class="ty">int</span> r=l+len-1;
+                dp[l][r]=max(nums[l]-dp[l+1][r], nums[r]-dp[l][r-1]);
+            }
+        <span class="kw">return</span> dp[0][n-1]&gt;=0;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +141,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n^2)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — DP[l][r]=max diff current-opponent trên đoạn; win nếu dp[0][n-1]≥0.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Optimal play score difference DP — non-negative means player1 wins or ties.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">One element</span><span class="analysis-tag edge">Tie still true</span><span class="analysis-tag edge">Both ends optimal</span><span class="analysis-tag pit">Greedy by value wrong</span><span class="analysis-tag pit">Strict &gt; misinterpreted</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Interval minimax — take max.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Predict%20the%20Winner&lc_id=486&embed=true"></iframe>

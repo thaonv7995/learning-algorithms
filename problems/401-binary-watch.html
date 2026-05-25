@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #401</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Backtracking</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Binary Watch</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>65.5% AC</span>
                     </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Binary Watch (LeetCode #401) — Easy.</div>
+                        <div class="block-text">Đồng hồ nhị phân có 4 bit giờ (0–11) và 6 bit phút (0–59). Cho num là số LED bật. Liệt kê mọi thời gian hợp lệ dùng đúng num bit 1, định dạng &quot;H:MM&quot; (phút luôn 2 chữ số).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>turnedOn = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;0:01&quot;,&quot;0:02&quot;,&quot;0:04&quot;,&quot;0:08&quot;,&quot;0:16&quot;,&quot;0:32&quot;,&quot;1:00&quot;,&quot;2:00&quot;,&quot;4:00&quot;,&quot;8:00&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>turnedOn = 9</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>turnedOn = 0</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;0:00&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Duyệt h=0..11, m=0..59; nếu popcount(h)+popcount(m)==turnedOn thì format &quot;h:MM&quot; vào kết quả.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">static <span class="ty">int</span> popc(<span class="ty">int</span> x){ <span class="ty">int</span> c=0; <span class="kw">while</span>(x){ c+=x&amp;1; x&gt;&gt;=1; } <span class="kw">return</span> c; }
+<span class="ty">char</span>** readBinaryWatch(<span class="ty">int</span> turnedOn, <span class="ty">int</span>* retSize) {
+    <span class="ty">char</span>** ans = <span class="kw">malloc</span>(720 * <span class="kw">sizeof</span>(<span class="ty">char</span>*)); *retSize = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> h=0; h&lt;12; h++) <span class="kw">for</span> (<span class="ty">int</span> m=0; m&lt;60; m++)
+        <span class="kw">if</span> (popc(h)+popc(m)==turnedOn) {
+            ans[*retSize] = <span class="kw">malloc</span>(8);
+            snprintf(ans[(*retSize)++], 8, &quot;%d:%02d&quot;, h, m);
+        }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> readBinaryWatch(<span class="ty">self</span>, turnedOn: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        <span class="kw">def</span> bits(x):
+            <span class="kw">return</span> bin(x).count(&quot;1&quot;)
+        ans = []
+        <span class="kw">for</span> h <span class="kw">in</span> <span class="ty">range</span>(12):
+            <span class="kw">for</span> m <span class="kw">in</span> <span class="ty">range</span>(60):
+                <span class="kw">if</span> bits(h) + bits(m) == turnedOn:
+                    ans.append(f&quot;{h}:{m:02d}&quot;)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; readBinaryWatch(<span class="ty">int</span> turnedOn) {
+        auto bits = [](<span class="ty">int</span> x){ <span class="kw">return</span> __builtin_popcount(x); };
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; ans;
+        <span class="kw">for</span> (<span class="ty">int</span> h = 0; h &lt; 12; h++)
+            <span class="kw">for</span> (<span class="ty">int</span> m = 0; m &lt; 60; m++)
+                <span class="kw">if</span> (bits(h) + bits(m) == turnedOn) {
+                    <span class="ty">char</span> buf[16];
+                    snprintf(buf, <span class="kw">sizeof</span>(buf), &quot;%d:%02d&quot;, h, m);
+                    ans.push_back(buf);
+                }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +143,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Backtracking</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Duyệt h=0..11, m=0..59; nếu popcount+popcount==turnedOn thì format…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi (h,m) hợp lệ được kiểm tra popcount — không bỏ sót hay thừa.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">turnedOn=0 → 0:00</span><span class="analysis-tag edge">turnedOn&gt;10 → rỗng</span><span class="analysis-tag edge">Giờ 11:59 cần nhiều bit</span><span class="analysis-tag pit">Quên zero-pad phút</span><span class="analysis-tag pit">Giới hạn giờ 0–11 không phải 0–12</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Chỉ 12×60 tổ hợp — brute popcount nhanh hơn backtrack cho bài nhỏ.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Binary%20Watch&lc_id=401&embed=true"></iframe>

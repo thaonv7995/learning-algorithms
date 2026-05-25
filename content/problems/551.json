@@ -5,30 +5,38 @@
   "category": "String",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Student Attendance Record I (LeetCode #551) — Easy.",
+  "description": "Kiểm tra chuỗi attendance hợp lệ: tối đa một 'A' (absent) và không có 3 'L' liên tiếp.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"PPALLP\"",
+      "output": "true"
+    },
+    {
+      "input": "s = \"PPALLL\"",
+      "output": "false"
+    },
+    {
+      "input": "s = \"P\"",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt một lần: đếm A, streak L reset khi gặp P/A.",
+  "memoryTip": "Attendance I: count A ≤1 và max consecutive L <3.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def checkRecord(self, s: str) -> bool:\n        a = l = 0\n        for c in s:\n            if c == \"A\":\n                a += 1\n                if a > 1: return False\n                l = 0\n            elif c == \"L\":\n                l += 1\n                if l >= 3: return False\n            else:\n                l = 0\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool checkRecord(string s) {\n        int a = 0, l = 0;\n        for (char c : s) {\n            if (c == 'A') { if (++a > 1) return false; l = 0; }\n            else if (c == 'L') { if (++l >= 3) return false; }\n            else l = 0;\n        }\n        return true;\n    }\n};",
+    "c": "/* Scan A count L streak — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Hai ràng buộc độc lập kiểm tra trong một pass.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không A không L",
+      "LLL ngay đầu"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Chỉ check A quên LLL",
+      "Reset L khi A sai"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

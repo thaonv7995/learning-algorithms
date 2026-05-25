@@ -4,31 +4,39 @@
   "difficulty": "Medium",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Continuous Subarray Sum (LeetCode #523) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Kiểm tra tồn tại subarray dài ≥ 2 có tổng chia hết cho k (có thể có số âm).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [23,2,4,6,7], k = 6",
+      "output": "true"
+    },
+    {
+      "input": "nums = [23,2,6,4,7], k = 6",
+      "output": "true"
+    },
+    {
+      "input": "nums = [1,2,12], k = 6",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Prefix mod k: nếu cùng remainder cách nhau ≥ 2 index → có subarray sum % k == 0.",
+  "memoryTip": "Continuous subarray sum k: hash map remainder → earliest index; gap ≥ 2.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def checkSubarraySum(self, nums: List[int], k: int) -> bool:\n        rem_idx = {0: -1}\n        s = 0\n        for i, x in enumerate(nums):\n            s += x\n            r = s % k if k else s\n            if r in rem_idx:\n                if i - rem_idx[r] >= 2:\n                    return True\n            else:\n                rem_idx[r] = i\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool checkSubarraySum(vector<int>& nums, int k) {\n        unordered_map<int,int> remIdx{{0,-1}};\n        long long s = 0;\n        for (int i = 0; i < (int)nums.size(); i++) {\n            s += nums[i];\n            int r = k ? s % k : (int)s;\n            if (remIdx.count(r)) {\n                if (i - remIdx[r] >= 2) return true;\n            } else remIdx[r] = i;\n        }\n        return false;\n    }\n};",
+    "c": "/* Prefix mod hash — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Hai prefix cùng mod k → hiệu chia hết k; khoảng index ≥ 2 đảm bảo length ≥ 2.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=0: remainder là tổng trực tiếp",
+      "Subarray [0,0] length 2"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Cập nhật rem_idx mỗi lần gặp (mất index sớm)",
+      "Quên seed {0:-1}"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

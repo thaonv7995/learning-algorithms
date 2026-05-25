@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #412</span>
                         <span class="diff-badge easy">Easy</span>
-                        <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Simulation</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Fizz Buzz</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Fizz Buzz (LeetCode #412) — Easy.</div>
+                        <div class="block-text">In các số từ 1 đến n: chia hết 3 và 5 → &quot;FizzBuzz&quot;, 3 → &quot;Fizz&quot;, 5 → &quot;Buzz&quot;, còn lại số dạng chuỗi.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>n = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;1&quot;,&quot;2&quot;,&quot;Fizz&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;1&quot;,&quot;2&quot;,&quot;Fizz&quot;,&quot;4&quot;,&quot;Buzz&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>n = 15</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;1&quot;,&quot;2&quot;,&quot;Fizz&quot;,&quot;4&quot;,&quot;Buzz&quot;,&quot;Fizz&quot;,&quot;7&quot;,&quot;8&quot;,&quot;Fizz&quot;,&quot;Buzz&quot;,&quot;11&quot;,&quot;Fizz&quot;,&quot;13&quot;,&quot;14&quot;,&quot;FizzBuzz&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Loop i=1..n: kiểm tra %15, %3, %5 theo thứ tự ưu tiên FizzBuzz trước.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,38 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>** fizzBuzz(<span class="ty">int</span> n, <span class="ty">int</span>* retSize) {
+    <span class="ty">char</span>** ans = <span class="kw">malloc</span>(n * <span class="kw">sizeof</span>(<span class="ty">char</span>*)); *retSize = n;
+    <span class="kw">for</span> (<span class="ty">int</span> i=1;i&lt;=n;i++) {
+        ans[i-1] = <span class="kw">malloc</span>(9);
+        <span class="kw">if</span> (i%15==0) strcpy(ans[i-1], &quot;FizzBuzz&quot;);
+        <span class="kw">else</span> <span class="kw">if</span> (i%3==0) strcpy(ans[i-1], &quot;Fizz&quot;);
+        <span class="kw">else</span> <span class="kw">if</span> (i%5==0) strcpy(ans[i-1], &quot;Buzz&quot;);
+        <span class="kw">else</span> sprintf(ans[i-1], &quot;%d&quot;, i);
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> fizzBuzz(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        ans = []
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, n+1):
+            <span class="kw">if</span> i % 15 == 0: ans.append(&quot;FizzBuzz&quot;)
+            <span class="kw">elif</span> i % 3 == 0: ans.append(&quot;Fizz&quot;)
+            <span class="kw">elif</span> i % 5 == 0: ans.append(&quot;Buzz&quot;)
+            <span class="kw">else</span>: ans.append(<span class="ty">str</span>(i))
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; fizzBuzz(<span class="ty">int</span> n) {
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; ans;
+        <span class="kw">for</span> (<span class="ty">int</span> i=1;i&lt;=n;i++) {
+            <span class="kw">if</span> (i%15==0) ans.push_back(&quot;FizzBuzz&quot;);
+            <span class="kw">else</span> <span class="kw">if</span> (i%3==0) ans.push_back(&quot;Fizz&quot;);
+            <span class="kw">else</span> <span class="kw">if</span> (i%5==0) ans.push_back(&quot;Buzz&quot;);
+            <span class="kw">else</span> ans.push_back(to_string(i));
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +140,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Math</span>
+                        <span class="pattern-chip">Simulation</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Loop i=1..n: kiểm tra %15, %3, %5 theo thứ tự ưu tiên FizzBuzz trước.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Quy tắc if-else đúng thứ tự 15 trước 3 và 5.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">n=15 đủ case</span><span class="analysis-tag edge">Chỉ Fizz hoặc Buzz</span><span class="analysis-tag pit">Kiểm tra 3 và 5 trước 15</span><span class="analysis-tag pit">Trả int thay string</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Mod 15 trước — tránh nhánh Fizz/Buzz riêng khi cả hai.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +169,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Fizz%20Buzz&lc_id=412&embed=true"></iframe>

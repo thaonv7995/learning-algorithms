@@ -3,32 +3,36 @@
   "title": "Subtree of Another Tree",
   "difficulty": "Easy",
   "category": "Tree",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Subtree of Another Tree (LeetCode #572) — Easy.",
+  "timeComplexity": "O(m * n)",
+  "spaceComplexity": "O(h)",
+  "description": "Kiểm tra subRoot có phải subtree của root không (cùng cấu trúc và giá trị).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root=[3,4,5,1,2], subRoot=[4,1,2]",
+      "output": "true"
+    },
+    {
+      "input": "root=[3,4,5,1,2,null,null,null,0], subRoot=[4,1,2]",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS root: tại mỗi node gọi isSameTree(node, subRoot); nếu khớp return true.",
+  "memoryTip": "Subtree check = traverse + isSameTree helper at each node.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:\n        def same(a, b):\n            if not a and not b: return True\n            if not a or not b or a.val != b.val: return False\n            return same(a.left,b.left) and same(a.right,b.right)\n        if not root: return False\n        if same(root, subRoot): return True\n        return self.isSubtree(root.left, subRoot) or self.isSubtree(root.right, subRoot)",
+    "cpp": "class Solution {\n    bool same(TreeNode* a, TreeNode* b) {\n        if (!a && !b) return true;\n        if (!a || !b || a->val != b->val) return false;\n        return same(a->left,b->left) && same(a->right,b->right);\n    }\npublic:\n    bool isSubtree(TreeNode* root, TreeNode* subRoot) {\n        if (!root) return false;\n        if (same(root, subRoot)) return true;\n        return isSubtree(root->left, subRoot) || isSubtree(root->right, subRoot);\n    }\n};",
+    "c": "/* DFS isSameTree — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Subtree phải khớp cấu trúc từ một node; isSameTree kiểm tra đủ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "subRoot null → true",
+      "subRoot lớn hơn root → false"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Serialize compare O(n) nhưng cần delimiter",
+      "Chỉ match root top"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

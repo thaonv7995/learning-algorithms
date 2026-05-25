@@ -5,30 +5,39 @@
   "category": "String",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Number of Segments in a String (LeetCode #434) — Easy.",
+  "description": "Đếm số segment (từ) trong chuỗi s — segment là chuỗi ký tự không phải space, ngăn bởi space.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"Hello, my name is John\"",
+      "output": "5"
+    },
+    {
+      "input": "s = \"   fly     me   to   the moon  \"",
+      "output": "5"
+    },
+    {
+      "input": "s = \"Hello\"",
+      "output": "1"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt: nếu không space và ký tự trước là space/begin thì +1 segment.",
+  "memoryTip": "Transition non-space after space/boundary — không cần split.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def countSegments(self, s: str) -> int:\n        ans = 0\n        for i, ch in enumerate(s):\n            if ch != \" \" and (i == 0 or s[i-1] == \" \"):\n                ans += 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int countSegments(string s) {\n        int ans=0;\n        for(int i=0;i<(int)s.size();i++)\n            if(s[i]!=' ' && (i==0||s[i-1]==' ')) ans++;\n        return ans;\n    }\n};",
+    "c": "int countSegments(char* s) {\n    int ans=0, n=strlen(s);\n    for(int i=0;i<n;i++) if(s[i]!=' ' && (i==0||s[i-1]==' ')) ans++;\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi segment bắt đầu tại ký tự đầu tiên sau space.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Chuỗi rỗng",
+      "Toàn space",
+      "Space đầu cuối"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "split filter empty",
+      "Đếm space"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

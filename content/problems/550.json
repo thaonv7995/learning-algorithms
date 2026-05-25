@@ -4,31 +4,35 @@
   "difficulty": "Medium",
   "category": "Database",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Game Play Analysis IV (LeetCode #550) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Bảng Activity. Tính tỷ lệ player có first_login không phải ngày đầu tiên của họ (event_date > MIN date) trong tổng số player.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "Player A login ngày 2 và 3, first=1",
+      "output": "Tỷ lệ player có ngày đầu > ngày first thực"
+    },
+    {
+      "input": "Mọi player chỉ 1 ngày",
+      "output": "0.00"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "WITH first AS (MIN date per player), tính COUNT player có EXISTS login sau first / COUNT player.",
+  "memoryTip": "Game Play IV = so sánh first event date với MIN date per player ratio.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "# SQL\nSELECT ROUND(\n  IFNULL(\n    (SELECT COUNT(DISTINCT player_id) FROM Activity a\n     JOIN (SELECT player_id, MIN(event_date) fd FROM Activity GROUP BY player_id) f\n       ON a.player_id=f.player_id AND a.event_date>f.fd)\n    / (SELECT COUNT(DISTINCT player_id) FROM Activity), 0), 2) AS fraction;",
+    "cpp": "// SQL\nSELECT ROUND(\n  IFNULL(\n    (SELECT COUNT(DISTINCT player_id) FROM Activity a\n     JOIN (SELECT player_id, MIN(event_date) fd FROM Activity GROUP BY player_id) f\n       ON a.player_id=f.player_id AND a.event_date>f.fd)\n    / (SELECT COUNT(DISTINCT player_id) FROM Activity), 0), 2) AS fraction;",
+    "c": "/* SQL ratio first login — xem SQL trên */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Player được đếm nếu có ít nhất một activity sau ngày đầu tiên của họ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một activity/player → 0",
+      "ROUND 2 chữ số"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Nhầm với Game Play I MIN date",
+      "Chia cho 0 khi không player"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

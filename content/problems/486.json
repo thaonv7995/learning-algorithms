@@ -2,33 +2,42 @@
   "id": 486,
   "title": "Predict the Winner",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Predict the Winner (LeetCode #486) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n^2)",
+  "spaceComplexity": "O(n^2)",
+  "description": "Hai người lấy từ đầu hoặc cuối nums, cộng score. Người 1 đi trước — có thắng (score ≥ đối thủ) không?",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,5,2]",
+      "output": "false"
+    },
+    {
+      "input": "nums = [1,5,233,7]",
+      "output": "true"
+    },
+    {
+      "input": "nums = [0,0,7,6]",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP[l][r]=max diff current-opponent trên đoạn; win nếu dp[0][n-1]≥0.",
+  "memoryTip": "Interval minimax — take max(nums[l]-dp[l+1][r], nums[r]-dp[l][r-1]).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def PredictTheWinner(self, nums: List[int]) -> bool:\n        n = len(nums)\n        dp = [[0]*n for _ in range(n)]\n        for i in range(n): dp[i][i] = nums[i]\n        for ln in range(2, n+1):\n            for l in range(n-ln+1):\n                r = l+ln-1\n                dp[l][r] = max(nums[l]-dp[l+1][r], nums[r]-dp[l][r-1])\n        return dp[0][n-1] >= 0",
+    "cpp": "class Solution {\npublic:\n    bool PredictTheWinner(vector<int>& nums) {\n        int n=nums.size(); vector<vector<int>> dp(n, vector<int>(n));\n        for(int i=0;i<n;i++) dp[i][i]=nums[i];\n        for(int len=2;len<=n;len++)\n            for(int l=0;l+len-1<n;l++){\n                int r=l+len-1;\n                dp[l][r]=max(nums[l]-dp[l+1][r], nums[r]-dp[l][r-1]);\n            }\n        return dp[0][n-1]>=0;\n    }\n};",
+    "c": "bool predictTheWinner(int* nums, int n) {\n    int dp[20][20]={0};\n    for(int i=0;i<n;i++) dp[i][i]=nums[i];\n    for(int len=2;len<=n;len++)\n        for(int l=0;l+len-1<n;l++){\n            int r=l+len-1;\n            int a=nums[l]-dp[l+1][r], b=nums[r]-dp[l][r-1];\n            dp[l][r]=a>b?a:b;\n        }\n    return dp[0][n-1]>=0;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Optimal play score difference DP — non-negative means player1 wins or ties.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "One element",
+      "Tie still true",
+      "Both ends optimal"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Greedy by value wrong",
+      "Strict > misinterpreted"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

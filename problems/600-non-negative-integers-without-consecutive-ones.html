@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #600</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Dynamic Programming</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Non-negative Integers without Consecutive Ones</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log num)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(log num)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>42.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Non-negative Integers without Consecutive Ones (LeetCode #600) — Hard.</div>
+                        <div class="block-text">Đếm số nguyên trong [0, num] mà biểu diễn nhị phân không có hai bit 1 liên tiếp.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>num = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>num = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>num = 1000000000</code></div>
+                <div class="ex-line"><span>Out</span><code>847286447</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Digit DP trên bit string của num: dp[pos][prev1][tight] đếm số hợp lệ ≤ num.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,44 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Binary digit DP — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findIntegers(<span class="ty">self</span>, num: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        bits = bin(num)[2:]
+        <span class="kw">from</span> functools <span class="kw">import</span> lru_cache
+        @lru_cache(<span class="kw">None</span>)
+        <span class="kw">def</span> dp(i, prev1, tight):
+            <span class="kw">if</span> i == <span class="ty">len</span>(bits):
+                <span class="kw">return</span> 1
+            limit = <span class="ty">int</span>(bits[i]) <span class="kw">if</span> tight <span class="kw">else</span> 1
+            ans = 0
+            <span class="kw">for</span> d <span class="kw">in</span> <span class="ty">range</span>(0, limit+1):
+                <span class="kw">if</span> prev1 <span class="kw">and</span> d == 1:
+                    continue
+                ans += dp(i+1, d==1, tight <span class="kw">and</span> d==limit)
+            <span class="kw">return</span> ans
+        <span class="kw">return</span> dp(0, <span class="kw">False</span>, <span class="kw">True</span>)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">string</span> bits;
+    <span class="ty">int</span> dp[35][2][2];
+    <span class="ty">int</span> dfs(<span class="ty">int</span> i, <span class="ty">int</span> prev1, <span class="ty">int</span> tight) {
+        <span class="kw">if</span> (i == (<span class="ty">int</span>)bits.size()) <span class="kw">return</span> 1;
+        <span class="kw">if</span> (dp[i][prev1][tight] != -1) <span class="kw">return</span> dp[i][prev1][tight];
+        <span class="ty">int</span> limit = tight ? bits[i]-'0' : 1;
+        <span class="ty">int</span> ans = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> d=0; d&lt;=limit; d++) {
+            <span class="kw">if</span> (prev1 &amp;&amp; d==1) continue;
+            ans += dfs(i+1, d==1, tight &amp;&amp; d==limit);
+        }
+        <span class="kw">return</span> dp[i][prev1][tight]=ans;
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> findIntegers(<span class="ty">int</span> num) {
+        bits = bitset&lt;32&gt;(num).to_string();
+        bits = bits.substr(bits.find('1'));
+        memset(dp, -1, <span class="kw">sizeof</span> dp);
+        <span class="kw">return</span> dfs(0, 0, 1);
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +147,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log num)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(log num)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Digit DP trên bit string của num: dp[pos][prev1][tight] đếm số hợp lệ ≤…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DP đếm mọi số ≤ num thỏa ràng buộc không &quot;11&quot; trong binary.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">num=0 → 1</span><span class="analysis-tag edge">num=1 → 2 (0,1)</span><span class="analysis-tag pit">Fibonacci formula off-by-one</span><span class="analysis-tag pit">Quên tight constraint</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>No consecutive ones = digit DP on binary with state prev bit + tight.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +175,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Non-negative%20Integers%20without%20Consecutive%20Ones&lc_id=600&embed=true"></iframe>

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #542</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">01 Matrix</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m * n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m * n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>53.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">01 Matrix (LeetCode #542) — Medium.</div>
+                        <div class="block-text">Ma trận 0/1. Trả ma trận khoảng cách Manhattan tới ô 0 gần nhất (ô 0 có dist 0).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>mat = [[0,0,0],[0,1,0],[1,1,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,0,0],[0,1,0],[1,2,1]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>mat = [[0,1],[1,0]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,1],[1,0]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Multi-source BFS: enqueue mọi ô 0 dist=0; lan 4 hướng gán dist+1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,48 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Multi-source BFS — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> updateMatrix(<span class="ty">self</span>, mat: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        m, n = <span class="ty">len</span>(mat), <span class="ty">len</span>(mat[0])
+        dist = [[10**9]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m)]
+        <span class="kw">from</span> collections <span class="kw">import</span> deque
+        q = deque()
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(n):
+                <span class="kw">if</span> mat[i][j] == 0:
+                    dist[i][j] = 0
+                    q.append((i,j))
+        dirs = [(1,0),(-1,0),(0,1),(0,-1)]
+        <span class="kw">while</span> q:
+            r,c = q.popleft()
+            <span class="kw">for</span> dr,dc <span class="kw">in</span> dirs:
+                nr, nc = r+dr, c+dc
+                <span class="kw">if</span> 0&lt;=nr&lt;m <span class="kw">and</span> 0&lt;=nc&lt;n <span class="kw">and</span> dist[nr][nc] &gt; dist[r][c]+1:
+                    dist[nr][nc] = dist[r][c]+1
+                    q.append((nr,nc))
+        <span class="kw">return</span> dist</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; updateMatrix(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; mat) {
+        <span class="ty">int</span> m = mat.size(), n = mat[0].size();
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; dist(m, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n, 1e9));
+        queue&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; q;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++)
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; n; j++)
+                <span class="kw">if</span> (!mat[i][j]) { dist[i][j] = 0; q.push({i,j}); }
+        <span class="ty">int</span> d[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+        <span class="kw">while</span> (!q.empty()) {
+            auto [r,c] = q.front(); q.pop();
+            <span class="kw">for</span> (auto&amp; dd : d) {
+                <span class="ty">int</span> nr=r+dd[0], nc=c+dd[1];
+                <span class="kw">if</span> (nr&gt;=0&amp;&amp;nr&lt;m&amp;&amp;nc&gt;=0&amp;&amp;nc&lt;n &amp;&amp; dist[nr][nc]&gt;dist[r][c]+1) {
+                    dist[nr][nc]=dist[r][c]+1; q.push({nr,nc});
+                }
+            }
+        }
+        <span class="kw">return</span> dist;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +146,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m * n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m * n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Multi-source BFS: enqueue mọi ô 0 dist=0; lan 4 hướng gán dist+1.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BFS layer đầu tiên tới mỗi ô cho dist tối thiểu tới 0.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Toàn 0</span><span class="analysis-tag edge">Một 0 góc</span><span class="analysis-tag pit">DP 4 chiều phức tạp hơn cần</span><span class="analysis-tag pit">Không init dist lớn</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>01 Matrix = BFS từ tất cả zeros đồng thời, không DP từng ô riêng.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +174,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=01%20Matrix&lc_id=542&embed=true"></iframe>

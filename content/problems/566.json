@@ -3,32 +3,36 @@
   "title": "Reshape the Matrix",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Reshape the Matrix (LeetCode #566) — Easy.",
+  "timeComplexity": "O(m * n)",
+  "spaceComplexity": "O(m * n)",
+  "description": "Reshape ma trận m×n thành r×c. Không thể reshape trả ma trận gốc (cùng ref).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "mat=[[1,2],[3,4]], r=1, c=4",
+      "output": "[[1,2,3,4]]"
+    },
+    {
+      "input": "mat=[[1,2],[3,4]], r=2, c=4",
+      "output": "[[1,2],[3,4]]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Nếu m*n != r*c return mat; flatten row-major rồi fill ma trận r×c.",
+  "memoryTip": "Reshape matrix: check size then index k -> (k/c, k%c).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def matrixReshape(self, mat: List[List[int]], r: int, c: int) -> List[List[int]]:\n        m, n = len(mat), len(mat[0])\n        if m*n != r*c:\n            return mat\n        flat = [x for row in mat for x in row]\n        return [flat[i*c:(i+1)*c] for i in range(r)]",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> matrixReshape(vector<vector<int>>& mat, int r, int c) {\n        int m = mat.size(), n = mat[0].size();\n        if (m*n != r*c) return mat;\n        vector<vector<int>> ans(r, vector<int>(c));\n        for (int k = 0; k < m*n; k++) ans[k/c][k%c] = mat[k/n][k%n];\n        return ans;\n    }\n};",
+    "c": "/* Flatten reshape — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Thứ tự row-major giữ nguyên khi reshape hợp lệ.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "r,c bằng m,n → copy",
+      "1xN reshape"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Không check m*n==r*c",
+      "Column-major nhầm"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

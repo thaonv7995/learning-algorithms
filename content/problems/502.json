@@ -3,32 +3,36 @@
   "title": "IPO",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "IPO (LeetCode #502) — Hard.",
+  "timeComplexity": "O(n log n + k log n)",
+  "spaceComplexity": "O(n)",
+  "description": "Có k dự án (capital[i], profits[i]) và vốn ban đầu w. Mỗi lần chọn dự án có capital ≤ w, cộng profit vào w. Lặp tối đa k lần. Trả vốn tối đa sau k dự án.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "k=2, w=0, capital=[1,2,3], profits=[0,1,1]",
+      "output": "4"
+    },
+    {
+      "input": "k=3, w=0, capital=[1,2], profits=[1,2]",
+      "output": "3"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Sort theo capital. Max-heap profit các dự án khả thi. Mỗi vòng: đẩy mọi dự án capital≤w vào heap, chọn profit lớn nhất một lần, cộng vào w.",
+  "memoryTip": "IPO = greedy khả thi + max-heap profit; sort capital trước, mở rộng tập khả thi dần.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMaximizedCapital(self, k: int, w: int, profits: List[int], capital: List[int]) -> int:\n        import heapq\n        projects = sorted(zip(capital, profits))\n        heap = []\n        i = 0\n        for _ in range(k):\n            while i < len(projects) and projects[i][0] <= w:\n                heapq.heappush(heap, -projects[i][1])\n                i += 1\n            if not heap:\n                break\n            w -= heapq.heappop(heap)\n        return w",
+    "cpp": "class Solution {\npublic:\n    int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capital) {\n        int n = profits.size();\n        vector<pair<int,int>> p(n);\n        for (int i = 0; i < n; i++) p[i] = {capital[i], profits[i]};\n        sort(p.begin(), p.end());\n        priority_queue<int> pq;\n        int i = 0;\n        while (k--) {\n            while (i < n && p[i].first <= w) pq.push(p[i++].second);\n            if (pq.empty()) break;\n            w += pq.top(); pq.pop();\n        }\n        return w;\n    }\n};",
+    "c": "/* Greedy + max-heap — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi bước chọn profit lớn nhất trong tập khả thi là optimal greedy khi vốn chỉ tăng.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "k=0 → w ban đầu",
+      "Không dự án khả thi → dừng sớm"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort sai chiều capital",
+      "Quên push dự án mới khả thi sau khi w tăng"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

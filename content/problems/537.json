@@ -3,32 +3,36 @@
   "title": "Complex Number Multiplication",
   "difficulty": "Medium",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(1)",
   "spaceComplexity": "O(1)",
-  "description": "Complex Number Multiplication (LeetCode #537) — Medium.",
+  "description": "Cho hai số phức dạng chuỗi \"a+bi\". Trả tích dạng \"c+di\" (a,b,c,d nguyên).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num1 = \"1+1i\", num2 = \"1+1i\"",
+      "output": "\"0+2i\""
+    },
+    {
+      "input": "num1 = \"1+-1i\", num2 = \"1+-1i\"",
+      "output": "\"0+-2i\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Parse a,b từ num1 và c,d từ num2. (a+bi)(c+di) = (ac-bd) + (ad+bc)i.",
+  "memoryTip": "Complex multiply: parse real/imag, công thức ac-bd và ad+bc.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def complexNumberMultiply(self, num1: str, num2: str) -> str:\n        def parse(s):\n            i = s.index('+')\n            a = int(s[:i])\n            b = int(s[i+1:-1])\n            return a, b\n        a, b = parse(num1)\n        c, d = parse(num2)\n        return f\"{a*c-b*d}+{a*d+b*c}i\"",
+    "cpp": "class Solution {\n    pair<int,int> parse(const string& s) {\n        int p = s.find('+');\n        int a = stoi(s.substr(0, p));\n        int b = stoi(s.substr(p+1, s.size()-p-2));\n        return {a,b};\n    }\npublic:\n    string complexNumberMultiply(string num1, string num2) {\n        auto [a,b] = parse(num1);\n        auto [c,d] = parse(num2);\n        return to_string(a*c-b*d) + \"+\" + to_string(a*d+b*c) + \"i\";\n    }\n};",
+    "c": "/* Parse + multiply formula — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Công thức nhân số phức chuẩn trên phần thực/ảo đã parse.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Số âm trong chuỗi",
+      "Phần ảo 0"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Parse sai vị trí +",
+      "Quên dấu âm ở imag"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

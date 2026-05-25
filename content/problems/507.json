@@ -3,32 +3,40 @@
   "title": "Perfect Number",
   "difficulty": "Easy",
   "category": "Math",
-  "timeComplexity": "O(n)",
+  "timeComplexity": "O(sqrt n)",
   "spaceComplexity": "O(1)",
-  "description": "Perfect Number (LeetCode #507) — Easy.",
+  "description": "Số hoàn hảo là số bằng tổng các ước dương đúng (không tính chính nó). Kiểm tra num có phải perfect number không.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num = 28",
+      "output": "true"
+    },
+    {
+      "input": "num = 7",
+      "output": "false"
+    },
+    {
+      "input": "num = 1",
+      "output": "false"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Cộng ước từ 1 đến sqrt(num); nếu i chia hết thì cộng i và num/i (trừ trùng sqrt).",
+  "memoryTip": "Perfect number: sum divisors = num; luôn cộng 1, duyệt đến sqrt.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def checkPerfectNumber(self, num: int) -> bool:\n        if num <= 1:\n            return False\n        s = 1\n        i = 2\n        while i * i <= num:\n            if num % i == 0:\n                s += i\n                if i * i != num:\n                    s += num // i\n            i += 1\n        return s == num",
+    "cpp": "class Solution {\npublic:\n    bool checkPerfectNumber(int num) {\n        if (num <= 1) return false;\n        int sum = 1;\n        for (int i = 2; i * i <= num; i++) {\n            if (num % i == 0) {\n                sum += i;\n                if (i * i != num) sum += num / i;\n            }\n        }\n        return sum == num;\n    }\n};",
+    "c": "/* Sum divisors sqrt — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Tổng ước đúng (không kể num) so với num xác định perfect number.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "num=1 → false",
+      "num=6 → true"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Cộng cả chính num",
+      "Double-count ước sqrt"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

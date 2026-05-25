@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #447</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Hash Table</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Number of Boomerangs</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>57.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Number of Boomerangs (LeetCode #447) — Medium.</div>
+                        <div class="block-text">Đếm boomerang: bộ ba (i,j,k) distinct sao dist(i,j)==dist(i,k). Mỗi boomerang đếm ordered triple.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>points = [[0,0],[1,0],[2,0]]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>points = [[1,1],[2,2],[3,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Với mỗi i, map dist² tới j: cộng ans += cnt*(cnt-1) khi thêm dist trùng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,42 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> numberOfBoomerangs(<span class="ty">int</span>** points, <span class="ty">int</span> n, <span class="ty">int</span>* cs) {
+    <span class="ty">int</span> ans=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++){
+        <span class="ty">int</span> cnt[200000]={0};
+        <span class="kw">for</span>(<span class="ty">int</span> j=0;j&lt;n;j++){
+            <span class="ty">int</span> dx=points[i][0]-points[j][0], dy=points[i][1]-points[j][1];
+            <span class="ty">int</span> d=dx*dx+dy*dy;
+            ans += 2*cnt[d+100000]; cnt[d+100000]++;
+        }
+    }
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> numberOfBoomerangs(<span class="ty">self</span>, points: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        ans = 0
+        <span class="kw">for</span> x1, y1 <span class="kw">in</span> points:
+            cnt = defaultdict(<span class="ty">int</span>)
+            <span class="kw">for</span> x2, y2 <span class="kw">in</span> points:
+                d = (x1-x2)**2 + (y1-y2)**2
+                cnt[d] += 1
+            <span class="kw">for</span> c <span class="kw">in</span> cnt.values():
+                ans += c * (c - 1)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> numberOfBoomerangs(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; p) {
+        <span class="ty">int</span> ans=0;
+        <span class="kw">for</span>(auto&amp; a:p){
+            unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; cnt;
+            <span class="kw">for</span>(auto&amp; b:p){
+                <span class="ty">int</span> d=(a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1]);
+                ans += 2*cnt[d]; cnt[d]++;
+            }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +139,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Hash Table</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^2)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Với mỗi i, map dist² tới j: cộng ans += cnt* khi thêm dist trùng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Ordered pairs j,k same dist from i → k*(k-1) per distance bucket.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n&lt;3 → 0</span><span class="analysis-tag edge">Trùng tọa độ dist=0</span><span class="analysis-tag edge">Large coords use dist²</span><span class="analysis-tag pit">Undirected count /6</span><span class="analysis-tag pit">Float distance precision</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Pivot i — pairs same distance form boomerangs count k*.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +168,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Number%20of%20Boomerangs&lc_id=447&embed=true"></iframe>

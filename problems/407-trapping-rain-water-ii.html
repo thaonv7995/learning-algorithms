@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #407</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Heap</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Trapping Rain Water II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(mn log(mn))</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(mn)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>64.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Trapping Rain Water II (LeetCode #407) — Hard.</div>
+                        <div class="block-text">Ma trận heightMap m×n cho độ cao. Tính lượng nước mưa giữ lại sau khi nước chảy ra biên (không qua điểm cao hơn mực nước local).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>heightMap = [[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>heightMap = [[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>10</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Min-heap từ mọi ô biên; pop ô thấp nhất, lan sang láng giềng chưa thăm: nước += max(0, wallHeight - neighborHeight), push neighbor với height max(neighbor, wall).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,87 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> { <span class="ty">int</span> h, r, c; } Cell;
+static <span class="ty">int</span> cmpCell(<span class="ty">const</span> <span class="ty">void</span>* a, <span class="ty">const</span> <span class="ty">void</span>* b) {
+    <span class="kw">return</span> ((Cell*)a)-&gt;h - ((Cell*)b)-&gt;h;
+}
+<span class="ty">int</span> trapRainWater(<span class="ty">int</span>** hm, <span class="ty">int</span> m, <span class="ty">int</span>* cs, <span class="ty">int</span> n) {
+    <span class="kw">if</span> (!m || !n) <span class="kw">return</span> 0;
+    <span class="ty">char</span>** vis = (<span class="ty">char</span>**)<span class="kw">malloc</span>(m * <span class="kw">sizeof</span>(<span class="ty">char</span>*));
+    Cell* heap = (Cell*)<span class="kw">malloc</span>(m * n * <span class="kw">sizeof</span>(Cell));
+    <span class="ty">int</span> hlen = 0, ans = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++) {
+        vis[i] = (<span class="ty">char</span>*)<span class="kw">calloc</span>(n, 1);
+        vis[i][0] = vis[i][n-1] = 1;
+        heap[hlen++] = (Cell){hm[i][0], i, 0};
+        heap[hlen++] = (Cell){hm[i][n-1], i, n-1};
+    }
+    <span class="kw">for</span> (<span class="ty">int</span> j = 1; j &lt; n - 1; j++) {
+        vis[0][j] = vis[m-1][j] = 1;
+        heap[hlen++] = (Cell){hm[0][j], 0, j};
+        heap[hlen++] = (Cell){hm[m-1][j], m-1, j};
+    }
+    <span class="ty">int</span> dr[4] = {1,-1,0,0}, dc[4] = {0,0,1,-1};
+    <span class="kw">while</span> (hlen) {
+        qsort(heap, hlen, <span class="kw">sizeof</span>(Cell), cmpCell);
+        Cell cur = heap[0];
+        memmove(heap, heap + 1, (--hlen) * <span class="kw">sizeof</span>(Cell));
+        <span class="kw">for</span> (<span class="ty">int</span> k = 0; k &lt; 4; k++) {
+            <span class="ty">int</span> nr = cur.r + dr[k], nc = cur.c + dc[k];
+            <span class="kw">if</span> (nr &lt; 0 || nr &gt;= m || nc &lt; 0 || nc &gt;= n || vis[nr][nc]) continue;
+            vis[nr][nc] = 1;
+            <span class="kw">if</span> (hm[nr][nc] &lt; cur.h) ans += cur.h - hm[nr][nc];
+            <span class="ty">int</span> nh = hm[nr][nc] &gt; cur.h ? hm[nr][nc] : cur.h;
+            heap[hlen++] = (Cell){nh, nr, nc};
+        }
+    }
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++) <span class="kw">free</span>(vis[i]);
+    <span class="kw">free</span>(vis); <span class="kw">free</span>(heap);
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> trapRainWater(<span class="ty">self</span>, heightMap: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> <span class="kw">not</span> heightMap <span class="kw">or</span> <span class="kw">not</span> heightMap[0]: <span class="kw">return</span> 0
+        m, n = <span class="ty">len</span>(heightMap), <span class="ty">len</span>(heightMap[0])
+        vis = [[<span class="kw">False</span>]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(m)]
+        heap = []
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(m):
+            <span class="kw">for</span> j <span class="kw">in</span> (0, n-1):
+                heapq.heappush(heap, (heightMap[i][j], i, j)); vis[i][j]=<span class="kw">True</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(1, n-1):
+            <span class="kw">for</span> i <span class="kw">in</span> (0, m-1):
+                heapq.heappush(heap, (heightMap[i][j], i, j)); vis[i][j]=<span class="kw">True</span>
+        ans = 0
+        <span class="kw">while</span> heap:
+            h, r, c = heapq.heappop(heap)
+            <span class="kw">for</span> dr, dc <span class="kw">in</span> ((1,0),(-1,0),(0,1),(0,-1)):
+                nr, nc = r+dr, c+dc
+                <span class="kw">if</span> 0&lt;=nr&lt;m <span class="kw">and</span> 0&lt;=nc&lt;n <span class="kw">and</span> <span class="kw">not</span> vis[nr][nc]:
+                    vis[nr][nc]=<span class="kw">True</span>
+                    ans += <span class="ty">max</span>(0, h - heightMap[nr][nc])
+                    heapq.heappush(heap, (<span class="ty">max</span>(h, heightMap[nr][nc]), nr, nc))
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> trapRainWater(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; hm) {
+        <span class="ty">int</span> m=hm.size(); <span class="kw">if</span>(!m) <span class="kw">return</span> 0; <span class="ty">int</span> n=hm[0].size();
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&gt; vis(m, <span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;(n));
+        priority_queue&lt;array&lt;<span class="ty">int</span>,3&gt;, <span class="ty">vector</span>&lt;array&lt;<span class="ty">int</span>,3&gt;&gt;, greater&lt;&gt;&gt; pq;
+        auto push=[&amp;](<span class="ty">int</span> r,<span class="ty">int</span> c){ vis[r][c]=1; pq.push({hm[r][c],r,c}); };
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;m;i++){ push(i,0); push(i,n-1); }
+        <span class="kw">for</span>(<span class="ty">int</span> j=1;j&lt;n-1;j++){ push(0,j); push(m-1,j); }
+        <span class="ty">int</span> ans=0, d[4][2]={{1,0},{-1,0},{0,1},{0,-1}};
+        <span class="kw">while</span>(!pq.empty()){
+            auto [h,r,c]=pq.top(); pq.pop();
+            <span class="kw">for</span>(auto&amp; dd:d){ <span class="ty">int</span> nr=r+dd[0], nc=c+dd[1];
+                <span class="kw">if</span>(nr&gt;=0&amp;&amp;nr&lt;m&amp;&amp;nc&gt;=0&amp;&amp;nc&lt;n&amp;&amp;!vis[nr][nc]){
+                    vis[nr][nc]=1; ans+=max(0,h-hm[nr][nc]);
+                    pq.push({max(h,hm[nr][nc]),nr,nc});
+                }
+            }
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +184,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Heap</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(mn log(mn)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(mn)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Min-heap từ mọi ô biên; pop ô thấp nhất, lan sang láng giềng chưa thăm:…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Priority flood-fill — ô được fill tới min boundary height trên mọi đường ra biên.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">1×1 → 0</span><span class="analysis-tag edge">Toàn bằng nhau → 0</span><span class="analysis-tag edge">Biên cao giữ nước trong</span><span class="analysis-tag pit">DFS không đảm bảo min wall</span><span class="analysis-tag pit">Quên seed toàn biên</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Giống trapping rain I nhưng BFS từ biên vào — mực nước = min path tới biên.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +213,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=8&problem=Trapping%20Rain%20Water%20II&lc_id=407&embed=true"></iframe>

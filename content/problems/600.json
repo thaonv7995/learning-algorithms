@@ -3,32 +3,40 @@
   "title": "Non-negative Integers without Consecutive Ones",
   "difficulty": "Hard",
   "category": "Dynamic Programming",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Non-negative Integers without Consecutive Ones (LeetCode #600) — Hard.",
+  "timeComplexity": "O(log num)",
+  "spaceComplexity": "O(log num)",
+  "description": "Đếm số nguyên trong [0, num] mà biểu diễn nhị phân không có hai bit 1 liên tiếp.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "num = 5",
+      "output": "5"
+    },
+    {
+      "input": "num = 1",
+      "output": "2"
+    },
+    {
+      "input": "num = 1000000000",
+      "output": "847286447"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Digit DP trên bit string của num: dp[pos][prev1][tight] đếm số hợp lệ ≤ num.",
+  "memoryTip": "No consecutive ones = digit DP on binary with state prev bit + tight.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findIntegers(self, num: int) -> int:\n        bits = bin(num)[2:]\n        from functools import lru_cache\n        @lru_cache(None)\n        def dp(i, prev1, tight):\n            if i == len(bits):\n                return 1\n            limit = int(bits[i]) if tight else 1\n            ans = 0\n            for d in range(0, limit+1):\n                if prev1 and d == 1:\n                    continue\n                ans += dp(i+1, d==1, tight and d==limit)\n            return ans\n        return dp(0, False, True)",
+    "cpp": "class Solution {\n    string bits;\n    int dp[35][2][2];\n    int dfs(int i, int prev1, int tight) {\n        if (i == (int)bits.size()) return 1;\n        if (dp[i][prev1][tight] != -1) return dp[i][prev1][tight];\n        int limit = tight ? bits[i]-'0' : 1;\n        int ans = 0;\n        for (int d=0; d<=limit; d++) {\n            if (prev1 && d==1) continue;\n            ans += dfs(i+1, d==1, tight && d==limit);\n        }\n        return dp[i][prev1][tight]=ans;\n    }\npublic:\n    int findIntegers(int num) {\n        bits = bitset<32>(num).to_string();\n        bits = bits.substr(bits.find('1'));\n        memset(dp, -1, sizeof dp);\n        return dfs(0, 0, 1);\n    }\n};",
+    "c": "/* Binary digit DP — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "DP đếm mọi số ≤ num thỏa ràng buộc không \"11\" trong binary.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "num=0 → 1",
+      "num=1 → 2 (0,1)"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Fibonacci formula off-by-one",
+      "Quên tight constraint"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

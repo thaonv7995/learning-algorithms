@@ -4,31 +4,39 @@
   "difficulty": "Medium",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Contiguous Array (LeetCode #525) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Mảng chỉ gồm 0 và 1. Tìm độ dài subarray liên tiếp dài nhất có số 0 và 1 bằng nhau.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [0,1]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [0,1,0]",
+      "output": "2"
+    },
+    {
+      "input": "nums = [0,0,0,1,1,0,0]",
+      "output": "6"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Biến 0→-1, 1→+1. Prefix sum: hai index cùng sum → subarray cân bằng; max độ dài.",
+  "memoryTip": "Contiguous array = prefix sum 0/1 as +/-1, hash first index each sum.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findMaxLength(self, nums: List[int]) -> int:\n        first = {0: -1}\n        s = ans = 0\n        for i, x in enumerate(nums):\n            s += 1 if x else -1\n            if s in first:\n                ans = max(ans, i - first[s])\n            else:\n                first[s] = i\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int findMaxLength(vector<int>& nums) {\n        unordered_map<int,int> first{{0,-1}};\n        int s = 0, ans = 0;\n        for (int i = 0; i < (int)nums.size(); i++) {\n            s += nums[i] ? 1 : -1;\n            if (first.count(s)) ans = max(ans, i - first[s]);\n            else first[s] = i;\n        }\n        return ans;\n    }\n};",
+    "c": "/* Prefix sum balance — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Cùng prefix sum nghĩa là số 0 và 1 bằng nhau trên đoạn.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Toàn 0 hoặc toàn 1 → 0",
+      "Seed sum 0 at -1"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Dùng count 0/1 riêng thay prefix",
+      "Ghi đè first index sớm"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

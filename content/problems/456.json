@@ -2,33 +2,42 @@
   "id": 456,
   "title": "132 Pattern",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Stack",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "132 Pattern (LeetCode #456) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Kiểm tra tồn tại bộ ba chỉ số i<j<k sao nums[i]<nums[k]<nums[j] (132 pattern).",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,2,3,4]",
+      "output": "false"
+    },
+    {
+      "input": "nums = [3,1,4,2]",
+      "output": "true"
+    },
+    {
+      "input": "nums = [-1,3,2,0]",
+      "output": "true"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt từ phải: stack giữ candidates cho j; third = max popped < nums[i] là k; nếu nums[i] < third → true.",
+  "memoryTip": "132 from right: maintain decreasing stack of potential j, track best k.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def find132pattern(self, nums: List[int]) -> bool:\n        stack, third = [], float(\"-inf\")\n        for x in reversed(nums):\n            if x < third: return True\n            while stack and x > stack[-1]:\n                third = stack.pop()\n            stack.append(x)\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool find132pattern(vector<int>& nums) {\n        stack<int> st; int third=INT_MIN;\n        for(int i=nums.size()-1;i>=0;i--){\n            if(nums[i]<third) return true;\n            while(!st.empty()&&nums[i]>st.top()){ third=st.top(); st.pop(); }\n            st.push(nums[i]);\n        }\n        return false;\n    }\n};",
+    "c": "bool find132pattern(int* nums, int n) {\n    int* st=malloc(n*sizeof(int)); int top=0, third=INT_MIN;\n    for(int i=n-1;i>=0;i--){\n        if(nums[i]<third){ free(st); return true; }\n        while(top&&nums[i]>st[top-1]) third=st[--top];\n        st[top++]=nums[i];\n    }\n    free(st); return false;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Right scan builds j>k pairs with third as max k for current i.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Tăng dần → false",
+      "Duplicate values",
+      "n<3"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "O(n²) TLE",
+      "Nhầm 132 vs 312 pattern"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

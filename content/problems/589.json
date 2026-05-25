@@ -2,33 +2,37 @@
   "id": 589,
   "title": "N-ary Tree Preorder Traversal",
   "difficulty": "Easy",
-  "category": "Stack",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "N-ary Tree Preorder Traversal (LeetCode #589) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Preorder traversal cây N-ary: root trước, rồi lần lượt từng subtree con.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [1,null,3,2,4,null,5,6]",
+      "output": "[1,3,5,6,2,4]"
+    },
+    {
+      "input": "root = [1,null,2,3,4,5]",
+      "output": "[1,2,3,4,5]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS preorder push val rồi recurse children; hoặc stack push children ngược thứ tự.",
+  "memoryTip": "N-ary preorder = visit root then each child left-to-right recursive.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def preorder(self, root: Node) -> List[int]:\n        ans = []\n        def dfs(n):\n            if not n: return\n            ans.append(n.val)\n            for c in n.children:\n                dfs(c)\n        dfs(root)\n        return ans",
+    "cpp": "class Solution {\n    void dfs(Node* n, vector<int>& ans) {\n        if (!n) return;\n        ans.push_back(n->val);\n        for (auto* c : n->children) dfs(c, ans);\n    }\npublic:\n    vector<int> preorder(Node* root) {\n        vector<int> ans;\n        dfs(root, ans);\n        return ans;\n    }\n};",
+    "c": "/* DFS preorder N-ary — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Thứ tự root trước con trái→phải đúng preorder N-ary.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "null → []",
+      "Leaf không children"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Postorder nhầm",
+      "Stack order ngược khi iterative"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

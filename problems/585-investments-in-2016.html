@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #585</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Database</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Investments in 2016</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>51.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Investments in 2016 (LeetCode #585) — Medium.</div>
+                        <div class="block-text">Insurance table t1 join t2 cùng pid khác tuid, t1 ttype='premium', t2 ttype='claim', t1 tname khác t2 tname, t1 txn_date năm 2016. SUM t2 price.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>Premium và claim khác insurer cùng policy 2016</code></div>
+                <div class="ex-line"><span>Out</span><code>Tổng claim price</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>Không cặp thỏa</code></div>
+                <div class="ex-line"><span>Out</span><code>NULL hoặc 0 tùy engine</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Self join Insurance ON pid, filter premium/claim, different tname, year 2016, SUM t2.price.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,12 +95,21 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
-<span class="ty">public</span>:
-};</pre>
+                            <pre class="code-block" id="code-block-c">/* SQL self join Insurance — xem SQL */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># SQL</span>
+SELECT SUM(t2.price) AS total
+FROM Insurance t1
+JOIN Insurance t2 ON t1.pid = t2.pid
+WHERE t1.ttype = 'premium' AND t2.ttype = 'claim'
+  AND t1.tname != t2.tname
+  AND t1.txn_date LIKE '2016%';</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// SQL</span>
+SELECT SUM(t2.price) AS total
+FROM Insurance t1
+JOIN Insurance t2 ON t1.pid = t2.pid
+WHERE t1.ttype = 'premium' AND t2.ttype = 'claim'
+  AND t1.tname != t2.tname
+  AND t1.txn_date LIKE '2016%';</pre>
                         </div>
                     </div>
                 </div>
@@ -105,17 +119,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Database</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Self join Insurance ON pid, filter premium/claim, different tname, year…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Join cùng policy premium/claim khác insurer, lọc năm 2016 trên premium.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Nhiều claim một policy</span><span class="analysis-tag edge">Không row → NULL sum</span><span class="analysis-tag pit">Join sai ttype</span><span class="analysis-tag pit">Lọc năm trên claim thay premium</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Investments 2016 = self join premium vs claim same pid diff name year filter.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +146,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Investments%20in%202016&lc_id=585&embed=true"></iframe>

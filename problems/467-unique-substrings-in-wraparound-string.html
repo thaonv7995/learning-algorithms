@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #467</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Unique Substrings in Wraparound String</h1>
                     <div class="head-stats">
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Unique Substrings in Wraparound String (LeetCode #467) — Medium.</div>
+                        <div class="block-text">Chuỗi wraparound: sau z là a. Đếm số substring khác nhau (contiguous) theo quy tắc wrap.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;a&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;cac&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;zab&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">dp[c] = số substring kết thúc bằng c; nếu prev(s[i]) hợp lệ thì dp[s[i]]=dp[prev]+1 else 1; cộng dồn.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,34 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> findSubstringInWraproundString(<span class="ty">char</span>* s) {
+    <span class="ty">int</span> dp[26]={0}, ans=0;
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;s[i];i++){
+        <span class="kw">if</span>(i&amp;&amp;(s[i]-s[i-1]+26)%26==1) dp[s[i]-'a']=dp[s[i-1]-'a']+1;
+        <span class="kw">else</span> dp[s[i]-'a']=1;
+    }
+    <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;26;i++) ans+=dp[i];
+    <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findSubstringInWraproundString(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        dp = [0] * 26
+        <span class="kw">for</span> i, ch <span class="kw">in</span> enumerate(s):
+            <span class="kw">if</span> i <span class="kw">and</span> (ord(ch) - ord(s[i-1]) + 26) % 26 == 1:
+                dp[ord(ch)-97] = dp[ord(s[i-1])-97] + 1
+            <span class="kw">else</span>:
+                dp[ord(ch)-97] = 1
+        <span class="kw">return</span> sum(dp)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> findSubstringInWraproundString(<span class="ty">string</span> s) {
+        <span class="ty">int</span> dp[26]={};
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)s.size();i++){
+            <span class="kw">if</span>(i&amp;&amp;(s[i]-s[i-1]+26)%26==1) dp[s[i]-'a']=dp[s[i-1]-'a']+1;
+            <span class="kw">else</span> dp[s[i]-'a']=1;
+        }
+        <span class="kw">return</span> accumulate(dp,dp+26,0);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +136,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
+                        <span class="pattern-chip">Dynamic Programming</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — dp[c] = số substring kết thúc bằng c; nếu prev hợp lệ thì…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Max unique substrings ending at each letter — sum over alphabet.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Broken wrap resets len 1</span><span class="analysis-tag edge">Single char</span><span class="analysis-tag edge">Full circle abc...z</span><span class="analysis-tag pit">Set all substrings O(n²)</span><span class="analysis-tag pit">Quên mod 26 cho z→a</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Only extend from previous letter in alphabet — linear DP[26].</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +165,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Unique%20Substrings%20in%20Wraparound%20String&lc_id=467&embed=true"></iframe>

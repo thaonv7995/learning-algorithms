@@ -2,33 +2,37 @@
   "id": 590,
   "title": "N-ary Tree Postorder Traversal",
   "difficulty": "Easy",
-  "category": "Stack",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "N-ary Tree Postorder Traversal (LeetCode #590) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Postorder traversal cây N-ary: duyệt hết subtree con trước, ghi root sau cùng.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "root = [1,null,3,2,4,null,5,6]",
+      "output": "[5,6,3,2,4,1]"
+    },
+    {
+      "input": "root = [1,null,2,3,4,5]",
+      "output": "[2,3,4,5,1]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS postorder: recurse children trước, append val sau.",
+  "memoryTip": "N-ary postorder = all children first then root value.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def postorder(self, root: Node) -> List[int]:\n        ans = []\n        def dfs(n):\n            if not n: return\n            for c in n.children:\n                dfs(c)\n            ans.append(n.val)\n        dfs(root)\n        return ans",
+    "cpp": "class Solution {\n    void dfs(Node* n, vector<int>& ans) {\n        if (!n) return;\n        for (auto* c : n->children) dfs(c, ans);\n        ans.push_back(n->val);\n    }\npublic:\n    vector<int> postorder(Node* root) {\n        vector<int> ans;\n        dfs(root, ans);\n        return ans;\n    }\n};",
+    "c": "/* DFS postorder N-ary — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mọi node được thêm sau toàn bộ descendants.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "null → []",
+      "Single node → [val]"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Preorder nhầm",
+      "Iterative phức tạp không cần"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

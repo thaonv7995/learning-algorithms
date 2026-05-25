@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #506</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Relative Ranks</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>74.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Relative Ranks (LeetCode #506) — Easy.</div>
+                        <div class="block-text">Cho mảng điểm score. Xếp hạng: hạng 1 &quot;Gold Medal&quot;, 2 &quot;Silver Medal&quot;, 3 &quot;Bronze Medal&quot;, còn lại là số hạng. Trả mảng chuỗi cùng thứ tự score.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>score = [5,4,3,2,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;Gold Medal&quot;,&quot;Silver Medal&quot;,&quot;Bronze Medal&quot;,&quot;4&quot;,&quot;5&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>score = [10,3,8,9,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;Gold Medal&quot;,&quot;5&quot;,&quot;Bronze Medal&quot;,&quot;Silver Medal&quot;,&quot;4&quot;]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sort index theo score giảm dần; gán medal cho 3 hạng đầu, các hạng sau gán số thứ tự.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Sort index by score — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findRelativeRanks(<span class="ty">self</span>, score: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        n = <span class="ty">len</span>(score)
+        order = sorted(<span class="ty">range</span>(n), key=lambda i: -score[i])
+        ans = [&quot;&quot;] * n
+        medals = [&quot;Gold Medal&quot;, &quot;Silver Medal&quot;, &quot;Bronze Medal&quot;]
+        <span class="kw">for</span> rank, i <span class="kw">in</span> enumerate(order):
+            ans[i] = medals[rank] <span class="kw">if</span> rank &lt; 3 <span class="kw">else</span> <span class="ty">str</span>(rank + 1)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; findRelativeRanks(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; score) {
+        <span class="ty">int</span> n = score.size();
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; idx(n);
+        iota(idx.begin(), idx.end(), 0);
+        sort(idx.begin(), idx.end(), [&amp;](<span class="ty">int</span> a, <span class="ty">int</span> b){ <span class="kw">return</span> score[a] &gt; score[b]; });
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; ans(n);
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; m = {&quot;Gold Medal&quot;,&quot;Silver Medal&quot;,&quot;Bronze Medal&quot;};
+        <span class="kw">for</span> (<span class="ty">int</span> r = 0; r &lt; n; r++)
+            ans[idx[r]] = r &lt; 3 ? m[r] : to_string(r + 1);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +127,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sort index theo score giảm dần; gán medal cho 3 hạng đầu, các hạng sau…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Xếp hạng theo thứ tự score giảm dần, map ngược về index gốc.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1 chỉ Gold</span><span class="analysis-tag edge">n=2 không có Bronze</span><span class="analysis-tag pit">Gán rank theo index sort thay vì vị trí gốc</span><span class="analysis-tag pit">Nhầm hạng 4-based vs 0-based</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Relative ranks = sort desc rồi map rank vào vị trí gốc.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +155,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Relative%20Ranks&lc_id=506&embed=true"></iframe>

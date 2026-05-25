@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #451</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Sort Characters By Frequency</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(k)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>75.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Sort Characters By Frequency (LeetCode #451) — Medium.</div>
+                        <div class="block-text">Sắp xếp ký tự trong s theo tần suất giảm dần; cùng tần suất giữ thứ tự bất kỳ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;tree&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;eert&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;cccaaa&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;aaaccc&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;Aabb&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;bbAa&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đếm freq; bucket sort: bucket[i] chứa chars freq i; ghép từ freq cao xuống.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* frequencySort(<span class="ty">char</span>* s) {
+    <span class="ty">int</span> cnt[128]={0}; <span class="kw">for</span>(<span class="ty">int</span> i=0;s[i];i++) cnt[(<span class="ty">unsigned</span> <span class="ty">char</span>)s[i]]++;
+    <span class="ty">char</span>* ans=<span class="kw">malloc</span>(strlen(s)+1); <span class="ty">int</span> p=0, n=strlen(s);
+    <span class="kw">for</span>(<span class="ty">int</span> f=n;f&gt;0;f--) <span class="kw">for</span>(<span class="ty">int</span> c=0;c&lt;128;c++) <span class="kw">if</span>(cnt[c]==f)
+        <span class="kw">for</span>(<span class="ty">int</span> k=0;k&lt;f;k++) ans[p++]=(<span class="ty">char</span>)c;
+    ans[p]=0; <span class="kw">return</span> ans;
+}</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> frequencySort(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        cnt = Counter(s)
+        buckets = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(s)+1)]
+        <span class="kw">for</span> ch, f <span class="kw">in</span> cnt.items(): buckets[f].append(ch)
+        ans = []
+        <span class="kw">for</span> f <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(s), 0, -1):
+            <span class="kw">for</span> ch <span class="kw">in</span> buckets[f]: ans.append(ch * f)
+        <span class="kw">return</span> &quot;&quot;.join(ans)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">string</span> frequencySort(<span class="ty">string</span> s) {
+        <span class="ty">int</span> cnt[128]={};
+        <span class="kw">for</span>(<span class="ty">char</span> c:s) cnt[c]++;
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; b(s.size()+1);
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;128;i++) <span class="kw">if</span>(cnt[i]) b[cnt[i]]+=<span class="ty">char</span>(i);
+        <span class="ty">string</span> ans;
+        <span class="kw">for</span>(<span class="ty">int</span> f=s.size();f;f--) <span class="kw">for</span>(<span class="ty">char</span> c:b[f]) ans+=<span class="ty">string</span>(cnt[c],c);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +137,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(k)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Đếm freq; bucket sort: bucket[i] chứa chars freq i; ghép từ freq cao…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Bucket sort by freq produces non-increasing frequency order.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một ký tự</span><span class="analysis-tag edge">Tất cả unique</span><span class="analysis-tag edge">Mixed case</span><span class="analysis-tag pit">Stable sort không bắt buộc</span><span class="analysis-tag pit">Heap O(n log n) vẫn OK</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Bucket by frequency O — faster than heap for lowercase letters.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Sort%20Characters%20By%20Frequency&lc_id=451&embed=true"></iframe>

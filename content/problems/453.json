@@ -2,33 +2,38 @@
   "id": 453,
   "title": "Minimum Moves to Equal Array Elements",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Math",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Minimum Moves to Equal Array Elements (LeetCode #453) — Medium.",
+  "description": "Mỗi move chọn i và tăng n-1 phần tử (mọi phần trừ nums[i]) lên 1. Min số move để mọi phần tử bằng nhau.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [1,2,3]",
+      "output": "3"
+    },
+    {
+      "input": "nums = [1,1,1]",
+      "output": "0"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tăng n-1 phần tử ≡ giảm 1 phần tử tương đối. Answer = sum(nums) - n*min(nums).",
+  "memoryTip": "453 vs 462: increment all but one = decrement one — target min element.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minMoves(self, nums: List[int]) -> int:\n        return sum(nums) - len(nums) * min(nums)",
+    "cpp": "class Solution {\npublic:\n    int minMoves(vector<int>& nums) {\n        long long s=0; int mn=INT_MAX;\n        for(int x:nums){ s+=x; mn=min(mn,x); }\n        return (int)(s - 1LL*nums.size()*mn);\n    }\n};",
+    "c": "int minMoves(int* nums, int n) {\n    long long s=0; int mn=INT_MAX;\n    for(int i=0;i<n;i++){ s+=nums[i]; if(nums[i]<mn) mn=nums[i]; }\n    return (int)(s - (long long)n*mn);\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Each move raises sum by n-1 while min catches up — equivalent to lowering one element.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Đã equal → 0",
+      "Một phần tử",
+      "Min ở nhiều vị trí"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Simulate moves TLE",
+      "Nhầm với 462 median"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

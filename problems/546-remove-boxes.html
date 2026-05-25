@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #546</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Remove Boxes</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n^4)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n^3)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Remove Boxes (LeetCode #546) — Hard.</div>
+                        <div class="block-text">Xóa hộp liên tiếp cùng màu thu điểm k*(k+1). Trả điểm tối đa xóa hết mảng boxes.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>boxes = [1,3,5,8,8,3,4,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>23</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>boxes = [1,1,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>9</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP[l][r][k]: max score đoạn [l,r] với k hộp cùng màu boxes[r] phía sau. Thử tách tại p hoặc gộp k+1 cùng màu.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,41 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* 3D interval DP — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> removeBoxes(<span class="ty">self</span>, boxes: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        <span class="kw">from</span> functools <span class="kw">import</span> lru_cache
+        @lru_cache(<span class="kw">None</span>)
+        <span class="kw">def</span> dp(l, r, k):
+            <span class="kw">if</span> l &gt; r: <span class="kw">return</span> 0
+            <span class="kw">while</span> r &gt; l <span class="kw">and</span> boxes[r] == boxes[r-1]:
+                r -= 1
+                k += 1
+            ans = dp(l, r-1, 0) + (k+1)*(k+1)
+            <span class="kw">for</span> p <span class="kw">in</span> <span class="ty">range</span>(l, r):
+                <span class="kw">if</span> boxes[p] == boxes[r]:
+                    ans = <span class="ty">max</span>(ans, dp(l, p, k+1) + dp(p+1, r-1, 0))
+            <span class="kw">return</span> ans
+        <span class="kw">return</span> dp(0, <span class="ty">len</span>(boxes)-1, 0)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; b;
+    <span class="ty">int</span> dp[100][100][100];
+    <span class="ty">int</span> solve(<span class="ty">int</span> l, <span class="ty">int</span> r, <span class="ty">int</span> k) {
+        <span class="kw">if</span> (l &gt; r) <span class="kw">return</span> 0;
+        <span class="kw">if</span> (dp[l][r][k]) <span class="kw">return</span> dp[l][r][k];
+        <span class="kw">while</span> (r &gt; l &amp;&amp; b[r] == b[r-1]) { r--; k++; }
+        <span class="ty">int</span> ans = solve(l, r-1, 0) + (k+1)*(k+1);
+        <span class="kw">for</span> (<span class="ty">int</span> p = l; p &lt; r; p++)
+            <span class="kw">if</span> (b[p] == b[r])
+                ans = max(ans, solve(l, p, k+1) + solve(p+1, r-1, 0));
+        <span class="kw">return</span> dp[l][r][k] = ans;
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> removeBoxes(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; boxes) {
+        b = boxes;
+        memset(dp, 0, <span class="kw">sizeof</span> dp);
+        <span class="kw">return</span> solve(0, boxes.size()-1, 0);
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +139,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n^4)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n^3)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP[l][r][k]: max score đoạn [l,r] với k hộp cùng màu…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Thử tách tại p hoặc gộp k+1 cùng màu.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>State (l,r,k) cover mọi cách gộp hộp cùng màu cuối trước khi nổ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một màu → n*n</span><span class="analysis-tag edge">Nhiều màu xen kẽ</span><span class="analysis-tag pit">Greedy sai</span><span class="analysis-tag pit">Quên gộp trailing same color vào k</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Remove Boxes = interval DP 3D .</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +167,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Remove%20Boxes&lc_id=546&embed=true"></iframe>

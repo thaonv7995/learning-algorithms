@@ -5,30 +5,35 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Find All Numbers Disappeared in an Array (LeetCode #448) — Easy.",
+  "description": "nums length n, giá trị [1,n]. Trả mọi số trong [1,n] không xuất hiện trong nums. O(n) O(1) extra.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "nums = [4,3,2,7,8,2,3,1]",
+      "output": "[5,6]"
+    },
+    {
+      "input": "nums = [1,1]",
+      "output": "[2]"
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đánh dấu âm tại index abs(x)-1; index i còn dương → thiếu i+1.",
+  "memoryTip": "Cyclic marking — same as find duplicates without collecting dup.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findDisappearedNumbers(self, nums: List[int]) -> List[int]:\n        for x in nums:\n            i = abs(x) - 1\n            nums[i] = -abs(nums[i])\n        return [i+1 for i,v in enumerate(nums) if v > 0]",
+    "cpp": "class Solution {\npublic:\n    vector<int> findDisappearedNumbers(vector<int>& nums) {\n        for(int x:nums){ int i=abs(x)-1; nums[i]=-abs(nums[i]); }\n        vector<int> ans;\n        for(int i=0;i<(int)nums.size();i++) if(nums[i]>0) ans.push_back(i+1);\n        return ans;\n    }\n};",
+    "c": "int* findDisappearedNumbers(int* nums, int n, int* rs) {\n    for(int i=0;i<n;i++){ int j=abs(nums[i])-1; nums[j]=-abs(nums[j]); }\n    int* ans=malloc(n*sizeof(int)); *rs=0;\n    for(int i=0;i<n;i++) if(nums[i]>0) ans[(*rs)++]=i+1;\n    return ans;\n}"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Negative mark visited values; positive index means missing number.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Không thiếu",
+      "Thiếu tất cả",
+      "Duplicate vẫn mark"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Extra boolean array",
+      "Quên abs when marking"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

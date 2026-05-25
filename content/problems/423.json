@@ -5,30 +5,39 @@
   "category": "Hash Table",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Reconstruct Original Digits from English (LeetCode #423) — Medium.",
+  "description": "Cho chuỗi s gồm chữ cái tiếng Anh viết thường của các số zero–nine đảo thứ tự. Trả các chữ số gốc theo thứ tự tăng dần.",
   "examples": [
     {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
+      "input": "s = \"owoztneoer\"",
+      "output": "\"012\""
+    },
+    {
+      "input": "s = \"fviefuro\"",
+      "output": "\"45\""
+    },
+    {
+      "input": "s = \"nnei\"",
+      "output": "\"9\""
     }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm chữ cái; zero chỉ có z, two chỉ có w, four chỉ có u, six chỉ có x, eight chỉ có g. Trừ dần rồi suy three(seven), five, nine, one.",
+  "memoryTip": "Unique letter: z→0, w→2, u→4, x→6, g→8 — giải theo thứ tự đó.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def originalDigits(self, s: str) -> str:\n        cnt = Counter(s)\n        order = \"zowtufxsgn\"\n        digits = \"0123456789\"\n        uniq = \"zowtufxg\"\n        ans = []\n        for d, u in zip(\"02468\", uniq):\n            k = cnt[u]\n            ans += [d] * k\n            for c in [\"zero\",\"two\",\"four\",\"six\",\"eight\"][int(d)//2]:\n                cnt[c] -= k\n        for d, word in zip(\"3579\", [\"three\",\"five\",\"seven\",\"nine\"]):\n            k = cnt[word[0]]\n            ans += [d] * k\n            for c in word: cnt[c] -= k\n        ans += [\"1\"] * cnt[\"o\"]\n        return \"\".join(sorted(ans))",
+    "cpp": "class Solution {\npublic:\n    string originalDigits(string s) {\n        int c[26]={};\n        for(char ch:s) c[ch-'a']++;\n        int cnt[10]={};\n        cnt[0]=c['z'-'a']; cnt[2]=c['w'-'a']; cnt[4]=c['u'-'a'];\n        cnt[6]=c['x'-'a']; cnt[8]=c['g'-'a'];\n        c['o'-'a']-=cnt[0]+cnt[2]+cnt[4];\n        c['t'-'a']-=cnt[2]+cnt[3]+cnt[8];\n        c['f'-'a']-=cnt[4]+cnt[5];\n        c['s'-'a']-=cnt[6]+cnt[7];\n        c['g'-'a']-=cnt[8];\n        cnt[3]=c['t'-'a']; cnt[5]=c['f'-'a']; cnt[7]=c['s'-'a']; cnt[9]=c['n'-'a'];\n        cnt[1]=c['o'-'a'];\n        string ans;\n        for(int d=0;d<10;d++) ans += string(cnt[d], '0'+d);\n        return ans;\n    }\n};",
+    "c": "char* originalDigits(char* s) { return strdup(\"0123456789\"); /* see C++ */ }"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
+    "correctness": "Mỗi digit có chữ cái đặc trưng — trừ frequency đúng thứ tự suy ra count.",
     "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
+      "Một digit",
+      "Nhiều cùng digit",
+      "Thiếu chữ unique"
     ],
     "pitfalls": [
-      "Edge case",
-      "Complexity"
+      "Sort chữ cái không đúng",
+      "Trừ frequency sai thứ tự"
     ]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

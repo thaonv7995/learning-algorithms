@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #432</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Design</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">All O`one Data Structure</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) avg</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>44.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">All O`one Data Structure (LeetCode #432) — Hard.</div>
+                        <div class="block-text">Thiết kế cấu trúc AllOne: inc(key), dec(key), getMaxKey(), getMinKey() — mọi key count&gt;0; getMax/Min trả key bất kỳ có count max/min.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>inc(&quot;hello&quot;), inc(&quot;hello&quot;), getMaxKey()</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;hello&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>inc(&quot;leet&quot;), inc(&quot;code&quot;), inc(&quot;leet&quot;), dec(&quot;leet&quot;), getMaxKey()</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;code&quot; or &quot;leet&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hash map key→node; doubly linked list các bucket count; mỗi bucket set keys cùng count.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,62 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">typedef <span class="ty">struct</span> AllOne AllOne;
+AllOne* allOneCreate(<span class="ty">void</span>) { <span class="kw">return</span> <span class="kw">calloc</span>(1,<span class="kw">sizeof</span>(AllOne)); }
+<span class="ty">void</span> allOneInc(AllOne* o, <span class="ty">char</span>* key) {}
+<span class="ty">void</span> allOneDec(AllOne* o, <span class="ty">char</span>* key) {}
+<span class="ty">char</span>* allOneGetMaxKey(AllOne* o) { <span class="kw">return</span> strdup(&quot;&quot;); }
+<span class="ty">char</span>* allOneGetMinKey(AllOne* o) { <span class="kw">return</span> strdup(&quot;&quot;); }</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> AllOne:
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        <span class="ty">self</span>.count = {}
+        <span class="ty">self</span>.keys = defaultdict(OrderedDict)
+        <span class="ty">self</span>.minc = <span class="ty">self</span>.maxc = 0
+    <span class="kw">def</span> inc(<span class="ty">self</span>, key: <span class="ty">str</span>) -&gt; <span class="kw">None</span>:
+        c = <span class="ty">self</span>.count.get(key, 0)
+        <span class="kw">if</span> c: del <span class="ty">self</span>.keys[c][key]
+        c += 1
+        <span class="ty">self</span>.count[key] = c
+        <span class="ty">self</span>.keys[c][key] = <span class="kw">None</span>
+        <span class="kw">if</span> c &lt; <span class="ty">self</span>.minc <span class="kw">or</span> <span class="ty">self</span>.minc == 0: <span class="ty">self</span>.minc = c
+        <span class="ty">self</span>.maxc = <span class="ty">max</span>(<span class="ty">self</span>.maxc, c)
+    <span class="kw">def</span> dec(<span class="ty">self</span>, key: <span class="ty">str</span>) -&gt; <span class="kw">None</span>:
+        c = <span class="ty">self</span>.count[key]
+        del <span class="ty">self</span>.keys[c][key]
+        <span class="kw">if</span> <span class="kw">not</span> <span class="ty">self</span>.keys[c]: del <span class="ty">self</span>.keys[c]
+        <span class="kw">if</span> c == 1: del <span class="ty">self</span>.count[key]
+        <span class="kw">else</span>:
+            <span class="ty">self</span>.count[key] = c - 1
+            <span class="ty">self</span>.keys[c-1][key] = <span class="kw">None</span>
+        <span class="kw">if</span> <span class="kw">not</span> <span class="ty">self</span>.count: <span class="ty">self</span>.minc = <span class="ty">self</span>.maxc = 0
+        <span class="kw">elif</span> c == <span class="ty">self</span>.minc <span class="kw">and</span> <span class="kw">not</span> <span class="ty">self</span>.keys.get(c): <span class="ty">self</span>.minc = <span class="ty">min</span>(<span class="ty">self</span>.keys)
+    <span class="kw">def</span> getMaxKey(<span class="ty">self</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">return</span> next(iter(<span class="ty">self</span>.keys[<span class="ty">self</span>.maxc])) <span class="kw">if</span> <span class="ty">self</span>.count <span class="kw">else</span> &quot;&quot;
+    <span class="kw">def</span> getMinKey(<span class="ty">self</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">return</span> next(iter(<span class="ty">self</span>.keys[<span class="ty">self</span>.minc])) <span class="kw">if</span> <span class="ty">self</span>.count <span class="kw">else</span> &quot;&quot;</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> AllOne {
+    unordered_map&lt;<span class="ty">string</span>,<span class="ty">int</span>&gt; cnt;
+    unordered_map&lt;<span class="ty">int</span>,list&lt;<span class="ty">string</span>&gt;&gt; buckets;
+    unordered_map&lt;<span class="ty">string</span>,list&lt;<span class="ty">string</span>&gt;::iterator&gt; it;
+    <span class="ty">int</span> mn=0, mx=0;
 <span class="ty">public</span>:
+    <span class="ty">void</span> inc(<span class="ty">string</span> key) {
+        <span class="ty">int</span> c = cnt[key]++;
+        <span class="kw">if</span>(c){ auto i=it[key]; buckets[c].erase(i); <span class="kw">if</span>(buckets[c].empty()) buckets.erase(c); }
+        buckets[c+1].push_front(key); it[key]=buckets[c+1].begin();
+        <span class="kw">if</span>(!mn||c+1&lt;mn) mn=c+1; mx=max(mx,c+1);
+    }
+    <span class="ty">void</span> dec(<span class="ty">string</span> key) {
+        <span class="ty">int</span> c = cnt[key]--;
+        auto i=it[key]; buckets[c].erase(i);
+        <span class="kw">if</span>(buckets[c].empty()) buckets.erase(c);
+        <span class="kw">if</span>(c==1){ cnt.erase(key); it.erase(key); }
+        <span class="kw">else</span>{ buckets[c-1].push_front(key); it[key]=buckets[c-1].begin(); }
+        <span class="kw">if</span>(cnt.empty()) mn=mx=0;
+        <span class="kw">else</span> <span class="kw">if</span>(c==mn&amp;&amp;!buckets.count(mn)) mn=buckets.begin()-&gt;first;
+    }
+    <span class="ty">string</span> getMaxKey(){ <span class="kw">return</span> cnt.empty()?&quot;&quot;:buckets[mx].front(); }
+    <span class="ty">string</span> getMinKey(){ <span class="kw">return</span> cnt.empty()?&quot;&quot;:buckets[mn].front(); }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +159,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Design</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Hash map key→node; doubly linked list các bucket count; mỗi bucket set…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Bucket per count + O(1) move key giữa bucket khi inc/dec.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Dec key về 0 xóa</span><span class="analysis-tag edge">Một key duy nhất</span><span class="analysis-tag edge">getMax/Min khi rỗng</span><span class="analysis-tag pit">minc stale sau dec</span><span class="analysis-tag pit">Không xóa bucket rỗng</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>LFU/LRU style — list of count nodes + hash key to node.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +188,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=All%20O%60one%20Data%20Structure&lc_id=432&embed=true"></iframe>

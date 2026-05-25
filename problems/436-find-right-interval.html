@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #436</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Binary Search</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Find Right Interval</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>55.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Find Right Interval (LeetCode #436) — Medium.</div>
+                        <div class="block-text">Cho intervals [start,end]. Với mỗi i, tìm j nhỏ nhất sao start_j &gt;= end_i (right interval); không có thì -1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>intervals = [[3,4],[2,3],[1,2]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[-1,0,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>intervals = [[1,4],[2,3],[3,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[-1,2,-1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Sort (start, original index); với mỗi end_i binary search lower_bound start &gt;= end_i.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span>* findRightInterval(<span class="ty">int</span>** iv, <span class="ty">int</span> n, <span class="ty">int</span>* cs, <span class="ty">int</span>* rs) { *rs=n; <span class="kw">return</span> NULL; }</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findRightInterval(<span class="ty">self</span>, intervals: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
+        starts = sorted((s, i) <span class="kw">for</span> i, (s, _) <span class="kw">in</span> enumerate(intervals))
+        ans = []
+        <span class="kw">for</span> _, e <span class="kw">in</span> intervals:
+            lo, hi = 0, <span class="ty">len</span>(starts)
+            <span class="kw">while</span> lo &lt; hi:
+                mid = (lo + hi) // 2
+                <span class="kw">if</span> starts[mid][0] &gt;= e: hi = mid
+                <span class="kw">else</span>: lo = mid + 1
+            ans.append(starts[lo][1] <span class="kw">if</span> lo &lt; <span class="ty">len</span>(starts) <span class="kw">else</span> -1)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; findRightInterval(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; v) {
+        <span class="ty">vector</span>&lt;pair&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; st;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)v.size();i++) st.push_back({v[i][0],i});
+        sort(st.begin(), st.end());
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; ans;
+        <span class="kw">for</span>(auto&amp; p:v){
+            <span class="ty">int</span> e=p[1];
+            auto it=lower_bound(st.begin(), st.end(), make_pair(e,0));
+            ans.push_back(it==st.end()?-1:it-&gt;second);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +130,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Binary Search</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n log n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Sort ; với mỗi end_i binary search lower_bound start &gt;= end_i.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Lower bound trên sorted starts cho right interval đầu tiên.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không có j thỏa → -1</span><span class="analysis-tag edge">start == end</span><span class="analysis-tag edge">Một interval</span><span class="analysis-tag pit">Nhầm &gt;= vs &gt;</span><span class="analysis-tag pit">Quên map original index</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Map end → first start ≥ end after sorting starts.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +159,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Find%20Right%20Interval&lc_id=436&embed=true"></iframe>
