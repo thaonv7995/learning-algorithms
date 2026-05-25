@@ -1,8 +1,8 @@
 # Install Algorithms Explorer from GitHub Release (Windows).
 param(
-    [int]$Port = 4173,
+    [int]$Port = 27909,
     [string]$BindHost = "127.0.0.1",
-    [string]$Repo = "thaonv/Algorithms",
+    [string]$Repo = "thaonv7995/learning-algorithms",
     [string]$Version = "latest",
     [switch]$NoStart,
     [switch]$Open

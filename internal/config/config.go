@@ -11,7 +11,7 @@ import (
 
 const (
 	DefaultHost = "127.0.0.1"
-	DefaultPort = 4173
+	DefaultPort = 27909
 )
 
 type Config struct {

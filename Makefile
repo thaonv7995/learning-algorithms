@@ -12,10 +12,10 @@ pack: build
 	bash scripts/pack-www.sh $(DIST)/www
 
 serve: pack
-	ALGO_EXPLORER_ROOT=$(DIST)/www $(BIN) serve --port 4173
+	ALGO_EXPLORER_ROOT=$(DIST)/www $(BIN) serve --port 27909
 
 install-local: pack
-	$(BIN) install --bundle $(DIST) --port 4173
+	$(BIN) install --bundle $(DIST) --port 27909
 	@echo "Run: ~/.local/bin/algo-explorer start"
 
 start:

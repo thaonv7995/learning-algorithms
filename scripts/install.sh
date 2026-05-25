@@ -2,9 +2,9 @@
 # Install Algorithms Explorer from GitHub Release (one-liner entrypoint).
 set -euo pipefail
 
-REPO="${ALGO_EXPLORER_REPO:-thaonv/Algorithms}"
+REPO="${ALGO_EXPLORER_REPO:-thaonv7995/learning-algorithms}"
 VERSION="${ALGO_EXPLORER_VERSION:-latest}"
-PORT="${ALGO_EXPLORER_PORT:-4173}"
+PORT="${ALGO_EXPLORER_PORT:-27909}"
 HOST="${ALGO_EXPLORER_HOST:-127.0.0.1}"
 NO_START=0
 DO_OPEN=0
@@ -14,7 +14,7 @@ usage() {
   cat <<EOF
 Usage: install.sh [options]
 
-  --port N       HTTP port (default 4173)
+  --port N       HTTP port (default 27909)
   --host H       Bind host (default 127.0.0.1)
   --no-start     Install only, do not start background server
   --open         Open browser after install

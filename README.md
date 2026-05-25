@@ -1,281 +1,326 @@
 # Algorithms Explorer
 
-**Version 1.0** — Sách giáo khoa tương tác *Cấu trúc dữ liệu & Giải thuật* kèm thư viện LeetCode (~3.175 bài), visualizer sandbox và checklist QA nội bộ.
+**Interactive document & LeetCode library — Version 1.0**
 
-Tài liệu này mô tả **bản phát hành chạy được (runtime)** — một process nền phục vụ toàn bộ nội dung qua HTTP local, build tự động trên GitHub Actions cho **macOS**, **Linux** và **Windows**.
+Tài liệu tương tác *Cấu trúc dữ liệu & Giải thuật*, kèm thư viện ~3.175 bài LeetCode, visualizer step-by-step và sandbox C. Phát hành dưới dạng **local server** chạy nền — một lệnh cài đặt, mở trình duyệt và học offline trên máy.
 
-> **Trạng thái:** v1 runtime đã có — `algo-explorer` binary, installer, GitHub Actions release.
-
----
-
-## Tại sao cần bản build, không mở file HTML trực tiếp?
-
-Ứng dụng là static site (~100 MB) nhưng dùng `fetch()` (ví dụ `data/catalog.json`). Trình duyệt **không cho phép** các request đó qua giao thức `file://` — cần **HTTP server local**.
-
-Bản build v1 gói:
-
-| Thành phần | Vai trò |
+| | |
 |---|---|
-| `algo-explorer` (binary) | HTTP server nhẹ, chạy nền |
-| `www/` | Toàn bộ `index.html`, `algorithms.html`, `problems/`, `visualizers/`, `data/`, … |
-| `install.sh` / `install.ps1` | Tải đúng bản OS/arch, cài vào thư mục người dùng, đăng ký chạy nền |
+| **Runtime** | `algo-explorer` — Go binary, không cần Node.js khi dùng |
+| **Default URL** | http://127.0.0.1:27909 |
+| **Platforms** | macOS (Intel / Apple Silicon) · Linux (x64 / ARM64) · Windows x64 |
+| **Repo** | [thaonv7995/learning-algorithms](https://github.com/thaonv7995/learning-algorithms) |
 
 ---
 
-## Cài đặt nhanh (một lệnh)
+## Mục lục
 
-Sau khi [Release](../../releases) v1 được publish, cài và chạy nền:
+- [Tổng quan](#tổng-quan)
+- [Cài đặt](#cài-đặt)
+- [Sử dụng hàng ngày](#sử-dụng-hàng-ngày)
+- [Nội dung](#nội-dung)
+- [Kiến trúc](#kiến-trúc)
+- [Cấu hình](#cấu-hình)
+- [Phát triển](#phát-triển)
+- [Release & CI](#release--ci)
+- [Roadmap](#roadmap)
+- [License](#license)
 
-### macOS / Linux
+---
 
-```bash
-curl -fsSL https://github.com/thaonv/Algorithms/releases/latest/download/install.sh | bash
+## Tổng quan
+
+Algorithms Explorer gồm hai phần chính:
+
+1. **Tài liệu** — 16 chương in A4, diagram tương tác, sandbox bộ nhớ/con trỏ, dark mode.
+2. **Thư viện LeetCode** — catalog đầy đủ, lọc theo độ khó/chủ đề, trang chi tiết kèm code và visualizer.
+
+Ứng dụng là static site (~100 MB) nhưng phụ thuộc `fetch()` (ví dụ `data/catalog.json`). Trình duyệt **chặn** các request đó qua `file://`, nên cần **HTTP server local**. Binary `algo-explorer` đảm nhiệm việc đó: cài một lần, chạy nền, quên đi.
+
+```
+  Browser                    algo-explorer (background)
+  ───────                    ──────────────────────────
+  localhost:27909  ◄──────►  static server → www/
+       │                              │
+       ├─ /  (document)               ├─ index.html
+       ├─ /algorithms.html           ├─ problems/
+       └─ /problems/…                └─ visualizers/ · data/
 ```
 
-Tuỳ chọn:
+---
+
+## Cài đặt
+
+### Yêu cầu
+
+- macOS 11+ · Linux (glibc) · Windows 10+
+- Trình duyệt hiện đại (Chrome, Firefox, Safari, Edge)
+- **Không** cần Node.js, Python hay Docker
+
+### Một lệnh (khuyến nghị)
+
+**macOS / Linux**
 
 ```bash
-# Chỉ tải, không chạy nền
-curl -fsSL .../install.sh | bash -s -- --no-start
-
-# Port tùy chỉnh (mặc định 4173)
-curl -fsSL .../install.sh | bash -s -- --port 9000
-
-# Mở trình duyệt sau khi cài
-curl -fsSL .../install.sh | bash -s -- --open
+curl -fsSL https://github.com/thaonv7995/learning-algorithms/releases/latest/download/install.sh | bash
 ```
 
-### Windows (PowerShell)
+**Windows (PowerShell)**
 
 ```powershell
-irm https://github.com/thaonv/Algorithms/releases/latest/download/install.ps1 | iex
+irm https://github.com/thaonv7995/learning-algorithms/releases/latest/download/install.ps1 | iex
 ```
 
-### Sau khi cài
+Script sẽ: tải đúng bản OS/CPU → giải nén vào thư mục người dùng → đăng ký service nền → khởi động server.
+
+### Tuỳ chọn khi cài
+
+```bash
+curl -fsSL https://github.com/thaonv7995/learning-algorithms/releases/latest/download/install.sh | bash -s -- \
+  --port 27909 \
+  --open          # mở browser sau cài
+  --no-start      # chỉ cài, không chạy nền
+  --upgrade       # ghi đè bản cũ
+```
+
+Fork repo khác: `ALGO_EXPLORER_REPO=owner/repo bash install.sh`
+
+### Cài thủ công (từ source)
+
+```bash
+git clone https://github.com/thaonv7995/learning-algorithms.git
+cd Algorithms
+make install-local   # cần Go 1.22+
+make start
+```
+
+Đảm bảo `~/.local/bin` có trong `PATH`:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+---
+
+## Sử dụng hàng ngày
+
+### CLI
 
 | Lệnh | Mô tả |
 |---|---|
-| `algo-explorer status` | Trạng thái process / port |
-| `algo-explorer open` | Mở `http://127.0.0.1:4173` |
-| `algo-explorer stop` | Dừng server nền |
+| `algo-explorer status` | Kiểm tra process và URL |
+| `algo-explorer open` | Mở trình duyệt tại URL mặc định |
+| `algo-explorer stop` | Dừng server |
 | `algo-explorer restart` | Khởi động lại |
-| `algo-explorer logs` | Xem log gần nhất |
+| `algo-explorer logs` | In ~40 dòng log gần nhất |
+| `algo-explorer uninstall` | Gỡ cài đặt và xoá dữ liệu local |
 
-**URL mặc định**
+### Trang chính
 
 | Trang | URL |
 |---|---|
-| Sách giáo khoa | http://127.0.0.1:4173/ |
-| Thư viện LeetCode | http://127.0.0.1:4173/algorithms.html |
-| Bài chi tiết | http://127.0.0.1:4173/problems/{id}-{slug}.html |
+| Tài liệu | http://127.0.0.1:27909/ |
+| Thư viện LeetCode | http://127.0.0.1:27909/algorithms.html |
+| Chi tiết bài | http://127.0.0.1:27909/problems/{id}-{slug}.html |
 
----
+Thư viện hỗ trợ phân trang qua query string: `algorithms.html?page=12` — reload vẫn giữ trang hiện tại.
 
-## Kiến trúc runtime v1
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  algo-explorer (single binary per OS/arch)              │
-│  ├─ serve      → HTTP static file server                │
-│  ├─ install    → copy www/ + register background job    │
-│  ├─ start/stop → quản lý PID                            │
-│  └─ open       → mở browser                             │
-└─────────────────────────────────────────────────────────┘
-         │ phục vụ
-         ▼
-┌─────────────────────────────────────────────────────────┐
-│  www/  (bundle nội dung v1)                             │
-│  index.html · algorithms.html · problems/ · data/ · …   │
-└─────────────────────────────────────────────────────────┘
-```
-
-**Mặc định**
-
-- Bind: `127.0.0.1` (chỉ máy local)
-- Port: `4173` (override bằng `--port` hoặc `ALGO_EXPLORER_PORT`)
-- Thư mục cài: `~/.local/share/algorithms-explorer/` (Linux/macOS) hoặc `%LOCALAPPDATA%\algorithms-explorer\` (Windows)
-- PID / log: `~/.local/state/algorithms-explorer/` hoặc tương đương trên từng OS
-
-**Chạy nền theo OS**
-
-| OS | Cơ chế |
-|---|---|
-| macOS | `launchd` — `~/Library/LaunchAgents/com.algorithms-explorer.server.plist` |
-| Linux | `systemd` user service — `~/.config/systemd/user/algorithms-explorer.service` |
-| Windows | Scheduled Task / background process — `AlgorithmsExplorer` |
-
-Binary **không** embed toàn bộ 100 MB vào một file duy nhất (artifact quá lớn, khó cache). Thay vào đó mỗi release gồm **binary nhỏ + tarball `www-v1.tar.zst`**, script install giải nén cạnh binary.
-
----
-
-## GitHub Actions — build matrix
-
-Workflow dự kiến: `.github/workflows/release.yml`
-
-**Trigger:** tag `v*` (ví dụ `v1.0.0`) hoặc `workflow_dispatch`
-
-**Matrix build**
-
-| Target | GOOS | GOARCH | Artifact |
-|---|---|---|---|
-| macOS Apple Silicon | `darwin` | `arm64` | `algo-explorer-darwin-arm64.tar.gz` |
-| macOS Intel | `darwin` | `amd64` | `algo-explorer-darwin-amd64.tar.gz` |
-| Linux x64 | `linux` | `amd64` | `algo-explorer-linux-amd64.tar.gz` |
-| Linux ARM64 | `linux` | `arm64` | `algo-explorer-linux-arm64.tar.gz` |
-| Windows x64 | `windows` | `amd64` | `algo-explorer-windows-amd64.zip` |
-
-**Các bước pipeline**
-
-1. Checkout source (branch/tag v1)
-2. `npm` / script đóng gói `www/` (copy file, loại `.git`, `checklist/` dev-only nếu cần)
-3. `go build` (hoặc Rust) — binary `algo-explorer` từ `cmd/algo-explorer/`
-4. Nén `www/` → `www-v1.tar.zst`
-5. Upload artifact theo matrix
-6. Tạo GitHub Release, đính kèm:
-   - 5 bundle OS/arch
-   - `install.sh`
-   - `install.ps1`
-   - `SHA256SUMS`
-7. (Tuỳ chọn) Sign macOS binary + notarize
-
-**Cấu trúc repo (runtime v1)**
-
-```
-Algorithms/
-├── README.md
-├── Makefile                  ← build / pack / serve local
-├── go.mod
-├── cmd/algo-explorer/        ← CLI + HTTP server
-├── internal/
-│   ├── server/               ← static file server
-│   ├── daemon/               ← start/stop, launchd/systemd
-│   ├── install/              ← cài bundle www/
-│   ├── config/
-│   └── paths/
-├── scripts/
-│   ├── pack-www.sh
-│   ├── install.sh
-│   └── install.ps1
-├── .github/workflows/
-│   ├── ci.yml
-│   └── release.yml
-├── index.html
-├── algorithms.html
-├── problems/
-├── visualizers/
-└── data/
-```
-
-### Build & chạy local (dev)
+### Gỡ cài đặt
 
 ```bash
-# Cần Go 1.22+
-make pack          # dist/algo-explorer + dist/www/
-make serve         # http://127.0.0.1:4173
-
-# Cài vào ~/.local/share/algorithms-explorer
-make install-local
-make start
-algo-explorer open
-```
-
-### Publish release
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-# → GitHub Actions build 5 platform bundles + install scripts
-```
-
----
-
-## Phát triển nội dung (source hiện tại)
-
-Repo hiện là **static site + toolchain Node** (không bắt buộc khi *chạy* bản build).
-
-```bash
-# Chạy local (không cần cài)
-make serve
-
-# Hoặc sau khi build
-./dist/algo-explorer serve --root dist/www --port 4173
-
-# Regenerate trang bài LeetCode
-node generate_problems.js --id=42
-
-# Sync catalog LeetCode (cần mạng)
-node scripts/sync-leetcode-catalog.js
-
-# Validate nội dung một bài
-node scripts/validate-problem.js --id=42
-
-# Rebuild toàn bộ
-node scripts/rebuild-all.js
-```
-
-**Yêu cầu dev:** Node.js 18+ (chỉ cho authoring / QA, không cần trên máy end-user).
-
----
-
-## Nội dung v1
-
-| Module | Mô tả |
-|---|---|
-| **Sách giáo khoa** (`index.html`) | 16 chương A4, sandbox RAM/con trỏ, dark mode, in PDF |
-| **Thư viện LC** (`algorithms.html`) | 3.175 bài, lọc/tìm kiếm, phân trang `?page=` |
-| **Chi tiết bài** (`problems/*.html`) | Mô tả, code C/C++/Python, visualizer tương tác |
-| **Visualizer** (`visualizers/`) | Step-by-step cho ~50 bài + fallback catalog |
-| **Checklist QA** (`checklist/`) | Nội bộ — không ship trong bản runtime end-user |
-
----
-
-## Cấu hình
-
-| Biến môi trường | Mặc định | Ý nghĩa |
-|---|---|---|
-| `ALGO_EXPLORER_PORT` | `4173` | Port HTTP |
-| `ALGO_EXPLORER_HOST` | `127.0.0.1` | Địa chỉ bind |
-| `ALGO_EXPLORER_ROOT` | *(thư mục cài)* | Đường dẫn `www/` |
-| `ALGO_EXPLORER_LOG_LEVEL` | `info` | `debug` \| `info` \| `warn` |
-
-File cấu hình tuỳ chọn: `~/.config/algorithms-explorer/config.toml`
-
----
-
-## Nâng cấp / gỡ cài đặt
-
-```bash
-# Nâng cấp lên release mới (giữ config + port)
-curl -fsSL .../install.sh | bash -s -- --upgrade
-
-# Gỡ hoàn toàn
 algo-explorer uninstall
 ```
 
 ---
 
+## Nội dung
+
+| Module | Path | Mô tả |
+|---|---|---|
+| Tài liệu | `index.html` | 16 chương A4, TOC, sandbox RAM, in PDF |
+| Library | `algorithms.html` | 3.175 bài, search, filter, pagination |
+| Problems | `problems/*.html` | Statement, ví dụ, code C/C++/Python |
+| Visualizers | `visualizers/` | Animation step-by-step + catalog fallback |
+| Catalog data | `data/catalog.json` | Metadata LeetCode (sync từ API) |
+
+> `checklist/` và `content/` dùng cho QA/authoring nội bộ — **không** đóng gói trong bản runtime end-user.
+
+---
+
+## Kiến trúc
+
+### Thành phần release
+
+| Artifact | Vai trò |
+|---|---|
+| `algo-explorer` | CLI + HTTP static server (~10 MB) |
+| `www/` | Bundle nội dung web (~66 MB nén) |
+| `install.sh` / `install.ps1` | Installer một lệnh |
+
+Mỗi platform release là archive (`tar.gz` / `zip`) chứa binary + thư mục `www/`.
+
+### Service nền
+
+| OS | Cơ chế |
+|---|---|
+| macOS | `launchd` → `~/Library/LaunchAgents/com.algorithms-explorer.server.plist` |
+| Linux | `systemd` user → `~/.config/systemd/user/algorithms-explorer.service` |
+| Windows | Background process (detached) |
+
+Nếu service manager không khả dụng, fallback sang process detached + PID file.
+
+### Thư mục trên máy người dùng
+
+| Path | Nội dung |
+|---|---|
+| `~/.local/share/algorithms-explorer/` | Binary + `www/` (Linux/macOS) |
+| `%LOCALAPPDATA%\algorithms-explorer\` | Tương đương Windows |
+| `~/.local/state/algorithms-explorer/` | PID, log |
+| `~/.config/algorithms-explorer/config.env` | Host, port, root |
+| `~/.local/bin/algo-explorer` | Symlink CLI |
+
+### Cấu trúc repository
+
+```
+Algorithms/
+├── cmd/algo-explorer/       # CLI entrypoint
+├── internal/
+│   ├── server/              # Static HTTP handler
+│   ├── daemon/              # start/stop, launchd/systemd
+│   ├── install/             # Bundle installer
+│   ├── config/
+│   └── paths/
+├── scripts/
+│   ├── pack-www.sh          # Đóng gói runtime bundle
+│   ├── install.sh
+│   └── install.ps1
+├── .github/workflows/
+│   ├── ci.yml               # Build + smoke test
+│   └── release.yml          # Multi-platform release
+├── index.html · algorithms.html
+├── problems/ · visualizers/ · data/
+├── Makefile
+└── go.mod
+```
+
+---
+
+## Cấu hình
+
+### Biến môi trường
+
+| Biến | Mặc định | Mô tả |
+|---|---|---|
+| `ALGO_EXPLORER_HOST` | `127.0.0.1` | Địa chỉ bind (chỉ local) |
+| `ALGO_EXPLORER_PORT` | `27909` | Port HTTP |
+| `ALGO_EXPLORER_ROOT` | *(auto)* | Đường dẫn thư mục `www/` |
+
+### File cấu hình
+
+`~/.config/algorithms-explorer/config.env`:
+
+```env
+ALGO_EXPLORER_HOST=127.0.0.1
+ALGO_EXPLORER_PORT=27909
+ALGO_EXPLORER_ROOT=/Users/you/.local/share/algorithms-explorer/www
+```
+
+Sau khi sửa: `algo-explorer restart`.
+
+---
+
+## Phát triển
+
+### Yêu cầu
+
+| Tool | Dùng cho |
+|---|---|
+| Go 1.22+ | Build `algo-explorer` |
+| Node.js 18+ | Authoring nội dung, sync catalog, QA |
+
+### Chạy local
+
+```bash
+make pack      # → dist/algo-explorer + dist/www/
+make serve     # foreground tại http://127.0.0.1:27909
+```
+
+Hoặc:
+
+```bash
+./dist/algo-explorer serve --root dist/www --port 27909
+```
+
+### Toolchain nội dung
+
+```bash
+node generate_problems.js --id=42          # Regenerate một trang bài
+node scripts/sync-leetcode-catalog.js      # Sync catalog (cần mạng)
+node scripts/validate-problem.js --id=42   # Validate nội dung
+node scripts/rebuild-all.js                # Rebuild toàn bộ
+bash scripts/pack-www.sh dist/www          # Đóng gói runtime bundle
+```
+
+### Makefile targets
+
+| Target | Mô tả |
+|---|---|
+| `make build` | Compile binary → `dist/algo-explorer` |
+| `make pack` | Build + đóng gói `www/` |
+| `make serve` | Chạy server foreground |
+| `make install-local` | Cài vào `~/.local/share/…` |
+| `make start` / `stop` / `status` | Quản lý instance đã cài |
+| `make cross` | Cross-compile 3 platform (dev) |
+| `make clean` | Xoá `dist/` |
+
+---
+
+## Release & CI
+
+### CI (mỗi push `main`)
+
+Workflow `.github/workflows/ci.yml`: pack `www/` → build Go → smoke test HTTP.
+
+### Release (tag `v*`)
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Workflow `.github/workflows/release.yml` build matrix:
+
+| Target | Artifact |
+|---|---|
+| macOS Apple Silicon | `algo-explorer-darwin-arm64.tar.gz` |
+| macOS Intel | `algo-explorer-darwin-amd64.tar.gz` |
+| Linux x64 | `algo-explorer-linux-amd64.tar.gz` |
+| Linux ARM64 | `algo-explorer-linux-arm64.tar.gz` |
+| Windows x64 | `algo-explorer-windows-amd64.zip` |
+
+Kèm theo: `install.sh`, `install.ps1`, `SHA256SUMS`.
+
+---
+
 ## Roadmap
 
-| Phiên bản | Mục tiêu |
-|---|---|
-| **v1.0** ✅ | Nội dung web + binary `algo-explorer` + CI/release |
-| **v1.1** 🔜 | Publish tag `v1.0.0` lên GitHub Releases |
-| **v1.2** | Auto-update check; tray icon (tuỳ chọn) |
-| **v2** | Electron/Tauri wrapper nếu cần offline 100% không cần browser |
+| Version | Trạng thái | Nội dung |
+|---|---|---|
+| **v1.0** | Done | Tài liệu + library + visualizer + runtime binary |
+| **v1.1** | Planned | GitHub Release public, tag `v1.0.0` |
+| **v1.2** | Planned | Auto-update, system tray (tuỳ chọn) |
+| **v2** | Ideas | Desktop shell (Tauri) nếu cần UX native hơn |
 
 ---
 
 ## License
 
-*(Chưa xác định — bổ sung trước khi public release.)*
+License dự án: *TBD* — sẽ bổ sung trước public release.
 
-LeetCode problem statements © LeetCode — nội dung sync chỉ dùng cho học tập cá nhân.
+Nội dung đề bài LeetCode thuộc bản quyền [LeetCode](https://leetcode.com). Dữ liệu sync trong repo chỉ nhằm mục đích **học tập cá nhân**.
 
 ---
 
-## Ghi chú triển khai cho maintainer
-
-1. Repo GitHub: `thaonv/Algorithms` (đổi `ALGO_EXPLORER_REPO` nếu fork).
-2. Tag `v1.0.0` → workflow `release.yml` tạo Release artifacts.
-3. Kiểm thử matrix trên 3 OS trước khi đánh dấu release stable.
-4. `checklist/` và `scripts/` dev có thể loại khỏi bundle `www/` để giảm kích thước tải.
+<p align="center">
+  <sub>Algorithms Explorer v1.0 · Built with Go + static web · Made for learning DSA</sub>
+</p>
