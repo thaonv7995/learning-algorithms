@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="visualizers/viz-embed.css">
+    <script>
+        (function () {
+            var t = localStorage.getItem("algo-theme");
+            if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", t);
+        })();
+    </script>
     <style>
         /* Embed mode — synced with Algorithms Explorer detail pages */
         html.embed-mode, body.embed-mode {
@@ -251,32 +258,48 @@
 </head>
 <body class="">
 
-    <!-- TOP NAVBAR: Controls the viewing/printing mode -->
+    <!-- TOP NAVBAR -->
     <header class="top-navbar no-print">
-        <div class="logo">
-            <i class="fa-solid fa-book-open-reader"></i>
-            <span>CẤU TRÚC DỮ LIỆU & GIẢI THUẬT</span>
+        <div class="nav-brand">
+            <span class="logo-mark" aria-hidden="true"><i class="fa-solid fa-book-open-reader"></i></span>
+            <div class="logo-text">
+                <span class="logo-title">Cấu Trúc Dữ Liệu</span>
+                <span class="logo-sub">& Giải Thuật</span>
+            </div>
         </div>
-        
-        <div class="mode-selectors">
-            <button class="btn-mode active" id="btn-mode-interactive">
-                <i class="fa-solid fa-laptop-code"></i> Học Tương Tác
+
+        <div class="mode-selectors" role="tablist" aria-label="Chế độ xem">
+            <button class="btn-mode active" id="btn-mode-interactive" role="tab" aria-selected="true">
+                <i class="fa-solid fa-laptop-code"></i>
+                <span class="btn-label">Học Tương Tác</span>
             </button>
-            <button class="btn-mode" id="btn-mode-print">
-                <i class="fa-solid fa-file-pdf"></i> Trang In A4 (Preview)
+            <button class="btn-mode" id="btn-mode-print" role="tab" aria-selected="false">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span class="btn-label">Trang In A4</span>
             </button>
         </div>
-        
+
         <div class="nav-actions">
-            <button class="btn-action" id="btn-toggle-sidebar">
-                <i class="fa-solid fa-bars"></i> Ẩn/Hiện Danh Mục
+            <button class="btn-icon" id="btn-theme-toggle" type="button" title="Đổi giao diện sáng/tối" aria-label="Đổi giao diện">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
             </button>
-            <button class="btn-action" id="btn-toggle-sandbox">
-                <i class="fa-solid fa-cubes"></i> Ẩn/Hiện Sandbox
+            <span class="nav-divider" aria-hidden="true"></span>
+            <button class="btn-action btn-ghost" id="btn-toggle-sidebar" type="button" title="Ẩn/hiện danh mục">
+                <i class="fa-solid fa-bars-staggered"></i>
+                <span class="btn-label">Danh mục</span>
             </button>
-            <button class="btn-action btn-primary" id="btn-trigger-print">
-                <i class="fa-solid fa-print"></i> In / Xuất PDF (A4)
+            <button class="btn-action btn-ghost" id="btn-toggle-sandbox" type="button" title="Ẩn/hiện sandbox">
+                <i class="fa-solid fa-cubes"></i>
+                <span class="btn-label">Sandbox</span>
             </button>
+            <button class="btn-action btn-primary" id="btn-trigger-print" type="button" title="In hoặc xuất PDF A4">
+                <i class="fa-solid fa-print"></i>
+                <span class="btn-label">In PDF</span>
+            </button>
+            <a href="algorithms.html" class="btn-action btn-accent" title="Mở thư viện LeetCode">
+                <i class="fa-solid fa-terminal"></i>
+                <span class="btn-label">LeetCode</span>
+            </a>
         </div>
     </header>
 
@@ -287,7 +310,14 @@
         
         <!-- Left Sidebar: Chapters Table of Contents -->
         <aside class="toc-sidebar">
-            <h4 class="toc-title">Danh mục bài học</h4>
+            <div class="toc-header">
+                <h4 class="toc-title">Danh mục bài học</h4>
+                <span class="toc-badge">13 chương</span>
+            </div>
+            <div class="toc-search">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input type="search" id="toc-search" placeholder="Tìm chương…" autocomplete="off" aria-label="Tìm chương">
+            </div>
             <ul class="toc-menu">
                 <li class="toc-item active" data-chapter="1">
                     <a href="#ch1"><i class="fa-solid fa-memory"></i> 1. Pointer & Memory</a>
@@ -326,14 +356,17 @@
                     <a href="#ch12"><i class="fa-solid fa-code"></i> 12. Dynamic Programming</a>
                 </li>
                 <li class="toc-item" data-chapter="13">
-                    <a href="#ch13"><i class="fa-solid fa-folder-tree"></i> 13. Trie (Prefix Tree)</a>
-                </li>
-                <li style="border-top: 1px solid var(--neutral-border); margin-top: 12px; padding-top: 12px; list-style-type: none;">
-                    <a href="algorithms.html" style="display: flex; align-items: center; gap: 0.75rem; padding: 10px 12px; color: #0284c7; font-weight: 700; border-radius: 8px; text-decoration: none; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); transition: all 0.2s;" onmouseover="this.style.background='rgba(56, 189, 248, 0.15)'; this.style.borderColor='#38bdf8'; this.style.color='#0284c7';" onmouseout="this.style.background='rgba(56, 189, 248, 0.08)'; this.style.borderColor='rgba(56, 189, 248, 0.2)'; this.style.color='#0284c7';">
-                        <i class="fa-solid fa-laptop-code" style="font-size: 1rem; color: #0284c7;"></i> Cổng LeetCode 50+
-                    </a>
+                    <a href="#ch13"><i class="fa-solid fa-folder-tree"></i> <span>13. Trie (Prefix Tree)</span></a>
                 </li>
             </ul>
+            <a href="algorithms.html" class="toc-leetcode-link">
+                <span class="toc-leetcode-icon"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="toc-leetcode-text">
+                    <strong>Cổng LeetCode 50+</strong>
+                    <small>3.175 bài · mô phỏng tương tác</small>
+                </span>
+                <i class="fa-solid fa-arrow-right toc-leetcode-arrow"></i>
+            </a>
         </aside>
 
         <!-- Middle Content Pane: Displays active chapter theory & code -->

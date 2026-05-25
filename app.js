@@ -10,6 +10,9 @@ function startApp() {
     const btnToggleSandbox = document.getElementById("btn-toggle-sandbox");
     const btnToggleSidebar = document.getElementById("btn-toggle-sidebar");
     const btnTriggerPrint = document.getElementById("btn-trigger-print");
+    const btnThemeToggle = document.getElementById("btn-theme-toggle");
+    const themeIcon = document.getElementById("theme-icon");
+    const tocSearchInput = document.getElementById("toc-search");
     
     const interactiveLayout = document.getElementById("interactive-layout");
     const printLayout = document.getElementById("print-layout");
@@ -71,6 +74,44 @@ function startApp() {
         quick: { comparisons: 0, swaps: 0, time: 0, active: false, done: false }
     };
     
+    // ==========================================================================
+    // 0. THEME & SIDEBAR SEARCH
+    // ==========================================================================
+
+    function getTheme() {
+        return document.documentElement.getAttribute("data-theme") || "dark";
+    }
+
+    function syncThemeIcon() {
+        if (!themeIcon) return;
+        const dark = getTheme() === "dark";
+        themeIcon.className = dark ? "fa-solid fa-sun" : "fa-solid fa-moon";
+        if (btnThemeToggle) {
+            btnThemeToggle.title = dark ? "Chuyển giao diện sáng" : "Chuyển giao diện tối";
+        }
+    }
+
+    syncThemeIcon();
+
+    if (btnThemeToggle) {
+        btnThemeToggle.addEventListener("click", () => {
+            const next = getTheme() === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", next);
+            localStorage.setItem("algo-theme", next);
+            syncThemeIcon();
+        });
+    }
+
+    if (tocSearchInput) {
+        tocSearchInput.addEventListener("input", () => {
+            const q = tocSearchInput.value.trim().toLowerCase();
+            sidebarItems.forEach(item => {
+                const text = (item.textContent || "").toLowerCase();
+                item.classList.toggle("hidden-by-search", q.length > 0 && !text.includes(q));
+            });
+        });
+    }
+
     // ==========================================================================
     // 1. NAVIGATION & MODE SWITCHING
     // ==========================================================================
@@ -745,10 +786,10 @@ function startApp() {
                 <input type="text" id="ptr-name" class="control-input" placeholder="Tên con trỏ (VD: p)" style="max-width: 100px;">
                 <input type="text" id="ptr-target" class="control-input" placeholder="Trỏ tới biến (VD: a)">
                 <button id="btn-create-ptr" class="btn-ctrl"><i class="fa-solid fa-arrow-pointer"></i> Tạo int*</button>
-                <button id="btn-deref-set" class="btn-ctrl" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-pen"></i> Gán *p</button>
+                <button id="btn-deref-set" class="btn-ctrl btn-warn"><i class="fa-solid fa-pen"></i> Gán *p</button>
             </div>
             <div class="control-group" style="margin-top: 5px; justify-content: space-between;">
-                <button id="btn-free-all" class="btn-ctrl" style="background:#fee2e2; color:#ef4444; width:100%;"><i class="fa-solid fa-trash"></i> Giải phóng Bộ nhớ (free)</button>
+                <button id="btn-free-all" class="btn-ctrl btn-danger btn-fill"><i class="fa-solid fa-trash"></i> Giải phóng Bộ nhớ (free)</button>
             </div>
         `;
 
@@ -852,7 +893,7 @@ function startApp() {
                 <div class="array-cell success" style="width:90px; height:80px; border-color:var(--accent); cursor:pointer;" id="mem-${name}" title="Click để xem chi tiết C">
                     <div style="font-size:0.7rem; color:var(--accent); font-weight:700; padding:2px;">int* ${name}</div>
                     <div class="cell-val" style="font-size:0.85rem; font-family:monospace; font-weight:500;">${targetAddr}</div>
-                    <div class="cell-idx" style="font-size:0.6rem; background:#ecfdf5;">${info.addr}</div>
+                    <div class="cell-idx cell-idx-accent">${info.addr}</div>
                 </div>
             `;
         }
