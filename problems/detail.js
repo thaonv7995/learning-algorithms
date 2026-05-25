@@ -75,7 +75,11 @@
     function initResize() {
         const divider = document.getElementById('resize-divider');
         const layout = document.querySelector('.layout');
-        if (!divider || !layout || window.innerWidth <= 1024) return;
+        const infoPane = document.getElementById('info-pane');
+        if (!divider || !layout || !infoPane || window.innerWidth <= 1024) return;
+
+        const MIN_W = 300;
+        const MAX_RATIO = 0.62;
 
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -83,34 +87,86 @@
         }
 
         let dragging = false;
+        let layoutLeft = 0;
+        let layoutWidth = 0;
+        let pendingX = 0;
+        let rafId = 0;
 
-        divider.addEventListener('mousedown', e => {
+        function applyWidth(clientX) {
+            let w = clientX - layoutLeft;
+            const maxW = Math.max(MIN_W, layoutWidth * MAX_RATIO);
+            w = Math.max(MIN_W, Math.min(w, maxW));
+            document.documentElement.style.setProperty('--info-pane-width', w + 'px');
+        }
+
+        function scheduleMove(clientX) {
+            pendingX = clientX;
+            if (rafId) return;
+            rafId = requestAnimationFrame(() => {
+                rafId = 0;
+                if (!dragging) return;
+                applyWidth(pendingX);
+            });
+        }
+
+        function beginDrag(e) {
+            if (e.button !== undefined && e.button !== 0) return;
+            const rect = layout.getBoundingClientRect();
+            layoutLeft = rect.left;
+            layoutWidth = rect.width;
             dragging = true;
             divider.classList.add('dragging');
+            layout.classList.add('is-resizing');
+            document.body.classList.add('is-resizing-panes');
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
+            if (divider.setPointerCapture && e.pointerId != null) {
+                try { divider.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ }
+            }
+            scheduleMove(e.clientX);
             e.preventDefault();
-        });
+        }
 
-        document.addEventListener('mousemove', e => {
-            if (!dragging) return;
-            const rect = layout.getBoundingClientRect();
-            let pct = ((e.clientX - rect.left) / rect.width) * 100;
-            pct = Math.min(Math.max(pct, 28), 62);
-            const val = pct.toFixed(1) + '%';
-            document.documentElement.style.setProperty('--info-pane-width', val);
-        });
-
-        document.addEventListener('mouseup', () => {
+        function endDrag() {
             if (!dragging) return;
             dragging = false;
             divider.classList.remove('dragging');
+            layout.classList.remove('is-resizing');
+            document.body.classList.remove('is-resizing-panes');
             document.body.style.cursor = '';
             document.body.style.userSelect = '';
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = 0;
+            }
             const current = getComputedStyle(document.documentElement)
                 .getPropertyValue('--info-pane-width').trim();
-            localStorage.setItem(STORAGE_KEY, current);
-        });
+            if (current) localStorage.setItem(STORAGE_KEY, current);
+        }
+
+        divider.addEventListener('pointerdown', beginDrag);
+
+        window.addEventListener('pointermove', e => {
+            if (!dragging) return;
+            scheduleMove(e.clientX);
+        }, { passive: true });
+
+        window.addEventListener('pointerup', endDrag);
+        window.addEventListener('pointercancel', endDrag);
+        divider.addEventListener('lostpointercapture', endDrag);
+
+        // Fallback cho trình duyệt cũ không hỗ trợ Pointer Events
+        if (!window.PointerEvent) {
+            divider.addEventListener('mousedown', e => {
+                if (e.button !== 0) return;
+                beginDrag(e);
+            });
+            window.addEventListener('mousemove', e => {
+                if (!dragging) return;
+                scheduleMove(e.clientX);
+            });
+            window.addEventListener('mouseup', endDrag);
+        }
     }
 
     function initProblemNav() {
