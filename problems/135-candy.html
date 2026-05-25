@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #135</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Greedy</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Candy</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>48.5% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Candy (LeetCode #135) — Hard.</div>
+                        <div class="block-text">Cho ratings[i] điểm trẻ em xếp hàng. Mỗi trẻ ít nhất 1 kẹo; hàng xóm rating cao hơn phải có nhiều kẹo hơn. Tìm tổng kẹo tối thiểu.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>ratings = [1,0,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>ratings = [1,2,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hai pass: trái→phải, nếu ratings[i]&gt;ratings[i-1] thì candy[i]=candy[i-1]+1. Phải→trái, nếu ratings[i]&gt;ratings[i+1] thì candy[i]=max(candy[i], candy[i+1]+1).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Hai pass greedy trái/phải — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> candy(<span class="ty">self</span>, ratings: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        n = <span class="ty">len</span>(ratings)
+        candy = [1] * n
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, n):
+            <span class="kw">if</span> ratings[i] &gt; ratings[i - 1]:
+                candy[i] = candy[i - 1] + 1
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n - 2, -1, -1):
+            <span class="kw">if</span> ratings[i] &gt; ratings[i + 1]:
+                candy[i] = <span class="ty">max</span>(candy[i], candy[i + 1] + 1)
+        <span class="kw">return</span> sum(candy)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> candy(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; ratings) {
+        <span class="ty">int</span> n = ratings.size();
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; c(n, 1);
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; n; i++)
+            <span class="kw">if</span> (ratings[i] &gt; ratings[i-1]) c[i] = c[i-1] + 1;
+        <span class="kw">for</span> (<span class="ty">int</span> i = n - 2; i &gt;= 0; i--)
+            <span class="kw">if</span> (ratings[i] &gt; ratings[i+1]) c[i] = max(c[i], c[i+1] + 1);
+        <span class="kw">return</span> accumulate(c.begin(), c.end(), 0);
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +126,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Greedy</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Hai pass: trái→phải, nếu ratings[i]&gt;ratings[i-1] thì…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Phải→trái, nếu ratings[i]&gt;ratings[i+1] thì candy[i]=max.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Pass trái đảm bảo ràng buộc trái; pass phải bổ sung ràng buộc phải không phá trái.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một trẻ → 1</span><span class="analysis-tag edge">Ratings bằng nhau → mỗi người 1</span><span class="analysis-tag pit">Chỉ một pass không đủ</span><span class="analysis-tag pit">Quên max khi pass phải</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Candy = pass trái + pass phải, lấy max hai ràng buộc.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +155,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Candy&lc_id=135&embed=true"></iframe>

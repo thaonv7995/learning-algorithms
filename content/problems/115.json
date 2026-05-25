@@ -3,32 +3,24 @@
   "title": "Distinct Subsequences",
   "difficulty": "Hard",
   "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Distinct Subsequences (LeetCode #115) — Hard.",
+  "timeComplexity": "O(m·n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi s và t. Đếm số cách chọn subsequence của s (giữ thứ tự, không cần liên tiếp) sao cho bằng t. Hai cách khác nhau nếu chỉ số chọn khác nhau.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"rabbbit\", t = \"rabbit\"", "output": "3" },
+    { "input": "s = \"babgbag\", t = \"bag\"", "output": "5" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP 1D: dp[j] = số cách khớp t[0..j-1]. Duyệt s từ trái; duyệt j ngược để không dùng cùng ký tự hai lần. Nếu s[i]==t[j] thì dp[j+1] += dp[j].",
+  "memoryTip": "dp[j+1] += dp[j] khi khớp — giống coin change nhưng thứ tự cố định.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def numDistinct(self, s: str, t: str) -> int:\n        n = len(t)\n        dp = [0] * (n + 1)\n        dp[0] = 1\n        for ch in s:\n            for j in range(n - 1, -1, -1):\n                if ch == t[j]:\n                    dp[j + 1] += dp[j]\n        return dp[n]",
+    "cpp": "class Solution {\npublic:\n    int numDistinct(string s, string t) {\n        int n = t.size();\n        vector<unsigned long long> dp(n + 1, 0);\n        dp[0] = 1;\n        for (char c : s) {\n            for (int j = n - 1; j >= 0; j--)\n                if (c == t[j]) dp[j + 1] += dp[j];\n        }\n        return dp[n];\n    }\n};",
+    "c": "/* DP 1D duyệt j ngược — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "dp[j] = số subsequence của s[0..i] khớp t[0..j-1]; cập nhật đúng khi thêm ký tự.",
+    "edgeCases": ["t rỗng → 1", "s ngắn hơn t → 0", "Nhiều ký tự trùng"],
+    "pitfalls": ["Duyệt j xuôi → đếm trùng cùng vị trí s", "Overflow với bài lớn (LeetCode dùng 64-bit)"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

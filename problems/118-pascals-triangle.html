@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #118</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Pascal's Triangle</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>78.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Pascal's Triangle (LeetCode #118) — Easy.</div>
+                        <div class="block-text">Cho số hàng numRows, sinh numRows hàng đầu của tam giác Pascal: hàng đầu là [1]; mỗi phần tử bên trong bằng tổng hai phần tử kề trên ở hàng trước; hai đầu mỗi hàng là 1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>numRows = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>numRows = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Bắt đầu [[1]]. Mỗi hàng mới: 1 ở đầu/cuối; phần tử giữa = prev[j-1] + prev[j]. Lặp numRows-1 lần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,36 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Sinh từng hàng từ hàng trước — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> generate(<span class="ty">self</span>, numRows: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        <span class="kw">if</span> numRows == 0:
+            <span class="kw">return</span> []
+        res = [[1]]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, numRows):
+            prev = res[-1]
+            row = [1]
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(1, i):
+                row.append(prev[j - 1] + prev[j])
+            row.append(1)
+            res.append(row)
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; generate(<span class="ty">int</span> numRows) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+        <span class="kw">if</span> (numRows == 0) <span class="kw">return</span> res;
+        res.push_back({1});
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; numRows; i++) {
+            <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; row = {1};
+            auto&amp; prev = res.back();
+            <span class="kw">for</span> (<span class="ty">int</span> j = 1; j &lt; i; j++)
+                row.push_back(prev[j - 1] + prev[j]);
+            row.push_back(1);
+            res.push_back(row);
+        }
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +134,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Bắt đầu [[1]].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Mỗi hàng mới: 1 ở đầu/cuối; phần tử giữa = prev[j-1] +…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Lặp numRows-1 lần.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Công thức Pascal đúng cho mọi hàng; hai đầu luôn 1.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">numRows = 1</span><span class="analysis-tag edge">numRows = 0 → []</span><span class="analysis-tag pit">Vòng j chạy 1..i-1 (không gồm i)</span><span class="analysis-tag pit">Quên thêm 1 ở cuối hàng</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Tam giác Pascal: C = C + C; hai mép luôn là 1.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +162,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Pascal's%20Triangle&lc_id=118&embed=true"></iframe>

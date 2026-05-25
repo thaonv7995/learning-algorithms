@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Linked List",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Convert Sorted List to Binary Search Tree (LeetCode #109) — Medium.",
+  "spaceComplexity": "O(log n)",
+  "description": "Cho linked list đã sắp xếp tăng dần (giá trị duy nhất). Dựng BST cân bằng cao nhất có thể.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [-10,-3,0,5,9]", "output": "[0,-3,9,-10,null,5]" },
+    { "input": "head = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm n nút. Đệ quy build(l,r): tại mid, lấy nút head hiện tại làm root (inorder simulation), head tiến 1 bước. Trái build trước, phải sau.",
+  "memoryTip": "Inorder BST = thứ tự list; build trái → gán root từ head → build phải.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def sortedListToBST(self, head: Optional[ListNode]) -> Optional[TreeNode]:\n        def size(h):\n            n = 0\n            while h:\n                n += 1\n                h = h.next\n            return n\n        def build(l, r):\n            nonlocal head\n            if l > r: return None\n            m = (l + r) // 2\n            left = build(l, m - 1)\n            root = TreeNode(head.val)\n            head = head.next\n            root.left = left\n            root.right = build(m + 1, r)\n            return root\n        return build(0, size(head) - 1) if head else None",
+    "cpp": "class Solution {\n    ListNode* cur;\n    int count(ListNode* h) {\n        int n = 0;\n        while (h) { n++; h = h->next; }\n        return n;\n    }\n    TreeNode* build(int l, int r) {\n        if (l > r) return nullptr;\n        int m = l + (r - l) / 2;\n        TreeNode* left = build(l, m - 1);\n        TreeNode* root = new TreeNode(cur->val);\n        cur = cur->next;\n        root->left = left;\n        root->right = build(m + 1, r);\n        return root;\n    }\npublic:\n    TreeNode* sortedListToBST(ListNode* head) {\n        if (!head) return nullptr;\n        cur = head;\n        return build(0, count(head) - 1);\n    }\n};",
+    "c": "/* Inorder simulation từ list — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Thứ tự inorder của BST khớp list; mid chia đều → cân bằng.",
+    "edgeCases": ["List rỗng", "Một nút", "Hai nút"],
+    "pitfalls": ["Copy sang array tốn O(n) extra (vẫn đúng nhưng kém tối ưu)", "Quên advance head sau khi tạo root"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,25 @@
   "id": 134,
   "title": "Gas Station",
   "difficulty": "Medium",
-  "category": "Array",
+  "category": "Greedy",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Gas Station (LeetCode #134) — Medium.",
+  "description": "Vòng tròn n trạm: gas[i] lít nhận được, cost[i] lít cần đi tới trạm kế. Bắt đầu trạm i với bình rỗng. Trả index trạm bắt đầu duy nhất để đi hết vòng, hoặc -1.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "gas = [1,2,3,4,5], cost = [3,4,5,1,2]", "output": "3" },
+    { "input": "gas = [2,3,4], cost = [3,4,3]", "output": "-1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Tổng (gas-cost) < 0 → -1. Greedy: tank += gas[i]-cost[i]; tank < 0 thì reset start=i+1, tank=0. Trả start nếu tổng ≥ 0.",
+  "memoryTip": "Tổng dư ≥ 0 + tank reset khi âm → start duy nhất.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:\n        total = tank = start = 0\n        for i in range(len(gas)):\n            diff = gas[i] - cost[i]\n            tank += diff\n            total += diff\n            if tank < 0:\n                start = i + 1\n                tank = 0\n        return start if total >= 0 else -1",
+    "cpp": "class Solution {\npublic:\n    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {\n        int total = 0, tank = 0, start = 0;\n        for (int i = 0; i < (int)gas.size(); i++) {\n            int diff = gas[i] - cost[i];\n            tank += diff;\n            total += diff;\n            if (tank < 0) { start = i + 1; tank = 0; }\n        }\n        return total >= 0 ? start : -1;\n    }\n};",
+    "c": "/* Greedy tank + tổng diff — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Nếu tổng dư ≥ 0 thì luôn có điểm bắt đầu; reset loại mọi start không khả thi.",
+    "edgeCases": ["Tổng âm → -1", "Một trạm"],
+    "pitfalls": ["Brute force O(n²)", "Quên kiểm tra total trước khi trả start"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

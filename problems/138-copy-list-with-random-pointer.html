@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #138</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Linked List</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Copy List with Random Pointer</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>62.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Copy List with Random Pointer (LeetCode #138) — Medium.</div>
+                        <div class="block-text">Sao chép linked list mà mỗi node có next và random trỏ tới node bất kỳ hoặc null. Trả head của bản sao.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>head = [[7,null],[13,0],[11,4],[10,2],[1,0]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[7,null],[13,0],[11,4],[10,2],[1,0]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>head = [[1,1],[2,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1,1],[2,1]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>head = []</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hash map old→new: pass 1 tạo node mới và map; pass 2 gán next/random từ map. Hoặc chèn bản sao xen kẽ rồi tách (O(1) extra nếu cho phép sửa list gốc).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Hash map old→<span class="kw">new</span>, hai pass — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> copyRandomList(<span class="ty">self</span>, head: 'Node') -&gt; 'Node':
+        <span class="kw">if</span> <span class="kw">not</span> head:
+            <span class="kw">return</span> <span class="kw">None</span>
+        mp = {}
+        cur = head
+        <span class="kw">while</span> cur:
+            mp[cur] = Node(cur.val)
+            cur = cur.next
+        cur = head
+        <span class="kw">while</span> cur:
+            mp[cur].next = mp.get(cur.next)
+            mp[cur].random = mp.get(cur.random)
+            cur = cur.next
+        <span class="kw">return</span> mp[head]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    Node* copyRandomList(Node* head) {
+        <span class="kw">if</span> (!head) <span class="kw">return</span> <span class="kw">nullptr</span>;
+        unordered_map&lt;Node*, Node*&gt; mp;
+        <span class="kw">for</span> (Node* cur = head; cur; cur = cur-&gt;next)
+            mp[cur] = <span class="kw">new</span> Node(cur-&gt;val);
+        <span class="kw">for</span> (Node* cur = head; cur; cur = cur-&gt;next) {
+            mp[cur]-&gt;next = mp.count(cur-&gt;next) ? mp[cur-&gt;next] : <span class="kw">nullptr</span>;
+            mp[cur]-&gt;random = mp.count(cur-&gt;random) ? mp[cur-&gt;random] : <span class="kw">nullptr</span>;
+        }
+        <span class="kw">return</span> mp[head];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +137,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
+                        <span class="pattern-chip">Linked List</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Hash map old→new: pass 1 tạo node mới và map; pass 2 gán…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hoặc chèn bản sao xen kẽ rồi tách extra nếu cho phép sửa…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi node gốc có đúng một bản sao; random/next trỏ qua map nên không lẫn node cũ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">head null</span><span class="analysis-tag edge">random = null</span><span class="analysis-tag edge">random trỏ chính mình</span><span class="analysis-tag pit">Một pass không map → random sai</span><span class="analysis-tag pit">Dùng địa chỉ node cũ cho random</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Clone có random = map gốc→mới, hai pass.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +166,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Copy%20List%20with%20Random%20Pointer&lc_id=138&embed=true"></iframe>

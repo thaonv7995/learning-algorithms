@@ -5,30 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Single Number II (LeetCode #137) — Medium.",
+  "description": "Cho mảng nums: mọi phần tử xuất hiện đúng ba lần, trừ một phần tử xuất hiện một lần. Tìm phần tử đó. O(n) thời gian, O(1) bộ nhớ phụ.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [2,2,3,2]", "output": "3" },
+    { "input": "nums = [0,1,0,1,0,1,99]", "output": "99" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đếm từng bit mod 3 trên 32 bit; hoặc state machine ones/twos: ones giữ bit xuất hiện lần 1 mod 3, twos lần 2 mod 3.",
+  "memoryTip": "Bit mod 3 hoặc ones/twos — mỗi bit độc lập.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def singleNumber(self, nums: List[int]) -> int:\n        ones = twos = 0\n        for x in nums:\n            ones = (ones ^ x) & ~twos\n            twos = (twos ^ x) & ~ones\n        return ones",
+    "cpp": "class Solution {\npublic:\n    int singleNumber(vector<int>& nums) {\n        int ones = 0, twos = 0;\n        for (int x : nums) {\n            ones = (ones ^ x) & ~twos;\n            twos = (twos ^ x) & ~ones;\n        }\n        return ones;\n    }\n};",
+    "c": "/* State machine ones/twos — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi bit được đếm mod 3 độc lập; số lẻ một lần không bị triệt tiêu.",
+    "edgeCases": ["Một phần tử", "Số âm"],
+    "pitfalls": ["Dùng sort O(n log n)", "Nhầm công thức cập nhật ones/twos"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -4,31 +4,24 @@
   "difficulty": "Medium",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Evaluate Reverse Polish Notation (LeetCode #150) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng tokens biểu thức Reverse Polish Notation (toán hạng và +,-,*,/). Tính giá trị. Phép chia nguyên về 0 (truncate toward zero).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "tokens = [\"2\",\"1\",\"+\",\"3\",\"*\"]", "output": "9" },
+    { "input": "tokens = [\"4\",\"13\",\"5\",\"/\",\"+\"]", "output": "6" },
+    { "input": "tokens = [\"10\",\"6\",\"9\",\"3\",\"+\",\"-11\",\"*\",\"/\",\"*\",\"17\",\"+\",\"5\",\"+\"]", "output": "22" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Stack: gặp số thì push; gặp toán tử pop b, pop a, push a op b. Cuối cùng stack còn một giá trị.",
+  "memoryTip": "RPN = stack; operator pop b rồi a, push kết quả.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def evalRPN(self, tokens: List[str]) -> int:\n        st = []\n        ops = {'+', '-', '*', '/'}\n        for t in tokens:\n            if t not in ops:\n                st.append(int(t))\n            else:\n                b = st.pop()\n                a = st.pop()\n                if t == '+': st.append(a + b)\n                elif t == '-': st.append(a - b)\n                elif t == '*': st.append(a * b)\n                else: st.append(int(a / b))\n        return st[0]",
+    "cpp": "class Solution {\npublic:\n    int evalRPN(vector<string>& tokens) {\n        stack<long long> st;\n        for (const string& t : tokens) {\n            if (t.size() > 1 || isdigit(t[0])) {\n                st.push(stoll(t));\n            } else {\n                long long b = st.top(); st.pop();\n                long long a = st.top(); st.pop();\n                if (t == \"+\") st.push(a + b);\n                else if (t == \"-\") st.push(a - b);\n                else if (t == \"*\") st.push(a * b);\n                else st.push(a / b);\n            }\n        }\n        return (int)st.top();\n    }\n};",
+    "c": "/* Stack đánh giá RPN — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "RPN đảm bảo đủ toán hạng khi gặp op; thứ tự pop b trước a đúng cho a op b.",
+    "edgeCases": ["Một toán hạng", "Số âm trong token", "Chia không dư"],
+    "pitfalls": ["Pop sai thứ tự (-,/)", "Dùng float thay int division", "Không nhận số âm một ký tự"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

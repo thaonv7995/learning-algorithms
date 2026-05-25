@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #101</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Symmetric Tree</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>61.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Symmetric Tree (LeetCode #101) — Easy.</div>
+                        <div class="block-text">Cho root của cây nhị phân. Kiểm tra cây có đối xứng qua gốc (mirror) hay không — cây trái là bản phản chiếu của cây phải.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [1,2,2,3,4,4,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [1,2,2,null,3,null,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Đệ quy so sánh hai nút (a, b): a.val === b.val, isMirror(a.left, b.right) và isMirror(a.right, b.left). Có thể dùng BFS cặp nút.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,24 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DFS so cặp mirror — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isSymmetric(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; bool:
+        <span class="kw">def</span> mir(a, b):
+            <span class="kw">if</span> <span class="kw">not</span> a <span class="kw">and</span> <span class="kw">not</span> b: <span class="kw">return</span> <span class="kw">True</span>
+            <span class="kw">if</span> <span class="kw">not</span> a <span class="kw">or</span> <span class="kw">not</span> b <span class="kw">or</span> a.val != b.val: <span class="kw">return</span> <span class="kw">False</span>
+            <span class="kw">return</span> mir(a.left, b.right) <span class="kw">and</span> mir(a.right, b.left)
+        <span class="kw">return</span> mir(root.left, root.right) <span class="kw">if</span> root <span class="kw">else</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isSymmetric(TreeNode* root) {
+        function&lt;<span class="ty">bool</span>(TreeNode*,TreeNode*)&gt; mir = [&amp;](TreeNode* a, TreeNode* b) {
+            <span class="kw">if</span> (!a &amp;&amp; !b) <span class="kw">return</span> true;
+            <span class="kw">if</span> (!a || !b || a-&gt;val != b-&gt;val) <span class="kw">return</span> false;
+            <span class="kw">return</span> mir(a-&gt;left, b-&gt;right) &amp;&amp; mir(a-&gt;right, b-&gt;left);
+        };
+        <span class="kw">return</span> !root || mir(root-&gt;left, root-&gt;right);
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +123,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Đệ quy so sánh hai nút : a.val === b.val, isMirror và…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Có thể dùng BFS cặp nút.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>So sánh đúng cặt đối xứng tại mọi nút.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">root null → true</span><span class="analysis-tag edge">Một con → false</span><span class="analysis-tag pit">So sánh left-left thay vì left-right</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Mirror = trái của bên này khớp phải của bên kia.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +150,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Symmetric%20Tree&lc_id=101&embed=true"></iframe>

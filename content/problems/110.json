@@ -4,31 +4,24 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Balanced Binary Tree (LeetCode #110) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root cây nhị phân. Kiểm tra cây có cân bằng không: |chiều cao cây trái − chiều cao cây phải| ≤ 1 tại mọi nút.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [3,9,20,null,null,15,7]", "output": "true" },
+    { "input": "root = [1,2,2,3,3,null,null,4,4]", "output": "false" },
+    { "input": "root = []", "output": "true" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS bottom-up: hàm depth trả chiều cao, hoặc -1 nếu mất cân bằng. |L−R|>1 → propagate -1 lên.",
+  "memoryTip": "Một pass: trả height hoặc -1 = không balanced.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isBalanced(self, root: Optional[TreeNode]) -> bool:\n        def depth(node):\n            if not node: return 0\n            L, R = depth(node.left), depth(node.right)\n            if L < 0 or R < 0 or abs(L - R) > 1: return -1\n            return 1 + max(L, R)\n        return depth(root) >= 0",
+    "cpp": "class Solution {\n    int depth(TreeNode* nd) {\n        if (!nd) return 0;\n        int L = depth(nd->left), R = depth(nd->right);\n        if (L < 0 || R < 0 || abs(L - R) > 1) return -1;\n        return 1 + max(L, R);\n    }\npublic:\n    bool isBalanced(TreeNode* root) {\n        return depth(root) >= 0;\n    }\n};",
+    "c": "/* DFS trả height hoặc -1 — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Kiểm tra điều kiện tại mọi nút trong một lần duyệt O(n).",
+    "edgeCases": ["Cây rỗng → true", "Một nút → true", "Cây lệch sâu"],
+    "pitfalls": ["Tính height riêng mỗi nút → O(n²)", "Chỉ so gốc, không kiểm tra con"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

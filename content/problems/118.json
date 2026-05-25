@@ -3,32 +3,24 @@
   "title": "Pascal's Triangle",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Pascal's Triangle (LeetCode #118) — Easy.",
+  "timeComplexity": "O(n²)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho số hàng numRows, sinh numRows hàng đầu của tam giác Pascal: hàng đầu là [1]; mỗi phần tử bên trong bằng tổng hai phần tử kề trên ở hàng trước; hai đầu mỗi hàng là 1.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "numRows = 5", "output": "[[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]" },
+    { "input": "numRows = 1", "output": "[[1]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Bắt đầu [[1]]. Mỗi hàng mới: 1 ở đầu/cuối; phần tử giữa = prev[j-1] + prev[j]. Lặp numRows-1 lần.",
+  "memoryTip": "Tam giác Pascal: C(n,k) = C(n-1,k-1) + C(n-1,k); hai mép luôn là 1.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def generate(self, numRows: int) -> List[List[int]]:\n        if numRows == 0:\n            return []\n        res = [[1]]\n        for i in range(1, numRows):\n            prev = res[-1]\n            row = [1]\n            for j in range(1, i):\n                row.append(prev[j - 1] + prev[j])\n            row.append(1)\n            res.append(row)\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> generate(int numRows) {\n        vector<vector<int>> res;\n        if (numRows == 0) return res;\n        res.push_back({1});\n        for (int i = 1; i < numRows; i++) {\n            vector<int> row = {1};\n            auto& prev = res.back();\n            for (int j = 1; j < i; j++)\n                row.push_back(prev[j - 1] + prev[j]);\n            row.push_back(1);\n            res.push_back(row);\n        }\n        return res;\n    }\n};",
+    "c": "/* Sinh từng hàng từ hàng trước — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Công thức Pascal đúng cho mọi hàng; hai đầu luôn 1.",
+    "edgeCases": ["numRows = 1", "numRows = 0 → []"],
+    "pitfalls": ["Vòng j chạy 1..i-1 (không gồm i)", "Quên thêm 1 ở cuối hàng"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -4,31 +4,23 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Symmetric Tree (LeetCode #101) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root của cây nhị phân. Kiểm tra cây có đối xứng qua gốc (mirror) hay không — cây trái là bản phản chiếu của cây phải.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,2,2,3,4,4,3]", "output": "true" },
+    { "input": "root = [1,2,2,null,3,null,3]", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đệ quy so sánh hai nút (a, b): a.val === b.val, isMirror(a.left, b.right) và isMirror(a.right, b.left). Có thể dùng BFS cặp nút.",
+  "memoryTip": "Mirror = trái của bên này khớp phải của bên kia.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isSymmetric(self, root: Optional[TreeNode]) -> bool:\n        def mir(a, b):\n            if not a and not b: return True\n            if not a or not b or a.val != b.val: return False\n            return mir(a.left, b.right) and mir(a.right, b.left)\n        return mir(root.left, root.right) if root else True",
+    "cpp": "class Solution {\npublic:\n    bool isSymmetric(TreeNode* root) {\n        function<bool(TreeNode*,TreeNode*)> mir = [&](TreeNode* a, TreeNode* b) {\n            if (!a && !b) return true;\n            if (!a || !b || a->val != b->val) return false;\n            return mir(a->left, b->right) && mir(a->right, b->left);\n        };\n        return !root || mir(root->left, root->right);\n    }\n};",
+    "c": "/* DFS so cặp mirror — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "So sánh đúng cặt đối xứng tại mọi nút.",
+    "edgeCases": ["root null → true", "Một con → false"],
+    "pitfalls": ["So sánh left-left thay vì left-right"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

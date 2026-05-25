@@ -2,33 +2,26 @@
   "id": 138,
   "title": "Copy List with Random Pointer",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Linked List",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Copy List with Random Pointer (LeetCode #138) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Sao chép linked list mà mỗi node có next và random trỏ tới node bất kỳ hoặc null. Trả head của bản sao.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [[7,null],[13,0],[11,4],[10,2],[1,0]]", "output": "[[7,null],[13,0],[11,4],[10,2],[1,0]]" },
+    { "input": "head = [[1,1],[2,1]]", "output": "[[1,1],[2,1]]" },
+    { "input": "head = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hash map old→new: pass 1 tạo node mới và map; pass 2 gán next/random từ map. Hoặc chèn bản sao xen kẽ rồi tách (O(1) extra nếu cho phép sửa list gốc).",
+  "memoryTip": "Clone có random = map gốc→mới, hai pass.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def copyRandomList(self, head: 'Node') -> 'Node':\n        if not head:\n            return None\n        mp = {}\n        cur = head\n        while cur:\n            mp[cur] = Node(cur.val)\n            cur = cur.next\n        cur = head\n        while cur:\n            mp[cur].next = mp.get(cur.next)\n            mp[cur].random = mp.get(cur.random)\n            cur = cur.next\n        return mp[head]",
+    "cpp": "class Solution {\npublic:\n    Node* copyRandomList(Node* head) {\n        if (!head) return nullptr;\n        unordered_map<Node*, Node*> mp;\n        for (Node* cur = head; cur; cur = cur->next)\n            mp[cur] = new Node(cur->val);\n        for (Node* cur = head; cur; cur = cur->next) {\n            mp[cur]->next = mp.count(cur->next) ? mp[cur->next] : nullptr;\n            mp[cur]->random = mp.count(cur->random) ? mp[cur->random] : nullptr;\n        }\n        return mp[head];\n    }\n};",
+    "c": "/* Hash map old→new, hai pass — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi node gốc có đúng một bản sao; random/next trỏ qua map nên không lẫn node cũ.",
+    "edgeCases": ["head null", "random = null", "random trỏ chính mình"],
+    "pitfalls": ["Một pass không map → random sai", "Dùng địa chỉ node cũ cho random"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

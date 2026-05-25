@@ -42,7 +42,7 @@
                     <h1 class="problem-title">Binary Tree Level Order Traversal</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>72.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Binary Tree Level Order Traversal (LeetCode #102) — Medium.</div>
+                        <div class="block-text">Trả về giá trị các nút theo từng tầng (trái → phải), mỗi tầng là một mảng con.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [3,9,20,null,null,15,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[3],[9,20],[15,7]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS: queue, mỗi vòng lặp xử lý đúng size hiện tại của queue = một tầng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +90,38 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* BFS tầng — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> levelOrder(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+        res, q = [], deque([root])
+        <span class="kw">while</span> q:
+            row, n = [], <span class="ty">len</span>(q)
+            <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n):
+                node = q.popleft()
+                row.append(node.val)
+                <span class="kw">if</span> node.left: q.append(node.left)
+                <span class="kw">if</span> node.right: q.append(node.right)
+            res.append(row)
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; levelOrder(TreeNode* root) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+        <span class="kw">if</span> (!root) <span class="kw">return</span> res;
+        queue&lt;TreeNode*&gt; q; q.push(root);
+        <span class="kw">while</span> (!q.empty()) {
+            <span class="ty">int</span> n = q.size(); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; row;
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+                auto* nd = q.front(); q.pop();
+                row.push_back(nd-&gt;val);
+                <span class="kw">if</span> (nd-&gt;left) q.push(nd-&gt;left);
+                <span class="kw">if</span> (nd-&gt;right) q.push(nd-&gt;right);
+            }
+            res.push_back(row);
+        }
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +132,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — BFS: queue, mỗi vòng lặp xử lý đúng size hiện tại của queue = một tầng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi nút vào đúng một tầng duy nhất.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Cây rỗng</span><span class="analysis-tag edge">Chỉ gốc</span><span class="analysis-tag pit">Không cố định size tầng khi duyệt queue</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>for pop — không lẫn tầng.</p>
                     </details>
                 </div>
                 </div>

@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #146</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">LRU Cache</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(capacity)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>47.4% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,16 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">LRU Cache (LeetCode #146) — Medium.</div>
+                        <div class="block-text">Thiết kế cấu trúc LRU Cache: get(key) trả value hoặc -1; put(key,value) cập nhật/thêm; khi đầy thì loại key ít dùng nhất. Mọi thao tác O(1).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>[&quot;LRUCache&quot;,&quot;put&quot;,&quot;put&quot;,&quot;get&quot;,&quot;put&quot;,&quot;get&quot;,&quot;put&quot;,&quot;get&quot;,&quot;get&quot;,&quot;get&quot;]
+[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[null,null,null,1,null,-1,null,-1,3,4]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +74,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hash map key→node + doubly linked list theo thứ tự dùng gần nhất (head=MRU, tail=LRU). get/put đưa node lên đầu; put vượt capacity thì xóa tail.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +91,100 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">/* Hash map + doubly linked list — xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> LRUCache:
+    <span class="kw">class</span> Node:
+        __slots__ = ('key', 'val', 'prev', 'next')
+        <span class="kw">def</span> __init__(<span class="ty">self</span>, key=0, val=0):
+            <span class="ty">self</span>.key, <span class="ty">self</span>.val = key, val
+            <span class="ty">self</span>.prev = <span class="ty">self</span>.next = <span class="kw">None</span>
+
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, capacity: <span class="ty">int</span>):
+        <span class="ty">self</span>.cap = capacity
+        <span class="ty">self</span>.mp = {}
+        <span class="ty">self</span>.head = <span class="ty">self</span>.tail = LRUCache.Node()
+        <span class="ty">self</span>.head.next = <span class="ty">self</span>.tail
+        <span class="ty">self</span>.tail.prev = <span class="ty">self</span>.head
+
+    <span class="kw">def</span> _remove(<span class="ty">self</span>, node):
+        node.prev.next = node.next
+        node.next.prev = node.prev
+
+    <span class="kw">def</span> _add_front(<span class="ty">self</span>, node):
+        node.next = <span class="ty">self</span>.head.next
+        node.prev = <span class="ty">self</span>.head
+        <span class="ty">self</span>.head.next.prev = node
+        <span class="ty">self</span>.head.next = node
+
+    <span class="kw">def</span> get(<span class="ty">self</span>, key: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> key <span class="kw">not</span> <span class="kw">in</span> <span class="ty">self</span>.mp:
+            <span class="kw">return</span> -1
+        node = <span class="ty">self</span>.mp[key]
+        <span class="ty">self</span>._remove(node)
+        <span class="ty">self</span>._add_front(node)
+        <span class="kw">return</span> node.val
+
+    <span class="kw">def</span> put(<span class="ty">self</span>, key: <span class="ty">int</span>, value: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
+        <span class="kw">if</span> key <span class="kw">in</span> <span class="ty">self</span>.mp:
+            node = <span class="ty">self</span>.mp[key]
+            node.val = value
+            <span class="ty">self</span>._remove(node)
+            <span class="ty">self</span>._add_front(node)
+        <span class="kw">else</span>:
+            <span class="kw">if</span> <span class="ty">len</span>(<span class="ty">self</span>.mp) == <span class="ty">self</span>.cap:
+                lru = <span class="ty">self</span>.tail.prev
+                <span class="ty">self</span>._remove(lru)
+                del <span class="ty">self</span>.mp[lru.key]
+            node = LRUCache.Node(key, value)
+            <span class="ty">self</span>.mp[key] = node
+            <span class="ty">self</span>._add_front(node)</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> LRUCache {
+    <span class="ty">struct</span> Node { <span class="ty">int</span> key, val; Node *prev, *next; };
+    <span class="ty">int</span> cap;
+    unordered_map&lt;<span class="ty">int</span>, Node*&gt; mp;
+    Node *head, *tail;
+    <span class="ty">void</span> remove(Node* node) {
+        node-&gt;prev-&gt;next = node-&gt;next;
+        node-&gt;next-&gt;prev = node-&gt;prev;
+    }
+    <span class="ty">void</span> addFront(Node* node) {
+        node-&gt;next = head-&gt;next;
+        node-&gt;prev = head;
+        head-&gt;next-&gt;prev = node;
+        head-&gt;next = node;
+    }
 <span class="ty">public</span>:
+    LRUCache(<span class="ty">int</span> capacity) : cap(capacity) {
+        head = <span class="kw">new</span> Node{0, 0, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>};
+        tail = <span class="kw">new</span> Node{0, 0, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>};
+        head-&gt;next = tail;
+        tail-&gt;prev = head;
+    }
+    <span class="ty">int</span> get(<span class="ty">int</span> key) {
+        <span class="kw">if</span> (!mp.count(key)) <span class="kw">return</span> -1;
+        Node* node = mp[key];
+        remove(node);
+        addFront(node);
+        <span class="kw">return</span> node-&gt;val;
+    }
+    <span class="ty">void</span> put(<span class="ty">int</span> key, <span class="ty">int</span> value) {
+        <span class="kw">if</span> (mp.count(key)) {
+            Node* node = mp[key];
+            node-&gt;val = value;
+            remove(node);
+            addFront(node);
+        } <span class="kw">else</span> {
+            <span class="kw">if</span> ((<span class="ty">int</span>)mp.size() == cap) {
+                Node* lru = tail-&gt;prev;
+                remove(lru);
+                mp.erase(lru-&gt;key);
+                <span class="kw">delete</span> lru;
+            }
+            Node* node = <span class="kw">new</span> Node{key, value, <span class="kw">nullptr</span>, <span class="kw">nullptr</span>};
+            mp[key] = node;
+            addFront(node);
+        }
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +194,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(capacity)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Hash map key→node + doubly linked list theo thứ tự dùng…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — get/put đưa node lên đầu; put vượt capacity thì xóa tail.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Map O(1) tra cứu; DLL O(1) move/evict; tail.prev luôn là LRU.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">capacity=1</span><span class="analysis-tag edge">get key không tồn tại → -1</span><span class="analysis-tag edge">put cập nhật key có sẵn</span><span class="analysis-tag pit">OrderedDict không đảm bảo O(1) mọi ngôn ngữ</span><span class="analysis-tag pit">Quên xóa key khỏi map khi evict</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Map + DLL: get/put = move to front; evict tail.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +222,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=LRU%20Cache&lc_id=146&embed=true"></iframe>

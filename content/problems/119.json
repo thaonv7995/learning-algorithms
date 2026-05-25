@@ -3,32 +3,24 @@
   "title": "Pascal's Triangle II",
   "difficulty": "Easy",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Pascal's Triangle II (LeetCode #119) — Easy.",
+  "timeComplexity": "O(n²)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chỉ số hàng rowIndex (0-based), trả về đúng hàng đó của tam giác Pascal (không cần toàn bộ tam giác).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "rowIndex = 3", "output": "[1,3,3,1]" },
+    { "input": "rowIndex = 0", "output": "[1]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Giữ một mảng row, bắt đầu [1]. Mỗi hàng i: cập nhật từ phải sang trái row[j] += row[j-1] (j = i-1..1), rồi append 1.",
+  "memoryTip": "Cập nhật phải→trái để không ghi đè giá trị cũ còn cần dùng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def getRow(self, rowIndex: int) -> List[int]:\n        row = [1]\n        for i in range(1, rowIndex + 1):\n            for j in range(i - 1, 0, -1):\n                row[j] += row[j - 1]\n            row.append(1)\n        return row",
+    "cpp": "class Solution {\npublic:\n    vector<int> getRow(int rowIndex) {\n        vector<int> row = {1};\n        for (int i = 1; i <= rowIndex; i++) {\n            for (int j = i - 1; j >= 1; j--)\n                row[j] += row[j - 1];\n            row.push_back(1);\n        }\n        return row;\n    }\n};",
+    "c": "/* Cập nhật hàng phải→trái — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi bước sinh đúng hàng i của Pascal; O(n) bộ nhớ phụ.",
+    "edgeCases": ["rowIndex = 0 → [1]", "rowIndex lớn — tràn int nếu không cẩn thận"],
+    "pitfalls": ["Cập nhật trái→phải làm sai giá trị", "Quên append 1 cuối hàng"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

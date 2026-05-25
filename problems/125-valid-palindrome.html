@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Valid Palindrome (LeetCode #125) — Easy.</div>
+                        <div class="block-text">Cho chuỗi s. Kiểm tra sau khi bỏ ký tự không phải chữ/số và không phân biệt hoa thường, chuỗi có phải palindrome hay không.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;A man, a plan, a canal: Panama&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;race a car&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Two pointers l, r: bỏ qua ký tự không alphanumeric, so sánh lower(s[l]) và lower(s[r]). Lệch → false; gặp nhau → true.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,34 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Two pointers skip non-alnum — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> isPalindrome(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; bool:
+        l, r = 0, <span class="ty">len</span>(s) - 1
+        <span class="kw">while</span> l &lt; r:
+            <span class="kw">while</span> l &lt; r <span class="kw">and</span> <span class="kw">not</span> s[l].isalnum(): l += 1
+            <span class="kw">while</span> l &lt; r <span class="kw">and</span> <span class="kw">not</span> s[r].isalnum(): r -= 1
+            <span class="kw">if</span> s[l].lower() != s[r].lower(): <span class="kw">return</span> <span class="kw">False</span>
+            l += 1; r -= 1
+        <span class="kw">return</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> alnum(<span class="ty">char</span> c) {
+        <span class="kw">return</span> isalnum(static_cast&lt;<span class="ty">unsigned</span> <span class="ty">char</span>&gt;(c));
+    }
+    <span class="ty">char</span> lower(<span class="ty">char</span> c) {
+        <span class="kw">return</span> tolower(static_cast&lt;<span class="ty">unsigned</span> <span class="ty">char</span>&gt;(c));
+    }
 <span class="ty">public</span>:
+    <span class="ty">bool</span> isPalindrome(<span class="ty">string</span> s) {
+        <span class="ty">int</span> l = 0, r = (<span class="ty">int</span>)s.size() - 1;
+        <span class="kw">while</span> (l &lt; r) {
+            <span class="kw">while</span> (l &lt; r &amp;&amp; !alnum(s[l])) l++;
+            <span class="kw">while</span> (l &lt; r &amp;&amp; !alnum(s[r])) r--;
+            <span class="kw">if</span> (lower(s[l]) != lower(s[r])) <span class="kw">return</span> false;
+            l++; r--;
+        }
+        <span class="kw">return</span> true;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +136,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Two pointers l, r: bỏ qua ký tự không alphanumeric, so…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Lệch → false; gặp nhau → true.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Chỉ so sánh ký tự hợp lệ theo thứ tự đối xứng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng → true</span><span class="analysis-tag edge">Chỉ ký tự đặc biệt → true</span><span class="analysis-tag pit">Quên tolower</span><span class="analysis-tag pit">Không skip ký tự không alphanumeric</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Palindrome chuứn hóa = two pointers bỏ rác, so thường.</p>
                     </details>
                 </div>
                 </div>

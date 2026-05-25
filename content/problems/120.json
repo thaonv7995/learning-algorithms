@@ -2,33 +2,25 @@
   "id": 120,
   "title": "Triangle",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Triangle (LeetCode #120) — Medium.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n²)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho tam giác số (hàng i có i+1 phần tử). Tìm tổng nhỏ nhất trên đường đi từ đỉnh xuống đáy; mỗi bước chỉ xuống ô liền kề bên dưới trái hoặc phải.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]", "output": "11" },
+    { "input": "triangle = [[-10]]", "output": "-10" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP bottom-up: dp = hàng cuối. Duyệt từ hàng n-2 lên 0: dp[j] = triangle[i][j] + min(dp[j], dp[j+1]). Trả dp[0].",
+  "memoryTip": "Tam giác = min path sum dạng tam giác; bottom-up 1D dp giống #64.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minimumTotal(self, triangle: List[List[int]]) -> int:\n        dp = triangle[-1][:]\n        for i in range(len(triangle) - 2, -1, -1):\n            for j in range(len(triangle[i])):\n                dp[j] = triangle[i][j] + min(dp[j], dp[j + 1])\n        return dp[0]",
+    "cpp": "class Solution {\npublic:\n    int minimumTotal(vector<vector<int>>& tri) {\n        vector<int> dp = tri.back();\n        for (int i = (int)tri.size() - 2; i >= 0; i--)\n            for (int j = 0; j <= i; j++)\n                dp[j] = tri[i][j] + min(dp[j], dp[j + 1]);\n        return dp[0];\n    }\n};",
+    "c": "/* DP bottom-up 1D min — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "dp[j] = min sum từ (i,j) xuống đáy; optimal substructure đúng.",
+    "edgeCases": ["Một hàng một phần tử", "Giá trị âm trên đường đi"],
+    "pitfalls": ["Top-down tốn stack O(n)", "Dùng dp[j+1] trước khi cập nhật dp[j] khi đi top-down in-place"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

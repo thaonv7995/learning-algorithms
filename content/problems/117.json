@@ -2,33 +2,25 @@
   "id": 117,
   "title": "Populating Next Right Pointers in Each Node II",
   "difficulty": "Medium",
-  "category": "Linked List",
+  "category": "Tree",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Populating Next Right Pointers in Each Node II (LeetCode #117) — Medium.",
+  "description": "Giống bài 116 nhưng cây nhị phân bất kỳ (có thể thiếu con trái/phải). Nối con trỏ next từ trái sang phải trong cùng tầng; next của nút cuối mỗi tầng là null.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,2,3,4,5,null,7]", "output": "[1,#,2,3,#,4,5,7,#]" },
+    { "input": "root = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt tầng bằng next đã có: dummy + prev xây chuỗi con của tầng kế. Với mỗi nút cur, append cur.left rồi cur.right vào chuỗi (nếu tồn tại). Hết tầng thì cur = dummy.next.",
+  "memoryTip": "Dummy head cho tầng con — prev nối mọi con thực sự tồn tại, bỏ qua null.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':\n        dummy = Node(0)\n        prev = dummy\n        cur = root\n        while cur:\n            while cur:\n                if cur.left:\n                    prev.next = cur.left\n                    prev = prev.next\n                if cur.right:\n                    prev.next = cur.right\n                    prev = prev.next\n                cur = cur.next\n            cur = dummy.next\n            dummy.next = None\n            prev = dummy\n        return root",
+    "cpp": "class Solution {\npublic:\n    Node* connect(Node* root) {\n        Node dummy(0);\n        Node* prev = &dummy;\n        Node* cur = root;\n        while (cur) {\n            while (cur) {\n                if (cur->left) {\n                    prev->next = cur->left;\n                    prev = prev->next;\n                }\n                if (cur->right) {\n                    prev->next = cur->right;\n                    prev = prev->next;\n                }\n                cur = cur->next;\n            }\n            cur = dummy.next;\n            dummy.next = nullptr;\n            prev = &dummy;\n        }\n        return root;\n    }\n};",
+    "c": "/* Dummy + prev nối tầng con — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Chỉ nối các nút thật; thứ tự trái→phải giữ nguyên dù có nhánh thiếu.",
+    "edgeCases": ["root null", "Chỉ một nhánh lệch", "Nút không có con"],
+    "pitfalls": ["Quên reset dummy.next giữa các tầng", "Giả định perfect tree như bài 116"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

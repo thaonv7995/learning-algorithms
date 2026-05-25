@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #150</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Evaluate Reverse Polish Notation</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>57.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Evaluate Reverse Polish Notation (LeetCode #150) — Medium.</div>
+                        <div class="block-text">Cho mảng tokens biểu thức Reverse Polish Notation (toán hạng và +,-,*,/). Tính giá trị. Phép chia nguyên về 0 (truncate toward zero).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>tokens = [&quot;2&quot;,&quot;1&quot;,&quot;+&quot;,&quot;3&quot;,&quot;*&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>9</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>tokens = [&quot;4&quot;,&quot;13&quot;,&quot;5&quot;,&quot;/&quot;,&quot;+&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>tokens = [&quot;10&quot;,&quot;6&quot;,&quot;9&quot;,&quot;3&quot;,&quot;+&quot;,&quot;-11&quot;,&quot;*&quot;,&quot;/&quot;,&quot;*&quot;,&quot;17&quot;,&quot;+&quot;,&quot;5&quot;,&quot;+&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>22</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Stack: gặp số thì push; gặp toán tử pop b, pop a, push a op b. Cuối cùng stack còn một giá trị.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Stack đánh giá RPN — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> evalRPN(<span class="ty">self</span>, tokens: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">int</span>:
+        st = []
+        ops = {'+', '-', '*', '/'}
+        <span class="kw">for</span> t <span class="kw">in</span> tokens:
+            <span class="kw">if</span> t <span class="kw">not</span> <span class="kw">in</span> ops:
+                st.append(<span class="ty">int</span>(t))
+            <span class="kw">else</span>:
+                b = st.pop()
+                a = st.pop()
+                <span class="kw">if</span> t == '+': st.append(a + b)
+                <span class="kw">elif</span> t == '-': st.append(a - b)
+                <span class="kw">elif</span> t == '*': st.append(a * b)
+                <span class="kw">else</span>: st.append(<span class="ty">int</span>(a / b))
+        <span class="kw">return</span> st[0]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> evalRPN(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; tokens) {
+        stack&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; st;
+        <span class="kw">for</span> (<span class="ty">const</span> <span class="ty">string</span>&amp; t : tokens) {
+            <span class="kw">if</span> (t.size() &gt; 1 || isdigit(t[0])) {
+                st.push(stoll(t));
+            } <span class="kw">else</span> {
+                <span class="ty">long</span> <span class="ty">long</span> b = st.top(); st.pop();
+                <span class="ty">long</span> <span class="ty">long</span> a = st.top(); st.pop();
+                <span class="kw">if</span> (t == &quot;+&quot;) st.push(a + b);
+                <span class="kw">else</span> <span class="kw">if</span> (t == &quot;-&quot;) st.push(a - b);
+                <span class="kw">else</span> <span class="kw">if</span> (t == &quot;*&quot;) st.push(a * b);
+                <span class="kw">else</span> st.push(a / b);
+            }
+        }
+        <span class="kw">return</span> (<span class="ty">int</span>)st.top();
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +144,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Stack: gặp số thì push; gặp toán tử pop b, pop a, push a…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Cuối cùng stack còn một giá trị.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>RPN đảm bảo đủ toán hạng khi gặp op; thứ tự pop b trước a đúng cho a op b.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một toán hạng</span><span class="analysis-tag edge">Số âm trong token</span><span class="analysis-tag edge">Chia không dư</span><span class="analysis-tag pit">Pop sai thứ tự (-,/)</span><span class="analysis-tag pit">Dùng float thay int division</span><span class="analysis-tag pit">Không nhận số âm một ký tự</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>RPN = stack; operator pop b rồi a, push kết quả.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +171,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Evaluate%20Reverse%20Polish%20Notation&lc_id=150&embed=true"></iframe>

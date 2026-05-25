@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Clone Graph</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(V + E)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(V)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>65.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Clone Graph (LeetCode #133) — Medium.</div>
+                        <div class="block-text">Cho node gốc của đồ thị vô hướng có nhãn (adjacency list). Trả bản sao sâu (deep copy) của toàn bộ đồ thị.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>adjList = [[2,4],[1,3],[2,4],[1,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[2,4],[1,3],[2,4],[1,3]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>adjList = [[]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Hash map old→new. DFS/BFS: nếu đã clone thì trả; tạo Node mới, lưu map, đệ quy clone từng neighbor và nối vào neighbors của bản sao.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,34 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Hash map + DFS clone neighbors — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> cloneGraph(<span class="ty">self</span>, node: 'Node') -&gt; 'Node':
+        <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span> <span class="kw">None</span>
+        oldToNew = {}
+        <span class="kw">def</span> dfs(n):
+            <span class="kw">if</span> n <span class="kw">in</span> oldToNew: <span class="kw">return</span> oldToNew[n]
+            copy = Node(n.val)
+            oldToNew[n] = copy
+            <span class="kw">for</span> nei <span class="kw">in</span> n.neighbors:
+                copy.neighbors.append(dfs(nei))
+            <span class="kw">return</span> copy
+        <span class="kw">return</span> dfs(node)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    unordered_map&lt;Node*, Node*&gt; mp;
+    Node* dfs(Node* node) {
+        <span class="kw">if</span> (!node) <span class="kw">return</span> <span class="kw">nullptr</span>;
+        <span class="kw">if</span> (mp.count(node)) <span class="kw">return</span> mp[node];
+        Node* copy = <span class="kw">new</span> Node(node-&gt;val);
+        mp[node] = copy;
+        <span class="kw">for</span> (Node* nei : node-&gt;neighbors)
+            copy-&gt;neighbors.push_back(dfs(nei));
+        <span class="kw">return</span> copy;
+    }
 <span class="ty">public</span>:
+    Node* cloneGraph(Node* node) {
+        <span class="kw">return</span> dfs(node);
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +132,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Graph</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(V + E)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(V)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Hash map old→new.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — DFS/BFS: nếu đã clone thì trả; tạo Node mới, lưu map, đệ…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi nút gốc map đúng một nút mới; cạnh được tái tạo qua neighbors.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">node null → null</span><span class="analysis-tag edge">Một nút không cạnh</span><span class="analysis-tag pit">Clone không qua map → vòng vô hạn</span><span class="analysis-tag pit">Shallow copy neighbors</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Clone graph = map gốc→mới + DFS/BFS tránh vòng.</p>
                     </details>
                 </div>
                 </div>

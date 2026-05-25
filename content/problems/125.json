@@ -5,30 +5,22 @@
   "category": "Two Pointers",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Valid Palindrome (LeetCode #125) — Easy.",
+  "description": "Cho chuỗi s. Kiểm tra sau khi bỏ ký tự không phải chữ/số và không phân biệt hoa thường, chuỗi có phải palindrome hay không.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"A man, a plan, a canal: Panama\"", "output": "true" },
+    { "input": "s = \"race a car\"", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Two pointers l, r: bỏ qua ký tự không alphanumeric, so sánh lower(s[l]) và lower(s[r]). Lệch → false; gặp nhau → true.",
+  "memoryTip": "Palindrome chuứn hóa = two pointers bỏ rác, so thường.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def isPalindrome(self, s: str) -> bool:\n        l, r = 0, len(s) - 1\n        while l < r:\n            while l < r and not s[l].isalnum(): l += 1\n            while l < r and not s[r].isalnum(): r -= 1\n            if s[l].lower() != s[r].lower(): return False\n            l += 1; r -= 1\n        return True",
+    "cpp": "class Solution {\n    bool alnum(char c) {\n        return isalnum(static_cast<unsigned char>(c));\n    }\n    char lower(char c) {\n        return tolower(static_cast<unsigned char>(c));\n    }\npublic:\n    bool isPalindrome(string s) {\n        int l = 0, r = (int)s.size() - 1;\n        while (l < r) {\n            while (l < r && !alnum(s[l])) l++;\n            while (l < r && !alnum(s[r])) r--;\n            if (lower(s[l]) != lower(s[r])) return false;\n            l++; r--;\n        }\n        return true;\n    }\n};",
+    "c": "/* Two pointers skip non-alnum — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Chỉ so sánh ký tự hợp lệ theo thứ tự đối xứng.",
+    "edgeCases": ["Chuỗi rỗng → true", "Chỉ ký tự đặc biệt → true"],
+    "pitfalls": ["Quên tolower", "Không skip ký tự không alphanumeric"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

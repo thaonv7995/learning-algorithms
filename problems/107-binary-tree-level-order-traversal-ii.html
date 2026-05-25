@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #107</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Binary Tree Level Order Traversal II</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Binary Tree Level Order Traversal II (LeetCode #107) — Medium.</div>
+                        <div class="block-text">Trả về giá trị các nút theo từng tầng, nhưng thứ tự tầng từ dưới lên trên (lá → gốc). Mỗi tầng trái → phải.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [3,9,20,null,null,15,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[15,7],[9,20],[3]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>root = []</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS giống LC 102: queue, mỗi vòng xử lý đúng size hiện tại = một tầng. Cuối cùng đảo ngược mảng kết quả.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* BFS tầng rồi đảo — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> levelOrderBottom(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+        res, q = [], deque([root])
+        <span class="kw">while</span> q:
+            row, n = [], <span class="ty">len</span>(q)
+            <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n):
+                node = q.popleft()
+                row.append(node.val)
+                <span class="kw">if</span> node.left: q.append(node.left)
+                <span class="kw">if</span> node.right: q.append(node.right)
+            res.append(row)
+        <span class="kw">return</span> res[::-1]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; levelOrderBottom(TreeNode* root) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+        <span class="kw">if</span> (!root) <span class="kw">return</span> res;
+        queue&lt;TreeNode*&gt; q; q.push(root);
+        <span class="kw">while</span> (!q.empty()) {
+            <span class="ty">int</span> n = q.size(); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; row;
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+                auto* nd = q.front(); q.pop();
+                row.push_back(nd-&gt;val);
+                <span class="kw">if</span> (nd-&gt;left) q.push(nd-&gt;left);
+                <span class="kw">if</span> (nd-&gt;right) q.push(nd-&gt;right);
+            }
+            res.push_back(row);
+        }
+        reverse(res.begin(), res.end());
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +143,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — BFS giống LC 102: queue, mỗi vòng xử lý đúng size hiện…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Cuối cùng đảo ngược mảng kết quả.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi nút vào đúng một tầng; đảo thứ tự tầng không đổi thứ tự trong tầng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Cây rỗng</span><span class="analysis-tag edge">Chỉ gốc</span><span class="analysis-tag edge">Cây lệch một bên</span><span class="analysis-tag pit">Quên reverse</span><span class="analysis-tag pit">Không cố định size queue mỗi tầng</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Level order bình thường rồi reverse — hoặc insert row vào đầu.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Binary%20Tree%20Level%20Order%20Traversal%20II&lc_id=107&embed=true"></iframe>

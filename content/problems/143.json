@@ -5,30 +5,22 @@
   "category": "Linked List",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Reorder List (LeetCode #143) — Medium.",
+  "description": "Sắp xếp lại list L0→L1→…→Ln thành L0→Ln→L1→Ln-1→… Chỉ sửa con trỏ, không copy node.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [1,2,3,4]", "output": "[1,4,2,3]" },
+    { "input": "head = [1,2,3,4,5]", "output": "[1,5,2,4,3]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "1) Tìm giữa (slow/fast). 2) Đảo nửa sau. 3) Merge xen kẽ hai nửa (lấy từ đầu nửa 1, rồi đầu nửa 2).",
+  "memoryTip": "Mid → reverse half → zip merge.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def reorderList(self, head: Optional[ListNode]) -> None:\n        if not head or not head.next:\n            return\n        slow, fast = head, head.next\n        while fast and fast.next:\n            slow = slow.next\n            fast = fast.next.next\n        second = slow.next\n        slow.next = None\n        prev = None\n        while second:\n            nxt = second.next\n            second.next = prev\n            prev = second\n            second = nxt\n        first, second = head, prev\n        while second:\n            t1, t2 = first.next, second.next\n            first.next = second\n            second.next = t1\n            first, second = t1, t2",
+    "cpp": "class Solution {\n    ListNode* reverse(ListNode* head) {\n        ListNode* prev = nullptr;\n        while (head) {\n            ListNode* nxt = head->next;\n            head->next = prev;\n            prev = head;\n            head = nxt;\n        }\n        return prev;\n    }\npublic:\n    void reorderList(ListNode* head) {\n        if (!head || !head->next) return;\n        ListNode *slow = head, *fast = head;\n        while (fast->next && fast->next->next) {\n            slow = slow->next;\n            fast = fast->next->next;\n        }\n        ListNode* second = reverse(slow->next);\n        slow->next = nullptr;\n        ListNode* first = head;\n        while (second) {\n            ListNode *t1 = first->next, *t2 = second->next;\n            first->next = second;\n            second->next = t1;\n            first = t1;\n            second = t2;\n        }\n    }\n};",
+    "c": "/* Tìm mid, reverse, merge xen — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Cắt đôi, đảo nửa sau, ghép xen đúng thứ tự L0,Ln,L1,…",
+    "edgeCases": ["1–2 node → không đổi nhiều", "List lẻ node giữa"],
+    "pitfalls": ["Copy vào array O(n) space", "Quên cắt slow.next trước merge"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

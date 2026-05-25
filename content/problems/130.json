@@ -2,33 +2,25 @@
   "id": 130,
   "title": "Surrounded Regions",
   "difficulty": "Medium",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Surrounded Regions (LeetCode #130) — Medium.",
+  "category": "Matrix",
+  "timeComplexity": "O(m · n)",
+  "spaceComplexity": "O(m · n)",
+  "description": "Cho lưới ký tự 'X' và 'O'. Đảo mọi 'O' bị bao quanh hoàn toàn bởi 'X' thành 'X'. 'O' nối biên không bị đảo.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "board = [[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"X\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]", "output": "[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]" },
+    { "input": "board = [[\"X\"]]", "output": "[[\"X\"]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS/BFS từ mọi 'O' trên biên, đánh dấu 'T' (safe). Sau đó: 'O'→'X', 'T'→'O'.",
+  "memoryTip": "Không đảo O biên = flood fill biên trước, flip phần còn lại.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def solve(self, board: List[List[str]]) -> None:\n        if not board: return\n        m, n = len(board), len(board[0])\n        def dfs(i, j):\n            if i < 0 or i >= m or j < 0 or j >= n or board[i][j] != 'O': return\n            board[i][j] = 'T'\n            dfs(i+1,j); dfs(i-1,j); dfs(i,j+1); dfs(i,j-1)\n        for i in range(m):\n            dfs(i, 0); dfs(i, n-1)\n        for j in range(n):\n            dfs(0, j); dfs(m-1, j)\n        for i in range(m):\n            for j in range(n):\n                if board[i][j] == 'O': board[i][j] = 'X'\n                elif board[i][j] == 'T': board[i][j] = 'O'",
+    "cpp": "class Solution {\n    void dfs(vector<vector<char>>& b, int i, int j) {\n        int m = b.size(), n = b[0].size();\n        if (i < 0 || i >= m || j < 0 || j >= n || b[i][j] != 'O') return;\n        b[i][j] = 'T';\n        dfs(b, i+1, j); dfs(b, i-1, j); dfs(b, i, j+1); dfs(b, i, j-1);\n    }\npublic:\n    void solve(vector<vector<char>>& board) {\n        if (board.empty()) return;\n        int m = board.size(), n = board[0].size();\n        for (int i = 0; i < m; i++) { dfs(board, i, 0); dfs(board, i, n-1); }\n        for (int j = 0; j < n; j++) { dfs(board, 0, j); dfs(board, m-1, j); }\n        for (int i = 0; i < m; i++)\n            for (int j = 0; j < n; j++) {\n                if (board[i][j] == 'O') board[i][j] = 'X';\n                else if (board[i][j] == 'T') board[i][j] = 'O';\n            }\n    }\n};",
+    "c": "/* Flood fill biên O → T, flip còn lại — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "O nối biên không bị capture; mọi O nội bộ còn lại bị đảo.",
+    "edgeCases": ["Board rỗng", "Toàn X hoặc toàn O biên"],
+    "pitfalls": ["DFS trực tiếp flip O nội bộ khó phân biệt biên", "Quên restore T→O"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

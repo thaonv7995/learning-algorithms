@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #123</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Best Time to Buy and Sell Stock III</h1>
                     <div class="head-stats">
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Best Time to Buy and Sell Stock III (LeetCode #123) — Hard.</div>
+                        <div class="block-text">Cho mảng giá cổ phiếu. Tối đa hai giao dịch mua-bán (mua trước bán, không chồng lấn). Tìm lợi nhuận tối đa.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>prices = [3,3,5,0,0,3,1,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>prices = [1,2,3,4,5]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">State machine 4 biến: buy1, sell1, buy2, sell2. Duyệt giá: cập nhật buy1=min(buy1,p), sell1=max(sell1,p-buy1), buy2=min(buy2,p-sell1), sell2=max(sell2,p-buy2).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,29 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* State machine 4 biến — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maxProfit(<span class="ty">self</span>, prices: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        buy1 = buy2 = float('inf')
+        sell1 = sell2 = 0
+        <span class="kw">for</span> p <span class="kw">in</span> prices:
+            buy1 = <span class="ty">min</span>(buy1, p)
+            sell1 = <span class="ty">max</span>(sell1, p - buy1)
+            buy2 = <span class="ty">min</span>(buy2, p - sell1)
+            sell2 = <span class="ty">max</span>(sell2, p - buy2)
+        <span class="kw">return</span> sell2</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> maxProfit(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; prices) {
+        <span class="ty">int</span> buy1 = INT_MAX, buy2 = INT_MAX, sell1 = 0, sell2 = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> p : prices) {
+            buy1 = min(buy1, p);
+            sell1 = max(sell1, p - buy1);
+            buy2 = min(buy2, p - sell1);
+            sell2 = max(sell2, p - buy2);
+        }
+        <span class="kw">return</span> sell2;
+    }
 };</pre>
                         </div>
                     </div>
@@ -108,14 +131,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — State machine 4 biến: buy1, sell1, buy2, sell2.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Duyệt giá: cập nhật buy1=min, sell1=max, buy2=min,…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>sell2 luôn là lợi nhuận tối đa sau tối đa 2 giao dịch hoàn chỉnh.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chỉ một giao dịch đủ → sell2 = sell1</span><span class="analysis-tag edge">Giá không tăng → 0</span><span class="analysis-tag pit">buy2 dùng p - sell1 (tiền còn lại sau giao dịch 1)</span><span class="analysis-tag pit">Nhầm thứ tự cập nhật state</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>2 giao dịch = 4 trạng thái buy1/sell1/buy2/sell2.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +155,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Best%20Time%20to%20Buy%20and%20Sell%20Stock%20III&lc_id=123&embed=true"></iframe>

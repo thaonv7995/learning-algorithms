@@ -4,31 +4,23 @@
   "difficulty": "Hard",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Binary Tree Maximum Path Sum (LeetCode #124) — Hard.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root cây nhị phân (giá trị nút có thể âm). Tìm tổng lớn nhất trên một đường đi bất kỳ (nút nối cha-con, không nhất thiết qua gốc).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,2,3]", "output": "6" },
+    { "input": "root = [-10,9,20,null,null,15,7]", "output": "42" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS gain(node): trả về tổng đường đi xuống tối đa qua node (chỉ một nhánh con). Cập nhật global = max(global, node.val + max(0,left) + max(0,right)).",
+  "memoryTip": "Path qua node = left gain + node + right gain; trả về một nhánh cho cha.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxPathSum(self, root: Optional[TreeNode]) -> int:\n        self.ans = float('-inf')\n        def gain(node):\n            if not node: return 0\n            l = max(0, gain(node.left))\n            r = max(0, gain(node.right))\n            self.ans = max(self.ans, node.val + l + r)\n            return node.val + max(l, r)\n        gain(root)\n        return self.ans",
+    "cpp": "class Solution {\n    int ans = INT_MIN;\n    int gain(TreeNode* node) {\n        if (!node) return 0;\n        int l = max(0, gain(node->left));\n        int r = max(0, gain(node->right));\n        ans = max(ans, node->val + l + r);\n        return node->val + max(l, r);\n    }\npublic:\n    int maxPathSum(TreeNode* root) {\n        gain(root);\n        return ans;\n    }\n};",
+    "c": "/* DFS gain + cập nhật global — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi đường đi có đỉnh cao nhất được xét khi DFS tại đỉnh đó.",
+    "edgeCases": ["Tất cả nút âm → trả nút lớn nhất", "Một nút"],
+    "pitfalls": ["Cộng cả hai nhánh khi trả về cho cha", "Khởi tạo ans = -inf vì giá trị âm"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #140</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">String</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Word Break II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n² · m + k)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n²)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>55.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Word Break II (LeetCode #140) — Hard.</div>
+                        <div class="block-text">Giống Word Break nhưng trả tất cả cách cắt s thành từ trong wordDict, mỗi cách là chuỗi các từ nối bằng khoảng trắng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;catsanddog&quot;, wordDict = [&quot;cat&quot;,&quot;cats&quot;,&quot;and&quot;,&quot;sand&quot;,&quot;dog&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;cats and dog&quot;,&quot;cat sand dog&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;pineapplepenapple&quot;, wordDict = [&quot;apple&quot;,&quot;pen&quot;,&quot;applepen&quot;,&quot;pine&quot;,&quot;pineapple&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;pine apple pen apple&quot;,&quot;pineapple pen apple&quot;,&quot;pine applepen apple&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;catsandog&quot;, wordDict = [&quot;cats&quot;,&quot;dog&quot;,&quot;sand&quot;,&quot;and&quot;,&quot;cat&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DP lưu danh sách câu cho mỗi prefix: dp[i] = các cách tách s[0:i). Với j &lt; i, nếu s[j:i] ∈ dict và dp[j] không rỗng, ghép mỗi câu từ dp[j] + từ mới. Hoặc DFS + memo.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +100,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DP list câu theo prefix — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> wordBreak(<span class="ty">self</span>, s: <span class="ty">str</span>, wordDict: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        words = <span class="ty">set</span>(wordDict)
+        n = <span class="ty">len</span>(s)
+        dp = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n + 1)]
+        dp[0] = ['']
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, n + 1):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i):
+                w = s[j:i]
+                <span class="kw">if</span> w <span class="kw">in</span> words <span class="kw">and</span> dp[j]:
+                    <span class="kw">for</span> sent <span class="kw">in</span> dp[j]:
+                        dp[i].append((sent + ' ' + w).strip())
+        <span class="kw">return</span> dp[n]</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; wordBreak(<span class="ty">string</span> s, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; wordDict) {
+        unordered_set&lt;<span class="ty">string</span>&gt; words(wordDict.begin(), wordDict.end());
+        <span class="ty">int</span> n = s.size();
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; dp(n + 1);
+        dp[0] = {&quot;&quot;};
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt;= n; ++i) {
+            <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; i; ++j) {
+                <span class="ty">string</span> w = s.substr(j, i - j);
+                <span class="kw">if</span> (words.count(w) &amp;&amp; !dp[j].empty()) {
+                    <span class="kw">for</span> (<span class="ty">const</span> <span class="ty">string</span>&amp; sent : dp[j]) {
+                        dp[i].push_back(sent.empty() ? w : sent + &quot; &quot; + w);
+                    }
+                }
+            }
+        }
+        <span class="kw">return</span> dp[n];
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +141,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">String</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n² · m + k)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n²)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP lưu danh sách câu cho mỗi prefix: dp[i] = các cách…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Với j &lt; i, nếu s[j:i] ∈ dict và dp[j] không rỗng, ghép…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Hoặc DFS + memo.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi tách hợp lệ được xây từ prefix nhỏ hơn; không bỏ sót nhờ quét mọi j.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không tách được → []</span><span class="analysis-tag edge">Một từ duy nhất</span><span class="analysis-tag edge">Nhiều cách trùng từ khác thứ tự</span><span class="analysis-tag pit">Chỉ trả bool như LC139</span><span class="analysis-tag pit">Không strip khoảng trắng đầu</span><span class="analysis-tag pit">DFS không memo → exponential</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>dp[i] = list câu cho prefix; ghép từ dp[j] + word.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Word%20Break%20II&lc_id=140&embed=true"></iframe>

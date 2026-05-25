@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #105</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Construct Binary Tree from Preorder and Inorder Traversal</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Construct Binary Tree from Preorder and Inorder Traversal (LeetCode #105) — Medium.</div>
+                        <div class="block-text">Cho preorder và inorder (không trùng). Dựng lại cây nhị phân.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>[3,9,20,null,null,15,7]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">pre[0] là root. Tìm root trong inorder → cắt trái/phải. Đệ quy với pre[1:1+len(left)] và in_left, tương tự phải. Dùng hash map vị trí inorder.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +90,35 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Map inorder + đệ quy — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> buildTree(<span class="ty">self</span>, preorder: <span class="ty">List</span>[<span class="ty">int</span>], inorder: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]:
+        pos = {v: i <span class="kw">for</span> i, v <span class="kw">in</span> enumerate(inorder)}
+        <span class="kw">def</span> build(pre, ino):
+            <span class="kw">if</span> <span class="kw">not</span> pre: <span class="kw">return</span> <span class="kw">None</span>
+            root = <span class="ty">TreeNode</span>(pre[0])
+            k = pos[pre[0]]
+            root.left = build(pre[1:k+1], ino[:k])
+            root.right = build(pre[k+1:], ino[k+1:])
+            <span class="kw">return</span> root
+        <span class="kw">return</span> build(preorder, inorder)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    unordered_map&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; pos;
+    <span class="ty">int</span> pi = 0;
+    TreeNode* build(<span class="ty">int</span> l, <span class="ty">int</span> r, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; pre) {
+        <span class="kw">if</span> (l &gt; r) <span class="kw">return</span> <span class="kw">nullptr</span>;
+        <span class="ty">int</span> v = pre[pi++];
+        auto* nd = <span class="kw">new</span> TreeNode(v);
+        nd-&gt;left = build(l, pos[v]-1, pre);
+        nd-&gt;right = build(pos[v]+1, r, pre);
+        <span class="kw">return</span> nd;
+    }
 <span class="ty">public</span>:
+    TreeNode* buildTree(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; pre, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; in) {
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)in.size(); i++) pos[in[i]] = i;
+        pi = 0;
+        <span class="kw">return</span> build(0, in.size()-1, pre);
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +129,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — pre[0] là root.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Tìm root trong inorder → cắt trái/phải.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Đệ quy với pre[1:1+len] và in_left, tương tự phải.</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Dùng hash map vị trí inorder.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Preorder xác định root; inorder xác định phân hoạch L/R.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút</span><span class="analysis-tag edge">Cây lệch trái</span><span class="analysis-tag pit">Slice sai độ dài subarray</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Root preorder = phần tử đầu; split inorder tại index root.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +156,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Construct%20Binary%20Tree%20from%20Preorder%20and%20Inorder%20Traversal&lc_id=105&embed=true"></iframe>

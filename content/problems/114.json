@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Linked List",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Flatten Binary Tree to Linked List (LeetCode #114) — Medium.",
+  "spaceComplexity": "O(h)",
+  "description": "Biến cây nhị phân thành linked list theo thứ tự preorder (gốc → trái → phải), dùng con phải làm next. In-place, left = null.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,2,5,3,4,null,6]", "output": "[1,null,2,null,3,null,4,null,5,null,6]" },
+    { "input": "root = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS reverse postorder (phải → trái → gốc): gán node.right = prev, left = null, prev = node. Tương đương preorder khi nối ngược.",
+  "memoryTip": "Reverse postorder = preorder khi flatten phải trước.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def flatten(self, root: Optional[TreeNode]) -> None:\n        prev = None\n        def dfs(node):\n            nonlocal prev\n            if not node: return\n            dfs(node.right)\n            dfs(node.left)\n            node.right = prev\n            node.left = None\n            prev = node\n        dfs(root)",
+    "cpp": "class Solution {\n    TreeNode* prev = nullptr;\n    void dfs(TreeNode* nd) {\n        if (!nd) return;\n        dfs(nd->right);\n        dfs(nd->left);\n        nd->right = prev;\n        nd->left = nullptr;\n        prev = nd;\n    }\npublic:\n    void flatten(TreeNode* root) {\n        dfs(root);\n    }\n};",
+    "c": "/* Reverse postorder nối prev — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Thứ tự nối khớp preorder; mọi nút chỉ có right pointer.",
+    "edgeCases": ["Cây rỗng", "Chỉ gốc", "Chỉ có left hoặc right con"],
+    "pitfalls": ["Làm mất con cũ trước khi nối", "Dùng stack preorder nhưng quên set left=null"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

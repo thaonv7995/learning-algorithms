@@ -2,33 +2,25 @@
   "id": 131,
   "title": "Palindrome Partitioning",
   "difficulty": "Medium",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Palindrome Partitioning (LeetCode #131) — Medium.",
+  "category": "Backtracking",
+  "timeComplexity": "O(n · 2^n)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho chuỗi s. Liệt kê mọi cách phân tách s thành các substring sao cho mỗi phần là palindrome.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"aab\"", "output": "[[\"a\",\"a\",\"b\"],[\"aa\",\"b\"]]" },
+    { "input": "s = \"a\"", "output": "[[\"a\"]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Backtracking từ index start: thử mọi end ≥ start; nếu s[start:end+1] palindrome thì thêm vào path, đệ quy start=end+1. start==n → lưu path.",
+  "memoryTip": "Partition palindrome = backtrack + check palindrome từng đoạn.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def partition(self, s: str) -> List[List[str]]:\n        res = []\n        def pal(l, r):\n            while l < r:\n                if s[l] != s[r]: return False\n                l += 1; r -= 1\n            return True\n        def bt(start, path):\n            if start == len(s):\n                res.append(path[:])\n                return\n            for end in range(start, len(s)):\n                if pal(start, end):\n                    path.append(s[start:end+1])\n                    bt(end + 1, path)\n                    path.pop()\n        bt(0, [])\n        return res",
+    "cpp": "class Solution {\n    bool pal(const string& s, int l, int r) {\n        while (l < r) if (s[l++] != s[r--]) return false;\n        return true;\n    }\n    vector<vector<string>> res;\n    string s;\n    void bt(int start, vector<string>& path) {\n        if (start == (int)s.size()) { res.push_back(path); return; }\n        for (int end = start; end < (int)s.size(); end++) {\n            if (!pal(s, start, end)) continue;\n            path.push_back(s.substr(start, end - start + 1));\n            bt(end + 1, path);\n            path.pop_back();\n        }\n    }\npublic:\n    vector<vector<string>> partition(string str) {\n        s = str;\n        vector<string> path;\n        bt(0, path);\n        return res;\n    }\n};",
+    "c": "/* Backtracking + check palindrome — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi phân hoạch hợp lệ được sinh đúng một lần.",
+    "edgeCases": ["Một ký tự → [[\"a\"]", "Chuỗi palindrome dài"],
+    "pitfalls": ["Quên pop path sau backtrack", "Precompute pal table có thể tối ưu #132"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

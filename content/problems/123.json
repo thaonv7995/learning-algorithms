@@ -5,30 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Best Time to Buy and Sell Stock III (LeetCode #123) — Hard.",
+  "description": "Cho mảng giá cổ phiếu. Tối đa hai giao dịch mua-bán (mua trước bán, không chồng lấn). Tìm lợi nhuận tối đa.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "prices = [3,3,5,0,0,3,1,4]", "output": "6" },
+    { "input": "prices = [1,2,3,4,5]", "output": "4" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "State machine 4 biến: buy1, sell1, buy2, sell2. Duyệt giá: cập nhật buy1=min(buy1,p), sell1=max(sell1,p-buy1), buy2=min(buy2,p-sell1), sell2=max(sell2,p-buy2).",
+  "memoryTip": "2 giao dịch = 4 trạng thái buy1/sell1/buy2/sell2.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        buy1 = buy2 = float('inf')\n        sell1 = sell2 = 0\n        for p in prices:\n            buy1 = min(buy1, p)\n            sell1 = max(sell1, p - buy1)\n            buy2 = min(buy2, p - sell1)\n            sell2 = max(sell2, p - buy2)\n        return sell2",
+    "cpp": "class Solution {\npublic:\n    int maxProfit(vector<int>& prices) {\n        int buy1 = INT_MAX, buy2 = INT_MAX, sell1 = 0, sell2 = 0;\n        for (int p : prices) {\n            buy1 = min(buy1, p);\n            sell1 = max(sell1, p - buy1);\n            buy2 = min(buy2, p - sell1);\n            sell2 = max(sell2, p - buy2);\n        }\n        return sell2;\n    }\n};",
+    "c": "/* State machine 4 biến — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "sell2 luôn là lợi nhuận tối đa sau tối đa 2 giao dịch hoàn chỉnh.",
+    "edgeCases": ["Chỉ một giao dịch đủ → sell2 = sell1", "Giá không tăng → 0"],
+    "pitfalls": ["buy2 dùng p - sell1 (tiền còn lại sau giao dịch 1)", "Nhầm thứ tự cập nhật state"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

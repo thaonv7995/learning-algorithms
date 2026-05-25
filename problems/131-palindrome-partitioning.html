@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #131</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Backtracking</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Palindrome Partitioning</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n · 2^n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>74.1% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Palindrome Partitioning (LeetCode #131) — Medium.</div>
+                        <div class="block-text">Cho chuỗi s. Liệt kê mọi cách phân tách s thành các substring sao cho mỗi phần là palindrome.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;aab&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[[&quot;a&quot;,&quot;a&quot;,&quot;b&quot;],[&quot;aa&quot;,&quot;b&quot;]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;a&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[[&quot;a&quot;]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Backtracking từ index start: thử mọi end ≥ start; nếu s[start:end+1] palindrome thì thêm vào path, đệ quy start=end+1. start==n → lưu path.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,49 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Backtracking + check palindrome — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> partition(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]:
+        res = []
+        <span class="kw">def</span> pal(l, r):
+            <span class="kw">while</span> l &lt; r:
+                <span class="kw">if</span> s[l] != s[r]: <span class="kw">return</span> <span class="kw">False</span>
+                l += 1; r -= 1
+            <span class="kw">return</span> <span class="kw">True</span>
+        <span class="kw">def</span> bt(start, path):
+            <span class="kw">if</span> start == <span class="ty">len</span>(s):
+                res.append(path[:])
+                <span class="kw">return</span>
+            <span class="kw">for</span> end <span class="kw">in</span> <span class="ty">range</span>(start, <span class="ty">len</span>(s)):
+                <span class="kw">if</span> pal(start, end):
+                    path.append(s[start:end+1])
+                    bt(end + 1, path)
+                    path.pop()
+        bt(0, [])
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> pal(<span class="ty">const</span> <span class="ty">string</span>&amp; s, <span class="ty">int</span> l, <span class="ty">int</span> r) {
+        <span class="kw">while</span> (l &lt; r) <span class="kw">if</span> (s[l++] != s[r--]) <span class="kw">return</span> false;
+        <span class="kw">return</span> true;
+    }
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; res;
+    <span class="ty">string</span> s;
+    <span class="ty">void</span> bt(<span class="ty">int</span> start, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; path) {
+        <span class="kw">if</span> (start == (<span class="ty">int</span>)s.size()) { res.push_back(path); <span class="kw">return</span>; }
+        <span class="kw">for</span> (<span class="ty">int</span> end = start; end &lt; (<span class="ty">int</span>)s.size(); end++) {
+            <span class="kw">if</span> (!pal(s, start, end)) continue;
+            path.push_back(s.substr(start, end - start + 1));
+            bt(end + 1, path);
+            path.pop_back();
+        }
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; partition(<span class="ty">string</span> str) {
+        s = str;
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; path;
+        bt(0, path);
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +146,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Backtracking</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n · 2^n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Backtracking từ index start: thử mọi end ≥ start; nếu…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — start==n → lưu path.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi phân hoạch hợp lệ được sinh đúng một lần.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một ký tự → [[&quot;a&quot;]</span><span class="analysis-tag edge">Chuỗi palindrome dài</span><span class="analysis-tag pit">Quên pop path sau backtrack</span><span class="analysis-tag pit">Precompute pal table có thể tối ưu #132</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Partition palindrome = backtrack + check palindrome từng đoạn.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +175,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Palindrome%20Partitioning&lc_id=131&embed=true"></iframe>

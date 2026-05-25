@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #127</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Word Ladder</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n · m · 26)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n · m)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Word Ladder (LeetCode #127) — Hard.</div>
+                        <div class="block-text">Cho beginWord, endWord và wordList. Mỗi bước đổi đúng một chữ cái thành từ trong list. Trả về số bước ít nhất của chuỗi biến đổi (gồm begin và end), hoặc 0 nếu không có.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>beginWord = &quot;hit&quot;, endWord = &quot;cog&quot;, wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>beginWord = &quot;hit&quot;, endWord = &quot;cog&quot;, wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS trên đồ thị từ (khác 1 chữ cái). Queue (word, steps). Khi gặp neighbor trong set, xóa khỏi set (visited) và enqueue. Gặp endWord → trả steps.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,47 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* BFS + erase visited word — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> ladderLength(<span class="ty">self</span>, beginWord: <span class="ty">str</span>, endWord: <span class="ty">str</span>, wordList: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">int</span>:
+        words = <span class="ty">set</span>(wordList)
+        <span class="kw">if</span> endWord <span class="kw">not</span> <span class="kw">in</span> words: <span class="kw">return</span> 0
+        <span class="kw">from</span> collections <span class="kw">import</span> deque
+        q = deque([(beginWord, 1)])
+        <span class="kw">while</span> q:
+            w, d = q.popleft()
+            <span class="kw">if</span> w == endWord: <span class="kw">return</span> d
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(w)):
+                <span class="kw">for</span> c <span class="kw">in</span> 'abcdefghijklmnopqrstuvwxyz':
+                    nw = w[:i] + c + w[i+1:]
+                    <span class="kw">if</span> nw <span class="kw">in</span> words:
+                        words.remove(nw)
+                        q.append((nw, d + 1))
+        <span class="kw">return</span> 0</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">int</span> ladderLength(<span class="ty">string</span> begin, <span class="ty">string</span> end, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; wl) {
+        unordered_set&lt;<span class="ty">string</span>&gt; words(wl.begin(), wl.end());
+        <span class="kw">if</span> (!words.count(end)) <span class="kw">return</span> 0;
+        queue&lt;pair&lt;<span class="ty">string</span>, <span class="ty">int</span>&gt;&gt; q;
+        q.push({begin, 1});
+        <span class="kw">while</span> (!q.empty()) {
+            auto [w, d] = q.front(); q.pop();
+            <span class="kw">if</span> (w == end) <span class="kw">return</span> d;
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)w.size(); i++) {
+                <span class="ty">char</span> orig = w[i];
+                <span class="kw">for</span> (<span class="ty">char</span> c = 'a'; c &lt;= 'z'; c++) {
+                    w[i] = c;
+                    <span class="kw">if</span> (words.count(w)) {
+                        words.erase(w);
+                        q.push({w, d + 1});
+                    }
+                }
+                w[i] = orig;
+            }
+        }
+        <span class="kw">return</span> 0;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +144,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Graph</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n · m · 26)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n · m)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — BFS trên đồ thị từ .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Queue .</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — gặp neighbor trong set, xóa khỏi set và enqueue.</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Gặp endWord → trả steps.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BFS tìm shortest path trên đồ thị vô hướng không trọng số.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">endWord không có → 0</span><span class="analysis-tag edge">beginWord == endWord (thường không xảy ra theo đề)</span><span class="analysis-tag pit">DFS không đảm bảo ngắn nhất</span><span class="analysis-tag pit">Quên remove visited → vòng lặp vô hạn</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Word Ladder = BFS tầng; xóa từ khỏi set khi visit.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +173,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Word%20Ladder&lc_id=127&embed=true"></iframe>

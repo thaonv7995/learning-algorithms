@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #149</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Max Points on a Line</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>30.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Max Points on a Line (LeetCode #149) — Hard.</div>
+                        <div class="block-text">Cho mảng points[i]=[xi,yi]. Tìm số điểm tối đa nằm trên cùng một đường thẳng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>points = [[1,1],[2,2],[3,3]]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Với mỗi điểm gốc, đếm số điểm cùng slope (dy,dx) chuẩn hóa bằng gcd; dùng pair hoặc string key. Trùng tọa độ tính riêng. O(n²) cặp.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,67 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-c">/* Mỗi anchor đếm slope gcd — xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">from</span> math <span class="kw">import</span> gcd
+
+<span class="kw">class</span> Solution:
+    <span class="kw">def</span> maxPoints(<span class="ty">self</span>, points: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="ty">int</span>:
+        n = <span class="ty">len</span>(points)
+        <span class="kw">if</span> n &lt; 3:
+            <span class="kw">return</span> n
+        ans = 0
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            x1, y1 = points[i]
+            slope = {}
+            same = 1
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i + 1, n):
+                x2, y2 = points[j]
+                dx, dy = x2 - x1, y2 - y1
+                <span class="kw">if</span> dx == 0 <span class="kw">and</span> dy == 0:
+                    same += 1
+                    continue
+                g = gcd(dx, dy)
+                dx //= g
+                dy //= g
+                <span class="kw">if</span> dx &lt; 0:
+                    dx, dy = -dx, -dy
+                key = (dx, dy)
+                slope[key] = slope.get(key, 0) + 1
+            local = same
+            <span class="kw">for</span> cnt <span class="kw">in</span> slope.values():
+                local = <span class="ty">max</span>(local, cnt + same)
+            ans = <span class="ty">max</span>(ans, local)
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    static <span class="ty">long</span> <span class="ty">long</span> gcdll(<span class="ty">long</span> <span class="ty">long</span> a, <span class="ty">long</span> <span class="ty">long</span> b) {
+        a = llabs(a); b = llabs(b);
+        <span class="kw">while</span> (b) { <span class="ty">long</span> <span class="ty">long</span> t = a % b; a = b; b = t; }
+        <span class="kw">return</span> a;
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> maxPoints(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; points) {
+        <span class="ty">int</span> n = points.size();
+        <span class="kw">if</span> (n &lt; 3) <span class="kw">return</span> n;
+        <span class="ty">int</span> ans = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; ++i) {
+            map&lt;pair&lt;<span class="ty">long</span> <span class="ty">long</span>,<span class="ty">long</span> <span class="ty">long</span>&gt;, <span class="ty">int</span>&gt; slope;
+            <span class="ty">int</span> same = 1;
+            <span class="kw">for</span> (<span class="ty">int</span> j = i + 1; j &lt; n; ++j) {
+                <span class="ty">long</span> <span class="ty">long</span> dx = points[j][0] - points[i][0];
+                <span class="ty">long</span> <span class="ty">long</span> dy = points[j][1] - points[i][1];
+                <span class="kw">if</span> (dx == 0 &amp;&amp; dy == 0) { ++same; continue; }
+                <span class="ty">long</span> <span class="ty">long</span> g = gcdll(dx, dy);
+                dx /= g; dy /= g;
+                <span class="kw">if</span> (dx &lt; 0) { dx = -dx; dy = -dy; }
+                ++slope[{dx, dy}];
+            }
+            <span class="ty">int</span> local = same;
+            <span class="kw">for</span> (auto&amp; p : slope)
+                local = max(local, p.second + same);
+            ans = max(ans, local);
+        }
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -104,18 +165,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Với mỗi điểm gốc, đếm số điểm cùng slope chuẩn hóa bằng…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Trùng tọa độ tính riêng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Hai điểm cùng đường qua anchor iff cùng slope chuẩn hóa; cộng trùng tọa độ.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">≤2 điểm</span><span class="analysis-tag edge">Tất cả trùng nhau</span><span class="analysis-tag edge">Đường thẳng đứng (dx=0)</span><span class="analysis-tag pit">Dùng float slope → sai số</span><span class="analysis-tag pit">Quên chuẩn hóa dấu slope</span><span class="analysis-tag pit">Overflow dx/dy — dùng long long</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Mỗi anchor: map slope gcd-normalized → count.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +193,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Max%20Points%20on%20a%20Line&lc_id=149&embed=true"></iframe>

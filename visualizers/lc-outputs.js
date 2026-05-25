@@ -243,7 +243,7 @@
     R[81] = s => (done(s) && s.ans != null ? val(s.ans, "index", s) : null);
     R[82] = s => (done(s) && s.result ? flow(s.result.join(" → "), s) : null);
     R[83] = s => (done(s) && s.result ? flow(s.result.join(" → "), s) : null);
-    R[84] = s => null; // premium
+    R[84] = s => (done(s) ? val(s.maxArea, "max area", s) : null);
     R[85] = s => (done(s) && s.best != null ? val(s.best, "max area", s) : null);
     R[86] = s => (done(s) && s.result ? flow(s.result.join(" → "), s) : null);
     R[87] = s => (done(s) ? bool(!!s.ok, s) : null);
@@ -260,6 +260,63 @@
     R[98] = s => (done(s) ? bool(!!s.valid, s) : null);
     R[99] = s => (done(s) && s.nums ? arr(s.nums, s, "recovered") : null);
     R[100] = s => null; // premium — lc-patterns
+
+    R[101] = s => (done(s) && s.result != null ? bool(s.result, s) : null);
+    R[102] = s => {
+        if (!s.levels || !s.levels.length) return null;
+        return { kind: "items", items: s.levels.map(lv => `[${lv.join(", ")}]`), flash: done(s) };
+    };
+    R[103] = s => null; // manual viz-output-section
+    R[104] = s => (s.maxDepth > 0 || done(s)) ? val(s.maxDepth, "maxDepth", s) : null;
+    R[105] = s => (done(s) && s.buildSteps && s.buildSteps.length ? val(s.buildSteps[0].root, "root", s) : null);
+
+    R[106] = s => (done(s) ? val(s.root, "root", s) : null);
+    R[107] = s => null;
+    R[108] = s => (s.picks && s.picks.length ? arr(s.picks, s, "BST roots") : null);
+    R[109] = s => (done(s) ? val(s.root, "root", s) : null);
+    R[110] = s => (done(s) ? bool(!!s.result, s) : null);
+    R[111] = s => (done(s) ? val(s.minDepth, "minDepth", s) : null);
+    R[112] = s => (done(s) ? bool(!!s.found, s) : null);
+    R[113] = s => null;
+    R[114] = s => (done(s) && s.out ? flow(s.out.join(" → "), s) : null);
+    R[115] = s => (done(s) ? val(s.dp[s.t.length], "cách", s) : null);
+    R[116] = s => (done(s) ? val(s.links.length, "links", s) : null);
+    R[117] = s => (done(s) ? val(s.links.length, "links", s) : null);
+    R[118] = s => null;
+    R[119] = s => (done(s) ? arr(s.row, s, "row") : null);
+    R[120] = s => (done(s) ? val(s.ans, "min path", s) : null);
+
+    R[121] = s => (done(s) ? val(s.maxProfit, "lợi nhuận", s) : null);
+    R[122] = s => (done(s) ? val(s.profit, "lợi nhuận", s) : null);
+    R[123] = s => (done(s) ? val(s.sell2, "max profit", s) : null);
+    R[124] = s => (done(s) ? val(s.best, "max path", s) : null);
+    R[125] = s => null; // lc-patterns
+    R[126] = s => comboItems(s.allPaths || [], s);
+    R[127] = s => (done(s) ? val(s.ans || 0, "bước", s) : null);
+    R[128] = s => (done(s) ? val(s.best, "streak", s) : null);
+    R[129] = s => (done(s) ? val(s.total, "tổng", s) : null);
+    R[130] = s => (done(s) ? val(s.flipped, "flipped", s) : null);
+    R[131] = s => comboItems(s.res, s);
+    R[132] = s => null;
+    R[133] = s => (done(s) ? val(Object.keys(s.clone || {}).length, "nodes", s) : null);
+    R[134] = s => (done(s) ? val(s.found, "start index", s) : null);
+    R[135] = s => (done(s) ? val(s.total, "candy", s) : null);
+
+    R[136] = s => (done(s) ? val(s.xor, "single", s) : null);
+    R[137] = s => (done(s) ? val(s.ones, "single", s) : null);
+    R[138] = s => (done(s) ? val(s.order.length, "cloned", s) : null);
+    R[139] = s => (done(s) ? bool(s.dp[s.str.length], s) : null);
+    R[140] = s => null;
+    R[141] = s => (done(s) ? bool(s.hasCycle, s) : null);
+    R[142] = s => (done(s) ? val(s.entry, "entry", s) : null);
+    R[143] = s => null;
+    R[144] = s => comboItems(s.res, s);
+    R[145] = s => comboItems(s.res, s);
+    R[146] = s => (done(s) ? val([...s.cache.keys()].join(","), "keys", s) : null);
+    R[147] = s => null;
+    R[148] = s => null;
+    R[149] = s => null;
+    R[150] = s => (done(s) ? val(s.stack[0], "result", s) : null);
 
     /* Generic fallback — catalog visualizer sets outputText */
     window.LC_OUTPUT_FALLBACK = function (s) {

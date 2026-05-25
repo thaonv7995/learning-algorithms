@@ -2,33 +2,25 @@
   "id": 116,
   "title": "Populating Next Right Pointers in Each Node",
   "difficulty": "Medium",
-  "category": "Linked List",
+  "category": "Tree",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Populating Next Right Pointers in Each Node (LeetCode #116) — Medium.",
+  "description": "Cho cây nhị phân hoàn hảo (perfect): mọi nút có đúng 0 hoặc 2 con, mọi lá cùng độ sâu. Gán con trỏ next của mỗi nút trỏ tới nút kế bên phải cùng tầng; next của nút cuối mỗi tầng là null.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,2,3,4,5,6,7]", "output": "[1,#,2,3,#,4,5,6,7,#]" },
+    { "input": "root = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Duyệt theo tầng O(1) extra: dùng next đã nối ở tầng trên để đi ngang. Với mỗi nút: left.next = right; nếu có next thì right.next = next.left. Xuống tầng con qua leftmost.left.",
+  "memoryTip": "Perfect tree → next của cha đã nối sẵn tầng hiện tại, không cần queue.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':\n        if not root:\n            return root\n        leftmost = root\n        while leftmost.left:\n            head = leftmost\n            while head:\n                head.left.next = head.right\n                if head.next:\n                    head.right.next = head.next.left\n                head = head.next\n            leftmost = leftmost.left\n        return root",
+    "cpp": "class Solution {\npublic:\n    Node* connect(Node* root) {\n        if (!root) return root;\n        Node* leftmost = root;\n        while (leftmost->left) {\n            Node* head = leftmost;\n            while (head) {\n                head->left->next = head->right;\n                if (head->next)\n                    head->right->next = head->next->left;\n                head = head->next;\n            }\n            leftmost = leftmost->left;\n        }\n        return root;\n    }\n};",
+    "c": "/* Nối next theo tầng O(1) — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi cặp anh em và cặp nút giữa hai cây con đều được nối đúng thứ tự trái→phải.",
+    "edgeCases": ["root null", "Chỉ một nút (next đã null)"],
+    "pitfalls": ["Dùng BFS queue tốn O(n)", "Quên nối right.next sang cây con bên cạnh"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

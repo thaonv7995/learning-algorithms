@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Backtracking",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Path Sum II (LeetCode #113) — Medium.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root và targetSum. Trả về tất cả đường đi từ gốc đến lá có tổng bằng targetSum (mỗi đường là mảng giá trị nút).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22", "output": "[[5,4,11,2],[5,8,4,5]]" },
+    { "input": "root = [1,2,3], targetSum = 5", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Backtracking DFS: push val vào path; tại lá nếu rem == val thì copy path vào kết quả; pop khi backtrack.",
+  "memoryTip": "Giống LC 112 nhưng thu thập mọi path — nhớ pop sau đệ quy.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> List[List[int]]:\n        res = []\n        def dfs(node, rem, path):\n            if not node: return\n            path.append(node.val)\n            if not node.left and not node.right and rem == node.val:\n                res.append(path[:])\n            else:\n                dfs(node.left, rem - node.val, path)\n                dfs(node.right, rem - node.val, path)\n            path.pop()\n        dfs(root, targetSum, [])\n        return res",
+    "cpp": "class Solution {\n    vector<vector<int>> res;\n    void dfs(TreeNode* nd, int rem, vector<int>& path) {\n        if (!nd) return;\n        path.push_back(nd->val);\n        if (!nd->left && !nd->right && rem == nd->val)\n            res.push_back(path);\n        else {\n            dfs(nd->left, rem - nd->val, path);\n            dfs(nd->right, rem - nd->val, path);\n        }\n        path.pop_back();\n    }\npublic:\n    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {\n        vector<int> path;\n        dfs(root, targetSum, path);\n        return res;\n    }\n};",
+    "c": "/* Backtracking DFS thu path — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi đường hợp lệ được ghi một lần; backtrack không bỏ sót nhánh.",
+    "edgeCases": ["Không có đường hợp lệ → []", "Nhiều đường trùng prefix", "Cây rỗng"],
+    "pitfalls": ["Append path trực tiếp (reference) thay vì copy", "Quên pop khi backtrack"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

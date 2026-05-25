@@ -3,32 +3,23 @@
   "title": "LRU Cache",
   "difficulty": "Medium",
   "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "LRU Cache (LeetCode #146) — Medium.",
+  "timeComplexity": "O(1)",
+  "spaceComplexity": "O(capacity)",
+  "description": "Thiết kế cấu trúc LRU Cache: get(key) trả value hoặc -1; put(key,value) cập nhật/thêm; khi đầy thì loại key ít dùng nhất. Mọi thao tác O(1).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "[\"LRUCache\",\"put\",\"put\",\"get\",\"put\",\"get\",\"put\",\"get\",\"get\",\"get\"]\n[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]", "output": "[null,null,null,1,null,-1,null,-1,3,4]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hash map key→node + doubly linked list theo thứ tự dùng gần nhất (head=MRU, tail=LRU). get/put đưa node lên đầu; put vượt capacity thì xóa tail.",
+  "memoryTip": "Map + DLL: get/put = move to front; evict tail.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class LRUCache:\n    class Node:\n        __slots__ = ('key', 'val', 'prev', 'next')\n        def __init__(self, key=0, val=0):\n            self.key, self.val = key, val\n            self.prev = self.next = None\n\n    def __init__(self, capacity: int):\n        self.cap = capacity\n        self.mp = {}\n        self.head = self.tail = LRUCache.Node()\n        self.head.next = self.tail\n        self.tail.prev = self.head\n\n    def _remove(self, node):\n        node.prev.next = node.next\n        node.next.prev = node.prev\n\n    def _add_front(self, node):\n        node.next = self.head.next\n        node.prev = self.head\n        self.head.next.prev = node\n        self.head.next = node\n\n    def get(self, key: int) -> int:\n        if key not in self.mp:\n            return -1\n        node = self.mp[key]\n        self._remove(node)\n        self._add_front(node)\n        return node.val\n\n    def put(self, key: int, value: int) -> None:\n        if key in self.mp:\n            node = self.mp[key]\n            node.val = value\n            self._remove(node)\n            self._add_front(node)\n        else:\n            if len(self.mp) == self.cap:\n                lru = self.tail.prev\n                self._remove(lru)\n                del self.mp[lru.key]\n            node = LRUCache.Node(key, value)\n            self.mp[key] = node\n            self._add_front(node)",
+    "cpp": "class LRUCache {\n    struct Node { int key, val; Node *prev, *next; };\n    int cap;\n    unordered_map<int, Node*> mp;\n    Node *head, *tail;\n    void remove(Node* node) {\n        node->prev->next = node->next;\n        node->next->prev = node->prev;\n    }\n    void addFront(Node* node) {\n        node->next = head->next;\n        node->prev = head;\n        head->next->prev = node;\n        head->next = node;\n    }\npublic:\n    LRUCache(int capacity) : cap(capacity) {\n        head = new Node{0, 0, nullptr, nullptr};\n        tail = new Node{0, 0, nullptr, nullptr};\n        head->next = tail;\n        tail->prev = head;\n    }\n    int get(int key) {\n        if (!mp.count(key)) return -1;\n        Node* node = mp[key];\n        remove(node);\n        addFront(node);\n        return node->val;\n    }\n    void put(int key, int value) {\n        if (mp.count(key)) {\n            Node* node = mp[key];\n            node->val = value;\n            remove(node);\n            addFront(node);\n        } else {\n            if ((int)mp.size() == cap) {\n                Node* lru = tail->prev;\n                remove(lru);\n                mp.erase(lru->key);\n                delete lru;\n            }\n            Node* node = new Node{key, value, nullptr, nullptr};\n            mp[key] = node;\n            addFront(node);\n        }\n    }\n};",
+    "c": "/* Hash map + doubly linked list — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Map O(1) tra cứu; DLL O(1) move/evict; tail.prev luôn là LRU.",
+    "edgeCases": ["capacity=1", "get key không tồn tại → -1", "put cập nhật key có sẵn"],
+    "pitfalls": ["OrderedDict không đảm bảo O(1) mọi ngôn ngữ", "Quên xóa key khỏi map khi evict"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

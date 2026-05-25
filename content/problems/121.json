@@ -5,30 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Best Time to Buy and Sell Stock (LeetCode #121) — Easy.",
+  "description": "Cho mảng giá cổ phiếu theo ngày (prices[i] là giá ngày i). Chỉ được mua tối đa một lần và bán tối đa một lần (phải mua trước khi bán). Tìm lợi nhuận tối đa.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "prices = [7,1,5,3,6,4]", "output": "5" },
+    { "input": "prices = [7,6,4,3,1]", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Một lần duyệt: giữ minPrice (giá thấp nhất đã thấy). Tại mỗi ngày, lợi nhuận = price - minPrice; cập nhật maxProfit và minPrice.",
+  "memoryTip": "Một giao dịch = track min buy, max(price - min).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        min_p, best = float('inf'), 0\n        for p in prices:\n            min_p = min(min_p, p)\n            best = max(best, p - min_p)\n        return best",
+    "cpp": "class Solution {\npublic:\n    int maxProfit(vector<int>& prices) {\n        int minP = INT_MAX, best = 0;\n        for (int p : prices) {\n            minP = min(minP, p);\n            best = max(best, p - minP);\n        }\n        return best;\n    }\n};",
+    "c": "/* Một pass min price + max profit — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi cặp mua-bán hợp lệ được xét gián tiếp qua min trước đó.",
+    "edgeCases": ["Giá chỉ giảm → 0", "Một ngày → 0"],
+    "pitfalls": ["Bán trước mua", "Dùng nested loop O(n²) không cần thiết"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,25 @@
   "id": 132,
   "title": "Palindrome Partitioning II",
   "difficulty": "Hard",
-  "category": "String",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Palindrome Partitioning II (LeetCode #132) — Hard.",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(n²)",
+  "spaceComplexity": "O(n²)",
+  "description": "Cho chuỗi s. Tìm số lần cắt tối thiểu để mọi phần sau khi cắt là palindrome (tương đương số đoạn palindrome ít nhất trừ 1).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"aab\"", "output": "1" },
+    { "input": "s = \"a\"", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP pal[i][j]: s[i..j] palindrome. dp[j] = min cắt cho prefix s[0..j]. Nếu pal[0][j] thì dp[j]=0; else dp[j]=min(dp[i-1]+1) với pal[i][j].",
+  "memoryTip": "Min cuts = dp[j] trên prefix; pal[i][j] precompute O(n²).",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def minCut(self, s: str) -> int:\n        n = len(s)\n        pal = [[False]*n for _ in range(n)]\n        for i in range(n-1, -1, -1):\n            for j in range(i, n):\n                pal[i][j] = s[i] == s[j] and (j - i < 2 or pal[i+1][j-1])\n        dp = [0]*n\n        for j in range(n):\n            if pal[0][j]:\n                dp[j] = 0\n            else:\n                dp[j] = j\n                for i in range(1, j+1):\n                    if pal[i][j]:\n                        dp[j] = min(dp[j], dp[i-1] + 1)\n        return dp[n-1]",
+    "cpp": "class Solution {\npublic:\n    int minCut(string s) {\n        int n = s.size();\n        vector<vector<bool>> pal(n, vector<bool>(n));\n        for (int i = n - 1; i >= 0; i--)\n            for (int j = i; j < n; j++)\n                pal[i][j] = s[i] == s[j] && (j - i < 2 || pal[i+1][j-1]);\n        vector<int> dp(n);\n        for (int j = 0; j < n; j++) {\n            if (pal[0][j]) dp[j] = 0;\n            else {\n                dp[j] = j;\n                for (int i = 1; i <= j; i++)\n                    if (pal[i][j]) dp[j] = min(dp[j], dp[i-1] + 1);\n            }\n        }\n        return dp[n-1];\n    }\n};",
+    "c": "/* DP pal table + min cuts — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "dp[j] optimal cho prefix; thử mọi đoạn palindrome kết thúc tại j.",
+    "edgeCases": ["s palindrome → 0", "Một ký tự → 0"],
+    "pitfalls": ["Check palindrome O(n) mỗi lần → O(n³)", "Nhầm số đoạn với số cắt"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

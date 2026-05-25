@@ -4,31 +4,24 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Binary Tree Level Order Traversal II (LeetCode #107) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Trả về giá trị các nút theo từng tầng, nhưng thứ tự tầng từ dưới lên trên (lá → gốc). Mỗi tầng trái → phải.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [3,9,20,null,null,15,7]", "output": "[[15,7],[9,20],[3]]" },
+    { "input": "root = [1]", "output": "[[1]]" },
+    { "input": "root = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS giống LC 102: queue, mỗi vòng xử lý đúng size hiện tại = một tầng. Cuối cùng đảo ngược mảng kết quả.",
+  "memoryTip": "Level order bình thường rồi reverse — hoặc insert row vào đầu.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def levelOrderBottom(self, root: Optional[TreeNode]) -> List[List[int]]:\n        if not root: return []\n        res, q = [], deque([root])\n        while q:\n            row, n = [], len(q)\n            for _ in range(n):\n                node = q.popleft()\n                row.append(node.val)\n                if node.left: q.append(node.left)\n                if node.right: q.append(node.right)\n            res.append(row)\n        return res[::-1]",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> levelOrderBottom(TreeNode* root) {\n        vector<vector<int>> res;\n        if (!root) return res;\n        queue<TreeNode*> q; q.push(root);\n        while (!q.empty()) {\n            int n = q.size(); vector<int> row;\n            for (int i = 0; i < n; i++) {\n                auto* nd = q.front(); q.pop();\n                row.push_back(nd->val);\n                if (nd->left) q.push(nd->left);\n                if (nd->right) q.push(nd->right);\n            }\n            res.push_back(row);\n        }\n        reverse(res.begin(), res.end());\n        return res;\n    }\n};",
+    "c": "/* BFS tầng rồi đảo — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi nút vào đúng một tầng; đảo thứ tự tầng không đổi thứ tự trong tầng.",
+    "edgeCases": ["Cây rỗng", "Chỉ gốc", "Cây lệch một bên"],
+    "pitfalls": ["Quên reverse", "Không cố định size queue mỗi tầng"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

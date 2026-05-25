@@ -4,31 +4,23 @@
   "difficulty": "Medium",
   "category": "Array",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Construct Binary Tree from Inorder and Postorder Traversal (LeetCode #106) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Cho hai mảng inorder và postorder (giá trị không trùng). Dựng lại cây nhị phân duy nhất tương ứng.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]", "output": "[3,9,20,null,null,15,7]" },
+    { "input": "inorder = [-1], postorder = [-1]", "output": "[-1]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Phần tử cuối postorder là root. Tìm root trong inorder → cắt cây trái/phải. Vì pop từ cuối postorder, đệ quy cây phải trước rồi cây trái. Dùng hash map vị trí inorder.",
+  "memoryTip": "Postorder cuối = root; split inorder; build phải trước trái sau khi pop.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def buildTree(self, inorder: List[int], postorder: List[int]) -> Optional[TreeNode]:\n        pos = {v: i for i, v in enumerate(inorder)}\n        def build(l, r):\n            if l > r: return None\n            v = postorder.pop()\n            root = TreeNode(v)\n            k = pos[v]\n            root.right = build(k + 1, r)\n            root.left = build(l, k - 1)\n            return root\n        return build(0, len(inorder) - 1)",
+    "cpp": "class Solution {\n    unordered_map<int,int> pos;\n    int pi;\n    TreeNode* build(int l, int r, vector<int>& post) {\n        if (l > r) return nullptr;\n        int v = post[pi--];\n        auto* nd = new TreeNode(v);\n        nd->right = build(pos[v]+1, r, post);\n        nd->left = build(l, pos[v]-1, post);\n        return nd;\n    }\npublic:\n    TreeNode* buildTree(vector<int>& in, vector<int>& post) {\n        for (int i = 0; i < (int)in.size(); i++) pos[in[i]] = i;\n        pi = post.size() - 1;\n        return build(0, in.size()-1, post);\n    }\n};",
+    "c": "/* Map inorder + đệ quy postorder — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Postorder xác định root; inorder xác định phân hoạch L/R không chồng lấn.",
+    "edgeCases": ["Một nút", "Cây lệch phải"],
+    "pitfalls": ["Build trái trước phải khi pop cuối", "Slice sai độ dài subarray"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

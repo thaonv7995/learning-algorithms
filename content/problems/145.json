@@ -2,33 +2,26 @@
   "id": 145,
   "title": "Binary Tree Postorder Traversal",
   "difficulty": "Easy",
-  "category": "Stack",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Binary Tree Postorder Traversal (LeetCode #145) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root cây nhị phân. Trả thứ tự duyệt postorder (trái → phải → node).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,null,2,3]", "output": "[3,2,1]" },
+    { "input": "root = [1,2,3,4,5,null,8,null,null,6,7,9]", "output": "[4,6,7,5,2,9,8,3,1]" },
+    { "input": "root = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đệ quy: postorder trái, phải, rồi thêm root.val. Iterative: stack + visited flag, hoặc reverse preorder (root-right-left) rồi đảo kết quả.",
+  "memoryTip": "Postorder = trái-phải-root; hoặc reverse preorder root-phải-trái.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:\n        res, st = [], []\n        if root:\n            st.append(root)\n        while st:\n            node = st.pop()\n            res.append(node.val)\n            if node.left:\n                st.append(node.left)\n            if node.right:\n                st.append(node.right)\n        return res[::-1]",
+    "cpp": "class Solution {\npublic:\n    vector<int> postorderTraversal(TreeNode* root) {\n        vector<int> res;\n        if (!root) return res;\n        stack<TreeNode*> st;\n        st.push(root);\n        while (!st.empty()) {\n            TreeNode* node = st.top(); st.pop();\n            res.push_back(node->val);\n            if (node->left) st.push(node->left);\n            if (node->right) st.push(node->right);\n        }\n        reverse(res.begin(), res.end());\n        return res;\n    }\n};",
+    "c": "/* Stack root-left-right rồi reverse — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Duyệt root-left-right đảo ngược = left-right-root.",
+    "edgeCases": ["root null", "Cây lệch một bên"],
+    "pitfalls": ["Quên reverse", "Dùng một stack không track visited → sai với cách khác"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

@@ -2,33 +2,26 @@
   "id": 142,
   "title": "Linked List Cycle II",
   "difficulty": "Medium",
-  "category": "Hash Table",
+  "category": "Linked List",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Linked List Cycle II (LeetCode #142) — Medium.",
+  "description": "Cho head linked list có thể có cycle. Trả node bắt đầu cycle, hoặc null nếu không có cycle.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [3,2,0,-4], pos = 1", "output": "node index 1" },
+    { "input": "head = [1,2], pos = 0", "output": "node index 0" },
+    { "input": "head = [1], pos = -1", "output": "null" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Floyd tìm giao điểm; đặt ptr1=head, ptr2=giao điểm, cùng bước 1 bước đến khi trùng — đó là đầu cycle (dist head→entry = dist meet→entry).",
+  "memoryTip": "Sau Floyd meet: head và meet cùng bước → entry.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        slow = fast = head\n        while fast and fast.next:\n            slow = slow.next\n            fast = fast.next.next\n            if slow is fast:\n                p = head\n                while p is not slow:\n                    p = p.next\n                    slow = slow.next\n                return p\n        return None",
+    "cpp": "class Solution {\npublic:\n    ListNode *detectCycle(ListNode *head) {\n        ListNode *slow = head, *fast = head;\n        while (fast && fast->next) {\n            slow = slow->next;\n            fast = fast->next->next;\n            if (slow == fast) {\n                ListNode *p = head;\n                while (p != slow) {\n                    p = p->next;\n                    slow = slow->next;\n                }\n                return p;\n            }\n        }\n        return nullptr;\n    }\n};",
+    "c": "/* Floyd + hai con trỏ tìm entry — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Công thức dist: a = c + (m-k), 2(a+k)=a+2k+c → a=c; hai con trỏ gặp đúng entry.",
+    "edgeCases": ["Không cycle → null", "Cycle ngay tại head"],
+    "pitfalls": ["Chỉ trả bool như LC141", "Quên reset một con trỏ về head"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

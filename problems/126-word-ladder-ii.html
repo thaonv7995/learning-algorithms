@@ -36,13 +36,13 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #126</span>
                         <span class="diff-badge hard">Hard</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Graph</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Word Ladder II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n · m · 26)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n · m)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>27.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Word Ladder II (LeetCode #126) — Hard.</div>
+                        <div class="block-text">Cho beginWord, endWord và wordList. Mỗi bước đổi đúng một chữ cái thành từ trong list. Trả về tất cả chuỗi biến đổi ngắn nhất từ beginWord đến endWord (mỗi chuỗi là danh sách từ).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>beginWord = &quot;hit&quot;, endWord = &quot;cog&quot;, wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[&quot;hit&quot;,&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;cog&quot;],[&quot;hit&quot;,&quot;hot&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>beginWord = &quot;hit&quot;, endWord = &quot;cog&quot;, wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS tầng để gán dist cho mọi từ đạt được. Xây đồ thị: u→v nếu dist[v]=dist[u]+1 và khác 1 chữ. DFS/backtrack từ beginWord theo đồ thị để thu mọi đường đến endWord.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,99 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* BFS dist + DFS backtrack — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> findLadders(<span class="ty">self</span>, beginWord: <span class="ty">str</span>, endWord: <span class="ty">str</span>, wordList: <span class="ty">List</span>[<span class="ty">str</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]:
+        words = <span class="ty">set</span>(wordList)
+        <span class="kw">if</span> endWord <span class="kw">not</span> <span class="kw">in</span> words: <span class="kw">return</span> []
+        <span class="kw">from</span> collections <span class="kw">import</span> deque, defaultdict
+        dist = {beginWord: 0}
+        q = deque([beginWord])
+        found = <span class="kw">False</span>
+        <span class="kw">while</span> q <span class="kw">and</span> <span class="kw">not</span> found:
+            <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(q)):
+                w = q.popleft()
+                <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(w)):
+                    <span class="kw">for</span> c <span class="kw">in</span> 'abcdefghijklmnopqrstuvwxyz':
+                        nw = w[:i] + c + w[i+1:]
+                        <span class="kw">if</span> nw <span class="kw">not</span> <span class="kw">in</span> words <span class="kw">or</span> nw <span class="kw">in</span> dist: continue
+                        dist[nw] = dist[w] + 1
+                        q.append(nw)
+                        <span class="kw">if</span> nw == endWord: found = <span class="kw">True</span>
+        <span class="kw">if</span> endWord <span class="kw">not</span> <span class="kw">in</span> dist: <span class="kw">return</span> []
+        adj = defaultdict(<span class="ty">list</span>)
+        <span class="kw">for</span> w, d <span class="kw">in</span> dist.items():
+            <span class="kw">if</span> w == endWord: continue
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(w)):
+                <span class="kw">for</span> c <span class="kw">in</span> 'abcdefghijklmnopqrstuvwxyz':
+                    nw = w[:i] + c + w[i+1:]
+                    <span class="kw">if</span> nw <span class="kw">in</span> dist <span class="kw">and</span> dist[nw] == d + 1:
+                        adj[w].append(nw)
+        res = []
+        <span class="kw">def</span> dfs(w, path):
+            <span class="kw">if</span> w == endWord:
+                res.append(path[:])
+                <span class="kw">return</span>
+            <span class="kw">for</span> nxt <span class="kw">in</span> adj[w]:
+                path.append(nxt)
+                dfs(nxt, path)
+                path.pop()
+        dfs(beginWord, [beginWord])
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">bool</span> diff1(<span class="ty">const</span> <span class="ty">string</span>&amp; a, <span class="ty">const</span> <span class="ty">string</span>&amp; b) {
+        <span class="ty">int</span> c = 0;
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)a.size(); i++) <span class="kw">if</span> (a[i] != b[i]) c++;
+        <span class="kw">return</span> c == 1;
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; findLadders(<span class="ty">string</span> begin, <span class="ty">string</span> end, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; wl) {
+        unordered_set&lt;<span class="ty">string</span>&gt; words(wl.begin(), wl.end());
+        <span class="kw">if</span> (!words.count(end)) <span class="kw">return</span> {};
+        unordered_map&lt;<span class="ty">string</span>, <span class="ty">int</span>&gt; dist;
+        dist[begin] = 0;
+        queue&lt;<span class="ty">string</span>&gt; q;
+        q.push(begin);
+        <span class="ty">bool</span> found = false;
+        <span class="kw">while</span> (q.size() &amp;&amp; !found) {
+            <span class="ty">int</span> sz = q.size();
+            <span class="kw">while</span> (sz--) {
+                <span class="ty">string</span> w = q.front(); q.pop();
+                <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)w.size(); i++) {
+                    <span class="kw">for</span> (<span class="ty">char</span> c = 'a'; c &lt;= 'z'; c++) {
+                        <span class="ty">string</span> nw = w; nw[i] = c;
+                        <span class="kw">if</span> (!words.count(nw) || dist.count(nw)) continue;
+                        dist[nw] = dist[w] + 1;
+                        q.push(nw);
+                        <span class="kw">if</span> (nw == end) found = true;
+                    }
+                }
+            }
+        }
+        <span class="kw">if</span> (!dist.count(end)) <span class="kw">return</span> {};
+        unordered_map&lt;<span class="ty">string</span>, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; adj;
+        <span class="kw">for</span> (auto&amp; [w, d] : dist) {
+            <span class="kw">if</span> (w == end) continue;
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; (<span class="ty">int</span>)w.size(); i++) {
+                <span class="kw">for</span> (<span class="ty">char</span> c = 'a'; c &lt;= 'z'; c++) {
+                    <span class="ty">string</span> nw = w; nw[i] = c;
+                    <span class="kw">if</span> (dist.count(nw) &amp;&amp; dist[nw] == d + 1) adj[w].push_back(nw);
+                }
+            }
+        }
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt; res;
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; path = {begin};
+        function&lt;<span class="ty">void</span>(<span class="ty">string</span>&amp;)&gt; dfs = [&amp;](<span class="ty">string</span>&amp; w) {
+            <span class="kw">if</span> (w == end) { res.push_back(path); <span class="kw">return</span>; }
+            <span class="kw">for</span> (auto&amp; nxt : adj[w]) {
+                path.push_back(nxt);
+                dfs(nxt);
+                path.pop_back();
+            }
+        };
+        dfs(begin);
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -103,19 +196,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="pattern-chip">Graph</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n · m · 26)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n · m)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — BFS tầng để gán dist cho mọi từ đạt được.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xây đồ thị: u→v nếu dist[v]=dist[u]+1 và khác 1 chữ.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — DFS/backtrack từ beginWord theo đồ thị để thu mọi đường…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BFS đảm bảo dist tối thiểu; adj chỉ nối bước +1 nên DFS chỉ tạo đường ngắn nhất.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">endWord không trong list → []</span><span class="analysis-tag edge">Nhiều đường ngắn nhất</span><span class="analysis-tag pit">BFS không theo tầng → dist sai</span><span class="analysis-tag pit">DFS không giới hạn theo dist+1</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Ladder II = BFS khoảng cách + DFS backtrack đường ngắn nhất.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +225,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Word%20Ladder%20II&lc_id=126&embed=true"></iframe>

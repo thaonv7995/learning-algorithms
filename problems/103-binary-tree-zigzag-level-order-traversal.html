@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #103</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Binary Tree Zigzag Level Order Traversal</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>63.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Binary Tree Zigzag Level Order Traversal (LeetCode #103) — Medium.</div>
+                        <div class="block-text">Giống level-order nhưng đổi chiều mỗi tầng: tầng 0 trái→phải, tầng 1 phải→trái, …</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [3,9,20,null,null,15,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[3],[20,9],[15,7]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">BFS như #102; sau mỗi tầng reverse row nếu tầng lẻ (hoặc dùng deque push front/back xen kẽ).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +90,39 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* BFS + reverse xen kẽ — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> zigzagLevelOrder(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        <span class="kw">if</span> <span class="kw">not</span> root: <span class="kw">return</span> []
+        res, q, left = [], deque([root]), <span class="kw">True</span>
+        <span class="kw">while</span> q:
+            row, n = [], <span class="ty">len</span>(q)
+            <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n):
+                node = q.popleft()
+                row.append(node.val)
+                <span class="kw">if</span> node.left: q.append(node.left)
+                <span class="kw">if</span> node.right: q.append(node.right)
+            <span class="kw">if</span> <span class="kw">not</span> left: row.reverse()
+            res.append(row); left = <span class="kw">not</span> left
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; zigzagLevelOrder(TreeNode* root) {
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+        <span class="kw">if</span> (!root) <span class="kw">return</span> res;
+        queue&lt;TreeNode*&gt; q; q.push(root); <span class="ty">bool</span> ltr = true;
+        <span class="kw">while</span> (!q.empty()) {
+            <span class="ty">int</span> n = q.size(); <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; row(n);
+            <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+                auto* nd = q.front(); q.pop();
+                row[ltr ? i : n - 1 - i] = nd-&gt;val;
+                <span class="kw">if</span> (nd-&gt;left) q.push(nd-&gt;left);
+                <span class="kw">if</span> (nd-&gt;right) q.push(nd-&gt;right);
+            }
+            res.push_back(row); ltr = !ltr;
+        }
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +133,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — BFS như #102; sau mỗi tầng reverse row nếu tầng lẻ .</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Thứ tự trong tầng đảo đúng parity.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút</span><span class="analysis-tag edge">Cây lệch</span><span class="analysis-tag pit">Reverse nhầm tầng chẵn</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>flag leftToRight ^= 1 sau mỗi tầng.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +160,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Binary%20Tree%20Zigzag%20Level%20Order%20Traversal&lc_id=103&embed=true"></iframe>

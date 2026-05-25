@@ -2,33 +2,26 @@
   "id": 140,
   "title": "Word Break II",
   "difficulty": "Hard",
-  "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Word Break II (LeetCode #140) — Hard.",
+  "category": "String",
+  "timeComplexity": "O(n² · m + k)",
+  "spaceComplexity": "O(n²)",
+  "description": "Giống Word Break nhưng trả tất cả cách cắt s thành từ trong wordDict, mỗi cách là chuỗi các từ nối bằng khoảng trắng.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "s = \"catsanddog\", wordDict = [\"cat\",\"cats\",\"and\",\"sand\",\"dog\"]", "output": "[\"cats and dog\",\"cat sand dog\"]" },
+    { "input": "s = \"pineapplepenapple\", wordDict = [\"apple\",\"pen\",\"applepen\",\"pine\",\"pineapple\"]", "output": "[\"pine apple pen apple\",\"pineapple pen apple\",\"pine applepen apple\"]" },
+    { "input": "s = \"catsandog\", wordDict = [\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DP lưu danh sách câu cho mỗi prefix: dp[i] = các cách tách s[0:i). Với j < i, nếu s[j:i] ∈ dict và dp[j] không rỗng, ghép mỗi câu từ dp[j] + từ mới. Hoặc DFS + memo.",
+  "memoryTip": "dp[i] = list câu cho prefix; ghép từ dp[j] + word.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:\n        words = set(wordDict)\n        n = len(s)\n        dp = [[] for _ in range(n + 1)]\n        dp[0] = ['']\n        for i in range(1, n + 1):\n            for j in range(i):\n                w = s[j:i]\n                if w in words and dp[j]:\n                    for sent in dp[j]:\n                        dp[i].append((sent + ' ' + w).strip())\n        return dp[n]",
+    "cpp": "class Solution {\npublic:\n    vector<string> wordBreak(string s, vector<string>& wordDict) {\n        unordered_set<string> words(wordDict.begin(), wordDict.end());\n        int n = s.size();\n        vector<vector<string>> dp(n + 1);\n        dp[0] = {\"\"};\n        for (int i = 1; i <= n; ++i) {\n            for (int j = 0; j < i; ++j) {\n                string w = s.substr(j, i - j);\n                if (words.count(w) && !dp[j].empty()) {\n                    for (const string& sent : dp[j]) {\n                        dp[i].push_back(sent.empty() ? w : sent + \" \" + w);\n                    }\n                }\n            }\n        }\n        return dp[n];\n    }\n};",
+    "c": "/* DP list câu theo prefix — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi tách hợp lệ được xây từ prefix nhỏ hơn; không bỏ sót nhờ quét mọi j.",
+    "edgeCases": ["Không tách được → []", "Một từ duy nhất", "Nhiều cách trùng từ khác thứ tự"],
+    "pitfalls": ["Chỉ trả bool như LC139", "Không strip khoảng trắng đầu", "DFS không memo → exponential"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

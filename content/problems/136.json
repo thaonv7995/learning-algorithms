@@ -5,30 +5,23 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Single Number (LeetCode #136) — Easy.",
+  "description": "Cho mảng nums trong đó mọi phần tử xuất hiện đúng hai lần, trừ một phần tử duy nhất. Tìm phần tử chỉ xuất hiện một lần. Yêu cầu O(n) thời gian và O(1) bộ nhớ phụ.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "nums = [2,2,1]", "output": "1" },
+    { "input": "nums = [4,1,2,1,2]", "output": "4" },
+    { "input": "nums = [1]", "output": "1" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "XOR toàn bộ mảng: a^a=0, a^0=a; các cặp triệt tiêu, còn lại phần tử đơn.",
+  "memoryTip": "Mọi số lặp đôi → XOR hết = số lẻ một lần.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def singleNumber(self, nums: List[int]) -> int:\n        ans = 0\n        for x in nums:\n            ans ^= x\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int singleNumber(vector<int>& nums) {\n        int ans = 0;\n        for (int x : nums) ans ^= x;\n        return ans;\n    }\n};",
+    "c": "/* XOR tất cả phần tử — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "XOR giao hoán kết hợp; mỗi cặp bằng nhau triệt tiêu, chỉ số lẻ còn lại.",
+    "edgeCases": ["Một phần tử → chính nó", "Số âm (bit pattern vẫn XOR đúng)"],
+    "pitfalls": ["Dùng hash map O(n) space", "Quên khởi tạo ans = 0"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

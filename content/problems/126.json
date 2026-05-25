@@ -2,33 +2,25 @@
   "id": 126,
   "title": "Word Ladder II",
   "difficulty": "Hard",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Word Ladder II (LeetCode #126) — Hard.",
+  "category": "Graph",
+  "timeComplexity": "O(n · m · 26)",
+  "spaceComplexity": "O(n · m)",
+  "description": "Cho beginWord, endWord và wordList. Mỗi bước đổi đúng một chữ cái thành từ trong list. Trả về tất cả chuỗi biến đổi ngắn nhất từ beginWord đến endWord (mỗi chuỗi là danh sách từ).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]", "output": "[[\"hit\",\"hot\",\"dot\",\"dog\",\"cog\"],[\"hit\",\"hot\",\"lot\",\"log\",\"cog\"]]" },
+    { "input": "beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\"]", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS tầng để gán dist cho mọi từ đạt được. Xây đồ thị: u→v nếu dist[v]=dist[u]+1 và khác 1 chữ. DFS/backtrack từ beginWord theo đồ thị để thu mọi đường đến endWord.",
+  "memoryTip": "Ladder II = BFS khoảng cách + DFS backtrack đường ngắn nhất.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:\n        words = set(wordList)\n        if endWord not in words: return []\n        from collections import deque, defaultdict\n        dist = {beginWord: 0}\n        q = deque([beginWord])\n        found = False\n        while q and not found:\n            for _ in range(len(q)):\n                w = q.popleft()\n                for i in range(len(w)):\n                    for c in 'abcdefghijklmnopqrstuvwxyz':\n                        nw = w[:i] + c + w[i+1:]\n                        if nw not in words or nw in dist: continue\n                        dist[nw] = dist[w] + 1\n                        q.append(nw)\n                        if nw == endWord: found = True\n        if endWord not in dist: return []\n        adj = defaultdict(list)\n        for w, d in dist.items():\n            if w == endWord: continue\n            for i in range(len(w)):\n                for c in 'abcdefghijklmnopqrstuvwxyz':\n                    nw = w[:i] + c + w[i+1:]\n                    if nw in dist and dist[nw] == d + 1:\n                        adj[w].append(nw)\n        res = []\n        def dfs(w, path):\n            if w == endWord:\n                res.append(path[:])\n                return\n            for nxt in adj[w]:\n                path.append(nxt)\n                dfs(nxt, path)\n                path.pop()\n        dfs(beginWord, [beginWord])\n        return res",
+    "cpp": "class Solution {\n    bool diff1(const string& a, const string& b) {\n        int c = 0;\n        for (int i = 0; i < (int)a.size(); i++) if (a[i] != b[i]) c++;\n        return c == 1;\n    }\npublic:\n    vector<vector<string>> findLadders(string begin, string end, vector<string>& wl) {\n        unordered_set<string> words(wl.begin(), wl.end());\n        if (!words.count(end)) return {};\n        unordered_map<string, int> dist;\n        dist[begin] = 0;\n        queue<string> q;\n        q.push(begin);\n        bool found = false;\n        while (q.size() && !found) {\n            int sz = q.size();\n            while (sz--) {\n                string w = q.front(); q.pop();\n                for (int i = 0; i < (int)w.size(); i++) {\n                    for (char c = 'a'; c <= 'z'; c++) {\n                        string nw = w; nw[i] = c;\n                        if (!words.count(nw) || dist.count(nw)) continue;\n                        dist[nw] = dist[w] + 1;\n                        q.push(nw);\n                        if (nw == end) found = true;\n                    }\n                }\n            }\n        }\n        if (!dist.count(end)) return {};\n        unordered_map<string, vector<string>> adj;\n        for (auto& [w, d] : dist) {\n            if (w == end) continue;\n            for (int i = 0; i < (int)w.size(); i++) {\n                for (char c = 'a'; c <= 'z'; c++) {\n                    string nw = w; nw[i] = c;\n                    if (dist.count(nw) && dist[nw] == d + 1) adj[w].push_back(nw);\n                }\n            }\n        }\n        vector<vector<string>> res;\n        vector<string> path = {begin};\n        function<void(string&)> dfs = [&](string& w) {\n            if (w == end) { res.push_back(path); return; }\n            for (auto& nxt : adj[w]) {\n                path.push_back(nxt);\n                dfs(nxt);\n                path.pop_back();\n            }\n        };\n        dfs(begin);\n        return res;\n    }\n};",
+    "c": "/* BFS dist + DFS backtrack — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "BFS đảm bảo dist tối thiểu; adj chỉ nối bước +1 nên DFS chỉ tạo đường ngắn nhất.",
+    "edgeCases": ["endWord không trong list → []", "Nhiều đường ngắn nhất"],
+    "pitfalls": ["BFS không theo tầng → dist sai", "DFS không giới hạn theo dist+1"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

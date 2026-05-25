@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #129</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Tree</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Sum Root to Leaf Numbers</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>70% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Sum Root to Leaf Numbers (LeetCode #129) — Medium.</div>
+                        <div class="block-text">Mỗi nút cây nhị phân chứa chữ số 0–9. Mỗi đường gốc→lá tạo một số (nối chữ số). Trả tổng tất cả các số đó.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [1,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>25</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [4,9,0,5,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>1026</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS: num = num*10 + node.val. Tại lá (không con), cộng num vào tổng. Ngược lại đệ quy trái/phải.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,27 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DFS tích lũy số gốc-lá — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> sumNumbers(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">int</span>:
+        <span class="kw">def</span> dfs(node, num):
+            <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span> 0
+            num = num * 10 + node.val
+            <span class="kw">if</span> <span class="kw">not</span> node.left <span class="kw">and</span> <span class="kw">not</span> node.right:
+                <span class="kw">return</span> num
+            <span class="kw">return</span> dfs(node.left, num) + dfs(node.right, num)
+        <span class="kw">return</span> dfs(root, 0)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> dfs(TreeNode* node, <span class="ty">int</span> num) {
+        <span class="kw">if</span> (!node) <span class="kw">return</span> 0;
+        num = num * 10 + node-&gt;val;
+        <span class="kw">if</span> (!node-&gt;left &amp;&amp; !node-&gt;right) <span class="kw">return</span> num;
+        <span class="kw">return</span> dfs(node-&gt;left, num) + dfs(node-&gt;right, num);
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> sumNumbers(TreeNode* root) {
+        <span class="kw">return</span> dfs(root, 0);
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +126,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DFS: num = num*10 + node.val.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Tại lá , cộng num vào tổng.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Ngược lại đệ quy trái/phải.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi đường gốc→lá được duyệt đúng một lần.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một nút → val</span><span class="analysis-tag edge">Cây lệch</span><span class="analysis-tag pit">Cộng num tại mọi nút thay vì chỉ lá</span><span class="analysis-tag pit">Quên num*10 trước khi cộng val</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Gốc→lá = DFS tích lũy num*10 + val; cộng tại lá.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +153,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Sum%20Root%20to%20Leaf%20Numbers&lc_id=129&embed=true"></iframe>

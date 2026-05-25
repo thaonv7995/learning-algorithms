@@ -3,32 +3,24 @@
   "title": "Max Points on a Line",
   "difficulty": "Hard",
   "category": "Array",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Max Points on a Line (LeetCode #149) — Hard.",
+  "timeComplexity": "O(n²)",
+  "spaceComplexity": "O(n)",
+  "description": "Cho mảng points[i]=[xi,yi]. Tìm số điểm tối đa nằm trên cùng một đường thẳng.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "points = [[1,1],[2,2],[3,3]]", "output": "3" },
+    { "input": "points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]", "output": "4" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Với mỗi điểm gốc, đếm số điểm cùng slope (dy,dx) chuẩn hóa bằng gcd; dùng pair hoặc string key. Trùng tọa độ tính riêng. O(n²) cặp.",
+  "memoryTip": "Mỗi anchor: map slope gcd-normalized → count.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "from math import gcd\n\nclass Solution:\n    def maxPoints(self, points: List[List[int]]) -> int:\n        n = len(points)\n        if n < 3:\n            return n\n        ans = 0\n        for i in range(n):\n            x1, y1 = points[i]\n            slope = {}\n            same = 1\n            for j in range(i + 1, n):\n                x2, y2 = points[j]\n                dx, dy = x2 - x1, y2 - y1\n                if dx == 0 and dy == 0:\n                    same += 1\n                    continue\n                g = gcd(dx, dy)\n                dx //= g\n                dy //= g\n                if dx < 0:\n                    dx, dy = -dx, -dy\n                key = (dx, dy)\n                slope[key] = slope.get(key, 0) + 1\n            local = same\n            for cnt in slope.values():\n                local = max(local, cnt + same)\n            ans = max(ans, local)\n        return ans",
+    "cpp": "class Solution {\n    static long long gcdll(long long a, long long b) {\n        a = llabs(a); b = llabs(b);\n        while (b) { long long t = a % b; a = b; b = t; }\n        return a;\n    }\npublic:\n    int maxPoints(vector<vector<int>>& points) {\n        int n = points.size();\n        if (n < 3) return n;\n        int ans = 0;\n        for (int i = 0; i < n; ++i) {\n            map<pair<long long,long long>, int> slope;\n            int same = 1;\n            for (int j = i + 1; j < n; ++j) {\n                long long dx = points[j][0] - points[i][0];\n                long long dy = points[j][1] - points[i][1];\n                if (dx == 0 && dy == 0) { ++same; continue; }\n                long long g = gcdll(dx, dy);\n                dx /= g; dy /= g;\n                if (dx < 0) { dx = -dx; dy = -dy; }\n                ++slope[{dx, dy}];\n            }\n            int local = same;\n            for (auto& p : slope)\n                local = max(local, p.second + same);\n            ans = max(ans, local);\n        }\n        return ans;\n    }\n};",
+    "c": "/* Mỗi anchor đếm slope gcd — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Hai điểm cùng đường qua anchor iff cùng slope chuẩn hóa; cộng trùng tọa độ.",
+    "edgeCases": ["≤2 điểm", "Tất cả trùng nhau", "Đường thẳng đứng (dx=0)"],
+    "pitfalls": ["Dùng float slope → sai số", "Quên chuẩn hóa dấu slope", "Overflow dx/dy — dùng long long"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

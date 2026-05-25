@@ -2,33 +2,26 @@
   "id": 144,
   "title": "Binary Tree Preorder Traversal",
   "difficulty": "Easy",
-  "category": "Stack",
+  "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Binary Tree Preorder Traversal (LeetCode #144) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root cây nhị phân. Trả thứ tự duyệt preorder (node → trái → phải).",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [1,null,2,3]", "output": "[1,2,3]" },
+    { "input": "root = [1,2,3,4,5,null,8,null,null,6,7,9]", "output": "[1,2,4,5,6,7,3,8,9]" },
+    { "input": "root = []", "output": "[]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Đệ quy: thêm root.val, rồi preorder trái, phải. Hoặc iterative: stack — pop, push phải rồi trái (pop trái trước).",
+  "memoryTip": "Preorder = visit trước; stack push phải trước trái.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:\n        res, st = [], []\n        if root:\n            st.append(root)\n        while st:\n            node = st.pop()\n            res.append(node.val)\n            if node.right:\n                st.append(node.right)\n            if node.left:\n                st.append(node.left)\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<int> preorderTraversal(TreeNode* root) {\n        vector<int> res;\n        if (!root) return res;\n        stack<TreeNode*> st;\n        st.push(root);\n        while (!st.empty()) {\n            TreeNode* node = st.top(); st.pop();\n            res.push_back(node->val);\n            if (node->right) st.push(node->right);\n            if (node->left) st.push(node->left);\n        }\n        return res;\n    }\n};",
+    "c": "/* Stack iterative preorder — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi node visit đúng một lần, thứ tự root-trái-phải.",
+    "edgeCases": ["root null → []", "Chỉ một nhánh"],
+    "pitfalls": ["Push trái trước phải → sai thứ tự", "Nhầm inorder/postorder"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

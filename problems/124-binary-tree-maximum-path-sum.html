@@ -42,7 +42,7 @@
                     <h1 class="problem-title">Binary Tree Maximum Path Sum</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>42.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Binary Tree Maximum Path Sum (LeetCode #124) — Hard.</div>
+                        <div class="block-text">Cho root cây nhị phân (giá trị nút có thể âm). Tìm tổng lớn nhất trên một đường đi bất kỳ (nút nối cha-con, không nhất thiết qua gốc).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [1,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>6</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [-10,9,20,null,null,15,7]</code></div>
+                <div class="ex-line"><span>Out</span><code>42</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">DFS gain(node): trả về tổng đường đi xuống tối đa qua node (chỉ một nhánh con). Cập nhật global = max(global, node.val + max(0,left) + max(0,right)).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,32 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* DFS gain + cập nhật global — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> maxPathSum(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; <span class="ty">int</span>:
+        <span class="ty">self</span>.ans = float('-inf')
+        <span class="kw">def</span> gain(node):
+            <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span> 0
+            l = <span class="ty">max</span>(0, gain(node.left))
+            r = <span class="ty">max</span>(0, gain(node.right))
+            <span class="ty">self</span>.ans = <span class="ty">max</span>(<span class="ty">self</span>.ans, node.val + l + r)
+            <span class="kw">return</span> node.val + <span class="ty">max</span>(l, r)
+        gain(root)
+        <span class="kw">return</span> <span class="ty">self</span>.ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">int</span> ans = INT_MIN;
+    <span class="ty">int</span> gain(TreeNode* node) {
+        <span class="kw">if</span> (!node) <span class="kw">return</span> 0;
+        <span class="ty">int</span> l = max(0, gain(node-&gt;left));
+        <span class="ty">int</span> r = max(0, gain(node-&gt;right));
+        ans = max(ans, node-&gt;val + l + r);
+        <span class="kw">return</span> node-&gt;val + max(l, r);
+    }
 <span class="ty">public</span>:
+    <span class="ty">int</span> maxPathSum(TreeNode* root) {
+        gain(root);
+        <span class="kw">return</span> ans;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +131,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DFS gain: trả về tổng đường đi xuống tối đa qua node .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Cập nhật global = max + max).</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mọi đường đi có đỉnh cao nhất được xét khi DFS tại đỉnh đó.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Tất cả nút âm → trả nút lớn nhất</span><span class="analysis-tag edge">Một nút</span><span class="analysis-tag pit">Cộng cả hai nhánh khi trả về cho cha</span><span class="analysis-tag pit">Khởi tạo ans = -inf vì giá trị âm</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Path qua node = left gain + node + right gain; trả về một nhánh cho cha.</p>
                     </details>
                 </div>
                 </div>

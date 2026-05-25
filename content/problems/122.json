@@ -5,30 +5,22 @@
   "category": "Array",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Best Time to Buy and Sell Stock II (LeetCode #122) — Medium.",
+  "description": "Cho mảng giá cổ phiếu. Được phép mua/bán không giới hạn số lần, nhưng không được nắm quá một cổ phiếu cùng lúc. Tìm lợi nhuận tối đa.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "prices = [7,1,5,3,6,4]", "output": "7" },
+    { "input": "prices = [1,2,3,4,5]", "output": "4" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Greedy: cộng mọi chênh lệch dương prices[i] - prices[i-1] (mua hôm trước, bán hôm sau khi giá tăng). Tương đương gom mọi đoạn tăng liên tiếp.",
+  "memoryTip": "Không giới hạn giao dịch = cộng hết bước tăng ngày kế.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        return sum(max(0, prices[i] - prices[i - 1]) for i in range(1, len(prices)))",
+    "cpp": "class Solution {\npublic:\n    int maxProfit(vector<int>& prices) {\n        int profit = 0;\n        for (int i = 1; i < (int)prices.size(); i++)\n            if (prices[i] > prices[i - 1])\n                profit += prices[i] - prices[i - 1];\n        return profit;\n    }\n};",
+    "c": "/* Cộng delta dương liên tiếp — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi đoạn tăng có thể tách thành nhiều giao dịch nhỏ mà không giảm tổng lợi nhuận.",
+    "edgeCases": ["Giá chỉ giảm → 0", "Hai ngày tăng liên tục"],
+    "pitfalls": ["DP phức tạp không cần", "Quên chỉ cộng khi prices[i] > prices[i-1]"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

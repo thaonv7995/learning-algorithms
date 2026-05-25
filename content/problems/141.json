@@ -5,30 +5,23 @@
   "category": "Linked List",
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(1)",
-  "description": "Linked List Cycle (LeetCode #141) — Easy.",
+  "description": "Cho head của linked list. Trả true nếu list có chu trình (node nào đó trỏ lại node đã thăm trước đó), ngược lại false.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "head = [3,2,0,-4], pos = 1", "output": "true" },
+    { "input": "head = [1,2], pos = 0", "output": "true" },
+    { "input": "head = [1], pos = -1", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Floyd: slow và fast; fast đi 2 bước, slow 1 bước. Nếu gặp nhau → có cycle. Fast chạm null → không cycle.",
+  "memoryTip": "Rùa và thỏ — gặp nhau = có vòng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def hasCycle(self, head: Optional[ListNode]) -> bool:\n        slow = fast = head\n        while fast and fast.next:\n            slow = slow.next\n            fast = fast.next.next\n            if slow is fast:\n                return True\n        return False",
+    "cpp": "class Solution {\npublic:\n    bool hasCycle(ListNode *head) {\n        ListNode *slow = head, *fast = head;\n        while (fast && fast->next) {\n            slow = slow->next;\n            fast = fast->next->next;\n            if (slow == fast) return true;\n        }\n        return false;\n    }\n};",
+    "c": "/* Floyd slow/fast — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Trong vòng, khoảng cách fast-slow giảm 1 mỗi bước nên chắc chắn gặp.",
+    "edgeCases": ["head null", "Một node không cycle", "Cycle tại head"],
+    "pitfalls": ["Hash set O(n) space", "So sánh trước khi di chuyển lần đầu"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

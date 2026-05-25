@@ -3,32 +3,24 @@
   "title": "Clone Graph",
   "difficulty": "Medium",
   "category": "Graph",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Clone Graph (LeetCode #133) — Medium.",
+  "timeComplexity": "O(V + E)",
+  "spaceComplexity": "O(V)",
+  "description": "Cho node gốc của đồ thị vô hướng có nhãn (adjacency list). Trả bản sao sâu (deep copy) của toàn bộ đồ thị.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "adjList = [[2,4],[1,3],[2,4],[1,3]]", "output": "[[2,4],[1,3],[2,4],[1,3]]" },
+    { "input": "adjList = [[]]", "output": "[[]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "Hash map old→new. DFS/BFS: nếu đã clone thì trả; tạo Node mới, lưu map, đệ quy clone từng neighbor và nối vào neighbors của bản sao.",
+  "memoryTip": "Clone graph = map gốc→mới + DFS/BFS tránh vòng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def cloneGraph(self, node: 'Node') -> 'Node':\n        if not node: return None\n        oldToNew = {}\n        def dfs(n):\n            if n in oldToNew: return oldToNew[n]\n            copy = Node(n.val)\n            oldToNew[n] = copy\n            for nei in n.neighbors:\n                copy.neighbors.append(dfs(nei))\n            return copy\n        return dfs(node)",
+    "cpp": "class Solution {\n    unordered_map<Node*, Node*> mp;\n    Node* dfs(Node* node) {\n        if (!node) return nullptr;\n        if (mp.count(node)) return mp[node];\n        Node* copy = new Node(node->val);\n        mp[node] = copy;\n        for (Node* nei : node->neighbors)\n            copy->neighbors.push_back(dfs(nei));\n        return copy;\n    }\npublic:\n    Node* cloneGraph(Node* node) {\n        return dfs(node);\n    }\n};",
+    "c": "/* Hash map + DFS clone neighbors — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mỗi nút gốc map đúng một nút mới; cạnh được tái tạo qua neighbors.",
+    "edgeCases": ["node null → null", "Một nút không cạnh"],
+    "pitfalls": ["Clone không qua map → vòng vô hạn", "Shallow copy neighbors"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

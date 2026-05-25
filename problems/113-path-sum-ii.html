@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #113</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Backtracking</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Path Sum II</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(h)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>62.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Path Sum II (LeetCode #113) — Medium.</div>
+                        <div class="block-text">Cho root và targetSum. Trả về tất cả đường đi từ gốc đến lá có tổng bằng targetSum (mỗi đường là mảng giá trị nút).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
-                <div class="ex-line"><span>Out</span><code>…</code></div>
+                <div class="ex-line"><span>In</span><code>root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22</code></div>
+                <div class="ex-line"><span>Out</span><code>[[5,4,11,2],[5,8,4,5]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>root = [1,2,3], targetSum = 5</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
+                        <div class="block-text">Backtracking DFS: push val vào path; tại lá nếu rem == val thì copy path vào kết quả; pop khi backtrack.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,11 +95,40 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-c">/* Backtracking DFS thu path — xem C++ */</pre>
                             <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
-    <span class="kw">pass</span></pre>
+    <span class="kw">def</span> pathSum(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>], targetSum: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        res = []
+        <span class="kw">def</span> dfs(node, rem, path):
+            <span class="kw">if</span> <span class="kw">not</span> node: <span class="kw">return</span>
+            path.append(node.val)
+            <span class="kw">if</span> <span class="kw">not</span> node.left <span class="kw">and</span> <span class="kw">not</span> node.right <span class="kw">and</span> rem == node.val:
+                res.append(path[:])
+            <span class="kw">else</span>:
+                dfs(node.left, rem - node.val, path)
+                dfs(node.right, rem - node.val, path)
+            path.pop()
+        dfs(root, targetSum, [])
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; res;
+    <span class="ty">void</span> dfs(TreeNode* nd, <span class="ty">int</span> rem, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; path) {
+        <span class="kw">if</span> (!nd) <span class="kw">return</span>;
+        path.push_back(nd-&gt;val);
+        <span class="kw">if</span> (!nd-&gt;left &amp;&amp; !nd-&gt;right &amp;&amp; rem == nd-&gt;val)
+            res.push_back(path);
+        <span class="kw">else</span> {
+            dfs(nd-&gt;left, rem - nd-&gt;val, path);
+            dfs(nd-&gt;right, rem - nd-&gt;val, path);
+        }
+        path.pop_back();
+    }
 <span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; pathSum(TreeNode* root, <span class="ty">int</span> targetSum) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; path;
+        dfs(root, targetSum, path);
+        <span class="kw">return</span> res;
+    }
 };</pre>
                         </div>
                     </div>
@@ -105,17 +139,17 @@
                     <div class="analysis-meta">
                         <span class="pattern-chip">Backtracking</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(h)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Backtracking DFS: push val vào path; tại lá nếu rem == val thì copy…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi đường hợp lệ được ghi một lần; backtrack không bỏ sót nhánh.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Không có đường hợp lệ → []</span><span class="analysis-tag edge">Nhiều đường trùng prefix</span><span class="analysis-tag edge">Cây rỗng</span><span class="analysis-tag pit">Append path trực tiếp (reference) thay vì copy</span><span class="analysis-tag pit">Quên pop khi backtrack</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
+                        <p>Giống LC 112 nhưng thu thập mọi path — nhớ pop sau đệ quy.</p>
                     </details>
                 </div>
                 </div>
@@ -132,7 +166,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Path%20Sum%20II&lc_id=113&embed=true"></iframe>

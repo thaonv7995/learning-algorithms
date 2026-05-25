@@ -4,31 +4,22 @@
   "difficulty": "Medium",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Binary Tree Zigzag Level Order Traversal (LeetCode #103) — Medium.",
+  "spaceComplexity": "O(n)",
+  "description": "Giống level-order nhưng đổi chiều mỗi tầng: tầng 0 trái→phải, tầng 1 phải→trái, …",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [3,9,20,null,null,15,7]", "output": "[[3],[20,9],[15,7]]" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS như #102; sau mỗi tầng reverse row nếu tầng lẻ (hoặc dùng deque push front/back xen kẽ).",
+  "memoryTip": "flag leftToRight ^= 1 sau mỗi tầng.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def zigzagLevelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:\n        if not root: return []\n        res, q, left = [], deque([root]), True\n        while q:\n            row, n = [], len(q)\n            for _ in range(n):\n                node = q.popleft()\n                row.append(node.val)\n                if node.left: q.append(node.left)\n                if node.right: q.append(node.right)\n            if not left: row.reverse()\n            res.append(row); left = not left\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {\n        vector<vector<int>> res;\n        if (!root) return res;\n        queue<TreeNode*> q; q.push(root); bool ltr = true;\n        while (!q.empty()) {\n            int n = q.size(); vector<int> row(n);\n            for (int i = 0; i < n; i++) {\n                auto* nd = q.front(); q.pop();\n                row[ltr ? i : n - 1 - i] = nd->val;\n                if (nd->left) q.push(nd->left);\n                if (nd->right) q.push(nd->right);\n            }\n            res.push_back(row); ltr = !ltr;\n        }\n        return res;\n    }\n};",
+    "c": "/* BFS + reverse xen kẽ — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Thứ tự trong tầng đảo đúng parity.",
+    "edgeCases": ["Một nút", "Cây lệch"],
+    "pitfalls": ["Reverse nhầm tầng chẵn"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

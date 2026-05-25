@@ -2,33 +2,25 @@
   "id": 127,
   "title": "Word Ladder",
   "difficulty": "Hard",
-  "category": "Hash Table",
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Word Ladder (LeetCode #127) — Hard.",
+  "category": "Graph",
+  "timeComplexity": "O(n · m · 26)",
+  "spaceComplexity": "O(n · m)",
+  "description": "Cho beginWord, endWord và wordList. Mỗi bước đổi đúng một chữ cái thành từ trong list. Trả về số bước ít nhất của chuỗi biến đổi (gồm begin và end), hoặc 0 nếu không có.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]", "output": "5" },
+    { "input": "beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\"]", "output": "0" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "BFS trên đồ thị từ (khác 1 chữ cái). Queue (word, steps). Khi gặp neighbor trong set, xóa khỏi set (visited) và enqueue. Gặp endWord → trả steps.",
+  "memoryTip": "Word Ladder = BFS tầng; xóa từ khỏi set khi visit.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:\n        words = set(wordList)\n        if endWord not in words: return 0\n        from collections import deque\n        q = deque([(beginWord, 1)])\n        while q:\n            w, d = q.popleft()\n            if w == endWord: return d\n            for i in range(len(w)):\n                for c in 'abcdefghijklmnopqrstuvwxyz':\n                    nw = w[:i] + c + w[i+1:]\n                    if nw in words:\n                        words.remove(nw)\n                        q.append((nw, d + 1))\n        return 0",
+    "cpp": "class Solution {\npublic:\n    int ladderLength(string begin, string end, vector<string>& wl) {\n        unordered_set<string> words(wl.begin(), wl.end());\n        if (!words.count(end)) return 0;\n        queue<pair<string, int>> q;\n        q.push({begin, 1});\n        while (!q.empty()) {\n            auto [w, d] = q.front(); q.pop();\n            if (w == end) return d;\n            for (int i = 0; i < (int)w.size(); i++) {\n                char orig = w[i];\n                for (char c = 'a'; c <= 'z'; c++) {\n                    w[i] = c;\n                    if (words.count(w)) {\n                        words.erase(w);\n                        q.push({w, d + 1});\n                    }\n                }\n                w[i] = orig;\n            }\n        }\n        return 0;\n    }\n};",
+    "c": "/* BFS + erase visited word — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "BFS tìm shortest path trên đồ thị vô hướng không trọng số.",
+    "edgeCases": ["endWord không có → 0", "beginWord == endWord (thường không xảy ra theo đề)"],
+    "pitfalls": ["DFS không đảm bảo ngắn nhất", "Quên remove visited → vòng lặp vô hạn"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }

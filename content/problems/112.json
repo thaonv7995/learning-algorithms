@@ -4,31 +4,23 @@
   "difficulty": "Easy",
   "category": "Tree",
   "timeComplexity": "O(n)",
-  "spaceComplexity": "O(1)",
-  "description": "Path Sum (LeetCode #112) — Easy.",
+  "spaceComplexity": "O(h)",
+  "description": "Cho root và targetSum. Kiểm tra có tồn tại đường đi từ gốc đến lá sao cho tổng giá trị các nút trên đường bằng targetSum.",
   "examples": [
-    {
-      "input": "Xem đề gốc trên LeetCode",
-      "output": "…"
-    }
+    { "input": "root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22", "output": "true" },
+    { "input": "root = [1,2,3], targetSum = 5", "output": "false" }
   ],
-  "approach": "Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.",
-  "memoryTip": "Nắm pattern chính của bài trước khi phỏng vấn.",
+  "approach": "DFS: tại lá kiểm tra rem == node.val; còn không thì đệ quy trái/phải với rem − node.val.",
+  "memoryTip": "Chỉ đường gốc→lá; trừ dần target khi đi xuống.",
   "solutions": {
-    "python": "class Solution:\n    pass",
-    "cpp": "class Solution {\npublic:\n};",
-    "c": "/* Xem C++ */"
+    "python": "class Solution:\n    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:\n        if not root: return False\n        if not root.left and not root.right:\n            return root.val == targetSum\n        rem = targetSum - root.val\n        return self.hasPathSum(root.left, rem) or self.hasPathSum(root.right, rem)",
+    "cpp": "class Solution {\npublic:\n    bool hasPathSum(TreeNode* root, int target) {\n        if (!root) return false;\n        if (!root->left && !root->right) return root->val == target;\n        int rem = target - root->val;\n        return hasPathSum(root->left, rem) || hasPathSum(root->right, rem);\n    }\n};",
+    "c": "/* DFS trừ target tại lá — xem C++ */"
   },
   "analysis": {
-    "correctness": "Logic chuẩn theo editorial.",
-    "edgeCases": [
-      "Rỗng",
-      "Một phần tử"
-    ],
-    "pitfalls": [
-      "Edge case",
-      "Complexity"
-    ]
+    "correctness": "Mọi đường gốc→lá được thử đúng một lần qua DFS.",
+    "edgeCases": ["Cây rỗng → false", "target = giá trị gốc (cây một nút)", "Số âm trên cây"],
+    "pitfalls": ["Kiểm tra rem==0 ở nút không phải lá", "Quên OR hai nhánh"]
   },
-  "tier": "catalog"
+  "tier": "done"
 }
