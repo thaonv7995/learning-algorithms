@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3882 · Minimum XOR Path in a Grid — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3882 Minimum XOR Path in a Grid</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/minimum-xor-path-in-a-grid/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3882</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Minimum XOR Path in a Grid</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>39.7% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given a 2D integer array <code>grid</code> of size <code>m * n</code>.</p>
+
+<p>You start at the <strong>top-left</strong> cell <code>(0, 0)</code> and want to reach the <strong>bottom-right</strong> cell <code>(m - 1, n - 1)</code>.</p>
+
+<p>At each step, you <strong>may</strong> move either <strong>right or down</strong>.</p>
+
+<p>The <strong>cost</strong> of a path is defined as the <strong>bitwise XOR</strong> of all the values in the cells along that path, <strong>including</strong> the start and end cells.</p>
+
+<p>Return the <strong>minimum</strong> possible XOR value among all valid paths from <code>(0, 0)</code> to <code>(m - 1, n - 1)</code>.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">grid = [[1,2],[3,4]]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">6</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>There are two valid paths:</p>
+
+<ul>
+	<li><code>(0, 0) &rarr; (0, 1) &rarr; (1, 1)</code> with XOR: <code>1 XOR 2 XOR 4 = 7</code></li>
+	<li><code>(0, 0) &rarr; (1, 0) &rarr; (1, 1)</code> with XOR: <code>1 XOR 3 XOR 4 = 6</code></li>
+</ul>
+
+<p>The minimum XOR value among all valid paths is 6.</p>
+</div>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">grid = [[6,7],[5,8]]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">9</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>There are two valid paths:</p>
+
+<ul>
+	<li><code>(0, 0) &rarr; (0, 1) &rarr; (1, 1)</code> with XOR: <code>6 XOR 7 XOR 8 = 9</code></li>
+	<li><code>(0, 0) &rarr; (1, 0) &rarr; (1, 1)</code> with XOR: <code>6 XOR 5 XOR 8 = 11</code></li>
+</ul>
+
+<p>The minimum XOR value among all valid paths is 9.</p>
+</div>
+
+<p><strong class="example">Example 3:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">grid = [[2,7,5]]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">0</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>There is only one valid path:</p>
+
+<ul>
+	<li><code>(0, 0) &rarr; (0, 1) &rarr; (0, 2)</code> with XOR: <code>2 XOR 7 XOR 5 = 0</code></li>
+</ul>
+
+<p>The XOR value of this path is 0, which is the minimum possible.</p>
+</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= m == grid.length &lt;= 1000</code></li>
+	<li><code>1 &lt;= n == grid[i].length &lt;= 1000</code></li>
+	<li><code>m * n &lt;= 1000</code></li>
+	<li><code>0 &lt;= grid[i][j] &lt;= 1023​</code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[[1,2],[3,4]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[6,7],[5,8]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Use dynamic programming with state &lt;code&gt;dp[i][j][x]&lt;/code&gt;, where &lt;code&gt;x&lt;/code&gt; is a possible XOR value. &lt;code&gt;dp[i][j][x]&lt;/code&gt; indicates whether it is possible to reach cell &lt;code&gt;(i, j)&lt;/code&gt; with XOR equal to &lt;code&gt;x&lt;/code&gt;. Transition from the top left cell by updating &lt;code&gt;x ^ grid[i][j]&lt;/code&gt;, and track all reachable XOR values to find the minimum at the end cell.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> minCost(<span class="ty">int</span>** grid, <span class="ty">int</span> gridSize, <span class="ty">int</span>* gridColSize) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> minCost(<span class="ty">self</span>, grid):
+        &quot;&quot;&quot;
+        :type grid: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> minCost(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; grid) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Use dynamic programming with state…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — &lt;code&gt;dp[i][j][x]&lt;/code&gt; indicates whether it is possible…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Transition from the top left cell by updating &lt;code&gt;x ^…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3881-direction-assignments-with-exactly-k-visible-people.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Direction Assignments with Exactly K Visible People</strong></span></a>
+                <a href="3883-count-non-decreasing-arrays-with-given-digit-sums.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Count Non Decreasing Arrays With Given Digit Sums</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Minimum%20XOR%20Path%20in%20a%20Grid&lc_id=3882&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist · 3,175 bài LeetCode</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg:#07090f; --surface:#0e1422; --border:#1e2a42; --text:#e2e8f0; --muted:#94a3b8; --done:#34d399; --prog:#38bdf8; --pend:#64748b; }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { background:var(--bg); color:var(--text); font-family:Inter,sans-serif; padding:20px; }
+        h1 { font-size:1.2rem; margin-bottom:12px; }
+        .stats { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+        .pill { background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-size:0.8rem; }
+        .pill strong { font-family:'Fira Code',monospace; }
+        .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+        input, select { background:var(--surface); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:8px 12px; font-size:0.85rem; }
+        input { flex:1; min-width:200px; }
+        table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+        th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); }
+        th { color:var(--muted); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.05em; }
+        tr:hover td { background:rgba(255,255,255,0.02); }
+        a { color:#818cf8; text-decoration:none; }
+        a:hover { text-decoration:underline; }
+        .st { display:inline-block; padding:2px 8px; border-radius:999px; font-size:0.65rem; font-weight:700; text-transform:uppercase; }
+        .st.pending { background:rgba(100,116,139,.15); color:var(--pend); }
+        .st.in-progress { background:rgba(56,189,248,.15); color:var(--prog); }
+        .st.done { background:rgba(52,211,153,.15); color:var(--done); }
+        .bar-wrap { height:8px; background:var(--surface); border-radius:999px; overflow:hidden; margin-bottom:20px; border:1px solid var(--border); }
+        .bar-done { height:100%; background:linear-gradient(90deg,#34d399,#6366f1); width:0%; transition:width .3s; }
+    </style>
+</head>
+<body>
+    <h1><i class="fa-solid fa-list-check"></i> Checklist hoàn thiện detail</h1>
+    <div class="bar-wrap"><div class="bar-done" id="bar"></div></div>
+    <div class="stats" id="stats"></div>
+    <div class="toolbar">
+        <input type="search" id="q" placeholder="Tìm #id, tiêu đề, tag…">
+        <select id="status-filter"><option value="all">Mọi trạng thái</option><option value="pending">Pending</option><option value="in-progress">In progress</option><option value="done">Done</option></select>
+        <select id="tier-filter"><option value="all">Mọi tier</option><option value="premium">Premium</option><option value="catalog">Catalog</option></select>
+    </div>
+    <table>
+        <thead><tr><th>#</th><th>Title</th><th>Diff</th><th>Category</th><th>Status</th><th>Detail</th><th>Review</th></tr></thead>
+        <tbody id="tbody"></tbody>
+    </table>
+    <script>
+        let data = [];
+        fetch('index.json').then(r => r.json()).then(j => {
+            data = j.problems || [];
+            renderStats();
+            render();
+        });
+        function slug(p) { return `${String(p.id).padStart(4,'0')}-${p.slug}`; }
+        function href(p) { return `../problems/${p.id}-${p.slug}.html`; }
+        function renderStats() {
+            const done = data.filter(p => p.status === 'done').length;
+            const prog = data.filter(p => p.status === 'in-progress').length;
+            const pend = data.length - done - prog;
+            document.getElementById('bar').style.width = (done / data.length * 100).toFixed(2) + '%';
+            document.getElementById('stats').innerHTML = `
+                <span class="pill">Tổng <strong>${data.length}</strong></span>
+                <span class="pill">Done <strong style="color:#34d399">${done}</strong></span>
+                <span class="pill">In progress <strong style="color:#38bdf8">${prog}</strong></span>
+                <span class="pill">Pending <strong>${pend}</strong></span>`;
+        }
+        function render() {
+            const q = document.getElementById('q').value.toLowerCase();
+            const st = document.getElementById('status-filter').value;
+            const tier = document.getElementById('tier-filter').value;
+            const rows = data.filter(p => {
+                if (st !== 'all' && p.status !== st) return false;
+                if (tier !== 'all' && p.tier !== tier) return false;
+                if (!q) return true;
+                return p.id.toString().includes(q) || p.title.toLowerCase().includes(q) || (p.category||'').toLowerCase().includes(q);
+            }).slice(0, 500);
+            document.getElementById('tbody').innerHTML = rows.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.title}</td>
+                    <td>${p.difficulty}</td>
+                    <td>${p.category||'—'}</td>
+                    <td><span class="st ${p.status.replace('_','-')}">${p.status}</span></td>
+                    <td><a href="${href(p)}" target="_blank">Mở</a></td>
+                    <td><a href="reviews/${slug(p)}.md">Review</a></td>
+                </tr>`).join('');
+        }
+        ['q','status-filter','tier-filter'].forEach(id => document.getElementById(id).addEventListener('input', render));
+    </script>
+</body>
+</html>

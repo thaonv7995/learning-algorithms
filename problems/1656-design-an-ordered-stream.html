@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #1656 · Design an Ordered Stream — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#1656 Design an Ordered Stream</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/design-an-ordered-stream/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head easy">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #1656</span>
+                        <span class="diff-badge easy">Easy</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Design an Ordered Stream</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>82.7% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>There is a stream of <code>n</code> <code>(idKey, value)</code> pairs arriving in an <strong>arbitrary</strong> order, where <code>idKey</code> is an integer between <code>1</code> and <code>n</code> and <code>value</code> is a string. No two pairs have the same <code>id</code>.</p>
+
+<p>Design a stream that returns the values in <strong>increasing order of their IDs</strong> by returning a <strong>chunk</strong> (list) of values after each insertion. The concatenation of all the <strong>chunks</strong> should result in a list of the sorted values.</p>
+
+<p>Implement the <code>OrderedStream</code> class:</p>
+
+<ul>
+	<li><code>OrderedStream(int n)</code> Constructs the stream to take <code>n</code> values.</li>
+	<li><code>String[] insert(int idKey, String value)</code> Inserts the pair <code>(idKey, value)</code> into the stream, then returns the <strong>largest possible chunk</strong> of currently inserted values that appear next in the order.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example:</strong></p>
+
+<p><strong><img alt="" src="https://assets.leetcode.com/uploads/2020/11/10/q1.gif" style="width: 682px; height: 240px;" /></strong></p>
+
+<pre>
+<strong>Input</strong>
+[&quot;OrderedStream&quot;, &quot;insert&quot;, &quot;insert&quot;, &quot;insert&quot;, &quot;insert&quot;, &quot;insert&quot;]
+[[5], [3, &quot;ccccc&quot;], [1, &quot;aaaaa&quot;], [2, &quot;bbbbb&quot;], [5, &quot;eeeee&quot;], [4, &quot;ddddd&quot;]]
+<strong>Output</strong>
+[null, [], [&quot;aaaaa&quot;], [&quot;bbbbb&quot;, &quot;ccccc&quot;], [], [&quot;ddddd&quot;, &quot;eeeee&quot;]]
+
+<strong>Explanation</strong>
+// Note that the values ordered by ID is [&quot;aaaaa&quot;, &quot;bbbbb&quot;, &quot;ccccc&quot;, &quot;ddddd&quot;, &quot;eeeee&quot;].
+OrderedStream os = new OrderedStream(5);
+os.insert(3, &quot;ccccc&quot;); // Inserts (3, &quot;ccccc&quot;), returns [].
+os.insert(1, &quot;aaaaa&quot;); // Inserts (1, &quot;aaaaa&quot;), returns [&quot;aaaaa&quot;].
+os.insert(2, &quot;bbbbb&quot;); // Inserts (2, &quot;bbbbb&quot;), returns [&quot;bbbbb&quot;, &quot;ccccc&quot;].
+os.insert(5, &quot;eeeee&quot;); // Inserts (5, &quot;eeeee&quot;), returns [].
+os.insert(4, &quot;ddddd&quot;); // Inserts (4, &quot;ddddd&quot;), returns [&quot;ddddd&quot;, &quot;eeeee&quot;].
+// Concatentating all the chunks returned:
+// [] + [&quot;aaaaa&quot;] + [&quot;bbbbb&quot;, &quot;ccccc&quot;] + [] + [&quot;ddddd&quot;, &quot;eeeee&quot;] = [&quot;aaaaa&quot;, &quot;bbbbb&quot;, &quot;ccccc&quot;, &quot;ddddd&quot;, &quot;eeeee&quot;]
+// The resulting order is the same as the order above.
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= n &lt;= 1000</code></li>
+	<li><code>1 &lt;= id &lt;= n</code></li>
+	<li><code>value.length == 5</code></li>
+	<li><code>value</code>&nbsp;consists only of lowercase letters.</li>
+	<li>Each call to <code>insert</code>&nbsp;will have a unique <code>id.</code></li>
+	<li>Exactly <code>n</code> calls will be made to <code>insert</code>.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[&quot;OrderedStream&quot;,&quot;insert&quot;,&quot;insert&quot;,&quot;insert&quot;,&quot;insert&quot;,&quot;insert&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[5],[3,&quot;ccccc&quot;],[1,&quot;aaaaa&quot;],[2,&quot;bbbbb&quot;],[5,&quot;eeeee&quot;],[4,&quot;ddddd&quot;]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Maintain the next id that should be outputted. Maintain the ids that were inserted in the stream. Per each insert, make a loop where you check if the id that has the turn has been inserted, and if so increment the id that has the turn and continue the loop, else break.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">
+
+
+typedef <span class="ty">struct</span> {
+    
+} OrderedStream;
+
+
+OrderedStream* orderedStreamCreate(<span class="ty">int</span> n) {
+    
+}
+
+<span class="ty">char</span>** orderedStreamInsert(OrderedStream* obj, <span class="ty">int</span> idKey, <span class="ty">char</span>* value, <span class="ty">int</span>* retSize) {
+    
+}
+
+<span class="ty">void</span> orderedStreamFree(OrderedStream* obj) {
+    
+}
+
+/**
+ * Your OrderedStream <span class="ty">struct</span> will be instantiated and called as such:
+ * OrderedStream* obj = orderedStreamCreate(n);
+ * <span class="ty">char</span>** param_1 = orderedStreamInsert(obj, idKey, value, retSize);
+ 
+ * orderedStreamFree(obj);
+*/</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> OrderedStream(object):
+
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, n):
+        &quot;&quot;&quot;
+        :type n: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> insert(<span class="ty">self</span>, idKey, value):
+        &quot;&quot;&quot;
+        :type idKey: <span class="ty">int</span>
+        :type value: <span class="ty">str</span>
+        :rtype: <span class="ty">List</span>[<span class="ty">str</span>]
+        &quot;&quot;&quot;
+        
+
+
+<span class="cm"># Your OrderedStream object will be instantiated <span class="kw">and</span> called as such:</span>
+<span class="cm"># obj = OrderedStream(n)</span>
+<span class="cm"># param_1 = obj.insert(idKey,value)</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> OrderedStream {
+<span class="ty">public</span>:
+    OrderedStream(<span class="ty">int</span> n) {
+        
+    }
+    
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; insert(<span class="ty">int</span> idKey, <span class="ty">string</span> value) {
+        
+    }
+};
+
+/**
+ * Your OrderedStream object will be instantiated and called as such:
+ * OrderedStream* obj = <span class="kw">new</span> OrderedStream(n);
+ * <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; param_1 = obj-&gt;insert(idKey,value);
+ */</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Maintain the next id that should be outputted.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Maintain the ids that were inserted in the stream.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Per each insert, make a loop where you check if the id…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="1655-distribute-repeating-integers.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Distribute Repeating Integers</strong></span></a>
+                <a href="1657-determine-if-two-strings-are-close.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Determine if Two Strings Are Close</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Design%20an%20Ordered%20Stream&lc_id=1656&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

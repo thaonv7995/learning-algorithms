@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3815 · Design Auction System — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3815 Design Auction System</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/design-auction-system/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3815</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Hash Table</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Design Auction System</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>42.2% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are asked to design an auction system that manages bids from multiple users in real time.</p>
+
+<p>Each bid is associated with a <code>userId</code>, an <code>itemId</code>, and a <code>bidAmount</code>.</p>
+
+<p>Implement the <code>AuctionSystem</code> class:​​​​​​​</p>
+
+<ul>
+	<li><code>AuctionSystem()</code>: Initializes the <code>AuctionSystem</code> object.</li>
+	<li><code>void addBid(int userId, int itemId, int bidAmount)</code>: Adds a new bid for <code>itemId</code> by <code>userId</code> with <code>bidAmount</code>. If the same <code>userId</code> <strong>already</strong> has a bid on <code>itemId</code>, <strong>replace</strong> it with the new <code>bidAmount</code>.</li>
+	<li><code>void updateBid(int userId, int itemId, int newAmount)</code>: Updates the existing bid of <code>userId</code> for <code>itemId</code> to <code>newAmount</code>. It is <strong>guaranteed</strong> that this bid <em>exists</em>.</li>
+	<li><code>void removeBid(int userId, int itemId)</code>: Removes the bid of <code>userId</code> for <code>itemId</code>. It is <strong>guaranteed</strong> that this bid <em>exists</em>.</li>
+	<li><code>int getHighestBidder(int itemId)</code>: Returns the <code>userId</code> of the <strong>highest</strong> bidder for <code>itemId</code>. If multiple users have the <strong>same highest</strong> <code>bidAmount</code>, return the user with the <strong>highest</strong> <code>userId</code>. If no bids exist for the item, return -1.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong><br />
+<span class="example-io">[&quot;AuctionSystem&quot;, &quot;addBid&quot;, &quot;addBid&quot;, &quot;getHighestBidder&quot;, &quot;updateBid&quot;, &quot;getHighestBidder&quot;, &quot;removeBid&quot;, &quot;getHighestBidder&quot;, &quot;getHighestBidder&quot;]<br />
+[[], [1, 7, 5], [2, 7, 6], [7], [1, 7, 8], [7], [2, 7], [7], [3]]</span></p>
+
+<p><strong>Output:</strong><br />
+<span class="example-io">[null, null, null, 2, null, 1, null, 1, -1] </span></p>
+
+<p><strong>Explanation</strong></p>
+AuctionSystem auctionSystem = new AuctionSystem(); // Initialize the Auction system<br />
+auctionSystem.addBid(1, 7, 5); // User 1 bids 5 on item 7<br />
+auctionSystem.addBid(2, 7, 6); // User 2 bids 6 on item 7<br />
+auctionSystem.getHighestBidder(7); // return 2 as User 2 has the highest bid<br />
+auctionSystem.updateBid(1, 7, 8); // User 1 updates bid to 8 on item 7<br />
+auctionSystem.getHighestBidder(7); // return 1 as User 1 now has the highest bid<br />
+auctionSystem.removeBid(2, 7); // Remove User 2&#39;s bid on item 7<br />
+auctionSystem.getHighestBidder(7); // return 1 as User 1 is the current highest bidder<br />
+auctionSystem.getHighestBidder(3); // return -1 as no bids exist for item 3</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= userId, itemId &lt;= 5 * 10<sup>4</sup></code></li>
+	<li><code>1 &lt;= bidAmount, newAmount &lt;= 10<sup>9</sup></code></li>
+	<li>At most <code>5 * 10<sup>4</sup></code> total calls to <code>addBid</code>, <code>updateBid</code>, <code>removeBid</code>, and <code>getHighestBidder</code>.</li>
+	<li>The input is generated such that for <code>updateBid</code> and <code>removeBid</code>, the bid from the given <code>userId</code> for the given <code>itemId</code> will be valid.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[&quot;AuctionSystem&quot;,&quot;addBid&quot;,&quot;addBid&quot;,&quot;getHighestBidder&quot;,&quot;updateBid&quot;,&quot;getHighestBidder&quot;,&quot;removeBid&quot;,&quot;getHighestBidder&quot;,&quot;getHighestBidder&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[],[1,7,5],[2,7,6],[7],[1,7,8],[7],[2,7],[7],[3]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Maintain a map from &lt;code&gt;itemId&lt;/code&gt; to its active bids. For each item, use a data structure ordered by &lt;code&gt;(bidAmount, userId)&lt;/code&gt; to get the highest bidder efficiently. On &lt;code&gt;addBid&lt;/code&gt; or &lt;code&gt;updateBid&lt;/code&gt;, remove the old entry (if any) and insert the new one. On &lt;code&gt;removeBid&lt;/code&gt;, delete the corresponding entry; return the top element for &lt;code&gt;getHighestBidder&lt;/code&gt;.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">
+
+
+typedef <span class="ty">struct</span> {
+    
+} AuctionSystem;
+
+
+AuctionSystem* auctionSystemCreate() {
+    
+}
+
+<span class="ty">void</span> auctionSystemAddBid(AuctionSystem* obj, <span class="ty">int</span> userId, <span class="ty">int</span> itemId, <span class="ty">int</span> bidAmount) {
+    
+}
+
+<span class="ty">void</span> auctionSystemUpdateBid(AuctionSystem* obj, <span class="ty">int</span> userId, <span class="ty">int</span> itemId, <span class="ty">int</span> newAmount) {
+    
+}
+
+<span class="ty">void</span> auctionSystemRemoveBid(AuctionSystem* obj, <span class="ty">int</span> userId, <span class="ty">int</span> itemId) {
+    
+}
+
+<span class="ty">int</span> auctionSystemGetHighestBidder(AuctionSystem* obj, <span class="ty">int</span> itemId) {
+    
+}
+
+<span class="ty">void</span> auctionSystemFree(AuctionSystem* obj) {
+    
+}
+
+/**
+ * Your AuctionSystem <span class="ty">struct</span> will be instantiated and called as such:
+ * AuctionSystem* obj = auctionSystemCreate();
+ * auctionSystemAddBid(obj, userId, itemId, bidAmount);
+ 
+ * auctionSystemUpdateBid(obj, userId, itemId, newAmount);
+ 
+ * auctionSystemRemoveBid(obj, userId, itemId);
+ 
+ * <span class="ty">int</span> param_4 = auctionSystemGetHighestBidder(obj, itemId);
+ 
+ * auctionSystemFree(obj);
+*/</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> AuctionSystem(object):
+
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        
+
+    <span class="kw">def</span> addBid(<span class="ty">self</span>, userId, itemId, bidAmount):
+        &quot;&quot;&quot;
+        :type userId: <span class="ty">int</span>
+        :type itemId: <span class="ty">int</span>
+        :type bidAmount: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> updateBid(<span class="ty">self</span>, userId, itemId, newAmount):
+        &quot;&quot;&quot;
+        :type userId: <span class="ty">int</span>
+        :type itemId: <span class="ty">int</span>
+        :type newAmount: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> removeBid(<span class="ty">self</span>, userId, itemId):
+        &quot;&quot;&quot;
+        :type userId: <span class="ty">int</span>
+        :type itemId: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> getHighestBidder(<span class="ty">self</span>, itemId):
+        &quot;&quot;&quot;
+        :type itemId: <span class="ty">int</span>
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        
+
+
+<span class="cm"># Your AuctionSystem object will be instantiated <span class="kw">and</span> called as such:</span>
+<span class="cm"># obj = AuctionSystem()</span>
+<span class="cm"># obj.addBid(userId,itemId,bidAmount)</span>
+<span class="cm"># obj.updateBid(userId,itemId,newAmount)</span>
+<span class="cm"># obj.removeBid(userId,itemId)</span>
+<span class="cm"># param_4 = obj.getHighestBidder(itemId)</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> AuctionSystem {
+<span class="ty">public</span>:
+    AuctionSystem() {
+        
+    }
+    
+    <span class="ty">void</span> addBid(<span class="ty">int</span> userId, <span class="ty">int</span> itemId, <span class="ty">int</span> bidAmount) {
+        
+    }
+    
+    <span class="ty">void</span> updateBid(<span class="ty">int</span> userId, <span class="ty">int</span> itemId, <span class="ty">int</span> newAmount) {
+        
+    }
+    
+    <span class="ty">void</span> removeBid(<span class="ty">int</span> userId, <span class="ty">int</span> itemId) {
+        
+    }
+    
+    <span class="ty">int</span> getHighestBidder(<span class="ty">int</span> itemId) {
+        
+    }
+};
+
+/**
+ * Your AuctionSystem object will be instantiated and called as such:
+ * AuctionSystem* obj = <span class="kw">new</span> AuctionSystem();
+ * obj-&gt;addBid(userId,itemId,bidAmount);
+ * obj-&gt;updateBid(userId,itemId,newAmount);
+ * obj-&gt;removeBid(userId,itemId);
+ * <span class="ty">int</span> param_4 = obj-&gt;getHighestBidder(itemId);
+ */</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Hash Table</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Maintain a map from &lt;code&gt;itemId&lt;/code&gt; to its active…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — For each item, use a data structure ordered by…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — On &lt;code&gt;addBid&lt;/code&gt; or &lt;code&gt;updateBid&lt;/code&gt;, remove…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — On &lt;code&gt;removeBid&lt;/code&gt;, delete the corresponding…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3814-maximum-capacity-within-budget.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Maximum Capacity Within Budget</strong></span></a>
+                <a href="3816-lexicographically-smallest-string-after-deleting-duplicate-characters.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Lexicographically Smallest String After Deleting Duplicate Characters</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Design%20Auction%20System&lc_id=3815&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

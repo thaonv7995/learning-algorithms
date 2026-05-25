@@ -1,0 +1,27 @@
+{
+  "id": 9,
+  "title": "Palindrome Number",
+  "difficulty": "Easy",
+  "category": "Math",
+  "timeComplexity": "O(log N)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho số nguyên x, trả về true nếu x là palindrome (đọc xuôi ngược giống nhau), ngược lại false.",
+  "examples": [
+    { "input": "x = 121", "output": "true" },
+    { "input": "x = -121", "output": "false" },
+    { "input": "x = 10", "output": "false" }
+  ],
+  "approach": "Số âm và số kết thúc 0 (trừ 0) không phải palindrome. Đảo nửa sau của x: while x > reversed { reversed = reversed*10 + x%10; x /= 10 }. So sánh x == reversed (lẻ chữ số) hoặc x == reversed/10 (chẵn chữ số).",
+  "memoryTip": "Chỉ hai biến int — không cần chuyển sang string.",
+  "solutions": {
+    "c": "bool isPalindrome(int x) {\n    if (x < 0 || (x % 10 == 0 && x != 0)) return false;\n    long rev = 0;\n    while (x > rev) { rev = rev * 10 + x % 10; x /= 10; }\n    return x == rev || x == rev / 10;\n}",
+    "python": "class Solution:\n    def isPalindrome(self, x: int) -> bool:\n        if x < 0 or (x % 10 == 0 and x): return False\n        rev = 0\n        while x > rev:\n            rev = rev * 10 + x % 10\n            x //= 10\n        return x == rev or x == rev // 10",
+    "cpp": "class Solution {\npublic:\n    bool isPalindrome(int x) {\n        if (x < 0 || (x % 10 == 0 && x)) return false;\n        long rev = 0;\n        while (x > rev) { rev = rev * 10 + x % 10; x /= 10; }\n        return x == rev || x == rev / 10;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Khi x ≤ rev, đã đảo đủ nửa sau — so sánh hai nửa tương đương kiểm tra palindrome.",
+    "edgeCases": ["x = 0 → true", "x < 0 → false", "10, 100 → false"],
+    "pitfalls": ["Convert string thay vì math", "Quên case số kết thúc 0"]
+  },
+  "tier": "done"
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #2463 · Minimum Total Distance Traveled — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#2463 Minimum Total Distance Traveled</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/minimum-total-distance-traveled/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #2463</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Minimum Total Distance Traveled</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>63.2% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>There are some robots and factories on the X-axis. You are given an integer array <code>robot</code> where <code>robot[i]</code> is the position of the <code>i<sup>th</sup></code> robot. You are also given a 2D integer array <code>factory</code> where <code>factory[j] = [position<sub>j</sub>, limit<sub>j</sub>]</code> indicates that <code>position<sub>j</sub></code> is the position of the <code>j<sup>th</sup></code> factory and that the <code>j<sup>th</sup></code> factory can repair at most <code>limit<sub>j</sub></code> robots.</p>
+
+<p>The positions of each robot are <strong>unique</strong>. The positions of each factory are also <strong>unique</strong>. Note that a robot can be <strong>in the same position</strong> as a factory initially.</p>
+
+<p>All the robots are initially broken; they keep moving in one direction. The direction could be the negative or the positive direction of the X-axis. When a robot reaches a factory that did not reach its limit, the factory repairs the robot, and it stops moving.</p>
+
+<p><strong>At any moment</strong>, you can set the initial direction of moving for <strong>some</strong> robot. Your target is to minimize the total distance traveled by all the robots.</p>
+
+<p>Return <em>the minimum total distance traveled by all the robots</em>. The test cases are generated such that all the robots can be repaired.</p>
+
+<p><strong>Note that</strong></p>
+
+<ul>
+	<li>All robots move at the same speed.</li>
+	<li>If two robots move in the same direction, they will never collide.</li>
+	<li>If two robots move in opposite directions and they meet at some point, they do not collide. They cross each other.</li>
+	<li>If a robot passes by a factory that reached its limits, it crosses it as if it does not exist.</li>
+	<li>If the robot moved from a position <code>x</code> to a position <code>y</code>, the distance it moved is <code>|y - x|</code>.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+<img alt="" src="https://assets.leetcode.com/uploads/2022/09/15/example1.jpg" style="width: 500px; height: 320px;" />
+<pre>
+<strong>Input:</strong> robot = [0,4,6], factory = [[2,2],[6,2]]
+<strong>Output:</strong> 4
+<strong>Explanation:</strong> As shown in the figure:
+- The first robot at position 0 moves in the positive direction. It will be repaired at the first factory.
+- The second robot at position 4 moves in the negative direction. It will be repaired at the first factory.
+- The third robot at position 6 will be repaired at the second factory. It does not need to move.
+The limit of the first factory is 2, and it fixed 2 robots.
+The limit of the second factory is 2, and it fixed 1 robot.
+The total distance is |2 - 0| + |2 - 4| + |6 - 6| = 4. It can be shown that we cannot achieve a better total distance than 4.
+</pre>
+
+<p><strong class="example">Example 2:</strong></p>
+<img alt="" src="https://assets.leetcode.com/uploads/2022/09/15/example-2.jpg" style="width: 500px; height: 329px;" />
+<pre>
+<strong>Input:</strong> robot = [1,-1], factory = [[-2,1],[2,1]]
+<strong>Output:</strong> 2
+<strong>Explanation:</strong> As shown in the figure:
+- The first robot at position 1 moves in the positive direction. It will be repaired at the second factory.
+- The second robot at position -1 moves in the negative direction. It will be repaired at the first factory.
+The limit of the first factory is 1, and it fixed 1 robot.
+The limit of the second factory is 1, and it fixed 1 robot.
+The total distance is |2 - 1| + |(-2) - (-1)| = 2. It can be shown that we cannot achieve a better total distance than 2.
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= robot.length, factory.length &lt;= 100</code></li>
+	<li><code>factory[j].length == 2</code></li>
+	<li><code>-10<sup>9</sup> &lt;= robot[i], position<sub>j</sub> &lt;= 10<sup>9</sup></code></li>
+	<li><code>0 &lt;= limit<sub>j</sub> &lt;= robot.length</code></li>
+	<li>The input will be generated such that it is always possible to repair every robot.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[0,4,6]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[2,2],[6,2]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[1,-1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[-2,1],[2,1]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Sort robots and factories by their positions. After sorting, notice that each factory should repair some subsegment of robots. Find the minimum total distance to repair first i robots with first j factories.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">long</span> <span class="ty">long</span> minimumTotalDistance(<span class="ty">int</span>* robot, <span class="ty">int</span> robotSize, <span class="ty">int</span>** factory, <span class="ty">int</span> factorySize, <span class="ty">int</span>* factoryColSize) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> minimumTotalDistance(<span class="ty">self</span>, robot, factory):
+        &quot;&quot;&quot;
+        :type robot: <span class="ty">List</span>[<span class="ty">int</span>]
+        :type factory: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">long</span> <span class="ty">long</span> minimumTotalDistance(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; robot, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; factory) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Sort robots and factories by their positions.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — After sorting, notice that each factory should repair…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Find the minimum total distance to repair first i robots…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="2462-total-cost-to-hire-k-workers.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Total Cost to Hire K Workers</strong></span></a>
+                <a href="2465-number-of-distinct-averages.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Number of Distinct Averages</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Minimum%20Total%20Distance%20Traveled&lc_id=2463&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

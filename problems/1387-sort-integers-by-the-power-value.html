@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #1387 · Sort Integers by The Power Value — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#1387 Sort Integers by The Power Value</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/sort-integers-by-the-power-value/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #1387</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Sort Integers by The Power Value</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>71.7% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>The power of an integer <code>x</code> is defined as the number of steps needed to transform <code>x</code> into <code>1</code> using the following steps:</p>
+
+<ul>
+	<li>if <code>x</code> is even then <code>x = x / 2</code></li>
+	<li>if <code>x</code> is odd then <code>x = 3 * x + 1</code></li>
+</ul>
+
+<p>For example, the power of <code>x = 3</code> is <code>7</code> because <code>3</code> needs <code>7</code> steps to become <code>1</code> (<code>3 --&gt; 10 --&gt; 5 --&gt; 16 --&gt; 8 --&gt; 4 --&gt; 2 --&gt; 1</code>).</p>
+
+<p>Given three integers <code>lo</code>, <code>hi</code> and <code>k</code>. The task is to sort all integers in the interval <code>[lo, hi]</code> by the power value in <strong>ascending order</strong>, if two or more integers have <strong>the same</strong> power value sort them by <strong>ascending order</strong>.</p>
+
+<p>Return the <code>k<sup>th</sup></code> integer in the range <code>[lo, hi]</code> sorted by the power value.</p>
+
+<p>Notice that for any integer <code>x</code> <code>(lo &lt;= x &lt;= hi)</code> it is <strong>guaranteed</strong> that <code>x</code> will transform into <code>1</code> using these steps and that the power of <code>x</code> is will <strong>fit</strong> in a 32-bit signed integer.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<pre>
+<strong>Input:</strong> lo = 12, hi = 15, k = 2
+<strong>Output:</strong> 13
+<strong>Explanation:</strong> The power of 12 is 9 (12 --&gt; 6 --&gt; 3 --&gt; 10 --&gt; 5 --&gt; 16 --&gt; 8 --&gt; 4 --&gt; 2 --&gt; 1)
+The power of 13 is 9
+The power of 14 is 17
+The power of 15 is 17
+The interval sorted by the power value [12,13,14,15]. For k = 2 answer is the second element which is 13.
+Notice that 12 and 13 have the same power value and we sorted them in ascending order. Same for 14 and 15.
+</pre>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<pre>
+<strong>Input:</strong> lo = 7, hi = 11, k = 4
+<strong>Output:</strong> 7
+<strong>Explanation:</strong> The power array corresponding to the interval [7, 8, 9, 10, 11] is [16, 3, 19, 6, 14].
+The interval sorted by power is [8, 10, 11, 7, 9].
+The fourth number in the sorted array is 7.
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= lo &lt;= hi &lt;= 1000</code></li>
+	<li><code>1 &lt;= k &lt;= hi - lo + 1</code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>12</code></div>
+                <div class="ex-line"><span>Out</span><code>15</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>2</code></div>
+                <div class="ex-line"><span>Out</span><code>7</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>11</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Use dynamic programming to get the power of each integer of the intervals. Sort all the integers of the interval by the power value and return the k-th in the sorted list.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> getKth(<span class="ty">int</span> lo, <span class="ty">int</span> hi, <span class="ty">int</span> k) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> getKth(<span class="ty">self</span>, lo, hi, k):
+        &quot;&quot;&quot;
+        :type lo: <span class="ty">int</span>
+        :type hi: <span class="ty">int</span>
+        :type k: <span class="ty">int</span>
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> getKth(<span class="ty">int</span> lo, <span class="ty">int</span> hi, <span class="ty">int</span> k) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Use dynamic programming to get the power of each integer…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Sort all the integers of the interval by the power value…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="1386-cinema-seat-allocation.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Cinema Seat Allocation</strong></span></a>
+                <a href="1388-pizza-with-3n-slices.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Pizza With 3n Slices</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Sort%20Integers%20by%20The%20Power%20Value&lc_id=1387&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

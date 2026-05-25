@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3797 · Count Routes to Climb a Rectangular Grid — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3797 Count Routes to Climb a Rectangular Grid</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/count-routes-to-climb-a-rectangular-grid/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3797</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Count Routes to Climb a Rectangular Grid</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>24.8% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given a string array <code>grid</code> of size <code>n</code>, where each string <code>grid[i]</code> has length <code>m</code>. The character <code>grid[i][j]</code> is one of the following symbols:</p>
+
+<ul>
+	<li><code>&#39;.&#39;</code>: The cell is available.</li>
+	<li><code>&#39;#&#39;</code>: The cell is blocked.</li>
+</ul>
+
+<p>You want to count the number of different routes to climb <code>grid</code>. Each route must start from <em>any cell</em> in the bottom row (row <code>n - 1</code>) and end in the top row (row 0).</p>
+
+<p>However, there are some constraints on the route.</p>
+
+<ul>
+	<li>You can only move from one available cell to <strong>another</strong> available cell.</li>
+	<li>The <strong>Euclidean distance</strong> of each move is <strong>at most</strong> <code>d</code>, where <code>d</code> is an integer parameter given to you. The Euclidean distance between two cells <code>(r1, c1)</code>, <code>(r2, c2)</code> is <code>sqrt((r1 - r2)<sup>2</sup> + (c1 - c2)<sup>2</sup>)</code>.</li>
+	<li>Each move either stays on the same row or moves to the row directly above (from row <code>r</code> to <code>r - 1</code>).</li>
+	<li>You cannot stay on the same row for two consecutive turns. If you stay on the same row in a move (and this move is not the last move), your next move must go to the row above.</li>
+</ul>
+
+<p>Return an integer denoting the number of such routes. Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">grid = [&quot;..&quot;,&quot;#.&quot;], d = 1</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">2</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>We label the cells we visit in the routes sequentially, starting from 1. The two routes are:</p>
+
+<pre>
+.2
+#1
+</pre>
+
+<pre>
+32
+#1
+</pre>
+
+<p>We can move from the cell (1, 1) to the cell (0, 1) because the Euclidean distance is <code>sqrt((1 - 0)<sup>2</sup> + (1 - 1)<sup>2</sup>) = sqrt(1) &lt;= d</code>.</p>
+
+<p>However, we cannot move from the cell (1, 1) to the cell (0, 0) because the Euclidean distance is <code>sqrt((1 - 0)<sup>2</sup> + (1 - 0)<sup>2</sup>) = sqrt(2) &gt; d</code>.</p>
+</div>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">grid = [&quot;..&quot;,&quot;#.&quot;], d = 2</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">4</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>Two of the routes are given in example 1. The other two routes are:</p>
+
+<pre>
+2.
+#1
+</pre>
+
+<pre>
+23
+#1
+</pre>
+
+<p>Note that we can move from (1, 1) to (0, 0) because the Euclidean distance is <code>sqrt(2) &lt;= d</code>.</p>
+</div>
+
+<p><strong class="example">Example 3:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">grid = [&quot;#&quot;], d = 750</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">0</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>We cannot choose any cell as the starting cell. Therefore, there are no routes.</p>
+</div>
+
+<p><strong class="example">Example 4:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">grid = [&quot;..&quot;], d = 1</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">4</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>The possible routes are:</p>
+
+<pre>
+.1
+</pre>
+
+<pre>
+1.
+</pre>
+
+<pre>
+12
+</pre>
+
+<pre>
+21
+</pre>
+</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= n == grid.length &lt;= 750</code></li>
+	<li><code>1 &lt;= m == grid[i].length &lt;= 750</code></li>
+	<li><code>grid[i][j]</code> is <code>&#39;.&#39;</code> or <code>&#39;#&#39;</code>.</li>
+	<li><code>1 &lt;= d &lt;= 750</code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[&quot;..&quot;,&quot;#.&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[&quot;..&quot;,&quot;#.&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>[&quot;#&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>750</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 4</div>
+                <div class="ex-line"><span>In</span><code>[&quot;..&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Use dynamic programming. Let &lt;code&gt;dp[r][c][0]&lt;/code&gt; be the number of ways to reach &lt;code&gt;(r, c)&lt;/code&gt; where the last move came from row &lt;code&gt;r + 1&lt;/code&gt; (moved up), and let &lt;code&gt;dp[r][c][1]&lt;/code&gt; be the number of ways where the last move stayed on row &lt;code&gt;r&lt;/code&gt;. Make computations faster using prefix sums over columns to aggregate contributions from cells within Euclidean distance &lt;code&gt;d&lt;/code&gt;. Combine &lt;code&gt;dp[r][c][0]&lt;/code&gt; and &lt;code&gt;dp[r][c][1]&lt;/code&gt; for all columns &lt;code&gt;c&lt;/code&gt; in row &lt;code&gt;r&lt;/code&gt; to produce the &lt;code&gt;dp&lt;/code&gt; values used for row &lt;code&gt;r - 1&lt;/code&gt;.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> numberOfRoutes(<span class="ty">char</span>** grid, <span class="ty">int</span> gridSize, <span class="ty">int</span> d) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> numberOfRoutes(<span class="ty">self</span>, grid, d):
+        &quot;&quot;&quot;
+        :type grid: <span class="ty">List</span>[<span class="ty">str</span>]
+        :type d: <span class="ty">int</span>
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> numberOfRoutes(<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; grid, <span class="ty">int</span> d) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Use dynamic programming.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Let &lt;code&gt;dp[r][c][0]&lt;/code&gt; be the number of ways to…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Make computations faster using prefix sums over columns…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Combine &lt;code&gt;dp[r][c][0]&lt;/code&gt; and…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3796-find-maximum-value-in-a-constrained-sequence.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Find Maximum Value in a Constrained Sequence</strong></span></a>
+                <a href="3798-largest-even-number.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Largest Even Number</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Count%20Routes%20to%20Climb%20a%20Rectangular%20Grid&lc_id=3797&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

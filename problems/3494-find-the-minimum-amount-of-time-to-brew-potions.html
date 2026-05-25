@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3494 · Find the Minimum Amount of Time to Brew Potions — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3494 Find the Minimum Amount of Time to Brew Potions</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/find-the-minimum-amount-of-time-to-brew-potions/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3494</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Find the Minimum Amount of Time to Brew Potions</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>62.7% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given two integer arrays, <code>skill</code> and <code><font face="monospace">mana</font></code>, of length <code>n</code> and <code>m</code>, respectively.</p>
+
+<p>In a laboratory, <code>n</code> wizards must brew <code>m</code> potions <em>in order</em>. Each potion has a mana capacity <code>mana[j]</code> and <strong>must</strong> pass through <strong>all</strong> the wizards sequentially to be brewed properly. The time taken by the <code>i<sup>th</sup></code> wizard on the <code>j<sup>th</sup></code> potion is <code>time<sub>ij</sub> = skill[i] * mana[j]</code>.</p>
+
+<p>Since the brewing process is delicate, a potion <strong>must</strong> be passed to the next wizard immediately after the current wizard completes their work. This means the timing must be <em>synchronized</em> so that each wizard begins working on a potion <strong>exactly</strong> when it arrives. ​</p>
+
+<p>Return the <strong>minimum</strong> amount of time required for the potions to be brewed properly.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">skill = [1,5,2,4], mana = [5,1,4,2]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">110</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<table style="border: 1px solid black;">
+	<tbody>
+		<tr>
+			<th style="border: 1px solid black;">Potion Number</th>
+			<th style="border: 1px solid black;">Start time</th>
+			<th style="border: 1px solid black;">Wizard 0 done by</th>
+			<th style="border: 1px solid black;">Wizard 1 done by</th>
+			<th style="border: 1px solid black;">Wizard 2 done by</th>
+			<th style="border: 1px solid black;">Wizard 3 done by</th>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">0</td>
+			<td style="border: 1px solid black;">0</td>
+			<td style="border: 1px solid black;">5</td>
+			<td style="border: 1px solid black;">30</td>
+			<td style="border: 1px solid black;">40</td>
+			<td style="border: 1px solid black;">60</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">1</td>
+			<td style="border: 1px solid black;">52</td>
+			<td style="border: 1px solid black;">53</td>
+			<td style="border: 1px solid black;">58</td>
+			<td style="border: 1px solid black;">60</td>
+			<td style="border: 1px solid black;">64</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">2</td>
+			<td style="border: 1px solid black;">54</td>
+			<td style="border: 1px solid black;">58</td>
+			<td style="border: 1px solid black;">78</td>
+			<td style="border: 1px solid black;">86</td>
+			<td style="border: 1px solid black;">102</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">3</td>
+			<td style="border: 1px solid black;">86</td>
+			<td style="border: 1px solid black;">88</td>
+			<td style="border: 1px solid black;">98</td>
+			<td style="border: 1px solid black;">102</td>
+			<td style="border: 1px solid black;">110</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>As an example for why wizard 0 cannot start working on the 1<sup>st</sup> potion before time <code>t = 52</code>, consider the case where the wizards started preparing the 1<sup>st</sup> potion at time <code>t = 50</code>. At time <code>t = 58</code>, wizard 2 is done with the 1<sup>st</sup> potion, but wizard 3 will still be working on the 0<sup>th</sup> potion till time <code>t = 60</code>.</p>
+</div>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">skill = [1,1,1], mana = [1,1,1]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">5</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<ol>
+	<li>Preparation of the 0<sup>th</sup> potion begins at time <code>t = 0</code>, and is completed by time <code>t = 3</code>.</li>
+	<li>Preparation of the 1<sup>st</sup> potion begins at time <code>t = 1</code>, and is completed by time <code>t = 4</code>.</li>
+	<li>Preparation of the 2<sup>nd</sup> potion begins at time <code>t = 2</code>, and is completed by time <code>t = 5</code>.</li>
+</ol>
+</div>
+
+<p><strong class="example">Example 3:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">skill = [1,2,3,4], mana = [1,2]</span></p>
+
+<p><strong>Output:</strong> 21</p>
+</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>n == skill.length</code></li>
+	<li><code>m == mana.length</code></li>
+	<li><code>1 &lt;= n, m &lt;= 5000</code></li>
+	<li><code>1 &lt;= mana[i], skill[i] &lt;= 5000</code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[1,5,2,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>[5,1,4,2]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[1,1,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,1,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>[1,2,3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Maintain each wizard's earliest free time (for the last potion) as &lt;code&gt;f[i]&lt;/code&gt;. Let &lt;code&gt;x&lt;/code&gt; be the current mana value. Starting from &lt;code&gt;now = f[0]&lt;/code&gt;, update &lt;code&gt;now = max(now + skill[i - 1] * x, f[i])&lt;/code&gt; for &lt;code&gt;i in [1..n]&lt;/code&gt;. Then, the final &lt;code&gt;f[n - 1] = now + skill[n - 1] * x&lt;/code&gt; for this potion. Update all other &lt;code&gt;f&lt;/code&gt; values by &lt;code&gt;f[i] = f[i + 1] - skill[i + 1] * x&lt;/code&gt; for &lt;code&gt;i in [0..n - 2]&lt;/code&gt; (in reverse order).</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">long</span> <span class="ty">long</span> minTime(<span class="ty">int</span>* skill, <span class="ty">int</span> skillSize, <span class="ty">int</span>* mana, <span class="ty">int</span> manaSize) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> minTime(<span class="ty">self</span>, skill, mana):
+        &quot;&quot;&quot;
+        :type skill: <span class="ty">List</span>[<span class="ty">int</span>]
+        :type mana: <span class="ty">List</span>[<span class="ty">int</span>]
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">long</span> <span class="ty">long</span> minTime(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; skill, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; mana) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Maintain each wizard's earliest free time as…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Let &lt;code&gt;x&lt;/code&gt; be the current mana value.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Starting from &lt;code&gt;now = f[0]&lt;/code&gt;, update &lt;code&gt;now =…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Then, the final &lt;code&gt;f[n - 1] = now + skill[n - 1] *…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3493-properties-graph.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Properties Graph</strong></span></a>
+                <a href="3495-minimum-operations-to-make-array-elements-zero.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Minimum Operations to Make Array Elements Zero</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Find%20the%20Minimum%20Amount%20of%20Time%20to%20Brew%20Potions&lc_id=3494&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "id": 8,
+  "title": "String to Integer (atoi)",
+  "difficulty": "Medium",
+  "category": "String",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Chuyển chuỗi s thành số nguyên 32-bit (atoi). Bỏ whitespace đầu, đọc dấu, đọc digits, clamp overflow.",
+  "examples": [
+    { "input": "s = \"42\"", "output": "42" },
+    { "input": "s = \"   -42\"", "output": "-42" },
+    { "input": "s = \"4193 with words\"", "output": "4193" }
+  ],
+  "approach": "State machine: (1) skip space (2) đọc sign (3) đọc digits, mỗi bước check overflow INT_MAX/INT_MIN trước khi res = res*10 + d.",
+  "memoryTip": "Duyệt in-place O(1) — không tạo chuỗi phụ.",
+  "solutions": {
+    "c": "int myAtoi(char* s) {\n    int i = 0, sign = 1;\n    long res = 0;\n    while (s[i] == ' ') i++;\n    if (s[i] == '+' || s[i] == '-') { sign = s[i++] == '-' ? -1 : 1; }\n    while (s[i] >= '0' && s[i] <= '9') {\n        res = res * 10 + (s[i++] - '0');\n        if (sign * res >= 2147483647) return 2147483647;\n        if (sign * res <= -2147483648L) return -2147483648;\n    }\n    return (int)(sign * res);\n}",
+    "python": "class Solution:\n    def myAtoi(self, s: str) -> int:\n        i, sign, res = 0, 1, 0\n        while i < len(s) and s[i] == ' ': i += 1\n        if i < len(s) and s[i] in '+-': sign = -1 if s[i] == '-' else 1; i += 1\n        while i < len(s) and s[i].isdigit():\n            res = res * 10 + int(s[i]); i += 1\n            if sign * res >= 2**31 - 1: return 2**31 - 1\n            if sign * res <= -2**31: return -2**31\n        return sign * res",
+    "cpp": "class Solution {\npublic:\n    int myAtoi(string s) {\n        int i = 0, sign = 1;\n        long res = 0;\n        while (i < (int)s.size() && s[i] == ' ') i++;\n        if (i < (int)s.size() && (s[i] == '+' || s[i] == '-')) sign = s[i++] == '-' ? -1 : 1;\n        while (i < (int)s.size() && isdigit(s[i])) {\n            res = res * 10 + (s[i++] - '0');\n            if (sign * res >= INT_MAX) return INT_MAX;\n            if (sign * res <= INT_MIN) return INT_MIN;\n        }\n        return (int)(sign * res);\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Dừng đúng khi gặp non-digit; overflow clamp đúng spec atoi.",
+    "edgeCases": ["Chỉ spaces", "Chỉ sign", "INT_MAX + 1"],
+    "pitfalls": ["Không skip space", "Không clamp overflow", "Đọc quá digit sau số"]
+  },
+  "tier": "done"
+}

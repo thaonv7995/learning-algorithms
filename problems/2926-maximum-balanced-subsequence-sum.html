@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #2926 · Maximum Balanced Subsequence Sum — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#2926 Maximum Balanced Subsequence Sum</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/maximum-balanced-subsequence-sum/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #2926</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Maximum Balanced Subsequence Sum</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>26% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>.</p>
+
+<p>A <strong>subsequence</strong> of <code>nums</code> having length <code>k</code> and consisting of <strong>indices</strong> <code>i<sub>0</sub>&nbsp;&lt;&nbsp;i<sub>1</sub> &lt;&nbsp;... &lt; i<sub>k-1</sub></code> is <strong>balanced</strong> if the following holds:</p>
+
+<ul>
+	<li><code>nums[i<sub>j</sub>] - nums[i<sub>j-1</sub>] &gt;= i<sub>j</sub> - i<sub>j-1</sub></code>, for every <code>j</code> in the range <code>[1, k - 1]</code>.</li>
+</ul>
+
+<p>A <strong>subsequence</strong> of <code>nums</code> having length <code>1</code> is considered balanced.</p>
+
+<p>Return <em>an integer denoting the <strong>maximum</strong> possible <strong>sum of elements</strong> in a <strong>balanced</strong> subsequence of </em><code>nums</code>.</p>
+
+<p>A <strong>subsequence</strong> of an array is a new <strong>non-empty</strong> array that is formed from the original array by deleting some (<strong>possibly none</strong>) of the elements without disturbing the relative positions of the remaining elements.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<pre>
+<strong>Input:</strong> nums = [3,3,5,6]
+<strong>Output:</strong> 14
+<strong>Explanation:</strong> In this example, the subsequence [3,5,6] consisting of indices 0, 2, and 3 can be selected.
+nums[2] - nums[0] &gt;= 2 - 0.
+nums[3] - nums[2] &gt;= 3 - 2.
+Hence, it is a balanced subsequence, and its sum is the maximum among the balanced subsequences of nums.
+The subsequence consisting of indices 1, 2, and 3 is also valid.
+It can be shown that it is not possible to get a balanced subsequence with a sum greater than 14.</pre>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<pre>
+<strong>Input:</strong> nums = [5,-1,-3,8]
+<strong>Output:</strong> 13
+<strong>Explanation:</strong> In this example, the subsequence [5,8] consisting of indices 0 and 3 can be selected.
+nums[3] - nums[0] &gt;= 3 - 0.
+Hence, it is a balanced subsequence, and its sum is the maximum among the balanced subsequences of nums.
+It can be shown that it is not possible to get a balanced subsequence with a sum greater than 13.
+</pre>
+
+<p><strong class="example">Example 3:</strong></p>
+
+<pre>
+<strong>Input:</strong> nums = [-2,-1]
+<strong>Output:</strong> -1
+<strong>Explanation:</strong> In this example, the subsequence [-1] can be selected.
+It is a balanced subsequence, and its sum is the maximum among the balanced subsequences of nums.
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>
+	<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[3,3,5,6]</code></div>
+                <div class="ex-line"><span>Out</span><code>[5,-1,-3,8]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Let &lt;code&gt;dp[x]&lt;/code&gt; represent the maximum sum of a balanced subsequence ending at &lt;code&gt;x&lt;/code&gt;. Rewriting the formula &lt;code&gt;nums[i&lt;sub&gt;j&lt;/sub&gt;] - nums[i&lt;sub&gt;j-1&lt;/sub&gt;] &gt;= i&lt;sub&gt;j&lt;/sub&gt; - i&lt;sub&gt;j-1&lt;/sub&gt;&lt;/code&gt; gives &lt;code&gt;nums[i&lt;sub&gt;j&lt;/sub&gt;] - i&lt;sub&gt;j&lt;/sub&gt; &gt;= nums[i&lt;sub&gt;j-1&lt;/sub&gt;] - i&lt;sub&gt;j-1&lt;/sub&gt;&lt;/code&gt;. So, for some index &lt;code&gt;x&lt;/code&gt;, we need to find an index &lt;code&gt;y&lt;/code&gt;, &lt;code&gt;y &lt; x&lt;/code&gt;, such that &lt;code&gt;dp[x] = nums[x] + dp[y]&lt;/code&gt; is maximized, and &lt;code&gt;nums[x] - x &gt;= nums[y] - y&lt;/code&gt;. There are many ways to achieve this. One method involves sorting the values of &lt;code&gt;nums[x] - x&lt;/code&gt; for all indices &lt;code&gt;x&lt;/code&gt; and using a segment/Fenwick tree with coordinate compression. Hence, using a dictionary or map, let's call it &lt;code&gt;dict&lt;/code&gt;, where &lt;code&gt;dict[nums[x] - x]&lt;/code&gt; represents the position of the value, &lt;code&gt;nums[x] - x&lt;/code&gt;, in the segment tree. The tree is initialized with zeros initially. For indices &lt;code&gt;x&lt;/code&gt; in order from &lt;code&gt;[0, n - 1]&lt;/code&gt;, &lt;code&gt;dp[x] = max(nums[x]&lt;/code&gt;, &lt;code&gt;nums[x]&lt;/code&gt; + the maximum query from the tree in the range &lt;code&gt;[0, dict[nums[x] - x]])&lt;/code&gt;, and if &lt;code&gt;dp[x]&lt;/code&gt; is greater than the value in the tree at position &lt;code&gt;dict[nums[x] - x]&lt;/code&gt;, we update the value in the tree. The answer to the problem is the maximum value in &lt;code&gt;dp&lt;/code&gt;.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">long</span> <span class="ty">long</span> maxBalancedSubsequenceSum(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> maxBalancedSubsequenceSum(<span class="ty">self</span>, nums):
+        &quot;&quot;&quot;
+        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">long</span> <span class="ty">long</span> maxBalancedSubsequenceSum(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Let &lt;code&gt;dp[x]&lt;/code&gt; represent the maximum sum of a…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Rewriting the formula &lt;code&gt;nums[i&lt;sub&gt;j&lt;/sub&gt;] -…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — So, for some index &lt;code&gt;x&lt;/code&gt;, we need to find an…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — There are many ways to achieve this. One method involves…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Biến low/high/mid trên Stack — O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="2925-maximum-score-after-applying-operations-on-a-tree.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Maximum Score After Applying Operations on a Tree</strong></span></a>
+                <a href="2928-distribute-candies-among-children-i.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Distribute Candies Among Children I</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Maximum%20Balanced%20Subsequence%20Sum&lc_id=2926&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

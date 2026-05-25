@@ -6,7 +6,6 @@
     <title>Algorithms Explorer · Thư viện LeetCode</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-    <script src="problems-data.js" defer></script>
 
     <style>
         :root {
@@ -390,6 +389,24 @@
             border-top: 1px solid var(--border);
         }
 
+        .tier-dot {
+            width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+        }
+        .tier-dot.premium { background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,.5); }
+        .tier-dot.catalog { background: #818cf8; }
+        .card-tier {
+            margin-left: auto;
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--faint);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .paid-lock { color: #f87171; font-size: 0.62rem; margin-left: 4px; }
+
         .category-tag {
             font-size: 0.7rem;
             font-weight: 600;
@@ -562,17 +579,21 @@
             <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
             <span>Algorithms Explorer</span>
         </a>
-        <a href="index.html" class="nav-link">
+            <a href="index.html" class="nav-link">
             <i class="fa-solid fa-arrow-left"></i> Sách giáo khoa
+        </a>
+        <a href="checklist/checklist.html" class="nav-link" title="Checklist hoàn thiện 3,175 bài">
+            <i class="fa-solid fa-list-check"></i> Checklist
         </a>
     </header>
 
     <main class="main-container">
 
         <div class="page-head">
-            <h1>Thư viện thuật toán <span id="head-total">· 50 bài</span></h1>
+            <h1>Thư viện thuật toán <span id="head-total">· … bài</span></h1>
             <div class="stat-pills">
-                <span class="stat-pill total"><span class="dot"></span> <span class="n" id="stats-total">50</span></span>
+                <span class="stat-pill total"><span class="dot"></span> <span class="n" id="stats-total">0</span></span>
+                <span class="stat-pill" style="--pill-color:#fbbf24" title="Bài premium đầy đủ"><span class="dot" style="background:#fbbf24"></span> <span class="n" id="stats-premium">0</span> ★</span>
                 <span class="stat-pill easy"><span class="dot"></span> <span class="n" id="stats-easy">0</span> Easy</span>
                 <span class="stat-pill medium"><span class="dot"></span> <span class="n" id="stats-medium">0</span> Med</span>
                 <span class="stat-pill hard"><span class="dot"></span> <span class="n" id="stats-hard">0</span> Hard</span>
@@ -590,19 +611,13 @@
                 <button class="btn-filter-difficulty" data-diff="medium">Med</button>
                 <button class="btn-filter-difficulty" data-diff="hard">Hard</button>
             </div>
+            <select id="tier-select" class="category-select" title="Loại bài">
+                <option value="all">Tất cả loại</option>
+                <option value="premium">★ Premium (đầy đủ)</option>
+                <option value="catalog">Catalog LC</option>
+            </select>
             <select id="category-select" class="category-select" title="Chủ đề">
                 <option value="all">Tất cả chủ đề</option>
-                <option value="Array">Array</option>
-                <option value="String">String</option>
-                <option value="Linked List">Linked List</option>
-                <option value="Tree">Tree</option>
-                <option value="Graph">Graph</option>
-                <option value="Stack">Stack / Queue</option>
-                <option value="Dynamic Programming">DP</option>
-                <option value="Binary Search">Binary Search</option>
-                <option value="Sliding Window">Sliding Window</option>
-                <option value="Two Pointers">Two Pointers</option>
-                <option value="Heap">Heap</option>
             </select>
         </div>
 
@@ -637,6 +652,7 @@
         const searchInput = document.getElementById("search-input");
         const diffButtons = document.querySelectorAll(".btn-filter-difficulty");
         const categorySelect = document.getElementById("category-select");
+        const tierSelect = document.getElementById("tier-select");
         const pageSizeSelect = document.getElementById("page-size-select");
         const paginationEl = document.getElementById("pagination");
         const paginationControls = document.getElementById("pagination-controls");
@@ -647,9 +663,12 @@
         const resultsTo = document.getElementById("results-to");
         const resultsCount = document.getElementById("results-count");
 
+        let PROBLEMS = [];
+        let catalogStats = null;
         let searchFilter = "";
         let difficultyFilter = "all";
         let categoryFilter = "all";
+        let tierFilter = "all";
         let currentPage = 1;
         let pageSize = 24;
         let filteredCache = [];
@@ -661,30 +680,56 @@
                 .trim();
         }
 
+        function problemHref(p) {
+            const slug = p.slug || getSlug(p.title);
+            return `problems/${p.id}-${slug}.html`;
+        }
+
         function initStats() {
-            if (typeof PROBLEMS === "undefined") return;
+            if (!PROBLEMS.length) return;
             const total = PROBLEMS.length;
             const easy = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "easy").length;
             const medium = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "medium").length;
             const hard = PROBLEMS.filter(p => p.difficulty.toLowerCase() === "hard").length;
+            const premium = PROBLEMS.filter(p => p.tier === "premium").length;
 
             document.getElementById("stats-total").innerText = total;
             document.getElementById("stats-easy").innerText = easy;
             document.getElementById("stats-medium").innerText = medium;
             document.getElementById("stats-hard").innerText = hard;
-            document.getElementById("head-total").innerText = `· ${total} bài`;
+            document.getElementById("stats-premium").innerText = premium;
+            document.getElementById("head-total").innerText = `· ${total.toLocaleString()} bài`;
+        }
+
+        function populateCategories(topTags) {
+            const keep = categorySelect.value;
+            categorySelect.innerHTML = '<option value="all">Tất cả chủ đề</option>';
+            (topTags || []).forEach(({ name, count }) => {
+                const opt = document.createElement("option");
+                opt.value = name;
+                opt.textContent = `${name} (${count})`;
+                categorySelect.appendChild(opt);
+            });
+            if ([...categorySelect.options].some(o => o.value === keep)) {
+                categorySelect.value = keep;
+            }
         }
 
         function getFilteredProblems() {
             return PROBLEMS.filter(p => {
+                const tagStr = (p.tags || []).join(" ").toLowerCase();
                 const matchesSearch = !searchFilter ||
                     p.title.toLowerCase().includes(searchFilter) ||
                     p.category.toLowerCase().includes(searchFilter) ||
+                    tagStr.includes(searchFilter) ||
                     p.id.toString().includes(searchFilter) ||
-                    p.description.toLowerCase().includes(searchFilter);
+                    (p.teaser || "").toLowerCase().includes(searchFilter);
                 const matchesDiff = difficultyFilter === "all" || p.difficulty.toLowerCase() === difficultyFilter;
-                const matchesCat = categoryFilter === "all" || p.category === categoryFilter;
-                return matchesSearch && matchesDiff && matchesCat;
+                const matchesCat = categoryFilter === "all" ||
+                    p.category === categoryFilter ||
+                    (p.tags || []).includes(categoryFilter);
+                const matchesTier = tierFilter === "all" || p.tier === tierFilter;
+                return matchesSearch && matchesDiff && matchesCat && matchesTier;
             });
         }
 
@@ -811,7 +856,7 @@
         }
 
         function renderGrid(resetScroll = false) {
-            if (typeof PROBLEMS === "undefined") {
+            if (!PROBLEMS.length) {
                 renderPlaceholder('loading');
                 paginationEl.hidden = true;
                 return;
@@ -841,23 +886,29 @@
                 const dc = diffClass(p.difficulty);
                 const card = document.createElement("a");
                 card.className = `problem-card ${dc}`;
-                card.href = `problems/${p.id}-${getSlug(p.title)}.html`;
+                card.href = problemHref(p);
 
-                const teaser = p.description.substring(0, 90) + (p.description.length > 90 ? '…' : '');
+                const teaser = p.teaser
+                    ? p.teaser + (p.teaser.length >= 120 ? '…' : '')
+                    : (p.tags || []).slice(0, 3).join(' · ') || p.category;
+
+                const tierLabel = p.tier === 'premium' ? 'Premium' : 'LC';
+                const tierClass = p.tier === 'premium' ? 'premium' : 'catalog';
+                const paidIcon = p.paid ? '<i class="fa-solid fa-lock paid-lock" title="LeetCode Premium"></i>' : '';
+                const acChip = p.acRate != null ? `<span class="comp-chip">${p.acRate}% AC</span>` : '';
 
                 card.innerHTML = `
                     <div class="card-top">
                         <span class="card-num">#${p.id}</span>
                         <span class="diff-badge ${dc}">${p.difficulty}</span>
+                        ${paidIcon}
+                        <span class="card-tier"><span class="tier-dot ${tierClass}"></span>${tierLabel}</span>
                     </div>
                     <h3 class="card-title">${p.title}</h3>
                     <p class="card-teaser">${teaser}</p>
                     <div class="card-footer">
                         <span class="category-tag">${p.category}</span>
-                        <div class="comp-row">
-                            <span class="comp-chip">${p.timeComplexity}</span>
-                            <span class="comp-chip">${p.spaceComplexity}</span>
-                        </div>
+                        <div class="comp-row">${acChip}</div>
                     </div>
                 `;
 
@@ -890,6 +941,11 @@
             resetPageAndRender();
         });
 
+        tierSelect.addEventListener("change", e => {
+            tierFilter = e.target.value;
+            resetPageAndRender();
+        });
+
         pageSizeSelect.addEventListener("change", e => {
             pageSize = parseInt(e.target.value, 10) || 24;
             resetPageAndRender();
@@ -906,16 +962,29 @@
             pageJumpInput.value = currentPage;
         });
 
-        window.addEventListener("DOMContentLoaded", () => {
+        async function loadCatalog() {
             renderPlaceholder('loading');
-            const check = setInterval(() => {
-                if (typeof PROBLEMS !== "undefined") {
-                    clearInterval(check);
-                    initStats();
-                    renderGrid();
-                }
-            }, 50);
-        });
+            try {
+                const res = await fetch('data/catalog.json');
+                if (!res.ok) throw new Error('Missing data/catalog.json');
+                const data = await res.json();
+                PROBLEMS = data.problems || [];
+                catalogStats = data.stats || null;
+                populateCategories(data.topTags);
+                initStats();
+                renderGrid();
+            } catch (err) {
+                problemsGrid.innerHTML = `
+                    <div class="placeholder-state">
+                        <i class="fa-solid fa-database"></i>
+                        <h3>Chưa có catalog</h3>
+                        <p>Chạy <code>node scripts/sync-leetcode-catalog.js</code> để import bài LeetCode.</p>
+                    </div>`;
+                paginationEl.hidden = true;
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", loadCatalog);
     </script>
 </body>
 </html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3638 · Maximum Balanced Shipments — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3638 Maximum Balanced Shipments</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/maximum-balanced-shipments/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3638</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Maximum Balanced Shipments</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>61.4% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p data-end="365" data-start="23">You are given an integer array <code data-end="62" data-start="54">weight</code> of length <code data-end="76" data-start="73">n</code>, representing the weights of <code data-end="109" data-start="106">n</code> parcels arranged in a straight line. A <strong data-end="161" data-start="149">shipment</strong> is defined as a contiguous subarray of parcels. A shipment is considered <strong data-end="247" data-start="235">balanced</strong> if the weight of the <strong data-end="284" data-start="269">last parcel</strong> is <strong>strictly less</strong> than the <strong data-end="329" data-start="311">maximum weight</strong> among all parcels in that shipment.</p>
+
+<p data-end="528" data-start="371">Select a set of <strong data-end="406" data-start="387">non-overlapping</strong>, contiguous, balanced shipments such that <strong data-end="496" data-start="449">each parcel appears in at most one shipment</strong> (parcels may remain unshipped).</p>
+
+<p data-end="587" data-start="507">Return the <strong data-end="545" data-start="518">maximum possible number</strong> of balanced shipments that can be formed.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">weight = [2,5,1,4,3]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">2</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p data-end="136" data-start="62">We can form the maximum of two balanced shipments as follows:</p>
+
+<ul>
+	<li data-end="163" data-start="140">Shipment 1: <code>[2, 5, 1]</code>
+
+	<ul>
+		<li data-end="195" data-start="168">Maximum parcel weight = 5</li>
+		<li data-end="275" data-start="200">Last parcel weight = 1, which is strictly less than 5. Thus, it&#39;s balanced.</li>
+	</ul>
+	</li>
+	<li data-end="299" data-start="279">Shipment 2: <code>[4, 3]</code>
+	<ul>
+		<li data-end="331" data-start="304">Maximum parcel weight = 4</li>
+		<li data-end="411" data-start="336">Last parcel weight = 3, which is strictly less than 4. Thus, it&#39;s balanced.</li>
+	</ul>
+	</li>
+</ul>
+
+<p data-end="519" data-start="413">It is impossible to partition the parcels to achieve more than two balanced shipments, so the answer is 2.</p>
+</div>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">weight = [4,4]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">0</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p data-end="635" data-start="574">No balanced shipment can be formed in this case:</p>
+
+<ul>
+	<li data-end="772" data-start="639">A shipment <code>[4, 4]</code> has maximum weight 4 and the last parcel&#39;s weight is also 4, which is not strictly less. Thus, it&#39;s not balanced.</li>
+	<li data-end="885" data-start="775">Single-parcel shipments <code>[4]</code> have the last parcel weight equal to the maximum parcel weight, thus not balanced.</li>
+</ul>
+
+<p data-end="958" data-is-last-node="" data-is-only-node="" data-start="887">As there is no way to form even one balanced shipment, the answer is 0.</p>
+</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li data-end="8706" data-start="8671"><code data-end="8704" data-start="8671">2 &lt;= n &lt;= 10<sup>5</sup></code></li>
+	<li data-end="8733" data-start="8709"><code data-end="8733" data-start="8709">1 &lt;= weight[i] &lt;= 10<sup>9</sup></code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[2,5,1,4,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[4,4]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Use a monotonic stack to find for each end index &lt;code&gt;i&lt;/code&gt; the nearest previous index &lt;code&gt;j&lt;/code&gt; with &lt;code&gt;weight[j] &gt; weight[i]&lt;/code&gt; (set &lt;code&gt;j = -1&lt;/code&gt; if none). Then set &lt;code&gt;dp[i] = best[j] + 1&lt;/code&gt; (using &lt;code&gt;best[-1] = 0&lt;/code&gt;), and update &lt;code&gt;best[i] = max(best[i-1], dp[i])&lt;/code&gt;; the result is &lt;code&gt;best[n-1]&lt;/code&gt;.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maxBalancedShipments(<span class="ty">int</span>* weight, <span class="ty">int</span> weightSize) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> maxBalancedShipments(<span class="ty">self</span>, weight):
+        &quot;&quot;&quot;
+        :type weight: <span class="ty">List</span>[<span class="ty">int</span>]
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> maxBalancedShipments(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; weight) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Use a monotonic stack to find for each end index…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Then set &lt;code&gt;dp[i] = best[j] + 1&lt;/code&gt; , and update…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3637-trionic-array-i.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Trionic Array I</strong></span></a>
+                <a href="3639-minimum-time-to-activate-string.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Minimum Time to Activate String</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Maximum%20Balanced%20Shipments&lc_id=3638&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3881 · Direction Assignments with Exactly K Visible People — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3881 Direction Assignments with Exactly K Visible People</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/direction-assignments-with-exactly-k-visible-people/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3881</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Math</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Direction Assignments with Exactly K Visible People</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>36.4% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given three integers <code>n</code>, <code>pos</code>, and <code>k</code>.</p>
+
+<p>There are <code>n</code> people standing in a line indexed from 0 to <code>n - 1</code>. Each person <strong>independently</strong> chooses a direction:</p>
+
+<ul>
+	<li><code>&#39;L&#39;</code>: <strong>visible</strong> only to people on their <strong>right</strong></li>
+	<li><code>&#39;R&#39;</code>: <strong>visible</strong> only to people on their <strong>left</strong></li>
+</ul>
+A person at index <code>pos</code> sees others as follows:
+
+<ul>
+	<li>A person <code>i &lt; pos</code> is visible if and only if they choose <code>&#39;L&#39;</code>.</li>
+	<li>A person <code>i &gt; pos</code> is visible if and only if they choose <code>&#39;R&#39;</code>.</li>
+</ul>
+
+<p>Return the number of possible direction assignments such that the person at index <code>pos</code> sees <strong>exactly</strong> <code>k</code> people.</p>
+
+<p>Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">n = 3, pos = 1, k = 0</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">2</span></p>
+
+<p><strong>Explanation:</strong>​​​​​​​</p>
+
+<ul>
+	<li>Index 0 is to the left of <code>pos = 1</code>, and index 2 is to the right of <code>pos = 1</code>.</li>
+	<li>To see <code>k = 0</code> people, index 0 must choose <code>&#39;R&#39;</code> and index 2 must choose <code>&#39;L&#39;</code>, keeping both invisible.</li>
+	<li>The person at index 1 can choose <code>&#39;L&#39;</code> or <code>&#39;R&#39;</code> since it does not affect the count. Thus, the answer is 2.</li>
+</ul>
+</div>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">n = 3, pos = 2, k = 1</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">4</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<ul>
+	<li>Index 0 and index 1 are left of <code>pos = 2</code>, and there is no index to the right.</li>
+	<li>To see <code>k = 1</code> person, exactly one of index 0 or index 1 must choose <code>&#39;L&#39;</code>, and the other must choose <code>&#39;R&#39;</code>.</li>
+	<li>There are 2 ways to choose which index is visible from the left.</li>
+	<li>The person at index 2 can choose <code>&#39;L&#39;</code> or <code>&#39;R&#39;</code> since it does not affect the count. Thus, the answer is <code>2 + 2 = 4</code>.</li>
+</ul>
+</div>
+
+<p><strong class="example">Example 3:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">n = 1, pos = 0, k = 0</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">2</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<ul>
+	<li>There are no indices to the left or right of <code>pos = 0</code>.</li>
+	<li>To see <code>k = 0</code> people, no additional condition is required.</li>
+	<li>The person at index 0 can choose <code>&#39;L&#39;</code> or <code>&#39;R&#39;</code>. Thus, the answer is 2.</li>
+</ul>
+</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>
+	<li><code>0 &lt;= pos, k &lt;= n - 1</code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>3</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>0</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>2</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 4</div>
+                <div class="ex-line"><span>In</span><code>1</code></div>
+                <div class="ex-line"><span>Out</span><code>0</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Use combinatorics Count the visible people on the left and right independently. Let &lt;code&gt;a = pos&lt;/code&gt; and &lt;code&gt;b = n - pos - 1&lt;/code&gt;. To see exactly &lt;code&gt;k&lt;/code&gt; people, choose &lt;code&gt;i&lt;/code&gt; visible people from the left side and &lt;code&gt;k - i&lt;/code&gt; from the right side. Each chosen left person must pick &lt;code&gt;L&lt;/code&gt;, each chosen right person must pick &lt;code&gt;R&lt;/code&gt;, and every other person can pick either direction. Sum over all valid &lt;code&gt;i&lt;/code&gt;, multiplying the two binomial choices and the free choices for the remaining people.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> countVisiblePeople(<span class="ty">int</span> n, <span class="ty">int</span> pos, <span class="ty">int</span> k) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> countVisiblePeople(<span class="ty">self</span>, n, pos, k):
+        &quot;&quot;&quot;
+        :type n: <span class="ty">int</span>
+        :type pos: <span class="ty">int</span>
+        :type k: <span class="ty">int</span>
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> countVisiblePeople(<span class="ty">int</span> n, <span class="ty">int</span> pos, <span class="ty">int</span> k) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Math</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Use combinatorics Count the visible people on the left…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Let &lt;code&gt;a = pos&lt;/code&gt; and &lt;code&gt;b = n - pos - 1&lt;/code&gt;.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — To see exactly &lt;code&gt;k&lt;/code&gt; people, choose…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Each chosen left person must pick &lt;code&gt;L&lt;/code&gt;, each…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3880-minimum-absolute-difference-between-two-values.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Minimum Absolute Difference Between Two Values</strong></span></a>
+                <a href="3882-minimum-xor-path-in-a-grid.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Minimum XOR Path in a Grid</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Direction%20Assignments%20with%20Exactly%20K%20Visible%20People&lc_id=3881&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

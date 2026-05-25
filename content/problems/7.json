@@ -1,0 +1,27 @@
+{
+  "id": 7,
+  "title": "Reverse Integer",
+  "difficulty": "Medium",
+  "category": "Math",
+  "timeComplexity": "O(log N)",
+  "spaceComplexity": "O(1)",
+  "description": "Đảo ngược các chữ số của số nguyên 32-bit signed x. Trả 0 nếu reverse overflow.",
+  "examples": [
+    { "input": "x = 123", "output": "321" },
+    { "input": "x = -123", "output": "-321" },
+    { "input": "x = 120", "output": "21" }
+  ],
+  "approach": "Lấy digit cuối bằng x % 10, x = x / 10, result = result * 10 + digit. Kiểm tra overflow trước khi nhân: nếu result > INT_MAX/10 hoặc bằng và digit > 7 thì return 0.",
+  "memoryTip": "Chỉ biến int trên stack — không chuyển sang string.",
+  "solutions": {
+    "c": "int reverse(int x) {\n    long res = 0;\n    while (x) {\n        res = res * 10 + x % 10;\n        x /= 10;\n    }\n    return (res < -2147483648L || res > 2147483647L) ? 0 : (int)res;\n}",
+    "python": "class Solution:\n    def reverse(self, x: int) -> int:\n        sign = -1 if x < 0 else 1\n        r = int(str(abs(x))[::-1])\n        r *= sign\n        return r if -2**31 <= r <= 2**31 - 1 else 0",
+    "cpp": "class Solution {\npublic:\n    int reverse(int x) {\n        long res = 0;\n        while (x) { res = res * 10 + x % 10; x /= 10; }\n        return (res < INT_MIN || res > INT_MAX) ? 0 : (int)res;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Pop/push digit tương đương đảo chuỗi số; check biên 32-bit tránh overflow.",
+    "edgeCases": ["x = 0", "x = INT_MIN", "kết quả có 0 đầu bị mất"],
+    "pitfalls": ["Không check overflow", "Dùng int thay long khi nhân"]
+  },
+  "tier": "done"
+}

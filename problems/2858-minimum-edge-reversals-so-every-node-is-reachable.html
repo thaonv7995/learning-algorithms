@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #2858 · Minimum Edge Reversals So Every Node Is Reachable — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#2858 Minimum Edge Reversals So Every Node Is Reachable</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/minimum-edge-reversals-so-every-node-is-reachable/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #2858</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Dynamic Programming</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Minimum Edge Reversals So Every Node Is Reachable</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N²)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.6% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>There is a <strong>simple directed graph</strong> with <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code>. The graph would form a <strong>tree</strong> if its edges were bi-directional.</p>
+
+<p>You are given an integer <code>n</code> and a <strong>2D</strong> integer array <code>edges</code>, where <code>edges[i] = [u<sub>i</sub>, v<sub>i</sub>]</code> represents a <strong>directed edge</strong> going from node <code>u<sub>i</sub></code> to node <code>v<sub>i</sub></code>.</p>
+
+<p>An <strong>edge reversal</strong> changes the direction of an edge, i.e., a directed edge going from node <code>u<sub>i</sub></code> to node <code>v<sub>i</sub></code> becomes a directed edge going from node <code>v<sub>i</sub></code> to node <code>u<sub>i</sub></code>.</p>
+
+<p>For every node <code>i</code> in the range <code>[0, n - 1]</code>, your task is to <strong>independently</strong> calculate the <strong>minimum</strong> number of <strong>edge reversals</strong> required so it is possible to reach any other node starting from node <code>i</code> through a <strong>sequence</strong> of <strong>directed edges</strong>.</p>
+
+<p>Return <em>an integer array </em><code>answer</code><em>, where </em><code>answer[i]</code><em> is the</em><em> </em> <em><strong>minimum</strong> number of <strong>edge reversals</strong> required so it is possible to reach any other node starting from node </em><code>i</code><em> through a <strong>sequence</strong> of <strong>directed edges</strong>.</em></p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<p><img height="246" src="https://assets.leetcode.com/uploads/2023/08/26/image-20230826221104-3.png" width="312" /></p>
+
+<pre>
+<strong>Input:</strong> n = 4, edges = [[2,0],[2,1],[1,3]]
+<strong>Output:</strong> [1,1,0,2]
+<strong>Explanation:</strong> The image above shows the graph formed by the edges.
+For node 0: after reversing the edge [2,0], it is possible to reach any other node starting from node 0.
+So, answer[0] = 1.
+For node 1: after reversing the edge [2,1], it is possible to reach any other node starting from node 1.
+So, answer[1] = 1.
+For node 2: it is already possible to reach any other node starting from node 2.
+So, answer[2] = 0.
+For node 3: after reversing the edges [1,3] and [2,1], it is possible to reach any other node starting from node 3.
+So, answer[3] = 2.
+</pre>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<p><img height="217" src="https://assets.leetcode.com/uploads/2023/08/26/image-20230826225541-2.png" width="322" /></p>
+
+<pre>
+<strong>Input:</strong> n = 3, edges = [[1,2],[2,0]]
+<strong>Output:</strong> [2,0,1]
+<strong>Explanation:</strong> The image above shows the graph formed by the edges.
+For node 0: after reversing the edges [2,0] and [1,2], it is possible to reach any other node starting from node 0.
+So, answer[0] = 2.
+For node 1: it is already possible to reach any other node starting from node 1.
+So, answer[1] = 0.
+For node 2: after reversing the edge [1, 2], it is possible to reach any other node starting from node 2.
+So, answer[2] = 1.
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>
+	<li><code>edges.length == n - 1</code></li>
+	<li><code>edges[i].length == 2</code></li>
+	<li><code>0 &lt;= u<sub>i</sub> == edges[i][0] &lt; n</code></li>
+	<li><code>0 &lt;= v<sub>i</sub> == edges[i][1] &lt; n</code></li>
+	<li><code>u<sub>i</sub> != v<sub>i</sub></code></li>
+	<li>The input is generated such&nbsp;that if the edges were bi-directional, the graph would be a tree.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>4</code></div>
+                <div class="ex-line"><span>Out</span><code>[[2,0],[2,1],[1,3]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>3</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1,2],[2,0]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">The problem can be solved using tree DP. Using node &lt;code&gt;0&lt;/code&gt; as the root, let &lt;code&gt;dp[x]&lt;/code&gt; be the minimum number of edge reversals so node &lt;code&gt;x&lt;/code&gt; can reach every node in its subtree. Using a DFS traversing the edges bidirectionally, we can compute &lt;code&gt;dp&lt;/code&gt;.&lt;br /&gt;<br>&lt;code&gt;dp[x] = dp[y] +&lt;/code&gt; (&lt;code&gt;1&lt;/code&gt; if the edge between &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; is going from &lt;code&gt;y&lt;/code&gt; to &lt;code&gt;x&lt;/code&gt;; &lt;code&gt;0&lt;/code&gt; otherwise), where &lt;code&gt;x&lt;/code&gt; is the parent of &lt;code&gt;y&lt;/code&gt;. Let &lt;code&gt;answer[x]&lt;/code&gt; be the minimum number of edge reversals so it is possible to reach any other node starting from node &lt;code&gt;x&lt;/code&gt;. Using another DFS starting from node &lt;code&gt;0&lt;/code&gt; and traversing the edges bidirectionally, we can compute &lt;code&gt;answer&lt;/code&gt;.&lt;br /&gt;<br>&lt;code&gt;answer[0] = dp[0]&lt;/code&gt;&lt;br /&gt;<br>&lt;code&gt;answer[y] = answer[x] +&lt;/code&gt; (&lt;code&gt;1&lt;/code&gt; if the edge between &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; is going from &lt;code&gt;x&lt;/code&gt; to &lt;code&gt;y&lt;/code&gt;; &lt;code&gt;-1&lt;/code&gt; otherwise), where &lt;code&gt;x&lt;/code&gt; is the parent of &lt;code&gt;y&lt;/code&gt;.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">/**
+ * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
+ */
+<span class="ty">int</span>* minEdgeReversals(<span class="ty">int</span> n, <span class="ty">int</span>** edges, <span class="ty">int</span> edgesSize, <span class="ty">int</span>* edgesColSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> minEdgeReversals(<span class="ty">self</span>, n, edges):
+        &quot;&quot;&quot;
+        :type n: <span class="ty">int</span>
+        :type edges: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
+        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; minEdgeReversals(<span class="ty">int</span> n, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; edges) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Dynamic Programming</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N²)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — The problem can be solved using tree DP.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Using node &lt;code&gt;0&lt;/code&gt; as the root, let…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Using a DFS traversing the edges bidirectionally, we can…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Let &lt;code&gt;answer[x]&lt;/code&gt; be the minimum number of edge…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="2857-count-pairs-of-points-with-distance-k.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Count Pairs of Points With Distance k</strong></span></a>
+                <a href="2859-sum-of-values-at-indices-with-k-set-bits.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Sum of Values at Indices With K Set Bits</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=10&problem=Minimum%20Edge%20Reversals%20So%20Every%20Node%20Is%20Reachable&lc_id=2858&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

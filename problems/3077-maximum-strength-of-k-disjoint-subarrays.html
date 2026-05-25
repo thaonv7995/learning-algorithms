@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3077 · Maximum Strength of K Disjoint Subarrays — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3077 Maximum Strength of K Disjoint Subarrays</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/maximum-strength-of-k-disjoint-subarrays/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3077</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Maximum Strength of K Disjoint Subarrays</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>27.8% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given an array of integers <code>nums</code> with length <code>n</code>, and a positive <strong>odd</strong> integer <code>k</code>.</p>
+
+<p>Select exactly <b><code>k</code></b> disjoint <span data-keyword="subarray-nonempty">subarrays</span> <b><code>sub<sub>1</sub>, sub<sub>2</sub>, ..., sub<sub>k</sub></code></b> from <code>nums</code> such that the last element of <code>sub<sub>i</sub></code> appears before the first element of <code>sub<sub>{i+1}</sub></code> for all <code>1 &lt;= i &lt;= k-1</code>. The goal is to maximize their combined strength.</p>
+
+<p>The strength of the selected subarrays is defined as:</p>
+
+<p><code>strength = k * sum(sub<sub>1</sub>)- (k - 1) * sum(sub<sub>2</sub>) + (k - 2) * sum(sub<sub>3</sub>) - ... - 2 * sum(sub<sub>{k-1}</sub>) + sum(sub<sub>k</sub>)</code></p>
+
+<p>where <b><code>sum(sub<sub>i</sub>)</code></b> is the sum of the elements in the <code>i</code>-th subarray.</p>
+
+<p>Return the <strong>maximum</strong> possible strength that can be obtained from selecting exactly <b><code>k</code></b> disjoint subarrays from <code>nums</code>.</p>
+
+<p><strong>Note</strong> that the chosen subarrays <strong>don&#39;t</strong> need to cover the entire array.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<p><strong>Input:</strong> <span class="example-io">nums = [1,2,3,-1,2], k = 3</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">22</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>The best possible way to select 3 subarrays is: nums[0..2], nums[3..3], and nums[4..4]. The strength is calculated as follows:</p>
+
+<p><code>strength = 3 * (1 + 2 + 3) - 2 * (-1) + 2 = 22</code></p>
+
+<p>&nbsp;</p>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<p><strong>Input:</strong> <span class="example-io">nums = [12,-2,-2,-2,-2], k = 5</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">64</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>The only possible way to select 5 disjoint subarrays is: nums[0..0], nums[1..1], nums[2..2], nums[3..3], and nums[4..4]. The strength is calculated as follows:</p>
+
+<p><code>strength = 5 * 12 - 4 * (-2) + 3 * (-2) - 2 * (-2) + (-2) = 64</code></p>
+
+<p><strong class="example">Example 3:</strong></p>
+
+<p><strong>Input:</strong> <span class="example-io">nums = [-1,-2,-3], k = </span>1</p>
+
+<p><strong>Output:</strong> <span class="example-io">-1</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>The best possible way to select 1 subarray is: nums[0..0]. The strength is -1.</p>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>
+	<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
+	<li><code>1 &lt;= k &lt;= n</code></li>
+	<li><code>1 &lt;= n * k &lt;= 10<sup>6</sup></code></li>
+	<li><code>k</code> is odd.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[1,2,3,-1,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[12,-2,-2,-2,-2]</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>[-1,-2,-3]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Let &lt;code&gt;dp[i][j][x == 0/1]&lt;/code&gt; be the maximum strength to select &lt;code&gt;j&lt;/code&gt; disjoint subarrays from the original array’s suffix (&lt;code&gt;nums[i..(n - 1)]&lt;/code&gt;), x denotes whether we select the element or not. Initially &lt;code&gt;dp[n][0][0] == 0&lt;/code&gt;. We have <br>&lt;code&gt;dp[i][j][1] = nums[i] * get(j) + max(dp[i + 1][j - 1][0], dp[i + 1][j][1])&lt;/code&gt; where &lt;code&gt;get(j) = j&lt;/code&gt; if &lt;code&gt;j&lt;/code&gt; is odd, otherwise &lt;code&gt;-j&lt;/code&gt;. We can select &lt;code&gt;nums[i]&lt;/code&gt; as a separate subarray or select at least &lt;code&gt;nums[i]&lt;/code&gt; and &lt;code&gt;nums[i + 1]&lt;/code&gt; as the first subarray.<br>&lt;code&gt;dp[i][j][0] = max(dp[i + 1][j][0], dp[i][j][1])&lt;/code&gt;. The answer is &lt;code&gt;dp[0][k][0]&lt;/code&gt;.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">long</span> <span class="ty">long</span> maximumStrength(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span> k) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> maximumStrength(<span class="ty">self</span>, nums, k):
+        &quot;&quot;&quot;
+        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
+        :type k: <span class="ty">int</span>
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">long</span> <span class="ty">long</span> maximumStrength(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> k) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Let &lt;code&gt;dp[i][j][x == 0/1]&lt;/code&gt; be the maximum…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Initially &lt;code&gt;dp[n][0][0] == 0&lt;/code&gt;.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — We have &lt;code&gt;dp[i][j][1] = nums[i] * get + max&lt;/code&gt;…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — We can select &lt;code&gt;nums[i]&lt;/code&gt; as a separate subarray…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3076-shortest-uncommon-substring-in-an-array.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Shortest Uncommon Substring in an Array</strong></span></a>
+                <a href="3079-find-the-sum-of-encrypted-integers.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Find the Sum of Encrypted Integers</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Maximum%20Strength%20of%20K%20Disjoint%20Subarrays&lc_id=3077&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

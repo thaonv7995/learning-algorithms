@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #2983 · Palindrome Rearrangement Queries — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#2983 Palindrome Rearrangement Queries</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/palindrome-rearrangement-queries/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #2983</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Palindrome Rearrangement Queries</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>25% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given a <strong>0-indexed</strong> string <code>s</code> having an <strong>even</strong> length <code>n</code>.</p>
+
+<p>You are also given a <strong>0-indexed</strong> 2D integer array, <code>queries</code>, where <code>queries[i] = [a<sub>i</sub>, b<sub>i</sub>, c<sub>i</sub>, d<sub>i</sub>]</code>.</p>
+
+<p>For each query <code>i</code>, you are allowed to perform the following operations:</p>
+
+<ul>
+	<li>Rearrange the characters within the <strong>substring</strong> <code>s[a<sub>i</sub>:b<sub>i</sub>]</code>, where <code>0 &lt;= a<sub>i</sub> &lt;= b<sub>i</sub> &lt; n / 2</code>.</li>
+	<li>Rearrange the characters within the <strong>substring</strong> <code>s[c<sub>i</sub>:d<sub>i</sub>]</code>, where <code>n / 2 &lt;= c<sub>i</sub> &lt;= d<sub>i</sub> &lt; n</code>.</li>
+</ul>
+
+<p>For each query, your task is to determine whether it is possible to make <code>s</code> a <strong>palindrome</strong> by performing the operations.</p>
+
+<p>Each query is answered <strong>independently</strong> of the others.</p>
+
+<p>Return <em>a <strong>0-indexed</strong> array </em><code>answer</code><em>, where </em><code>answer[i] == true</code><em> if it is possible to make </em><code>s</code><em> a palindrome by performing operations specified by the </em><code>i<sup>th</sup></code><em> query, and </em><code>false</code><em> otherwise.</em></p>
+
+<ul>
+	<li>A <strong>substring</strong> is a contiguous sequence of characters within a string.</li>
+	<li><code>s[x:y]</code> represents the substring consisting of characters from the index <code>x</code> to index <code>y</code> in <code>s</code>, <strong>both inclusive</strong>.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<pre>
+<strong>Input:</strong> s = &quot;abcabc&quot;, queries = [[1,1,3,5],[0,2,5,5]]
+<strong>Output:</strong> [true,true]
+<strong>Explanation:</strong> In this example, there are two queries:
+In the first query:
+- a<sub>0</sub> = 1, b<sub>0</sub> = 1, c<sub>0</sub> = 3, d<sub>0</sub> = 5.
+- So, you are allowed to rearrange s[1:1] =&gt; a<u>b</u>cabc and s[3:5] =&gt; abc<u>abc</u>.
+- To make s a palindrome, s[3:5] can be rearranged to become =&gt; abc<u>cba</u>.
+- Now, s is a palindrome. So, answer[0] = true.
+In the second query:
+- a<sub>1</sub> = 0, b<sub>1</sub> = 2, c<sub>1</sub> = 5, d<sub>1</sub> = 5.
+- So, you are allowed to rearrange s[0:2] =&gt; <u>abc</u>abc and s[5:5] =&gt; abcab<u>c</u>.
+- To make s a palindrome, s[0:2] can be rearranged to become =&gt; <u>cba</u>abc.
+- Now, s is a palindrome. So, answer[1] = true.
+</pre>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<pre>
+<strong>Input:</strong> s = &quot;abbcdecbba&quot;, queries = [[0,2,7,9]]
+<strong>Output:</strong> [false]
+<strong>Explanation:</strong> In this example, there is only one query.
+a<sub>0</sub> = 0, b<sub>0</sub> = 2, c<sub>0</sub> = 7, d<sub>0</sub> = 9.
+So, you are allowed to rearrange s[0:2] =&gt; <u>abb</u>cdecbba and s[7:9] =&gt; abbcdec<u>bba</u>.
+It is not possible to make s a palindrome by rearranging these substrings because s[3:6] is not a palindrome.
+So, answer[0] = false.</pre>
+
+<p><strong class="example">Example 3:</strong></p>
+
+<pre>
+<strong>Input:</strong> s = &quot;acbcab&quot;, queries = [[1,2,4,5]]
+<strong>Output:</strong> [true]
+<strong>Explanation: </strong>In this example, there is only one query.
+a<sub>0</sub> = 1, b<sub>0</sub> = 2, c<sub>0</sub> = 4, d<sub>0</sub> = 5.
+So, you are allowed to rearrange s[1:2] =&gt; a<u>cb</u>cab and s[4:5] =&gt; acbc<u>ab</u>.
+To make s a palindrome s[1:2] can be rearranged to become a<u>bc</u>cab.
+Then, s[4:5] can be rearranged to become abcc<u>ba</u>.
+Now, s is a palindrome. So, answer[0] = true.</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>2 &lt;= n == s.length &lt;= 10<sup>5</sup></code></li>
+	<li><code>1 &lt;= queries.length &lt;= 10<sup>5</sup></code></li>
+	<li><code>queries[i].length == 4</code></li>
+	<li><code>a<sub>i</sub> == queries[i][0], b<sub>i</sub> == queries[i][1]</code></li>
+	<li><code>c<sub>i</sub> == queries[i][2], d<sub>i</sub> == queries[i][3]</code></li>
+	<li><code>0 &lt;= a<sub>i</sub> &lt;= b<sub>i</sub> &lt; n / 2</code></li>
+	<li><code>n / 2 &lt;= c<sub>i</sub> &lt;= d<sub>i</sub> &lt; n </code></li>
+	<li><code>n</code> is even.</li>
+	<li><code>s</code> consists of only lowercase English letters.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>&quot;abcabc&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1,1,3,5],[0,2,5,5]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>&quot;abbcdecbba&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[[0,2,7,9]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>&quot;acbcab&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1,2,4,5]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Consider two indices, &lt;code&gt;x&lt;/code&gt; on the left side and its symmetrical index &lt;code&gt;y&lt;/code&gt; on the right side. Store the frequencies of all of the letters in both intervals &lt;code&gt;[a&lt;sub&gt;i&lt;/sub&gt;, b&lt;sub&gt;i&lt;/sub&gt;]&lt;/code&gt; and &lt;code&gt;[c&lt;sub&gt;i&lt;/sub&gt;, d&lt;sub&gt;i&lt;/sub&gt;]&lt;/code&gt; in a query. If &lt;code&gt;x&lt;/code&gt; is not in &lt;code&gt;[a&lt;sub&gt;i&lt;/sub&gt;, b&lt;sub&gt;i&lt;/sub&gt;]&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; is not in &lt;code&gt;[c&lt;sub&gt;i&lt;/sub&gt;, d&lt;sub&gt;i&lt;/sub&gt;]&lt;/code&gt;, they must be the same. If &lt;code&gt;x&lt;/code&gt; is in &lt;code&gt;[a&lt;sub&gt;i&lt;/sub&gt;, b&lt;sub&gt;i&lt;/sub&gt;]&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; is not in &lt;code&gt;[c&lt;sub&gt;i&lt;/sub&gt;, d&lt;sub&gt;i&lt;/sub&gt;]&lt;/code&gt;, remove one occurrence of the character at index &lt;code&gt;y&lt;/code&gt; from the frequency array on the left side. Similarly, if &lt;code&gt;x&lt;/code&gt; is not in &lt;code&gt;[a&lt;sub&gt;i&lt;/sub&gt;, b&lt;sub&gt;i&lt;/sub&gt;]&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; is in &lt;code&gt;[c&lt;sub&gt;i&lt;/sub&gt;, d&lt;sub&gt;i&lt;/sub&gt;]&lt;/code&gt;, remove one occurrence of the character at index &lt;code&gt;x&lt;/code&gt; from the frequency array on the right side. Finally, check whether the two frequency arrays are the same, and the indices that don't fall into any of the intervals are the same as well. Use prefix-sum + hashing to improve the time complexity.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">/**
+ * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
+ */
+<span class="ty">bool</span>* canMakePalindromeQueries(<span class="ty">char</span>* s, <span class="ty">int</span>** queries, <span class="ty">int</span> queriesSize, <span class="ty">int</span>* queriesColSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> canMakePalindromeQueries(<span class="ty">self</span>, s, queries):
+        &quot;&quot;&quot;
+        :type s: <span class="ty">str</span>
+        :type queries: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
+        :rtype: <span class="ty">List</span>[bool]
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">vector</span>&lt;<span class="ty">bool</span>&gt; canMakePalindromeQueries(<span class="ty">string</span> s, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; queries) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Consider two indices, &lt;code&gt;x&lt;/code&gt; on the left side and…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Store the frequencies of all of the letters in both…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — If &lt;code&gt;x&lt;/code&gt; is not in &lt;code&gt;[a&lt;sub&gt;i&lt;/sub&gt;,…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — If &lt;code&gt;x&lt;/code&gt; is in &lt;code&gt;[a&lt;sub&gt;i&lt;/sub&gt;,…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="2982-find-longest-special-substring-that-occurs-thrice-ii.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Find Longest Special Substring That Occurs Thrice II</strong></span></a>
+                <a href="2996-smallest-missing-integer-greater-than-sequential-prefix-sum.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Smallest Missing Integer Greater Than Sequential Prefix Sum</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Palindrome%20Rearrangement%20Queries&lc_id=2983&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

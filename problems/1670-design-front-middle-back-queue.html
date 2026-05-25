@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #1670 · Design Front Middle Back Queue — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#1670 Design Front Middle Back Queue</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/design-front-middle-back-queue/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #1670</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Design Front Middle Back Queue</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>57.9% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>Design a queue that supports <code>push</code> and <code>pop</code> operations in the front, middle, and back.</p>
+
+<p>Implement the <code>FrontMiddleBack</code> class:</p>
+
+<ul>
+	<li><code>FrontMiddleBack()</code> Initializes the queue.</li>
+	<li><code>void pushFront(int val)</code> Adds <code>val</code> to the <strong>front</strong> of the queue.</li>
+	<li><code>void pushMiddle(int val)</code> Adds <code>val</code> to the <strong>middle</strong> of the queue.</li>
+	<li><code>void pushBack(int val)</code> Adds <code>val</code> to the <strong>back</strong> of the queue.</li>
+	<li><code>int popFront()</code> Removes the <strong>front</strong> element of the queue and returns it. If the queue is empty, return <code>-1</code>.</li>
+	<li><code>int popMiddle()</code> Removes the <strong>middle</strong> element of the queue and returns it. If the queue is empty, return <code>-1</code>.</li>
+	<li><code>int popBack()</code> Removes the <strong>back</strong> element of the queue and returns it. If the queue is empty, return <code>-1</code>.</li>
+</ul>
+
+<p><strong>Notice</strong> that when there are <b>two</b> middle position choices, the operation is performed on the <strong>frontmost</strong> middle position choice. For example:</p>
+
+<ul>
+	<li>Pushing <code>6</code> into the middle of <code>[1, 2, 3, 4, 5]</code> results in <code>[1, 2, <u>6</u>, 3, 4, 5]</code>.</li>
+	<li>Popping the middle from <code>[1, 2, <u>3</u>, 4, 5, 6]</code> returns <code>3</code> and results in <code>[1, 2, 4, 5, 6]</code>.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<pre>
+<strong>Input:</strong>
+[&quot;FrontMiddleBackQueue&quot;, &quot;pushFront&quot;, &quot;pushBack&quot;, &quot;pushMiddle&quot;, &quot;pushMiddle&quot;, &quot;popFront&quot;, &quot;popMiddle&quot;, &quot;popMiddle&quot;, &quot;popBack&quot;, &quot;popFront&quot;]
+[[], [1], [2], [3], [4], [], [], [], [], []]
+<strong>Output:</strong>
+[null, null, null, null, null, 1, 3, 4, 2, -1]
+
+<strong>Explanation:</strong>
+FrontMiddleBackQueue q = new FrontMiddleBackQueue();
+q.pushFront(1);   // [<u>1</u>]
+q.pushBack(2);    // [1, <u>2</u>]
+q.pushMiddle(3);  // [1, <u>3</u>, 2]
+q.pushMiddle(4);  // [1, <u>4</u>, 3, 2]
+q.popFront();     // return 1 -&gt; [4, 3, 2]
+q.popMiddle();    // return 3 -&gt; [4, 2]
+q.popMiddle();    // return 4 -&gt; [2]
+q.popBack();      // return 2 -&gt; []
+q.popFront();     // return -1 -&gt; [] (The queue is empty)
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= val &lt;= 10<sup>9</sup></code></li>
+	<li>At most&nbsp;<code>1000</code>&nbsp;calls will be made to&nbsp;<code>pushFront</code>,&nbsp;<code>pushMiddle</code>,&nbsp;<code>pushBack</code>, <code>popFront</code>, <code>popMiddle</code>, and <code>popBack</code>.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[&quot;FrontMiddleBackQueue&quot;,&quot;pushFront&quot;,&quot;pushBack&quot;,&quot;pushMiddle&quot;,&quot;pushMiddle&quot;,&quot;popFront&quot;,&quot;popMiddle&quot;,&quot;popMiddle&quot;,&quot;popBack&quot;,&quot;popFront&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[],[1],[2],[3],[4],[],[],[],[],[]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">The constraints are low enough for a brute force, single array approach. For an O(1) per method approach, use 2 double-ended queues: one for the first half and one for the second half.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">
+
+
+typedef <span class="ty">struct</span> {
+    
+} FrontMiddleBackQueue;
+
+
+FrontMiddleBackQueue* frontMiddleBackQueueCreate() {
+    
+}
+
+<span class="ty">void</span> frontMiddleBackQueuePushFront(FrontMiddleBackQueue* obj, <span class="ty">int</span> val) {
+    
+}
+
+<span class="ty">void</span> frontMiddleBackQueuePushMiddle(FrontMiddleBackQueue* obj, <span class="ty">int</span> val) {
+    
+}
+
+<span class="ty">void</span> frontMiddleBackQueuePushBack(FrontMiddleBackQueue* obj, <span class="ty">int</span> val) {
+    
+}
+
+<span class="ty">int</span> frontMiddleBackQueuePopFront(FrontMiddleBackQueue* obj) {
+    
+}
+
+<span class="ty">int</span> frontMiddleBackQueuePopMiddle(FrontMiddleBackQueue* obj) {
+    
+}
+
+<span class="ty">int</span> frontMiddleBackQueuePopBack(FrontMiddleBackQueue* obj) {
+    
+}
+
+<span class="ty">void</span> frontMiddleBackQueueFree(FrontMiddleBackQueue* obj) {
+    
+}
+
+/**
+ * Your FrontMiddleBackQueue <span class="ty">struct</span> will be instantiated and called as such:
+ * FrontMiddleBackQueue* obj = frontMiddleBackQueueCreate();
+ * frontMiddleBackQueuePushFront(obj, val);
+ 
+ * frontMiddleBackQueuePushMiddle(obj, val);
+ 
+ * frontMiddleBackQueuePushBack(obj, val);
+ 
+ * <span class="ty">int</span> param_4 = frontMiddleBackQueuePopFront(obj);
+ 
+ * <span class="ty">int</span> param_5 = frontMiddleBackQueuePopMiddle(obj);
+ 
+ * <span class="ty">int</span> param_6 = frontMiddleBackQueuePopBack(obj);
+ 
+ * frontMiddleBackQueueFree(obj);
+*/</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> FrontMiddleBackQueue(object):
+
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        
+
+    <span class="kw">def</span> pushFront(<span class="ty">self</span>, val):
+        &quot;&quot;&quot;
+        :type val: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> pushMiddle(<span class="ty">self</span>, val):
+        &quot;&quot;&quot;
+        :type val: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> pushBack(<span class="ty">self</span>, val):
+        &quot;&quot;&quot;
+        :type val: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> popFront(<span class="ty">self</span>):
+        &quot;&quot;&quot;
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> popMiddle(<span class="ty">self</span>):
+        &quot;&quot;&quot;
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> popBack(<span class="ty">self</span>):
+        &quot;&quot;&quot;
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        
+
+
+<span class="cm"># Your FrontMiddleBackQueue object will be instantiated <span class="kw">and</span> called as such:</span>
+<span class="cm"># obj = FrontMiddleBackQueue()</span>
+<span class="cm"># obj.pushFront(val)</span>
+<span class="cm"># obj.pushMiddle(val)</span>
+<span class="cm"># obj.pushBack(val)</span>
+<span class="cm"># param_4 = obj.popFront()</span>
+<span class="cm"># param_5 = obj.popMiddle()</span>
+<span class="cm"># param_6 = obj.popBack()</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> FrontMiddleBackQueue {
+<span class="ty">public</span>:
+    FrontMiddleBackQueue() {
+        
+    }
+    
+    <span class="ty">void</span> pushFront(<span class="ty">int</span> val) {
+        
+    }
+    
+    <span class="ty">void</span> pushMiddle(<span class="ty">int</span> val) {
+        
+    }
+    
+    <span class="ty">void</span> pushBack(<span class="ty">int</span> val) {
+        
+    }
+    
+    <span class="ty">int</span> popFront() {
+        
+    }
+    
+    <span class="ty">int</span> popMiddle() {
+        
+    }
+    
+    <span class="ty">int</span> popBack() {
+        
+    }
+};
+
+/**
+ * Your FrontMiddleBackQueue object will be instantiated and called as such:
+ * FrontMiddleBackQueue* obj = <span class="kw">new</span> FrontMiddleBackQueue();
+ * obj-&gt;pushFront(val);
+ * obj-&gt;pushMiddle(val);
+ * obj-&gt;pushBack(val);
+ * <span class="ty">int</span> param_4 = obj-&gt;popFront();
+ * <span class="ty">int</span> param_5 = obj-&gt;popMiddle();
+ * <span class="ty">int</span> param_6 = obj-&gt;popBack();
+ */</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — The constraints are low enough for a brute force, single…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — For an O per method approach, use 2 double-ended queues:…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Chỉ con trỏ duyệt tại chỗ — O nếu không tạo nút mới.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="1669-merge-in-between-linked-lists.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Merge In Between Linked Lists</strong></span></a>
+                <a href="1671-minimum-number-of-removals-to-make-mountain-array.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Minimum Number of Removals to Make Mountain Array</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=5&problem=Design%20Front%20Middle%20Back%20Queue&lc_id=1670&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

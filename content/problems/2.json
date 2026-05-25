@@ -1,0 +1,27 @@
+{
+  "id": 2,
+  "title": "Add Two Numbers",
+  "difficulty": "Medium",
+  "category": "Linked List",
+  "timeComplexity": "O(max(N, M))",
+  "spaceComplexity": "O(1)",
+  "description": "Cho hai danh sách liên kết đơn không rỗng biểu diễn hai số nguyên không âm. Các chữ số lưu theo thứ tự **ngược** (head = hàng đơn vị).\n\nHãy cộng hai số và trả về tổng dưới dạng một linked list cùng kiểu.\n\nGiả định: không có số 0 ở đầu (trừ số 0 itself).",
+  "examples": [
+    { "input": "l1 = [2,4,3], l2 = [5,6,4]", "output": "[7,0,8] (342 + 465 = 807)" },
+    { "input": "l1 = [0], l2 = [0]", "output": "[0]" },
+    { "input": "l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]", "output": "[8,9,9,9,0,0,0,1]" }
+  ],
+  "approach": "Duyệt song song hai list bằng con trỏ p1, p2. Tại mỗi bước: tổng = val(p1) + val(p2) + carry. Chữ số mới = tổng % 10, carry = tổng / 10. Nối nút mới vào list kết quả (dummy head giúp code gọn). Khi một list hết, coi giá trị = 0. Sau vòng lặp, nếu carry = 1 thì thêm nút cuối.",
+  "memoryTip": "Chỉ dùng dummy node + tail pointer trên Stack — O(1) bộ nhớ phụ. Các nút kết quả có thể cấp phát mới O(max(N,M)) theo yêu cầu output.",
+  "solutions": {
+    "c": "// Solution in C (Add Two Numbers)\nstruct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {\n    struct ListNode dummy = {0, NULL};\n    struct ListNode* tail = &dummy;\n    int carry = 0;\n    while (l1 || l2 || carry) {\n        int sum = carry;\n        if (l1) { sum += l1->val; l1 = l1->next; }\n        if (l2) { sum += l2->val; l2 = l2->next; }\n        carry = sum / 10;\n        struct ListNode* node = (struct ListNode*)malloc(sizeof(struct ListNode));\n        node->val = sum % 10;\n        node->next = NULL;\n        tail->next = node;\n        tail = node;\n    }\n    return dummy.next;\n}",
+    "python": "# Solution in Python (Add Two Numbers)\nclass Solution:\n    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = ListNode(0)\n        tail = dummy\n        carry = 0\n        while l1 or l2 or carry:\n            s = carry\n            if l1:\n                s += l1.val\n                l1 = l1.next\n            if l2:\n                s += l2.val\n                l2 = l2.next\n            carry, digit = divmod(s, 10)\n            tail.next = ListNode(digit)\n            tail = tail.next\n        return dummy.next",
+    "cpp": "class Solution {\npublic:\n    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {\n        ListNode dummy(0);\n        ListNode* tail = &dummy;\n        int carry = 0;\n        while (l1 || l2 || carry) {\n            int sum = carry;\n            if (l1) { sum += l1->val; l1 = l1->next; }\n            if (l2) { sum += l2->val; l2 = l2->next; }\n            carry = sum / 10;\n            tail->next = new ListNode(sum % 10);\n            tail = tail->next;\n        }\n        return dummy.next;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Mỗi vị trí chữ số được cộng đúng kèm carry từ hàng trước; xử lý list lệch độ dài bằng cách coi thiếu = 0; carry cuối đảm bảo trường hợp 999+1.",
+    "edgeCases": ["Một list dài hơn nhiều", "carry còn 1 sau cùng", "l1=[0], l2=[0]"],
+    "pitfalls": ["Quên nút carry cuối", "Không dùng dummy → mất head", "Tính carry trước khi mod 10 sai thứ tự"]
+  },
+  "tier": "done"
+}

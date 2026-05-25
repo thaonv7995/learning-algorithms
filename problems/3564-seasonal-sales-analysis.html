@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3564 · Seasonal Sales Analysis — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3564 Seasonal Sales Analysis</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/seasonal-sales-analysis/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3564</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Database</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Seasonal Sales Analysis</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>62.5% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>Table: <code>sales</code></p>
+
+<pre>
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| sale_id       | int     |
+| product_id    | int     |
+| sale_date     | date    |
+| quantity      | int     |
+| price         | decimal |
++---------------+---------+
+sale_id is the unique identifier for this table.
+Each row contains information about a product sale including the product_id, date of sale, quantity sold, and price per unit.
+</pre>
+
+<p>Table: <code>products</code></p>
+
+<pre>
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| product_id    | int     |
+| product_name  | varchar |
+| category      | varchar |
++---------------+---------+
+product_id is the unique identifier for this table.
+Each row contains information about a product including its name and category.
+</pre>
+
+<p>Write a solution to find the most popular product category for each season. The seasons are defined as:</p>
+
+<ul>
+	<li><strong>Winter</strong>: December, January, February</li>
+	<li><strong>Spring</strong>: March, April, May</li>
+	<li><strong>Summer</strong>: June, July, August</li>
+	<li><strong>Fall</strong>: September, October, November</li>
+</ul>
+
+<p>The <strong>popularity</strong> of a <strong>category</strong> is determined by the <strong>total quantity sold</strong> in that <strong>season</strong>. If there is a <strong>tie</strong>, select the category with the highest <strong>total revenue</strong> (<code>quantity &times; price</code>). If there is still a tie, return the lexicographically smaller category.</p>
+
+<p>Return <em>the result table ordered by season in <strong>ascending</strong> order</em>.</p>
+
+<p>The result format is in the following example.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong></p>
+
+<p>sales table:</p>
+
+<pre class="example-io">
++---------+------------+------------+----------+-------+
+| sale_id | product_id | sale_date  | quantity | price |
++---------+------------+------------+----------+-------+
+| 1       | 1          | 2023-01-15 | 5        | 10.00 |
+| 2       | 2          | 2023-01-20 | 4        | 15.00 |
+| 3       | 3          | 2023-03-10 | 3        | 18.00 |
+| 4       | 4          | 2023-04-05 | 1        | 20.00 |
+| 5       | 1          | 2023-05-20 | 2        | 10.00 |
+| 6       | 2          | 2023-06-12 | 4        | 15.00 |
+| 7       | 5          | 2023-06-15 | 5        | 12.00 |
+| 8       | 3          | 2023-07-24 | 2        | 18.00 |
+| 9       | 4          | 2023-08-01 | 5        | 20.00 |
+| 10      | 5          | 2023-09-03 | 3        | 12.00 |
+| 11      | 1          | 2023-09-25 | 6        | 10.00 |
+| 12      | 2          | 2023-11-10 | 4        | 15.00 |
+| 13      | 3          | 2023-12-05 | 6        | 18.00 |
+| 14      | 4          | 2023-12-22 | 3        | 20.00 |
+| 15      | 5          | 2024-02-14 | 2        | 12.00 |
++---------+------------+------------+----------+-------+
+</pre>
+
+<p>products table:</p>
+
+<pre class="example-io">
++------------+-----------------+----------+
+| product_id | product_name    | category |
++------------+-----------------+----------+
+| 1          | Warm Jacket     | Apparel  |
+| 2          | Designer Jeans  | Apparel  |
+| 3          | Cutting Board   | Kitchen  |
+| 4          | Smart Speaker   | Tech     |
+| 5          | Yoga Mat        | Fitness  |
++------------+-----------------+----------+
+</pre>
+
+<p><strong>Output:</strong></p>
+
+<pre class="example-io">
++---------+----------+----------------+---------------+
+| season  | category | total_quantity | total_revenue |
++---------+----------+----------------+---------------+
+| Fall    | Apparel  | 10             | 120.00        |
+| Spring  | Kitchen  | 3              | 54.00         |
+| Summer  | Tech     | 5              | 100.00        |
+| Winter  | Apparel  | 9              | 110.00        |
++---------+----------+----------------+---------------+
+</pre>
+
+<p><strong>Explanation:</strong></p>
+
+<ul>
+	<li><strong>Fall (Sep, Oct, Nov):</strong>
+
+	<ul>
+		<li>Apparel: 10 items sold (6 Jackets in Sep, 4 Jeans in Nov), revenue $120.00 (6&times;$10.00 + 4&times;$15.00)</li>
+		<li>Fitness: 3 Yoga Mats sold in Sep, revenue $36.00</li>
+		<li>Most popular: Apparel with highest total quantity (10)</li>
+	</ul>
+	</li>
+	<li><strong>Spring (Mar, Apr, May):</strong>
+	<ul>
+		<li>Kitchen: 3 Cutting Boards sold in Mar, revenue $54.00</li>
+		<li>Tech: 1 Smart Speaker sold in Apr, revenue $20.00</li>
+		<li>Apparel: 2 Warm Jackets sold in May, revenue $20.00</li>
+		<li>Most popular: Kitchen with highest total quantity (3) and highest revenue ($54.00)</li>
+	</ul>
+	</li>
+	<li><strong>Summer (Jun, Jul, Aug):</strong>
+	<ul>
+		<li>Apparel: 4 Designer Jeans sold in Jun, revenue $60.00</li>
+		<li>Fitness: 5 Yoga Mats sold in Jun, revenue $60.00</li>
+		<li>Kitchen: 2 Cutting Boards sold in Jul, revenue $36.00</li>
+		<li>Tech: 5 Smart Speakers sold in Aug, revenue $100.00</li>
+		<li>Most popular: Tech and Fitness both have 5 items, but Tech has higher revenue ($100.00 vs $60.00)</li>
+	</ul>
+	</li>
+	<li><strong>Winter (Dec, Jan, Feb):</strong>
+	<ul>
+		<li>Apparel: 9 items sold (5 Jackets in Jan, 4 Jeans in Jan), revenue $110.00</li>
+		<li>Kitchen: 6 Cutting Boards sold in Dec, revenue $108.00</li>
+		<li>Tech: 3 Smart Speakers sold in Dec, revenue $60.00</li>
+		<li>Fitness: 2 Yoga Mats sold in Feb, revenue $24.00</li>
+		<li>Most popular: Apparel with highest total quantity (9) and highest revenue ($110.00)</li>
+	</ul>
+	</li>
+</ul>
+
+<p>The result table is ordered by season in ascending order.</p>
+</div>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>{&quot;headers&quot;:{&quot;sales&quot;:[&quot;sale_id&quot;,&quot;product_id&quot;,&quot;sale_date&quot;,&quot;quantity&quot;,&quot;price&quot;],&quot;products&quot;:[&quot;product_id&quot;,&quot;product_name&quot;,&quot;category&quot;]},&quot;rows&quot;:{&quot;sales&quot;:[[1,1,&quot;2023-01-15&quot;,5,10.00],[2,2,&quot;2023-01-20&quot;,4,15.00],[3,3,&quot;2023-03-10&quot;,3,18.00],[4,4,&quot;2023-04-05&quot;,1,20.00],[5,1,&quot;2023-05-20&quot;,2,10.00],[6,2,&quot;2023-06-12&quot;,4,15.00],[7,5,&quot;2023-06-15&quot;,5,12.00],[8,3,&quot;2023-07-24&quot;,2,18.00],[9,4,&quot;2023-08-01&quot;,5,20.00],[10,5,&quot;2023-09-03&quot;,3,12.00],[11,1,&quot;2023-09-25&quot;,6,10.00],[12,2,&quot;2023-11-10&quot;,4,15.00],[13,3,&quot;2023-12-05&quot;,6,18.00],[14,4,&quot;2023-12-22&quot;,3,20.00],[15,5,&quot;2024-02-14&quot;,2,12.00]],&quot;products&quot;:[[1,&quot;Warm Jacket&quot;,&quot;Apparel&quot;],[2,&quot;Designer Jeans&quot;,&quot;Apparel&quot;],[3,&quot;Cutting Board&quot;,&quot;Kitchen&quot;],[4,&quot;Smart Speaker&quot;,&quot;Tech&quot;],[5,&quot;Yoga Mat&quot;,&quot;Fitness&quot;]]}}</code></div>
+                <div class="ex-line"><span>Out</span><code>(xem LeetCode)</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Áp dụng kỹ thuật Database. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="cm">// Template C — xem editorial LeetCode</span>
+</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Template Python — xem editorial LeetCode</span>
+</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// Template C++</span></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Database</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Database.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3563-lexicographically-smallest-string-after-adjacent-removals.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Lexicographically Smallest String After Adjacent Removals</strong></span></a>
+                <a href="3566-partition-array-into-two-equal-product-subsets.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Partition Array into Two Equal Product Subsets</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Seasonal%20Sales%20Analysis&lc_id=3564&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

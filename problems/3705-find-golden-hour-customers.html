@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3705 · Find Golden Hour Customers — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3705 Find Golden Hour Customers</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/find-golden-hour-customers/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3705</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">General</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Find Golden Hour Customers</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>34.3% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>Table: <code>restaurant_orders</code></p>
+
+<pre>
++------------------+----------+
+| Column Name      | Type     | 
++------------------+----------+
+| order_id         | int      |
+| customer_id      | int      |
+| order_timestamp  | datetime |
+| order_amount     | decimal  |
+| payment_method   | varchar  |
+| order_rating     | int      |
++------------------+----------+
+order_id is the unique identifier for this table.
+payment_method can be cash, card, or app.
+order_rating is between 1 and 5, where 5 is the best (NULL if not rated).
+order_timestamp contains both date and time information.
+</pre>
+
+<p>Write a solution to find <strong>golden hour customers</strong>&nbsp;- customers who consistently order during peak hours and provide high satisfaction. A customer is a <strong>golden hour customer</strong> if they meet ALL the following criteria:</p>
+
+<ul>
+	<li>Made <strong>at least</strong> <code>3</code> orders.</li>
+	<li><strong>At least</strong> <code>60%</code> of their orders are during <strong>peak hours&nbsp;</strong>(<code>11:00</code>-<code>14:00</code> or <code>18:00</code>-<code>21:00</code>).</li>
+	<li>Their <strong>average rating</strong> for rated orders is at least <code>4.0,</code> round it to<code> 2 </code>decimal places.</li>
+	<li>Have rated <strong>at least</strong> <code>50%</code> of their orders.</li>
+</ul>
+
+<p>Return <em>the result table ordered by</em> <code>average_rating</code> <em>in <strong>descending</strong> order, then by</em> <code>customer_id</code>​​​​​​​ <em>in <strong>descending</strong> order</em>.</p>
+
+<p>The result format is in the following example.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong></p>
+
+<p>restaurant_orders table:</p>
+
+<pre class="example-io">
++----------+-------------+---------------------+--------------+----------------+--------------+
+| order_id | customer_id | order_timestamp     | order_amount | payment_method | order_rating |
++----------+-------------+---------------------+--------------+----------------+--------------+
+| 1        | 101         | 2024-03-01 12:30:00 | 25.50        | card           | 5            |
+| 2        | 101         | 2024-03-02 19:15:00 | 32.00        | app            | 4            |
+| 3        | 101         | 2024-03-03 13:45:00 | 28.75        | card           | 5            |
+| 4        | 101         | 2024-03-04 20:30:00 | 41.00        | app            | NULL         |
+| 5        | 102         | 2024-03-01 11:30:00 | 18.50        | cash           | 4            |
+| 6        | 102         | 2024-03-02 12:00:00 | 22.00        | card           | 3            |
+| 7        | 102         | 2024-03-03 15:30:00 | 19.75        | cash           | NULL         |
+| 8        | 103         | 2024-03-01 19:00:00 | 55.00        | app            | 5            |
+| 9        | 103         | 2024-03-02 20:45:00 | 48.50        | app            | 4            |
+| 10       | 103         | 2024-03-03 18:30:00 | 62.00        | card           | 5            |
+| 11       | 104         | 2024-03-01 10:00:00 | 15.00        | cash           | 3            |
+| 12       | 104         | 2024-03-02 09:30:00 | 18.00        | cash           | 2            |
+| 13       | 104         | 2024-03-03 16:00:00 | 20.00        | card           | 3            |
+| 14       | 105         | 2024-03-01 12:15:00 | 30.00        | app            | 4            |
+| 15       | 105         | 2024-03-02 13:00:00 | 35.50        | app            | 5            |
+| 16       | 105         | 2024-03-03 11:45:00 | 28.00        | card           | 4            |
++----------+-------------+---------------------+--------------+----------------+--------------+
+</pre>
+
+<p><strong>Output:</strong></p>
+
+<pre class="example-io">
++-------------+--------------+----------------------+----------------+
+| customer_id | total_orders | peak_hour_percentage | average_rating |
++-------------+--------------+----------------------+----------------+
+| 103         | 3            | 100                  | 4.67           |
+| 101         | 4            | 100                  | 4.67           |
+| 105         | 3            | 100                  | 4.33           |
++-------------+--------------+----------------------+----------------+
+</pre>
+
+<p><strong>Explanation:</strong></p>
+
+<ul>
+	<li><strong>Customer 101</strong>:
+
+	<ul>
+		<li>Total orders: 4 (at least 3)&nbsp;</li>
+		<li>Peak hour orders: 4 out of 4 (12:30, 19:15, 13:45, and 20:30 are in peak hours)</li>
+		<li>Peak hour percentage: 100% (at least 60%)&nbsp;</li>
+		<li>Rated orders: 3 out of 4 (75% rating completion)&nbsp;</li>
+		<li>Average rating: (5+4+5)/3 = 4.67 (at least 4.0)&nbsp;</li>
+		<li>Result: <strong>Golden hour customer</strong></li>
+	</ul>
+	</li>
+	<li><strong>Customer 102</strong>:
+	<ul>
+		<li>Total orders: 3 (at least 3)&nbsp;</li>
+		<li>Peak hour orders: 2 out of 3 (11:30, 12:00 are in peak hours; 15:30 is not)</li>
+		<li>Peak hour percentage: 2/3 = 66.67% (at least 60%)&nbsp;</li>
+		<li>Rated orders: 2 out of 3 (66.67% rating completion)&nbsp;</li>
+		<li>Average rating: (4+3)/2 = 3.5 (less than 4.0)&nbsp;</li>
+		<li>Result: <strong>Not a golden hour customer</strong> (average rating too low)</li>
+	</ul>
+	</li>
+	<li><strong>Customer 103</strong>:
+	<ul>
+		<li>Total orders: 3 (at least 3)&nbsp;</li>
+		<li>Peak hour orders: 3 out of 3 (19:00, 20:45, 18:30 all in evening peak)</li>
+		<li>Peak hour percentage: 3/3 = 100% (at least 60%)&nbsp;</li>
+		<li>Rated orders: 3 out of 3 (100% rating completion)&nbsp;</li>
+		<li>Average rating: (5+4+5)/3 = 4.67 (at least 4.0)&nbsp;</li>
+		<li>Result: <strong>Golden hour customer</strong></li>
+	</ul>
+	</li>
+	<li><strong>Customer 104</strong>:
+	<ul>
+		<li>Total orders: 3 (at least 3)&nbsp;</li>
+		<li>Peak hour orders: 0 out of 3 (10:00, 09:30, 16:00 all outside peak hours)</li>
+		<li>Peak hour percentage: 0/3 = 0% (less than 60%)&nbsp;</li>
+		<li>Result: <strong>Not a golden hour customer</strong> (insufficient peak hour orders)</li>
+	</ul>
+	</li>
+	<li><strong>Customer 105</strong>:
+	<ul>
+		<li>Total orders: 3 (at least 3)&nbsp;</li>
+		<li>Peak hour orders: 3 out of 3 (12:15, 13:00, 11:45 all in lunch peak)</li>
+		<li>Peak hour percentage: 3/3 = 100% (at least 60%)&nbsp;</li>
+		<li>Rated orders: 3 out of 3 (100% rating completion)&nbsp;</li>
+		<li>Average rating: (4+5+4)/3 = 4.33 (at least 4.0)&nbsp;</li>
+		<li>Result: <strong>Golden hour customer</strong></li>
+	</ul>
+	</li>
+</ul>
+
+<p>The results table is ordered by average_rating DESC, then customer_id DESC.</p>
+</div>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>{&quot;headers&quot;:{&quot;restaurant_orders&quot;:[&quot;order_id&quot;,&quot;customer_id&quot;,&quot;order_timestamp&quot;,&quot;order_amount&quot;,&quot;payment_method&quot;,&quot;order_rating&quot;]},&quot;rows&quot;:{&quot;restaurant_orders&quot;:[[1,101,&quot;2024-03-01 12:30:00&quot;,25.50,&quot;card&quot;,5],[2,101,&quot;2024-03-02 19:15:00&quot;,32.00,&quot;app&quot;,4],[3,101,&quot;2024-03-03 13:45:00&quot;,28.75,&quot;card&quot;,5],[4,101,&quot;2024-03-04 20:30:00&quot;,41.00,&quot;app&quot;,null],[5,102,&quot;2024-03-01 11:30:00&quot;,18.50,&quot;cash&quot;,4],[6,102,&quot;2024-03-02 12:00:00&quot;,22.00,&quot;card&quot;,3],[7,102,&quot;2024-03-03 15:30:00&quot;,19.75,&quot;cash&quot;,null],[8,103,&quot;2024-03-01 19:00:00&quot;,55.00,&quot;app&quot;,5],[9,103,&quot;2024-03-02 20:45:00&quot;,48.50,&quot;app&quot;,4],[10,103,&quot;2024-03-03 18:30:00&quot;,62.00,&quot;card&quot;,5],[11,104,&quot;2024-03-01 10:00:00&quot;,15.00,&quot;cash&quot;,3],[12,104,&quot;2024-03-02 09:30:00&quot;,18.00,&quot;cash&quot;,2],[13,104,&quot;2024-03-03 16:00:00&quot;,20.00,&quot;card&quot;,3],[14,105,&quot;2024-03-01 12:15:00&quot;,30.00,&quot;app&quot;,4],[15,105,&quot;2024-03-02 13:00:00&quot;,35.50,&quot;app&quot;,5],[16,105,&quot;2024-03-03 11:45:00&quot;,28.00,&quot;card&quot;,4]]}}</code></div>
+                <div class="ex-line"><span>Out</span><code>(xem LeetCode)</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Áp dụng kỹ thuật thuật toán phù hợp. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="cm">// Template C — xem editorial LeetCode</span>
+</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Template Python — xem editorial LeetCode</span>
+</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// Template C++</span></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">General</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật thuật toán phù hợp.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3704-count-no-zero-pairs-that-sum-to-n.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Count No-Zero Pairs That Sum to N</strong></span></a>
+                <a href="3707-equal-score-substrings.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Equal Score Substrings</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Find%20Golden%20Hour%20Customers&lc_id=3705&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

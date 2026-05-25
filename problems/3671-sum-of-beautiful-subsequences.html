@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3671 · Sum of Beautiful Subsequences — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3671 Sum of Beautiful Subsequences</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/sum-of-beautiful-subsequences/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3671</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Sum of Beautiful Subsequences</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>31.6% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given an integer array <code>nums</code> of length <code>n</code>.</p>
+
+<p>For every <strong>positive</strong> integer <code>g</code>, we define the <strong>beauty</strong> of <code>g</code> as the <strong>product</strong> of <code>g</code> and the number of <strong>strictly increasing</strong> <strong><span data-keyword="subsequence-array-nonempty">subsequences</span></strong> of <code>nums</code> whose greatest common divisor (GCD) is exactly <code>g</code>.</p>
+
+<p>Return the <strong>sum</strong> of <strong>beauty</strong> values for all positive integers <code>g</code>.</p>
+
+<p>Since the answer could be very large, return it modulo <code>10<sup>9</sup> + 7</code>.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">nums = [1,2,3]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">10</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>All strictly increasing subsequences and their GCDs are:</p>
+
+<table style="border: 1px solid black;">
+	<thead>
+		<tr>
+			<th style="border: 1px solid black;">Subsequence</th>
+			<th style="border: 1px solid black;">GCD</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid black;">[1]</td>
+			<td style="border: 1px solid black;">1</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">[2]</td>
+			<td style="border: 1px solid black;">2</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">[3]</td>
+			<td style="border: 1px solid black;">3</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">[1,2]</td>
+			<td style="border: 1px solid black;">1</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">[1,3]</td>
+			<td style="border: 1px solid black;">1</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">[2,3]</td>
+			<td style="border: 1px solid black;">1</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">[1,2,3]</td>
+			<td style="border: 1px solid black;">1</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Calculating beauty for each GCD:</p>
+
+<table style="border: 1px solid black;">
+	<thead>
+		<tr>
+			<th style="border: 1px solid black;">GCD</th>
+			<th style="border: 1px solid black;">Count of subsequences</th>
+			<th style="border: 1px solid black;">Beauty (GCD &times; Count)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid black;">1</td>
+			<td style="border: 1px solid black;">5</td>
+			<td style="border: 1px solid black;">1 &times; 5 = 5</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">2</td>
+			<td style="border: 1px solid black;">1</td>
+			<td style="border: 1px solid black;">2 &times; 1 = 2</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">3</td>
+			<td style="border: 1px solid black;">1</td>
+			<td style="border: 1px solid black;">3 &times; 1 = 3</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Total beauty is <code>5 + 2 + 3 = 10</code>.</p>
+</div>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">nums = [4,6]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">12</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>All strictly increasing subsequences and their GCDs are:</p>
+
+<table style="border: 1px solid black;">
+	<thead>
+		<tr>
+			<th style="border: 1px solid black;">Subsequence</th>
+			<th style="border: 1px solid black;">GCD</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid black;">[4]</td>
+			<td style="border: 1px solid black;">4</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">[6]</td>
+			<td style="border: 1px solid black;">6</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">[4,6]</td>
+			<td style="border: 1px solid black;">2</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Calculating beauty for each GCD:</p>
+
+<table style="border: 1px solid black;">
+	<thead>
+		<tr>
+			<th style="border: 1px solid black;">GCD</th>
+			<th style="border: 1px solid black;">Count of subsequences</th>
+			<th style="border: 1px solid black;">Beauty (GCD &times; Count)</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid black;">2</td>
+			<td style="border: 1px solid black;">1</td>
+			<td style="border: 1px solid black;">2 &times; 1 = 2</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">4</td>
+			<td style="border: 1px solid black;">1</td>
+			<td style="border: 1px solid black;">4 &times; 1 = 4</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid black;">6</td>
+			<td style="border: 1px solid black;">1</td>
+			<td style="border: 1px solid black;">6 &times; 1 = 6</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Total beauty is <code>2 + 4 + 6 = 12</code>.</p>
+</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= n == nums.length &lt;= 10<sup>4</sup></code></li>
+	<li><code>1 &lt;= nums[i] &lt;= 7 * 10<sup>4</sup></code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[1,2,3]</code></div>
+                <div class="ex-line"><span>Out</span><code>[4,6]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Fix a candidate GCD &lt;code&gt;g&lt;/code&gt; and keep, in the original order, only those array elements divisible by &lt;code&gt;g&lt;/code&gt;; scale them down to &lt;code&gt;x / g&lt;/code&gt; so any increasing subsequence here corresponds to a subsequence whose elements are all multiples of &lt;code&gt;g&lt;/code&gt;. Count strictly increasing subsequences of that scaled list by assigning ranks (coordinate compression) and maintaining prefix sums of ways for smaller ranks (you may use a Fenwick tree). The count you get, call it &lt;code&gt;cnt_g&lt;/code&gt;, includes subsequences whose GCD is &lt;code&gt;g&lt;/code&gt; or any multiple of &lt;code&gt;g&lt;/code&gt;; it is therefore an overcount for &quot;exactly g&quot;. To get the number with GCD exactly &lt;code&gt;g&lt;/code&gt;, process &lt;code&gt;g&lt;/code&gt; from &lt;code&gt;max(nums)&lt;/code&gt; down to &lt;code&gt;1&lt;/code&gt; and subtract counts already assigned to multiples: &lt;code&gt;F[g] = cnt_g - sum{k=2g,3g,...}*F[k]&lt;/code&gt; (do arithmetic mod &lt;code&gt;MOD&lt;/code&gt;); descending order ensures multiples are known. The final answer is the sum of contributions &lt;code&gt;g * F[g]&lt;/code&gt; for all &lt;code&gt;g&lt;/code&gt;.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> totalBeauty(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> totalBeauty(<span class="ty">self</span>, nums):
+        &quot;&quot;&quot;
+        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> totalBeauty(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Fix a candidate GCD &lt;code&gt;g&lt;/code&gt; and keep, in the…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Count strictly increasing subsequences of that scaled…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — The count you get, call it &lt;code&gt;cnt_g&lt;/code&gt;, includes…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — To get the number with GCD exactly &lt;code&gt;g&lt;/code&gt;,…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3670-maximum-product-of-two-integers-with-no-common-bits.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Maximum Product of Two Integers With No Common Bits</strong></span></a>
+                <a href="3673-find-zombie-sessions.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Find Zombie Sessions</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Sum%20of%20Beautiful%20Subsequences&lc_id=3671&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

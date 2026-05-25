@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+    <style>
+        .tier-badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+        }
+        .tier-badge.premium { color: #fde68a; border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.1); }
+        .tier-badge.catalog { color: #c4b5fd; border-color: rgba(139,92,246,.35); background: rgba(139,92,246,.1); }
+        .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .tag-chip {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+        .lc-external-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            background: rgba(99,102,241,.08);
+            border: 1px solid rgba(99,102,241,.2);
+            border-radius: 10px;
+            font-size: 0.78rem;
+        }
+        .lc-external-bar a { color: var(--cyan); text-decoration: none; font-weight: 600; }
+        .lc-open-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(99,102,241,.15);
+            border: 1px solid rgba(99,102,241,.3);
+            color: #c4b5fd !important;
+            font-size: 0.76rem;
+            text-decoration: none;
+        }
+        .meta-cx.paid { color: #fca5a5; border-color: rgba(248,113,113,.3); }
+        #desc-content { font-size: 0.84rem; line-height: 1.65; color: #cbd5e1; }
+        #desc-content p { margin-bottom: 0.75em; }
+        #desc-content code, #desc-content pre { font-family: 'Fira Code', monospace; font-size: 0.8rem; }
+        #desc-content pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+        .block-text.muted { color: var(--faint); }
+    </style>
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current" id="breadcrumb-title">…</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head" id="problem-head">
+                    <div class="head-meta">
+                        <span class="lc-num" id="lc-num">LC #—</span>
+                        <span class="diff-badge" id="diff-badge">—</span>
+                        <span class="cat-chip" id="cat-chip">—</span>
+                        <span class="tier-badge catalog" id="tier-badge">Catalog</span>
+                    </div>
+                    <h1 class="problem-title" id="problem-title">…</h1>
+                    <div class="tag-row" id="tag-row"></div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="lc-external-bar">
+                    <i class="fa-brands fa-leetcode"></i>
+                    <span>Đề gốc:</span>
+                    <a id="lc-external" href="#" target="_blank" rel="noopener">LeetCode</a>
+                </div>
+
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div id="desc-content" class="block-text">Đang tải…</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example" id="examples-content"></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis"></div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="#" class="problem-nav-btn" id="nav-prev"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></a>
+                <a href="#" class="problem-nav-btn next" id="nav-next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — bài premium có sandbox đầy đủ hơn</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" id="sandbox-iframe" src="about:blank"></iframe>
+            </div>
+        </section>
+    </div>
+
+    <script src="view.js"></script>
+</body>
+</html>

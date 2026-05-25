@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #6 · Zigzag Conversion — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#6 Zigzag Conversion</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/zigzag-conversion/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #6</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">String</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
+                    </div>
+                    <h1 class="problem-title">Zigzag Conversion</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>54.2% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="block-text">Cho chuỗi s và số hàng numRows, sắp xếp s theo zigzag trên numRows hàng rồi đọc từng hàng nối lại.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;PAYPALISHIRING&quot;, numRows = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;PAHNAPLSIIGYIR&quot;</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;PAYPALISHIRING&quot;, numRows = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;PINALSIGYAHRPI&quot;</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Dùng mảng rows[numRows] làm bucket. Duyệt từng ký tự, gán vào row hiện tại, đảo chiều khi chạm hàng 0 hoặc numRows-1. Cuối cùng nối các bucket.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* convert(<span class="ty">char</span>* s, <span class="ty">int</span> numRows) {
+    <span class="kw">if</span> (numRows == 1) <span class="kw">return</span> s;
+    <span class="ty">int</span> n = strlen(s), r = 0, dir = 1;
+    <span class="ty">char</span>** rows = <span class="kw">calloc</span>(numRows, <span class="kw">sizeof</span>(<span class="ty">char</span>*));
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; numRows; i++) rows[i] = <span class="kw">calloc</span>(n + 1, 1);
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; s[i]; i++) {
+        rows[r][strlen(rows[r])] = s[i];
+        <span class="kw">if</span> (r == 0) dir = 1; <span class="kw">else</span> <span class="kw">if</span> (r == numRows - 1) dir = -1;
+        r += dir;
+    }
+    <span class="ty">char</span>* out = <span class="kw">malloc</span>(n + 1); out[0] = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; numRows; i++) strcat(out, rows[i]);
+    <span class="kw">return</span> out;
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> convert(<span class="ty">self</span>, s: <span class="ty">str</span>, numRows: <span class="ty">int</span>) -&gt; <span class="ty">str</span>:
+        <span class="kw">if</span> numRows == 1: <span class="kw">return</span> s
+        rows = [''] * numRows
+        r, d = 0, 1
+        <span class="kw">for</span> c <span class="kw">in</span> s:
+            rows[r] += c
+            <span class="kw">if</span> r == 0: d = 1
+            <span class="kw">elif</span> r == numRows - 1: d = -1
+            r += d
+        <span class="kw">return</span> ''.join(rows)</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">string</span> convert(<span class="ty">string</span> s, <span class="ty">int</span> numRows) {
+        <span class="kw">if</span> (numRows == 1) <span class="kw">return</span> s;
+        <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; rows(numRows);
+        <span class="ty">int</span> r = 0, d = 1;
+        <span class="kw">for</span> (<span class="ty">char</span> c : s) {
+            rows[r] += c;
+            <span class="kw">if</span> (r == 0) d = 1; <span class="kw">else</span> <span class="kw">if</span> (r == numRows - 1) d = -1;
+            r += d;
+        }
+        <span class="ty">string</span> out;
+        <span class="kw">for</span> (auto&amp; row : rows) out += row;
+        <span class="kw">return</span> out;
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">String</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dùng mảng rows[numRows] làm bucket.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Duyệt từng ký tự, gán vào row hiện tại, đảo chiều khi…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Cuối cùng nối các bucket.</span></li></ol>
+
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mô phỏng đúng quỹ đạo zigzag — mỗi ký tự vào đúng một hàng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">numRows = 1</span><span class="analysis-tag edge">numRows &gt;= len(s)</span><span class="analysis-tag edge">s rỗng</span><span class="analysis-tag pit">Quên đảo dir tại biên</span><span class="analysis-tag pit">Off-by-one numRows</span></div>
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng N bucket string trên heap — O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <span class="problem-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></span>
+                <span class="problem-nav-btn disabled next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></span>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Zigzag%20Conversion&lc_id=6&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

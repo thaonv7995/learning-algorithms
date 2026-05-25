@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3617 · Find Students with Study Spiral Pattern — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3617 Find Students with Study Spiral Pattern</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/find-students-with-study-spiral-pattern/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3617</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">General</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Find Students with Study Spiral Pattern</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>30.1% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>Table: <code>students</code></p>
+
+<pre>
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| student_id   | int     |
+| student_name | varchar |
+| major        | varchar |
++--------------+---------+
+student_id is the unique identifier for this table.
+Each row contains information about a student and their academic major.
+</pre>
+
+<p>Table: <code>study_sessions</code></p>
+
+<pre>
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| session_id    | int     |
+| student_id    | int     |
+| subject       | varchar |
+| session_date  | date    |
+| hours_studied | decimal |
++---------------+---------+
+session_id is the unique identifier for this table.
+Each row represents a study session by a student for a specific subject.
+</pre>
+
+<p>Write a solution to find students who follow the <strong>Study Spiral Pattern</strong>&nbsp;- students who consistently study multiple subjects in a rotating cycle.</p>
+
+<ul>
+	<li>A Study Spiral Pattern means a student studies at least <code>3</code><strong> different subjects</strong> in a repeating sequence</li>
+	<li>The pattern must repeat for <strong>at least </strong><code>2</code><strong> complete cycles</strong> (minimum <code>6</code> study sessions)</li>
+	<li>Sessions must be <strong>consecutive dates</strong> with no gaps longer than <code>2</code> days between sessions</li>
+	<li>Calculate the <strong>cycle length</strong> (number of different subjects in the pattern)</li>
+	<li>Calculate the <strong>total study hours</strong> across all sessions in the pattern</li>
+	<li>Only include students with cycle length of <strong>at least </strong><code>3</code><strong> subjects</strong></li>
+</ul>
+
+<p>Return <em>the result table ordered by cycle length in <strong>descending</strong> order, then by total study hours in <strong>descending</strong> order</em>.</p>
+
+<p>The result format is in the following example.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong></p>
+
+<p>students table:</p>
+
+<pre class="example-io">
++------------+--------------+------------------+
+| student_id | student_name | major            |
++------------+--------------+------------------+
+| 1          | Alice Chen   | Computer Science |
+| 2          | Bob Johnson  | Mathematics      |
+| 3          | Carol Davis  | Physics          |
+| 4          | David Wilson | Chemistry        |
+| 5          | Emma Brown   | Biology          |
++------------+--------------+------------------+
+</pre>
+
+<p>study_sessions table:</p>
+
+<pre class="example-io">
++------------+------------+------------+--------------+---------------+
+| session_id | student_id | subject    | session_date | hours_studied |
++------------+------------+------------+--------------+---------------+
+| 1          | 1          | Math       | 2023-10-01   | 2.5           |
+| 2          | 1          | Physics    | 2023-10-02   | 3.0           |
+| 3          | 1          | Chemistry  | 2023-10-03   | 2.0           |
+| 4          | 1          | Math       | 2023-10-04   | 2.5           |
+| 5          | 1          | Physics    | 2023-10-05   | 3.0           |
+| 6          | 1          | Chemistry  | 2023-10-06   | 2.0           |
+| 7          | 2          | Algebra    | 2023-10-01   | 4.0           |
+| 8          | 2          | Calculus   | 2023-10-02   | 3.5           |
+| 9          | 2          | Statistics | 2023-10-03   | 2.5           |
+| 10         | 2          | Geometry   | 2023-10-04   | 3.0           |
+| 11         | 2          | Algebra    | 2023-10-05   | 4.0           |
+| 12         | 2          | Calculus   | 2023-10-06   | 3.5           |
+| 13         | 2          | Statistics | 2023-10-07   | 2.5           |
+| 14         | 2          | Geometry   | 2023-10-08   | 3.0           |
+| 15         | 3          | Biology    | 2023-10-01   | 2.0           |
+| 16         | 3          | Chemistry  | 2023-10-02   | 2.5           |
+| 17         | 3          | Biology    | 2023-10-03   | 2.0           |
+| 18         | 3          | Chemistry  | 2023-10-04   | 2.5           |
+| 19         | 4          | Organic    | 2023-10-01   | 3.0           |
+| 20         | 4          | Physical   | 2023-10-05   | 2.5           |
++------------+------------+------------+--------------+---------------+
+</pre>
+
+<p><strong>Output:</strong></p>
+
+<pre class="example-io">
++------------+--------------+------------------+--------------+-------------------+
+| student_id | student_name | major            | cycle_length | total_study_hours |
++------------+--------------+------------------+--------------+-------------------+
+| 2          | Bob Johnson  | Mathematics      | 4            | 26.0              |
+| 1          | Alice Chen   | Computer Science | 3            | 15.0              |
++------------+--------------+------------------+--------------+-------------------+
+</pre>
+
+<p><strong>Explanation:</strong></p>
+
+<ul>
+	<li><strong>Alice Chen (student_id = 1):</strong>
+
+	<ul>
+		<li>Study sequence: Math &rarr; Physics &rarr; Chemistry &rarr; Math &rarr; Physics &rarr; Chemistry</li>
+		<li>Pattern: 3 subjects (Math, Physics, Chemistry) repeating for 2 complete cycles</li>
+		<li>Consecutive dates: Oct 1-6 with no gaps &gt; 2 days</li>
+		<li>Cycle length: 3 subjects</li>
+		<li>Total hours: 2.5 + 3.0 + 2.0 + 2.5 + 3.0 + 2.0 = 15.0 hours</li>
+	</ul>
+	</li>
+	<li><strong>Bob Johnson (student_id = 2):</strong>
+	<ul>
+		<li>Study sequence: Algebra &rarr; Calculus &rarr; Statistics &rarr; Geometry &rarr; Algebra &rarr; Calculus &rarr; Statistics &rarr; Geometry</li>
+		<li>Pattern: 4 subjects (Algebra, Calculus, Statistics, Geometry) repeating for 2 complete cycles</li>
+		<li>Consecutive dates: Oct 1-8 with no gaps &gt; 2 days</li>
+		<li>Cycle length: 4 subjects</li>
+		<li>Total hours: 4.0 + 3.5 + 2.5 + 3.0 + 4.0 + 3.5 + 2.5 + 3.0 = 26.0&nbsp;hours</li>
+	</ul>
+	</li>
+	<li><strong>Students not included:</strong>
+	<ul>
+		<li>Carol Davis (student_id = 3): Only 2 subjects (Biology, Chemistry) - doesn&#39;t meet minimum 3 subjects requirement</li>
+		<li>David Wilson (student_id = 4): Only 2 study sessions with a 4-day gap - doesn&#39;t meet consecutive dates requirement</li>
+		<li>Emma Brown (student_id = 5): No study sessions recorded</li>
+	</ul>
+	</li>
+</ul>
+
+<p>The result table is ordered by cycle_length in descending order, then by total_study_hours in descending order.</p>
+</div>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>{&quot;headers&quot;:{&quot;students&quot;:[&quot;student_id&quot;,&quot;student_name&quot;,&quot;major&quot;],&quot;study_sessions&quot;:[&quot;session_id&quot;,&quot;student_id&quot;,&quot;subject&quot;,&quot;session_date&quot;,&quot;hours_studied&quot;]},&quot;rows&quot;:{&quot;students&quot;:[[1,&quot;Alice Chen&quot;,&quot;Computer Science&quot;],[2,&quot;Bob Johnson&quot;,&quot;Mathematics&quot;],[3,&quot;Carol Davis&quot;,&quot;Physics&quot;],[4,&quot;David Wilson&quot;,&quot;Chemistry&quot;],[5,&quot;Emma Brown&quot;,&quot;Biology&quot;]],&quot;study_sessions&quot;:[[1,1,&quot;Math&quot;,&quot;2023-10-01&quot;,2.5],[2,1,&quot;Physics&quot;,&quot;2023-10-02&quot;,3.0],[3,1,&quot;Chemistry&quot;,&quot;2023-10-03&quot;,2.0],[4,1,&quot;Math&quot;,&quot;2023-10-04&quot;,2.5],[5,1,&quot;Physics&quot;,&quot;2023-10-05&quot;,3.0],[6,1,&quot;Chemistry&quot;,&quot;2023-10-06&quot;,2.0],[7,2,&quot;Algebra&quot;,&quot;2023-10-01&quot;,4.0],[8,2,&quot;Calculus&quot;,&quot;2023-10-02&quot;,3.5],[9,2,&quot;Statistics&quot;,&quot;2023-10-03&quot;,2.5],[10,2,&quot;Geometry&quot;,&quot;2023-10-04&quot;,3.0],[11,2,&quot;Algebra&quot;,&quot;2023-10-05&quot;,4.0],[12,2,&quot;Calculus&quot;,&quot;2023-10-06&quot;,3.5],[13,2,&quot;Statistics&quot;,&quot;2023-10-07&quot;,2.5],[14,2,&quot;Geometry&quot;,&quot;2023-10-08&quot;,3.0],[15,3,&quot;Biology&quot;,&quot;2023-10-01&quot;,2.0],[16,3,&quot;Chemistry&quot;,&quot;2023-10-02&quot;,2.5],[17,3,&quot;Biology&quot;,&quot;2023-10-03&quot;,2.0],[18,3,&quot;Chemistry&quot;,&quot;2023-10-04&quot;,2.5],[19,4,&quot;Organic&quot;,&quot;2023-10-01&quot;,3.0],[20,4,&quot;Physical&quot;,&quot;2023-10-05&quot;,2.5]]}}</code></div>
+                <div class="ex-line"><span>Out</span><code>(xem LeetCode)</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Áp dụng kỹ thuật thuật toán phù hợp. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="cm">// Template C — xem editorial LeetCode</span>
+</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Template Python — xem editorial LeetCode</span>
+</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// Template C++</span></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">General</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật thuật toán phù hợp.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3615-longest-palindromic-path-in-graph.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Longest Palindromic Path in Graph</strong></span></a>
+                <a href="3618-split-array-by-prime-indices.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Split Array by Prime Indices</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Find%20Students%20with%20Study%20Spiral%20Pattern&lc_id=3617&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #2227 · Encrypt and Decrypt Strings — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#2227 Encrypt and Decrypt Strings</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/encrypt-and-decrypt-strings/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #2227</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Encrypt and Decrypt Strings</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>38.4% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given a character array <code>keys</code> containing <strong>unique</strong> characters and a string array <code>values</code> containing strings of length 2. You are also given another string array <code>dictionary</code> that contains all permitted original strings after decryption. You should implement a data structure that can encrypt or decrypt a <strong>0-indexed</strong> string.</p>
+
+<p>A string is <strong>encrypted</strong> with the following process:</p>
+
+<ol>
+	<li>For each character <code>c</code> in the string, we find the index <code>i</code> satisfying <code>keys[i] == c</code> in <code>keys</code>.</li>
+	<li>Replace <code>c</code> with <code>values[i]</code> in the string.</li>
+</ol>
+
+<p>Note that in case a character of the string is <strong>not present</strong> in <code>keys</code>, the encryption process cannot be carried out, and an empty string <code>&quot;&quot;</code> is returned.</p>
+
+<p>A string is <strong>decrypted</strong> with the following process:</p>
+
+<ol>
+	<li>For each substring <code>s</code> of length 2 occurring at an even index in the string, we find an <code>i</code> such that <code>values[i] == s</code>. If there are multiple valid <code>i</code>, we choose <strong>any</strong> one of them. This means a string could have multiple possible strings it can decrypt to.</li>
+	<li>Replace <code>s</code> with <code>keys[i]</code> in the string.</li>
+</ol>
+
+<p>Implement the <code>Encrypter</code> class:</p>
+
+<ul>
+	<li><code>Encrypter(char[] keys, String[] values, String[] dictionary)</code> Initializes the <code>Encrypter</code> class with <code>keys, values</code>, and <code>dictionary</code>.</li>
+	<li><code>String encrypt(String word1)</code> Encrypts <code>word1</code> with the encryption process described above and returns the encrypted string.</li>
+	<li><code>int decrypt(String word2)</code> Returns the number of possible strings <code>word2</code> could decrypt to that also appear in <code>dictionary</code>.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<pre>
+<strong>Input</strong>
+[&quot;Encrypter&quot;, &quot;encrypt&quot;, &quot;decrypt&quot;]
+[[[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;], [&quot;ei&quot;, &quot;zf&quot;, &quot;ei&quot;, &quot;am&quot;], [&quot;abcd&quot;, &quot;acbd&quot;, &quot;adbc&quot;, &quot;badc&quot;, &quot;dacb&quot;, &quot;cadb&quot;, &quot;cbda&quot;, &quot;abad&quot;]], [&quot;abcd&quot;], [&quot;eizfeiam&quot;]]
+<strong>Output</strong>
+[null, &quot;eizfeiam&quot;, 2]
+
+<strong>Explanation</strong>
+Encrypter encrypter = new Encrypter([[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;], [&quot;ei&quot;, &quot;zf&quot;, &quot;ei&quot;, &quot;am&quot;], [&quot;abcd&quot;, &quot;acbd&quot;, &quot;adbc&quot;, &quot;badc&quot;, &quot;dacb&quot;, &quot;cadb&quot;, &quot;cbda&quot;, &quot;abad&quot;]);
+encrypter.encrypt(&quot;abcd&quot;); // return &quot;eizfeiam&quot;. 
+&nbsp;                          // &#39;a&#39; maps to &quot;ei&quot;, &#39;b&#39; maps to &quot;zf&quot;, &#39;c&#39; maps to &quot;ei&quot;, and &#39;d&#39; maps to &quot;am&quot;.
+encrypter.decrypt(&quot;eizfeiam&quot;); // return 2. 
+                              // &quot;ei&quot; can map to &#39;a&#39; or &#39;c&#39;, &quot;zf&quot; maps to &#39;b&#39;, and &quot;am&quot; maps to &#39;d&#39;. 
+                              // Thus, the possible strings after decryption are &quot;abad&quot;, &quot;cbad&quot;, &quot;abcd&quot;, and &quot;cbcd&quot;. 
+                              // 2 of those strings, &quot;abad&quot; and &quot;abcd&quot;, appear in dictionary, so the answer is 2.
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= keys.length == values.length &lt;= 26</code></li>
+	<li><code>values[i].length == 2</code></li>
+	<li><code>1 &lt;= dictionary.length &lt;= 100</code></li>
+	<li><code>1 &lt;= dictionary[i].length &lt;= 100</code></li>
+	<li>All <code>keys[i]</code> and <code>dictionary[i]</code> are <strong>unique</strong>.</li>
+	<li><code>1 &lt;= word1.length &lt;= 2000</code></li>
+	<li><code>2 &lt;= word2.length &lt;= 200</code></li>
+	<li>All <code>word1[i]</code> appear in <code>keys</code>.</li>
+	<li><code>word2.length</code> is even.</li>
+	<li><code>keys</code>, <code>values[i]</code>, <code>dictionary[i]</code>, <code>word1</code>, and <code>word2</code> only contain lowercase English letters.</li>
+	<li>At most <code>200</code> calls will be made to <code>encrypt</code> and <code>decrypt</code> <strong>in total</strong>.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[&quot;Encrypter&quot;,&quot;encrypt&quot;,&quot;decrypt&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;],[&quot;ei&quot;,&quot;zf&quot;,&quot;ei&quot;,&quot;am&quot;],[&quot;abcd&quot;,&quot;acbd&quot;,&quot;adbc&quot;,&quot;badc&quot;,&quot;dacb&quot;,&quot;cadb&quot;,&quot;cbda&quot;,&quot;abad&quot;]],[&quot;abcd&quot;],[&quot;eizfeiam&quot;]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">For encryption, use hashmap to map each char of word1 to its value. For decryption, use trie to prune when necessary.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">
+
+
+typedef <span class="ty">struct</span> {
+    
+} Encrypter;
+
+
+Encrypter* encrypterCreate(<span class="ty">char</span>* keys, <span class="ty">int</span> keysSize, <span class="ty">char</span>** values, <span class="ty">int</span> valuesSize, <span class="ty">char</span>** dictionary, <span class="ty">int</span> dictionarySize) {
+    
+}
+
+<span class="ty">char</span>* encrypterEncrypt(Encrypter* obj, <span class="ty">char</span>* word1) {
+    
+}
+
+<span class="ty">int</span> encrypterDecrypt(Encrypter* obj, <span class="ty">char</span>* word2) {
+    
+}
+
+<span class="ty">void</span> encrypterFree(Encrypter* obj) {
+    
+}
+
+/**
+ * Your Encrypter <span class="ty">struct</span> will be instantiated and called as such:
+ * Encrypter* obj = encrypterCreate(keys, keysSize, values, valuesSize, dictionary, dictionarySize);
+ * <span class="ty">char</span>* param_1 = encrypterEncrypt(obj, word1);
+ 
+ * <span class="ty">int</span> param_2 = encrypterDecrypt(obj, word2);
+ 
+ * encrypterFree(obj);
+*/</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Encrypter(object):
+
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, keys, values, dictionary):
+        &quot;&quot;&quot;
+        :type keys: <span class="ty">List</span>[<span class="ty">str</span>]
+        :type values: <span class="ty">List</span>[<span class="ty">str</span>]
+        :type dictionary: <span class="ty">List</span>[<span class="ty">str</span>]
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> encrypt(<span class="ty">self</span>, word1):
+        &quot;&quot;&quot;
+        :type word1: <span class="ty">str</span>
+        :rtype: <span class="ty">str</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> decrypt(<span class="ty">self</span>, word2):
+        &quot;&quot;&quot;
+        :type word2: <span class="ty">str</span>
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        
+
+
+<span class="cm"># Your Encrypter object will be instantiated <span class="kw">and</span> called as such:</span>
+<span class="cm"># obj = Encrypter(keys, values, dictionary)</span>
+<span class="cm"># param_1 = obj.encrypt(word1)</span>
+<span class="cm"># param_2 = obj.decrypt(word2)</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Encrypter {
+<span class="ty">public</span>:
+    Encrypter(<span class="ty">vector</span>&lt;<span class="ty">char</span>&gt;&amp; keys, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; values, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; dictionary) {
+        
+    }
+    
+    <span class="ty">string</span> encrypt(<span class="ty">string</span> word1) {
+        
+    }
+    
+    <span class="ty">int</span> decrypt(<span class="ty">string</span> word2) {
+        
+    }
+};
+
+/**
+ * Your Encrypter object will be instantiated and called as such:
+ * Encrypter* obj = <span class="kw">new</span> Encrypter(keys, values, dictionary);
+ * <span class="ty">string</span> param_1 = obj-&gt;encrypt(word1);
+ * <span class="ty">int</span> param_2 = obj-&gt;decrypt(word2);
+ */</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — For encryption, use hashmap to map each char of word1 to…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — For decryption, use trie to prune when necessary.</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="2226-maximum-candies-allocated-to-k-children.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Maximum Candies Allocated to K Children</strong></span></a>
+                <a href="2231-largest-number-after-digit-swaps-by-parity.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Largest Number After Digit Swaps by Parity</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Encrypt%20and%20Decrypt%20Strings&lc_id=2227&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

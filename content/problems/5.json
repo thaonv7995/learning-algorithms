@@ -1,0 +1,26 @@
+{
+  "id": 5,
+  "title": "Longest Palindromic Substring",
+  "difficulty": "Medium",
+  "category": "Two Pointers",
+  "timeComplexity": "O(N²)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho chuỗi s, trả về chuỗi con palindrome dài nhất trong s.",
+  "examples": [
+    { "input": "s = \"babad\"", "output": "\"bab\" hoặc \"aba\"" },
+    { "input": "s = \"cbbd\"", "output": "\"bb\"" }
+  ],
+  "approach": "Expand around center: với mỗi vị trí i, mở rộng palindrome lẻ (i,i) và chẵn (i,i+1) bằng two pointers left/right. Cập nhật chuỗi dài nhất. O(N²) thời gian, O(1) bộ nhớ.",
+  "memoryTip": "Chỉ lưu best start/length — không cần mảng DP O(N²).",
+  "solutions": {
+    "c": "char* longestPalindrome(char* s) {\n    int n = strlen(s);\n    if (n < 2) return s;\n    int bestL = 0, bestLen = 1;\n    for (int i = 0; i < n; i++) {\n        int l = i, r = i;\n        while (l >= 0 && r < n && s[l] == s[r]) { l--; r++; }\n        if (r - l - 1 > bestLen) { bestL = l + 1; bestLen = r - l - 1; }\n        l = i; r = i + 1;\n        while (l >= 0 && r < n && s[l] == s[r]) { l--; r++; }\n        if (r - l - 1 > bestLen) { bestL = l + 1; bestLen = r - l - 1; }\n    }\n    char* res = (char*)malloc(bestLen + 1);\n    strncpy(res, s + bestL, bestLen);\n    res[bestLen] = '\\0';\n    return res;\n}",
+    "python": "class Solution:\n    def longestPalindrome(self, s: str) -> str:\n        def expand(l, r):\n            while l >= 0 and r < len(s) and s[l] == s[r]:\n                l -= 1; r += 1\n            return s[l+1:r]\n        best = \"\"\n        for i in range(len(s)):\n            best = max(best, expand(i, i), expand(i, i+1), key=len)\n        return best",
+    "cpp": "class Solution {\npublic:\n    string longestPalindrome(string s) {\n        auto expand = [&](int l, int r) {\n            while (l >= 0 && r < (int)s.size() && s[l] == s[r]) { l--; r++; }\n            return s.substr(l + 1, r - l - 1);\n        };\n        string best;\n        for (int i = 0; i < (int)s.size(); i++) {\n            string a = expand(i, i), b = expand(i, i + 1);\n            if (a.size() > best.size()) best = a;\n            if (b.size() > best.size()) best = b;\n        }\n        return best;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Mọi palindrome có tâm lẻ hoặc chẵn — expand tại mỗi i bắt được tất cả.",
+    "edgeCases": ["s 1 ký tự", "toàn cùng ký tự", "không có palindrome >1"],
+    "pitfalls": ["Chỉ check expand lẻ", "Quên substr bounds khi expand"]
+  },
+  "tier": "done"
+}

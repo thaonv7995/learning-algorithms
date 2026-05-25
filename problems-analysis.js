@@ -23,7 +23,8 @@ const PATTERN_DESC = {
 const CORRECTNESS = {
     "1": "Hash map đảm bảo mỗi cặp (value → index) được tra cứu O(1); duyệt một lượt nên không bỏ sót cặp hợp lệ.",
     "3": "Cửa sổ luôn không chứa ký tự trùng; mỗi ký tự vào/ra cửa sổ tối đa một lần → O(N).",
-    "4": "Chia đôi + merge O(log(m+n)) tìm median mà không merge toàn bộ.",
+    "4": "Binary search trên partition i sao cho max(left) ≤ min(right) — đường cắt hợp lệ ⟺ median đúng.",
+    "2": "Dummy node + carry từng digit; list lệch độ dài coi thiếu = 0; thêm nút nếu carry cuối = 1.",
     "11": "Di chuyển con trỏ ở cột thấp hơn không loại bỏ cặp tối ưu tiềm năng vì chiều rộng giảm nhưng chỉ cột thấp mới có thể tăng min(h[L],h[R]).",
     "15": "Sort + anchor i + two-pointer đảm bảo mọi bộ ba được xét; skip duplicate tránh trùng kết quả.",
     "20": "Stack khớp chính xác thứ tự LIFO của ngoặc; stack rỗng cuối cùng ⟺ mọi ngoặc đã đóng đúng.",
@@ -46,9 +47,17 @@ const PITFALLS = {
         "Dùng cùng phần tử hai lần",
         "Quên lưu index trước khi ghi đè key trùng giá trị"
     ],
+    "2": [
+        "Quên nút carry cuối",
+        "Không dùng dummy head"
+    ],
     "3": [
         "Dùng set thay map index → left nhảy chậm",
         "Quên cập nhật maxLength mỗi bước"
+    ],
+    "4": [
+        "Merge hai mảng O(m+n) thay binary search partition",
+        "Quên swap nums1/nums2 khi len(nums1) > len(nums2)"
     ],
     "11": [
         "Brute force O(N²) khi two-pointer đủ",
@@ -94,10 +103,20 @@ const EDGE = {
         "target = tổng hai phần tử cuối",
         "Số âm và dương hỗn hợp"
     ],
+    "2": [
+        "List lệch độ dài",
+        "Carry = 1 sau cùng",
+        "l1=[0], l2=[0]"
+    ],
     "3": [
         "Chuỗi rỗng → 0",
         "Tất cả ký tự giống nhau → 1",
         "Chuỗi không lặp → len(s)"
+    ],
+    "4": [
+        "Một mảng rỗng",
+        "Tổng số phần tử lẻ",
+        "Hai mảng không giao nhau"
     ],
     "11": [
         "Hai cột cùng chiều cao",
@@ -200,12 +219,13 @@ function defaultPitfalls(p) {
 }
 
 function buildAnalysis(p) {
+    const ao = p._analysisOverride || {};
     return {
         pattern: p.category,
-        steps: splitSteps(p.approach),
-        edgeCases: defaultEdge(p),
-        correctness: CORRECTNESS[p.id] || '',
-        pitfalls: defaultPitfalls(p),
+        steps: splitSteps(p.approach || ao.approach || ''),
+        edgeCases: ao.edgeCases || defaultEdge(p),
+        correctness: ao.correctness || CORRECTNESS[p.id] || '',
+        pitfalls: ao.pitfalls || defaultPitfalls(p),
     };
 }
 
@@ -237,7 +257,7 @@ function renderAnalysisHtml(p) {
         ? '<p class="analysis-insight-line"><i class="fa-solid fa-check"></i>' + esc(a.correctness) + '</p>'
         : '';
 
-    const memoryShort = compactText(p.memoryTip, 110);
+    const memoryShort = compactText(p.memoryTip || 'Xem phân tích độ phức tạp và pattern ở trên.', 110);
 
     return `
                 <div class="block analysis-compact">

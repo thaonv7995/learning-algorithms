@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #2286 · Booking Concert Tickets in Groups — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#2286 Booking Concert Tickets in Groups</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/booking-concert-tickets-in-groups/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #2286</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">Binary Search</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Booking Concert Tickets in Groups</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>19.6% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>A concert hall has <code>n</code> rows numbered from <code>0</code> to <code>n - 1</code>, each with <code>m</code> seats, numbered from <code>0</code> to <code>m - 1</code>. You need to design a ticketing system that can allocate seats in the following cases:</p>
+
+<ul>
+	<li>If a group of <code>k</code> spectators can sit <strong>together</strong> in a row.</li>
+	<li>If <strong>every</strong> member of a group of <code>k</code> spectators can get a seat. They may or <strong>may not</strong> sit together.</li>
+</ul>
+
+<p>Note that the spectators are very picky. Hence:</p>
+
+<ul>
+	<li>They will book seats only if each member of their group can get a seat with row number <strong>less than or equal</strong> to <code>maxRow</code>. <code>maxRow</code> can <strong>vary</strong> from group to group.</li>
+	<li>In case there are multiple rows to choose from, the row with the <strong>smallest</strong> number is chosen. If there are multiple seats to choose in the same row, the seat with the <strong>smallest</strong> number is chosen.</li>
+</ul>
+
+<p>Implement the <code>BookMyShow</code> class:</p>
+
+<ul>
+	<li><code>BookMyShow(int n, int m)</code> Initializes the object with <code>n</code> as number of rows and <code>m</code> as number of seats per row.</li>
+	<li><code>int[] gather(int k, int maxRow)</code> Returns an array of length <code>2</code> denoting the row and seat number (respectively) of the <strong>first seat</strong> being allocated to the <code>k</code> members of the group, who must sit <strong>together</strong>. In other words, it returns the smallest possible <code>r</code> and <code>c</code> such that all <code>[c, c + k - 1]</code> seats are valid and empty in row <code>r</code>, and <code>r &lt;= maxRow</code>. Returns <code>[]</code> in case it is <strong>not possible</strong> to allocate seats to the group.</li>
+	<li><code>boolean scatter(int k, int maxRow)</code> Returns <code>true</code> if all <code>k</code> members of the group can be allocated seats in rows <code>0</code> to <code>maxRow</code>, who may or <strong>may not</strong> sit together. If the seats can be allocated, it allocates <code>k</code> seats to the group with the <strong>smallest</strong> row numbers, and the smallest possible seat numbers in each row. Otherwise, returns <code>false</code>.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<pre>
+<strong>Input</strong>
+[&quot;BookMyShow&quot;, &quot;gather&quot;, &quot;gather&quot;, &quot;scatter&quot;, &quot;scatter&quot;]
+[[2, 5], [4, 0], [2, 0], [5, 1], [5, 1]]
+<strong>Output</strong>
+[null, [0, 0], [], true, false]
+
+<strong>Explanation</strong>
+BookMyShow bms = new BookMyShow(2, 5); // There are 2 rows with 5 seats each 
+bms.gather(4, 0); // return [0, 0]
+                  // The group books seats [0, 3] of row 0. 
+bms.gather(2, 0); // return []
+                  // There is only 1 seat left in row 0,
+                  // so it is not possible to book 2 consecutive seats. 
+bms.scatter(5, 1); // return True
+                   // The group books seat 4 of row 0 and seats [0, 3] of row 1. 
+bms.scatter(5, 1); // return False
+                   // There is only one seat left in the hall.
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= n &lt;= 5 * 10<sup>4</sup></code></li>
+	<li><code>1 &lt;= m, k &lt;= 10<sup>9</sup></code></li>
+	<li><code>0 &lt;= maxRow &lt;= n - 1</code></li>
+	<li>At most <code>5 * 10<sup>4</sup></code> calls <strong>in total</strong> will be made to <code>gather</code> and <code>scatter</code>.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[&quot;BookMyShow&quot;,&quot;gather&quot;,&quot;gather&quot;,&quot;scatter&quot;,&quot;scatter&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[2,5],[4,0],[2,0],[5,1],[5,1]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Since seats are allocated by smallest row and then by smallest seat numbers, how can we keep a record of the smallest seat number vacant in each row? How can range max query help us to check if contiguous seats can be allocated in a range? Similarly, can range sum query help us to check if enough seats are available in a range? Which data structure can be used to implement the above?</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">
+
+
+typedef <span class="ty">struct</span> {
+    
+} BookMyShow;
+
+
+BookMyShow* bookMyShowCreate(<span class="ty">int</span> n, <span class="ty">int</span> m) {
+    
+}
+
+<span class="ty">int</span>* bookMyShowGather(BookMyShow* obj, <span class="ty">int</span> k, <span class="ty">int</span> maxRow, <span class="ty">int</span>* retSize) {
+    
+}
+
+<span class="ty">bool</span> bookMyShowScatter(BookMyShow* obj, <span class="ty">int</span> k, <span class="ty">int</span> maxRow) {
+    
+}
+
+<span class="ty">void</span> bookMyShowFree(BookMyShow* obj) {
+    
+}
+
+/**
+ * Your BookMyShow <span class="ty">struct</span> will be instantiated and called as such:
+ * BookMyShow* obj = bookMyShowCreate(n, m);
+ * <span class="ty">int</span>* param_1 = bookMyShowGather(obj, k, maxRow, retSize);
+ 
+ * <span class="ty">bool</span> param_2 = bookMyShowScatter(obj, k, maxRow);
+ 
+ * bookMyShowFree(obj);
+*/</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> BookMyShow(object):
+
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, n, m):
+        &quot;&quot;&quot;
+        :type n: <span class="ty">int</span>
+        :type m: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> gather(<span class="ty">self</span>, k, maxRow):
+        &quot;&quot;&quot;
+        :type k: <span class="ty">int</span>
+        :type maxRow: <span class="ty">int</span>
+        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> scatter(<span class="ty">self</span>, k, maxRow):
+        &quot;&quot;&quot;
+        :type k: <span class="ty">int</span>
+        :type maxRow: <span class="ty">int</span>
+        :rtype: bool
+        &quot;&quot;&quot;
+        
+
+
+<span class="cm"># Your BookMyShow object will be instantiated <span class="kw">and</span> called as such:</span>
+<span class="cm"># obj = BookMyShow(n, m)</span>
+<span class="cm"># param_1 = obj.gather(k,maxRow)</span>
+<span class="cm"># param_2 = obj.scatter(k,maxRow)</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> BookMyShow {
+<span class="ty">public</span>:
+    BookMyShow(<span class="ty">int</span> n, <span class="ty">int</span> m) {
+        
+    }
+    
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; gather(<span class="ty">int</span> k, <span class="ty">int</span> maxRow) {
+        
+    }
+    
+    <span class="ty">bool</span> scatter(<span class="ty">int</span> k, <span class="ty">int</span> maxRow) {
+        
+    }
+};
+
+/**
+ * Your BookMyShow object will be instantiated and called as such:
+ * BookMyShow* obj = <span class="kw">new</span> BookMyShow(n, m);
+ * <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; param_1 = obj-&gt;gather(k,maxRow);
+ * <span class="ty">bool</span> param_2 = obj-&gt;scatter(k,maxRow);
+ */</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Binary Search</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Since seats are allocated by smallest row and then by…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — How can range max query help us to check if contiguous…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Similarly, can range sum query help us to check if enough…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Which data structure can be used to implement the above?</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Biến low/high/mid trên Stack — O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="2285-maximum-total-importance-of-roads.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Maximum Total Importance of Roads</strong></span></a>
+                <a href="2287-rearrange-characters-to-make-target-string.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Rearrange Characters to Make Target String</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Booking%20Concert%20Tickets%20in%20Groups&lc_id=2286&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

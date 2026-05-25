@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #355 · Design Twitter — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#355 Design Twitter</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/design-twitter/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #355</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Hash Table</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Design Twitter</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>44.7% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the <code>10</code> most recent tweets in the user&#39;s news feed.</p>
+
+<p>Implement the <code>Twitter</code> class:</p>
+
+<ul>
+	<li><code>Twitter()</code> Initializes your twitter object.</li>
+	<li><code>void postTweet(int userId, int tweetId)</code> Composes a new tweet with ID <code>tweetId</code> by the user <code>userId</code>. Each call to this function will be made with a unique <code>tweetId</code>.</li>
+	<li><code>List&lt;Integer&gt; getNewsFeed(int userId)</code> Retrieves the <code>10</code> most recent tweet IDs in the user&#39;s news feed. Each item in the news feed must be posted by users who the user followed or by the user themself. Tweets must be <strong>ordered from most recent to least recent</strong>.</li>
+	<li><code>void follow(int followerId, int followeeId)</code> The user with ID <code>followerId</code> started following the user with ID <code>followeeId</code>.</li>
+	<li><code>void unfollow(int followerId, int followeeId)</code> The user with ID <code>followerId</code> started unfollowing the user with ID <code>followeeId</code>.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<pre>
+<strong>Input</strong>
+[&quot;Twitter&quot;, &quot;postTweet&quot;, &quot;getNewsFeed&quot;, &quot;follow&quot;, &quot;postTweet&quot;, &quot;getNewsFeed&quot;, &quot;unfollow&quot;, &quot;getNewsFeed&quot;]
+[[], [1, 5], [1], [1, 2], [2, 6], [1], [1, 2], [1]]
+<strong>Output</strong>
+[null, null, [5], null, null, [6, 5], null, [5]]
+
+<strong>Explanation</strong>
+Twitter twitter = new Twitter();
+twitter.postTweet(1, 5); // User 1 posts a new tweet (id = 5).
+twitter.getNewsFeed(1);  // User 1&#39;s news feed should return a list with 1 tweet id -&gt; [5]. return [5]
+twitter.follow(1, 2);    // User 1 follows user 2.
+twitter.postTweet(2, 6); // User 2 posts a new tweet (id = 6).
+twitter.getNewsFeed(1);  // User 1&#39;s news feed should return a list with 2 tweet ids -&gt; [6, 5]. Tweet id 6 should precede tweet id 5 because it is posted after tweet id 5.
+twitter.unfollow(1, 2);  // User 1 unfollows user 2.
+twitter.getNewsFeed(1);  // User 1&#39;s news feed should return a list with 1 tweet id -&gt; [5], since user 1 is no longer following user 2.
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= userId, followerId, followeeId &lt;= 500</code></li>
+	<li><code>0 &lt;= tweetId &lt;= 10<sup>4</sup></code></li>
+	<li>All the tweets have <strong>unique</strong> IDs.</li>
+	<li>At most <code>3 * 10<sup>4</sup></code> calls will be made to <code>postTweet</code>, <code>getNewsFeed</code>, <code>follow</code>, and <code>unfollow</code>.</li>
+	<li>A user cannot follow himself.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[&quot;Twitter&quot;,&quot;postTweet&quot;,&quot;getNewsFeed&quot;,&quot;follow&quot;,&quot;postTweet&quot;,&quot;getNewsFeed&quot;,&quot;unfollow&quot;,&quot;getNewsFeed&quot;]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[],[1,5],[1],[1,2],[2,6],[1],[1,2],[1]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Áp dụng kỹ thuật Hash Table kết hợp Linked List. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">
+
+
+typedef <span class="ty">struct</span> {
+    
+} Twitter;
+
+
+Twitter* twitterCreate() {
+    
+}
+
+<span class="ty">void</span> twitterPostTweet(Twitter* obj, <span class="ty">int</span> userId, <span class="ty">int</span> tweetId) {
+    
+}
+
+<span class="ty">int</span>* twitterGetNewsFeed(Twitter* obj, <span class="ty">int</span> userId, <span class="ty">int</span>* retSize) {
+    
+}
+
+<span class="ty">void</span> twitterFollow(Twitter* obj, <span class="ty">int</span> followerId, <span class="ty">int</span> followeeId) {
+    
+}
+
+<span class="ty">void</span> twitterUnfollow(Twitter* obj, <span class="ty">int</span> followerId, <span class="ty">int</span> followeeId) {
+    
+}
+
+<span class="ty">void</span> twitterFree(Twitter* obj) {
+    
+}
+
+/**
+ * Your Twitter <span class="ty">struct</span> will be instantiated and called as such:
+ * Twitter* obj = twitterCreate();
+ * twitterPostTweet(obj, userId, tweetId);
+ 
+ * <span class="ty">int</span>* param_2 = twitterGetNewsFeed(obj, userId, retSize);
+ 
+ * twitterFollow(obj, followerId, followeeId);
+ 
+ * twitterUnfollow(obj, followerId, followeeId);
+ 
+ * twitterFree(obj);
+*/</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Twitter(object):
+
+    <span class="kw">def</span> __init__(<span class="ty">self</span>):
+        
+
+    <span class="kw">def</span> postTweet(<span class="ty">self</span>, userId, tweetId):
+        &quot;&quot;&quot;
+        :type userId: <span class="ty">int</span>
+        :type tweetId: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> getNewsFeed(<span class="ty">self</span>, userId):
+        &quot;&quot;&quot;
+        :type userId: <span class="ty">int</span>
+        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> follow(<span class="ty">self</span>, followerId, followeeId):
+        &quot;&quot;&quot;
+        :type followerId: <span class="ty">int</span>
+        :type followeeId: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> unfollow(<span class="ty">self</span>, followerId, followeeId):
+        &quot;&quot;&quot;
+        :type followerId: <span class="ty">int</span>
+        :type followeeId: <span class="ty">int</span>
+        :rtype: <span class="kw">None</span>
+        &quot;&quot;&quot;
+        
+
+
+<span class="cm"># Your Twitter object will be instantiated <span class="kw">and</span> called as such:</span>
+<span class="cm"># obj = Twitter()</span>
+<span class="cm"># obj.postTweet(userId,tweetId)</span>
+<span class="cm"># param_2 = obj.getNewsFeed(userId)</span>
+<span class="cm"># obj.follow(followerId,followeeId)</span>
+<span class="cm"># obj.unfollow(followerId,followeeId)</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Twitter {
+<span class="ty">public</span>:
+    Twitter() {
+        
+    }
+    
+    <span class="ty">void</span> postTweet(<span class="ty">int</span> userId, <span class="ty">int</span> tweetId) {
+        
+    }
+    
+    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; getNewsFeed(<span class="ty">int</span> userId) {
+        
+    }
+    
+    <span class="ty">void</span> follow(<span class="ty">int</span> followerId, <span class="ty">int</span> followeeId) {
+        
+    }
+    
+    <span class="ty">void</span> unfollow(<span class="ty">int</span> followerId, <span class="ty">int</span> followeeId) {
+        
+    }
+};
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter* obj = <span class="kw">new</span> Twitter();
+ * obj-&gt;postTweet(userId,tweetId);
+ * <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; param_2 = obj-&gt;getNewsFeed(userId);
+ * obj-&gt;follow(followerId,followeeId);
+ * obj-&gt;unfollow(followerId,followeeId);
+ */</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Hash Table</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Hash Table kết hợp Linked List.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="354-russian-doll-envelopes.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Russian Doll Envelopes</strong></span></a>
+                <a href="357-count-numbers-with-unique-digits.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Count Numbers with Unique Digits</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Design%20Twitter&lc_id=355&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

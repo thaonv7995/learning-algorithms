@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3320 · Count The Number of Winning Sequences — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3320 Count The Number of Winning Sequences</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/count-the-number-of-winning-sequences/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head hard">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3320</span>
+                        <span class="diff-badge hard">Hard</span>
+                        <span class="cat-chip">String</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Count The Number of Winning Sequences</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>32.2% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>Alice and Bob are playing a fantasy battle game consisting of <code>n</code> rounds where they summon one of three magical creatures each round: a Fire Dragon, a Water Serpent, or an Earth Golem. In each round, players <strong>simultaneously</strong> summon their creature and are awarded points as follows:</p>
+
+<ul>
+	<li>If one player summons a Fire Dragon and the other summons an Earth Golem, the player who summoned the <strong>Fire Dragon</strong> is awarded a point.</li>
+	<li>If one player summons a Water Serpent and the other summons a Fire Dragon, the player who summoned the <strong>Water Serpent</strong> is awarded a point.</li>
+	<li>If one player summons an Earth Golem and the other summons a Water Serpent, the player who summoned the <strong>Earth Golem</strong> is awarded a point.</li>
+	<li>If both players summon the same creature, no player is awarded a point.</li>
+</ul>
+
+<p>You are given a string <code>s</code> consisting of <code>n</code> characters <code>&#39;F&#39;</code>, <code>&#39;W&#39;</code>, and <code>&#39;E&#39;</code>, representing the sequence of creatures Alice will summon in each round:</p>
+
+<ul>
+	<li>If <code>s[i] == &#39;F&#39;</code>, Alice summons a Fire Dragon.</li>
+	<li>If <code>s[i] == &#39;W&#39;</code>, Alice summons a Water Serpent.</li>
+	<li>If <code>s[i] == &#39;E&#39;</code>, Alice summons an Earth Golem.</li>
+</ul>
+
+<p>Bob&rsquo;s sequence of moves is unknown, but it is guaranteed that Bob will never summon the same creature in two consecutive rounds. Bob <em>beats</em> Alice if the total number of points awarded to Bob after <code>n</code> rounds is <strong>strictly greater</strong> than the points awarded to Alice.</p>
+
+<p>Return the number of distinct sequences Bob can use to beat Alice.</p>
+
+<p>Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">s = &quot;FFF&quot;</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">3</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>Bob can beat Alice by making one of the following sequences of moves: <code>&quot;WFW&quot;</code>, <code>&quot;FWF&quot;</code>, or <code>&quot;WEW&quot;</code>. Note that other winning sequences like <code>&quot;WWE&quot;</code> or <code>&quot;EWW&quot;</code> are invalid since Bob cannot make the same move twice in a row.</p>
+</div>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">s = &quot;FWEFW&quot;</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">18</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p><w>Bob can beat Alice by making one of the following sequences of moves: <code>&quot;FWFWF&quot;</code>, <code>&quot;FWFWE&quot;</code>, <code>&quot;FWEFE&quot;</code>, <code>&quot;FWEWE&quot;</code>, <code>&quot;FEFWF&quot;</code>, <code>&quot;FEFWE&quot;</code>, <code>&quot;FEFEW&quot;</code>, <code>&quot;FEWFE&quot;</code>, <code>&quot;WFEFE&quot;</code>, <code>&quot;WFEWE&quot;</code>, <code>&quot;WEFWF&quot;</code>, <code>&quot;WEFWE&quot;</code>, <code>&quot;WEFEF&quot;</code>, <code>&quot;WEFEW&quot;</code>, <code>&quot;WEWFW&quot;</code>, <code>&quot;WEWFE&quot;</code>, <code>&quot;EWFWE&quot;</code>, or <code>&quot;EWEWE&quot;</code>.</w></p>
+</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= s.length &lt;= 1000</code></li>
+	<li><code>s[i]</code> is one of <code>&#39;F&#39;</code>, <code>&#39;W&#39;</code>, or <code>&#39;E&#39;</code>.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>&quot;FFF&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;FWEFW&quot;</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Use dynamic programming. For &lt;code&gt;0 &lt; i &lt; n - 1&lt;/code&gt;, &lt;code&gt;-n &lt; j &lt; n&lt;/code&gt;, and &lt;code&gt;k&lt;/code&gt; in &lt;code&gt;{’F’, ‘W’, ‘E’}&lt;/code&gt;, let &lt;code&gt;dp[i][j][k]&lt;/code&gt;  be the number of sequences consisting of the first &lt;code&gt;i&lt;/code&gt; moves such that the difference between bob’s points and alice’s point is equal to &lt;code&gt;j&lt;/code&gt; and the &lt;code&gt;i&lt;sup&gt;th&lt;/sup&gt;&lt;/code&gt; move that Bob played is &lt;code&gt;k&lt;/code&gt;. The answer is the sum of &lt;code&gt;dp[n - 1][j][k]&lt;/code&gt;over all &lt;code&gt;j &gt; 0&lt;/code&gt; and over all &lt;code&gt;k&lt;/code&gt;.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> countWinningSequences(<span class="ty">char</span>* s) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> countWinningSequences(<span class="ty">self</span>, s):
+        &quot;&quot;&quot;
+        :type s: <span class="ty">str</span>
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> countWinningSequences(<span class="ty">string</span> s) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">String</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Use dynamic programming.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — For &lt;code&gt;0 &lt; i &lt; n - 1&lt;/code&gt;, &lt;code&gt;-n &lt; j &lt; n&lt;/code&gt;,…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — The answer is the sum of &lt;code&gt;dp[n - 1][j][k]&lt;/code&gt;over…</span></li></ol>
+
+                    
+                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng</span><span class="analysis-tag edge">Một ký tự</span></div>
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3319-k-th-largest-perfect-subtree-size-in-binary-tree.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>K-th Largest Perfect Subtree Size in Binary Tree</strong></span></a>
+                <a href="3321-find-x-sum-of-all-k-long-subarrays-ii.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Find X-Sum of All K-Long Subarrays II</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Count%20The%20Number%20of%20Winning%20Sequences&lc_id=3320&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

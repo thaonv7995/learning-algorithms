@@ -23,8 +23,8 @@
             </nav>
         </div>
         <div class="nav-actions">
+            <a href="https://leetcode.com/problems/median-of-two-sorted-arrays/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
             <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
-            <a href="../index.html" class="nav-link"><i class="fa-solid fa-book-open"></i><span class="lbl">Sách</span></a>
         </div>
     </header>
 
@@ -37,11 +37,13 @@
                         <span class="lc-num">LC #4</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Binary Search</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Median of Two Sorted Arrays</h1>
                     <div class="head-stats">
                         <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log(min(M, N)))</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46.6% AC</span>
                     </div>
                 </div>
                 <nav class="pane-tabs" role="tablist">
@@ -71,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng Tìm kiếm nhị phân trên đường cắt phân hoạch. Giả sử ta thực hiện cắt mảng nhỏ hơn `nums1` tại chỉ số `i` và mảng lớn hơn `nums2` tại chỉ số `j = (m + n + 1) / 2 - i`. Ta tìm kiếm nhị phân chỉ số `i` trong khoảng `[0, m]` sao cho: phần tử bên trái đường cắt của nums1 nhỏ hơn hoặc bằng phần tử bên phải đường cắt của nums2 (`nums1[i-1] <= nums2[j]`) và ngược lại. Khi tìm thấy đường cắt tối ưu, ta dễ dàng tính toán số trung vị từ các giá trị biên xung quanh đường cắt.</div>
+                        <div class="block-text">Áp dụng Tìm kiếm nhị phân trên đường cắt phân hoạch. Giả sử ta thực hiện cắt mảng nhỏ hơn `nums1` tại chỉ số `i` và mảng lớn hơn `nums2` tại chỉ số `j = (m + n + 1) / 2 - i`. Ta tìm kiếm nhị phân chỉ số `i` trong khoảng `[0, m]` sao cho: phần tử bên trái đường cắt của nums1 nhỏ hơn hoặc bằng phần tử bên phải đường cắt của nums2 (`nums1[i-1] &lt;= nums2[j]`) và ngược lại. Khi tìm thấy đường cắt tối ưu, ta dễ dàng tính toán số trung vị từ các giá trị biên xung quanh đường cắt.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -88,48 +90,17 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Median of Two Sorted Arrays)</span>
-<span class="ty">double</span> findMedianSortedArrays(<span class="ty">int</span>* nums1, <span class="ty">int</span> nums1Size, <span class="ty">int</span>* nums2, <span class="ty">int</span> nums2Size) {
-    <span class="ty">int</span> total = nums1Size + nums2Size;
-    <span class="ty">int</span> i = 0, j = 0;
-    <span class="ty">int</span> prev = 0, curr = 0;
-    <span class="kw">for</span> (<span class="ty">int</span> count = 0; count &lt;= total / 2; count++) {
-        prev = curr;
-        <span class="kw">if</span> (i &lt; nums1Size &amp;&amp; (j &gt;= nums2Size || nums1[i] &lt; nums2[j])) {
-            curr = nums1[i++];
-        } <span class="kw">else</span> {
-            curr = nums2[j++];
-        }
-    }
-    <span class="kw">if</span> (total % 2 == 1) {
-        <span class="kw">return</span> curr;
-    }
-    <span class="kw">return</span> (<span class="ty">double</span>)(prev + curr) / 2.0;
+                            <pre class="code-block" id="code-block-c"><span class="ty">double</span> findMedianSortedArrays(<span class="ty">int</span>* nums1, <span class="ty">int</span> nums1Size, <span class="ty">int</span>* nums2, <span class="ty">int</span> nums2Size) {
+    
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Median of Two Sorted Arrays)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> findMedianSortedArrays(<span class="ty">self</span>, nums1: <span class="ty">List</span>[<span class="ty">int</span>], nums2: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">float</span>:
-        A, B = nums1, nums2
-        total = <span class="ty">len</span>(nums1) + <span class="ty">len</span>(nums2)
-        half = total // 2
-        <span class="kw">if</span> <span class="ty">len</span>(B) &lt; <span class="ty">len</span>(A):
-            A, B = B, A
-        l, r = 0, <span class="ty">len</span>(A) - 1
-        <span class="kw">while</span> True:
-            i = (l + r) // 2
-            j = half - i - 2
-            Aleft = A[i] <span class="kw">if</span> i &gt;= 0 <span class="kw">else</span> <span class="ty">float</span>("-infinity")
-            Aright = A[i + 1] <span class="kw">if</span> (i + 1) &lt; <span class="ty">len</span>(A) <span class="kw">else</span> <span class="ty">float</span>("infinity")
-            Bleft = B[j] <span class="kw">if</span> j &gt;= 0 <span class="kw">else</span> <span class="ty">float</span>("-infinity")
-            Bright = B[j + 1] <span class="kw">if</span> (j + 1) &lt; <span class="ty">len</span>(B) <span class="kw">else</span> <span class="ty">float</span>("infinity")
-            <span class="kw">if</span> Aleft &lt;= Bright <span class="kw">and</span> Bleft &lt;= Aright:
-                <span class="kw">if</span> total % 2:
-                    <span class="kw">return</span> <span class="ty">min</span>(Aright, Bright)
-                <span class="kw">return</span> (<span class="ty">max</span>(Aleft, Bleft) + <span class="ty">min</span>(Aright, Bright)) / 2
-            <span class="kw">elif</span> Aleft &gt; Bright:
-                r = i - 1
-            <span class="kw">else</span>:
-                l = i + 1</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> findMedianSortedArrays(<span class="ty">self</span>, nums1, nums2):
+        &quot;&quot;&quot;
+        :type nums1: <span class="ty">List</span>[<span class="ty">int</span>]
+        :type nums2: <span class="ty">List</span>[<span class="ty">int</span>]
+        :rtype: float
+        &quot;&quot;&quot;
+        </pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
 <span class="kw">public</span>:
     <span class="ty">double</span> <span class="fn">findMedianSortedArrays</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums1, <span class="ty">vector&lt;int&gt;</span>&amp; nums2) {
@@ -172,8 +143,8 @@
 
                     <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Tìm kiếm nhị phân trên đường cắt phân hoạch.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Giả sử ta thực hiện cắt mảng nhỏ hơn `nums1` tại chỉ số…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — tìm kiếm nhị phân chỉ số `i` trong khoảng `[0, m]` sao…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — tìm thấy đường cắt tối ưu, ta dễ dàng tính toán số trung…</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Chia đôi + merge O(log(m+n)) tìm median mà không merge toàn bộ.</p>
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Binary search trên partition i sao cho max(left) ≤ min(right) — đường cắt hợp lệ ⟺ median đúng.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một mảng rỗng</span><span class="analysis-tag edge">Tổng số phần tử lẻ</span><span class="analysis-tag edge">Hai mảng không giao nhau</span><span class="analysis-tag pit">Merge hai mảng O(m+n) thay binary search partition</span><span class="analysis-tag pit">Quên swap nums1/nums2 khi len(nums1) &gt; len(nums2)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
@@ -184,8 +155,8 @@
             </div>
 
             <footer class="problem-nav">
-                <a href="297-serialize-and-deserialize-binary-tree.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Serialize and Deserialize Binary Tree</strong></span></a>
-                <a href="51-n-queens.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>N-Queens</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+                <span class="problem-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></span>
+                <span class="problem-nav-btn disabled next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></span>
             </footer>
         </aside>
 
@@ -194,7 +165,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Console log thu gọn — bấm để mở</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Median%20of%20Two%20Sorted%20Arrays&lc_id=4&embed=true"></iframe>

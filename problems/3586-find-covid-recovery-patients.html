@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3586 · Find COVID Recovery Patients — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3586 Find COVID Recovery Patients</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/find-covid-recovery-patients/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3586</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Database</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Find COVID Recovery Patients</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>42.4% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>Table: <code>patients</code></p>
+
+<pre>
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| patient_id  | int     |
+| patient_name| varchar |
+| age         | int     |
++-------------+---------+
+patient_id is the unique identifier for this table.
+Each row contains information about a patient.
+</pre>
+
+<p>Table: <code>covid_tests</code></p>
+
+<pre>
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| test_id     | int     |
+| patient_id  | int     |
+| test_date   | date    |
+| result      | varchar |
++-------------+---------+
+test_id is the unique identifier for this table.
+Each row represents a COVID test result. The result can be Positive, Negative, or Inconclusive.
+</pre>
+
+<p>Write a solution to find patients who have <strong>recovered from COVID</strong> - patients who tested positive but later tested negative.</p>
+
+<ul>
+	<li>A patient is considered recovered if they have <strong>at least one</strong> <strong>Positive</strong> test followed by at least one <strong>Negative</strong> test on a <strong>later date</strong></li>
+	<li>Calculate the <strong>recovery time</strong> in days as the <strong>difference</strong> between the <strong>first positive test</strong> and the <strong>first negative test</strong> after that <strong>positive test</strong></li>
+	<li><strong>Only include</strong> patients who have both positive and negative test results</li>
+</ul>
+
+<p>Return <em>the result table ordered by </em><code>recovery_time</code><em> in <strong>ascending</strong> order, then by </em><code>patient_name</code><em> in <strong>ascending</strong> order</em>.</p>
+
+<p>The result format is in the following example.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong></p>
+
+<p>patients table:</p>
+
+<pre class="example-io">
++------------+--------------+-----+
+| patient_id | patient_name | age |
++------------+--------------+-----+
+| 1          | Alice Smith  | 28  |
+| 2          | Bob Johnson  | 35  |
+| 3          | Carol Davis  | 42  |
+| 4          | David Wilson | 31  |
+| 5          | Emma Brown   | 29  |
++------------+--------------+-----+
+</pre>
+
+<p>covid_tests table:</p>
+
+<pre class="example-io">
++---------+------------+------------+--------------+
+| test_id | patient_id | test_date  | result       |
++---------+------------+------------+--------------+
+| 1       | 1          | 2023-01-15 | Positive     |
+| 2       | 1          | 2023-01-25 | Negative     |
+| 3       | 2          | 2023-02-01 | Positive     |
+| 4       | 2          | 2023-02-05 | Inconclusive |
+| 5       | 2          | 2023-02-12 | Negative     |
+| 6       | 3          | 2023-01-20 | Negative     |
+| 7       | 3          | 2023-02-10 | Positive     |
+| 8       | 3          | 2023-02-20 | Negative     |
+| 9       | 4          | 2023-01-10 | Positive     |
+| 10      | 4          | 2023-01-18 | Positive     |
+| 11      | 5          | 2023-02-15 | Negative     |
+| 12      | 5          | 2023-02-20 | Negative     |
++---------+------------+------------+--------------+
+</pre>
+
+<p><strong>Output:</strong></p>
+
+<pre class="example-io">
++------------+--------------+-----+---------------+
+| patient_id | patient_name | age | recovery_time |
++------------+--------------+-----+---------------+
+| 1          | Alice Smith  | 28  | 10            |
+| 3          | Carol Davis  | 42  | 10            |
+| 2          | Bob Johnson  | 35  | 11            |
++------------+--------------+-----+---------------+
+</pre>
+
+<p><strong>Explanation:</strong></p>
+
+<ul>
+	<li><strong>Alice Smith (patient_id = 1):</strong>
+
+	<ul>
+		<li>First positive test: 2023-01-15</li>
+		<li>First negative test after positive: 2023-01-25</li>
+		<li>Recovery time: 25 - 15 = 10 days</li>
+	</ul>
+	</li>
+	<li><strong>Bob Johnson (patient_id = 2):</strong>
+	<ul>
+		<li>First positive test: 2023-02-01</li>
+		<li>Inconclusive test on 2023-02-05 (ignored for recovery calculation)</li>
+		<li>First negative test after positive: 2023-02-12</li>
+		<li>Recovery time: 12 - 1 = 11 days</li>
+	</ul>
+	</li>
+	<li><strong>Carol Davis (patient_id = 3):</strong>
+	<ul>
+		<li>Had negative test on 2023-01-20 (before positive test)</li>
+		<li>First positive test: 2023-02-10</li>
+		<li>First negative test after positive: 2023-02-20</li>
+		<li>Recovery time: 20 - 10 = 10 days</li>
+	</ul>
+	</li>
+	<li><strong>Patients not included:</strong>
+	<ul>
+		<li>David Wilson (patient_id = 4): Only has positive tests, no negative test after positive</li>
+		<li>Emma Brown (patient_id = 5): Only has negative tests, never tested positive</li>
+	</ul>
+	</li>
+</ul>
+
+<p>Output table is ordered by recovery_time in ascending order, and then by patient_name in ascending order.</p>
+</div>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>{&quot;headers&quot;:{&quot;patients&quot;:[&quot;patient_id&quot;,&quot;patient_name&quot;,&quot;age&quot;],&quot;covid_tests&quot;:[&quot;test_id&quot;,&quot;patient_id&quot;,&quot;test_date&quot;,&quot;result&quot;]},&quot;rows&quot;:{&quot;patients&quot;:[[1,&quot;Alice Smith&quot;,28],[2,&quot;Bob Johnson&quot;,35],[3,&quot;Carol Davis&quot;,42],[4,&quot;David Wilson&quot;,31],[5,&quot;Emma Brown&quot;,29]],&quot;covid_tests&quot;:[[1,1,&quot;2023-01-15&quot;,&quot;Positive&quot;],[2,1,&quot;2023-01-25&quot;,&quot;Negative&quot;],[3,2,&quot;2023-02-01&quot;,&quot;Positive&quot;],[4,2,&quot;2023-02-05&quot;,&quot;Inconclusive&quot;],[5,2,&quot;2023-02-12&quot;,&quot;Negative&quot;],[6,3,&quot;2023-01-20&quot;,&quot;Negative&quot;],[7,3,&quot;2023-02-10&quot;,&quot;Positive&quot;],[8,3,&quot;2023-02-20&quot;,&quot;Negative&quot;],[9,4,&quot;2023-01-10&quot;,&quot;Positive&quot;],[10,4,&quot;2023-01-18&quot;,&quot;Positive&quot;],[11,5,&quot;2023-02-15&quot;,&quot;Negative&quot;],[12,5,&quot;2023-02-20&quot;,&quot;Negative&quot;]]}}</code></div>
+                <div class="ex-line"><span>Out</span><code>(xem LeetCode)</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Áp dụng kỹ thuật Database. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="cm">// Template C — xem editorial LeetCode</span>
+</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Template Python — xem editorial LeetCode</span>
+</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// Template C++</span></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Database</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Database.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3585-find-weighted-median-node-in-tree.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Find Weighted Median Node in Tree</strong></span></a>
+                <a href="3587-minimum-adjacent-swaps-to-alternate-parity.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Minimum Adjacent Swaps to Alternate Parity</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Find%20COVID%20Recovery%20Patients&lc_id=3586&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

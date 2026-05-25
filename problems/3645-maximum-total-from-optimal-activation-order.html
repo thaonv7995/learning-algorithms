@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #3645 · Maximum Total from Optimal Activation Order — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#3645 Maximum Total from Optimal Activation Order</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/maximum-total-from-optimal-activation-order/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #3645</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Array</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Maximum Total from Optimal Activation Order</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>33.3% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given two integer arrays <code>value</code> and <code>limit</code>, both of length <code>n</code>.</p>
+
+<p>Initially, all elements are <strong>inactive</strong>. You may activate them in any order.</p>
+
+<ul>
+	<li>To activate an inactive element at index <code>i</code>, the number of <strong>currently</strong> active elements must be <strong>strictly less</strong> than <code>limit[i]</code>.</li>
+	<li>When you activate the element at index <code>i</code>, it adds <code>value[i]</code> to the <strong>total</strong> activation value (i.e., the sum of <code>value[i]</code> for all elements that have undergone activation operations).</li>
+	<li>After each activation, if the number of <strong>currently</strong> active elements becomes <code>x</code>, then <strong>all</strong> elements <code>j</code> with <code>limit[j] &lt;= x</code> become <strong>permanently</strong> inactive, even if they are already active.</li>
+</ul>
+
+<p>Return the <strong>maximum</strong> <strong>total</strong> you can obtain by choosing the activation order optimally.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">value = [3,5,8], limit = [2,1,3]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">16</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>One optimal activation order is:</p>
+
+<table>
+	<thead>
+		<tr>
+			<th align="center" style="border: 1px solid black;">Step</th>
+			<th align="center" style="border: 1px solid black;">Activated <code>i</code></th>
+			<th align="center" style="border: 1px solid black;"><code>value[i]</code></th>
+			<th align="center" style="border: 1px solid black;">Active Before <code>i</code></th>
+			<th align="center" style="border: 1px solid black;">Active After <code>i</code></th>
+			<th align="center" style="border: 1px solid black;">Becomes Inactive <code>j</code></th>
+			<th align="center" style="border: 1px solid black;">Inactive Elements</th>
+			<th align="center" style="border: 1px solid black;">Total</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">5</td>
+			<td align="center" style="border: 1px solid black;">0</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;"><code>j = 1</code> as <code>limit[1] = 1</code></td>
+			<td align="center" style="border: 1px solid black;">[1]</td>
+			<td align="center" style="border: 1px solid black;">5</td>
+		</tr>
+		<tr>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;">0</td>
+			<td align="center" style="border: 1px solid black;">3</td>
+			<td align="center" style="border: 1px solid black;">0</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">-</td>
+			<td align="center" style="border: 1px solid black;">[1]</td>
+			<td align="center" style="border: 1px solid black;">8</td>
+		</tr>
+		<tr>
+			<td align="center" style="border: 1px solid black;">3</td>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;">8</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;"><code>j = 0</code> as <code>limit[0] = 2</code></td>
+			<td align="center" style="border: 1px solid black;">[0, 1]</td>
+			<td align="center" style="border: 1px solid black;">16</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Thus, the maximum possible total is 16.</p>
+</div>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">value = [4,2,6], limit = [1,1,1]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">6</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>One optimal activation order is:</p>
+
+<table style="border: 1px solid black;">
+	<thead>
+		<tr>
+			<th align="center" style="border: 1px solid black;">Step</th>
+			<th align="center" style="border: 1px solid black;">Activated <code>i</code></th>
+			<th align="center" style="border: 1px solid black;"><code>value[i]</code></th>
+			<th align="center" style="border: 1px solid black;">Active Before <code>i</code></th>
+			<th align="center" style="border: 1px solid black;">Active After <code>i</code></th>
+			<th align="center" style="border: 1px solid black;">Becomes Inactive <code>j</code></th>
+			<th align="center" style="border: 1px solid black;">Inactive Elements</th>
+			<th align="center" style="border: 1px solid black;">Total</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;">6</td>
+			<td align="center" style="border: 1px solid black;">0</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;"><code>j = 0, 1, 2</code> as <code>limit[j] = 1</code></td>
+			<td align="center" style="border: 1px solid black;">[0, 1, 2]</td>
+			<td align="center" style="border: 1px solid black;">6</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Thus, the maximum possible total is 6.</p>
+</div>
+
+<p><strong class="example">Example 3:</strong></p>
+
+<div class="example-block">
+<p><strong>Input:</strong> <span class="example-io">value = [4,1,5,2], limit = [3,3,2,3]</span></p>
+
+<p><strong>Output:</strong> <span class="example-io">12</span></p>
+
+<p><strong>Explanation:</strong></p>
+
+<p>One optimal activation order is:​​​​​​​<strong>​​​​​​​</strong></p>
+
+<table style="border: 1px solid black;">
+	<thead>
+		<tr>
+			<th align="center" style="border: 1px solid black;">Step</th>
+			<th align="center" style="border: 1px solid black;">Activated <code>i</code></th>
+			<th align="center" style="border: 1px solid black;"><code>value[i]</code></th>
+			<th align="center" style="border: 1px solid black;">Active Before <code>i</code></th>
+			<th align="center" style="border: 1px solid black;">Active After <code>i</code></th>
+			<th align="center" style="border: 1px solid black;">Becomes Inactive <code>j</code></th>
+			<th align="center" style="border: 1px solid black;">Inactive Elements</th>
+			<th align="center" style="border: 1px solid black;">Total</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;">5</td>
+			<td align="center" style="border: 1px solid black;">0</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">-</td>
+			<td align="center" style="border: 1px solid black;">[ ]</td>
+			<td align="center" style="border: 1px solid black;">5</td>
+		</tr>
+		<tr>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;">0</td>
+			<td align="center" style="border: 1px solid black;">4</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;"><code>j = 2</code> as <code>limit[2] = 2</code></td>
+			<td align="center" style="border: 1px solid black;">[2]</td>
+			<td align="center" style="border: 1px solid black;">9</td>
+		</tr>
+		<tr>
+			<td align="center" style="border: 1px solid black;">3</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">1</td>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;">-</td>
+			<td align="center" style="border: 1px solid black;">[2]</td>
+			<td align="center" style="border: 1px solid black;">10</td>
+		</tr>
+		<tr>
+			<td align="center" style="border: 1px solid black;">4</td>
+			<td align="center" style="border: 1px solid black;">3</td>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;">2</td>
+			<td align="center" style="border: 1px solid black;">3</td>
+			<td align="center" style="border: 1px solid black;"><code>j = 0, 1, 3</code> as <code>limit[j] = 3</code></td>
+			<td align="center" style="border: 1px solid black;">[0, 1, 2, 3]</td>
+			<td align="center" style="border: 1px solid black;">12</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Thus, the maximum possible total is 12.</p>
+</div>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= n == value.length == limit.length &lt;= 10<sup>5</sup></code></li>
+	<li><code>1 &lt;= value[i] &lt;= 10<sup>5</sup></code>​​​​​​​</li>
+	<li><code>1 &lt;= limit[i] &lt;= n</code></li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[3,5,8]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,1,3]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>[4,2,6]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,1,1]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>[4,1,5,2]</code></div>
+                <div class="ex-line"><span>Out</span><code>[3,3,2,3]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Group the items by their &lt;code&gt;limit&lt;/code&gt; values, as decisions for each &lt;code&gt;limit&lt;/code&gt; are independent. For a group with &lt;code&gt;limit = j&lt;/code&gt; and &lt;code&gt;m&lt;/code&gt; items, its contribution is the sum of the top &lt;code&gt;min(j, m)&lt;/code&gt; values. To extract each group's top values, use a min-heap of capacity &lt;code&gt;j&lt;/code&gt;: push each &lt;code&gt;value[i]&lt;/code&gt;, and whenever the heap size exceeds &lt;code&gt;j&lt;/code&gt;, pop the smallest. After processing a group's heap, sum its elements and add to the overall total; repeat for all groups in any order.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c"><span class="ty">long</span> <span class="ty">long</span> maxTotal(<span class="ty">int</span>* value, <span class="ty">int</span> valueSize, <span class="ty">int</span>* limit, <span class="ty">int</span> limitSize) {
+    
+}</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> maxTotal(<span class="ty">self</span>, value, limit):
+        &quot;&quot;&quot;
+        :type value: <span class="ty">List</span>[<span class="ty">int</span>]
+        :type limit: <span class="ty">List</span>[<span class="ty">int</span>]
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        </pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">long</span> <span class="ty">long</span> maxTotal(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; value, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; limit) {
+        
+    }
+};</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Array</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Group the items by their &lt;code&gt;limit&lt;/code&gt; values, as…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — For a group with &lt;code&gt;limit = j&lt;/code&gt; and…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — To extract each group's top values, use a min-heap of…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — After processing a group's heap, sum its elements and add…</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Hai chỉ số trên mảng gốc — O bộ nhớ phụ.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="3644-maximum-k-to-sort-a-permutation.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Maximum K to Sort a Permutation</strong></span></a>
+                <a href="3646-next-special-palindrome-number.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Next Special Palindrome Number</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=11&problem=Maximum%20Total%20from%20Optimal%20Activation%20Order&lc_id=3645&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>

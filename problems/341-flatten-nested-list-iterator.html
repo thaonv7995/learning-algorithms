@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC #341 · Flatten Nested List Iterator — Algorithms Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-left">
+            <a href="../index.html" class="logo">
+                <span class="logo-mark"><i class="fa-solid fa-laptop-code"></i></span>
+                <span class="logo-text">Algorithms Explorer</span>
+            </a>
+            <nav class="breadcrumb">
+                <a href="../algorithms.html">Thư viện</a>
+                <i class="fa-solid fa-chevron-right sep"></i>
+                <span class="current">#341 Flatten Nested List Iterator</span>
+            </nav>
+        </div>
+        <div class="nav-actions">
+            <a href="https://leetcode.com/problems/flatten-nested-list-iterator/" class="nav-link" target="_blank" rel="noopener"><i class="fa-brands fa-leetcode"></i><span class="lbl">LC</span></a>
+            <a href="../algorithms.html" class="nav-link"><i class="fa-solid fa-grid-2"></i><span class="lbl">Thư viện</span></a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <aside class="info-pane" id="info-pane">
+            <div class="pane-sticky">
+                <div class="problem-head medium">
+                    <div class="head-meta">
+                        <span class="lc-num">LC #341</span>
+                        <span class="diff-badge medium">Medium</span>
+                        <span class="cat-chip">Stack</span>
+                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                    </div>
+                    <h1 class="problem-title">Flatten Nested List Iterator</h1>
+                    <div class="head-stats">
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>65.7% AC</span>
+                    </div>
+                </div>
+                <nav class="pane-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-file-lines"></i> Bài toán</button>
+                    <button class="tab-btn" data-tab="solution"><i class="fa-solid fa-code"></i> Giải pháp <span class="tab-badge">3</span></button>
+                    <button class="tab-btn" data-tab="analysis"><i class="fa-solid fa-chart-line"></i> Phân tích</button>
+                </nav>
+            </div>
+
+            <div class="pane-body">
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
+                        <div class="lc-content"><p>You are given a nested list of integers <code>nestedList</code>. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it.</p>
+
+<p>Implement the <code>NestedIterator</code> class:</p>
+
+<ul>
+	<li><code>NestedIterator(List&lt;NestedInteger&gt; nestedList)</code> Initializes the iterator with the nested list <code>nestedList</code>.</li>
+	<li><code>int next()</code> Returns the next integer in the nested list.</li>
+	<li><code>boolean hasNext()</code> Returns <code>true</code> if there are still some integers in the nested list and <code>false</code> otherwise.</li>
+</ul>
+
+<p>Your code will be tested with the following pseudocode:</p>
+
+<pre>
+initialize iterator with nestedList
+res = []
+while iterator.hasNext()
+    append iterator.next() to the end of res
+return res
+</pre>
+
+<p>If <code>res</code> matches the expected flattened list, then your code will be judged as correct.</p>
+
+<p>&nbsp;</p>
+<p><strong class="example">Example 1:</strong></p>
+
+<pre>
+<strong>Input:</strong> nestedList = [[1,1],2,[1,1]]
+<strong>Output:</strong> [1,1,2,1,1]
+<strong>Explanation:</strong> By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1].
+</pre>
+
+<p><strong class="example">Example 2:</strong></p>
+
+<pre>
+<strong>Input:</strong> nestedList = [1,[4,[6]]]
+<strong>Output:</strong> [1,4,6]
+<strong>Explanation:</strong> By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6].
+</pre>
+
+<p>&nbsp;</p>
+<p><strong>Constraints:</strong></p>
+
+<ul>
+	<li><code>1 &lt;= nestedList.length &lt;= 500</code></li>
+	<li>The values of the integers in the nested list is in the range <code>[-10<sup>6</sup>, 10<sup>6</sup>]</code>.</li>
+</ul>
+</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
+                        <div class="drawer-example">
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 1</div>
+                <div class="ex-line"><span>In</span><code>[[1,1],2,[1,1]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1,[4,[6]]]</code></div>
+            </div></div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-solution">
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
+                        <div class="block-text">Áp dụng kỹ thuật Stack kết hợp Tree. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
+                        <div class="code-toolbar">
+                            <div class="lang-tabs" role="tablist">
+                                <button class="code-tab-btn active" data-lang="c"><i class="fa-solid fa-c"></i> C</button>
+                                <button class="code-tab-btn" data-lang="python"><i class="fa-brands fa-python"></i> Py</button>
+                                <button class="code-tab-btn" data-lang="cpp"><i class="fa-solid fa-microchip"></i> C++</button>
+                            </div>
+                            <button class="btn-copy" id="btn-copy-code"><i class="fa-regular fa-copy"></i> Sao chép</button>
+                        </div>
+                        <div class="code-container">
+                            <div class="code-header" id="code-lang-label">
+                                <span class="fname">solution.c</span>
+                                <span class="ftype">C99</span>
+                            </div>
+                            <pre class="code-block" id="code-block-c">/**
+ * *********************************************************************
+ * <span class="cm">// This is the interface that allows <span class="kw">for</span> creating nested lists.</span>
+ * <span class="cm">// You should not implement it, or speculate about its implementation</span>
+ * *********************************************************************
+ *
+ * <span class="cm">// Return true <span class="kw">if</span> this NestedInteger holds a single integer, rather than a nested list.</span>
+ * <span class="ty">bool</span> NestedIntegerIsInteger(<span class="ty">struct</span> NestedInteger *);
+ *
+ * <span class="cm">// Return the single integer that this NestedInteger holds, <span class="kw">if</span> it holds a single integer</span>
+ * <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a nested list</span>
+ * <span class="ty">int</span> NestedIntegerGetInteger(<span class="ty">struct</span> NestedInteger *);
+ *
+ * <span class="cm">// Return the nested list that this NestedInteger holds, <span class="kw">if</span> it holds a nested list</span>
+ * <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a single integer</span>
+ * <span class="ty">struct</span> NestedInteger **NestedIntegerGetList(<span class="ty">struct</span> NestedInteger *);
+ *
+ * <span class="cm">// Return the nested list's size that this NestedInteger holds, <span class="kw">if</span> it holds a nested list</span>
+ * <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a single integer</span>
+ * <span class="ty">int</span> NestedIntegerGetListSize(<span class="ty">struct</span> NestedInteger *);
+ * };
+ */
+<span class="ty">struct</span> NestedIterator {
+    
+};
+
+<span class="ty">struct</span> NestedIterator *nestedIterCreate(<span class="ty">struct</span> NestedInteger** nestedList, <span class="ty">int</span> nestedListSize) {
+    
+}
+
+<span class="ty">bool</span> nestedIterHasNext(<span class="ty">struct</span> NestedIterator *iter) {
+    
+}
+
+<span class="ty">int</span> nestedIterNext(<span class="ty">struct</span> NestedIterator *iter) {
+    
+}
+
+/** Deallocates memory previously allocated <span class="kw">for</span> the iterator */
+<span class="ty">void</span> nestedIterFree(<span class="ty">struct</span> NestedIterator *iter) {
+    
+}
+
+/**
+ * Your NestedIterator will be called like this:
+ * <span class="ty">struct</span> NestedIterator *i = nestedIterCreate(nestedList, nestedListSize);
+ * <span class="kw">while</span> (nestedIterHasNext(i)) printf(&quot;%d\n&quot;, nestedIterNext(i));
+ * nestedIterFree(i);
+ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># &quot;&quot;&quot;</span>
+<span class="cm"># This is the interface that allows <span class="kw">for</span> creating nested lists.</span>
+<span class="cm"># You should <span class="kw">not</span> implement it, <span class="kw">or</span> speculate about its implementation</span>
+<span class="cm"># &quot;&quot;&quot;</span>
+<span class="cm">#<span class="kw">class</span> NestedInteger(object):</span>
+<span class="cm">#    <span class="kw">def</span> isInteger(<span class="ty">self</span>):</span>
+<span class="cm">#        &quot;&quot;&quot;</span>
+<span class="cm">#        @<span class="kw">return</span> <span class="kw">True</span> <span class="kw">if</span> this NestedInteger holds a single integer, rather than a nested <span class="ty">list</span>.</span>
+<span class="cm">#        :rtype bool</span>
+<span class="cm">#        &quot;&quot;&quot;</span>
+<span class="cm">#</span>
+<span class="cm">#    <span class="kw">def</span> getInteger(<span class="ty">self</span>):</span>
+<span class="cm">#        &quot;&quot;&quot;</span>
+<span class="cm">#        @<span class="kw">return</span> the single integer that this NestedInteger holds, <span class="kw">if</span> it holds a single integer</span>
+<span class="cm">#        Return <span class="kw">None</span> <span class="kw">if</span> this NestedInteger holds a nested <span class="ty">list</span></span>
+<span class="cm">#        :rtype <span class="ty">int</span></span>
+<span class="cm">#        &quot;&quot;&quot;</span>
+<span class="cm">#</span>
+<span class="cm">#    <span class="kw">def</span> getList(<span class="ty">self</span>):</span>
+<span class="cm">#        &quot;&quot;&quot;</span>
+<span class="cm">#        @<span class="kw">return</span> the nested <span class="ty">list</span> that this NestedInteger holds, <span class="kw">if</span> it holds a nested <span class="ty">list</span></span>
+<span class="cm">#        Return <span class="kw">None</span> <span class="kw">if</span> this NestedInteger holds a single integer</span>
+<span class="cm">#        :rtype <span class="ty">List</span>[NestedInteger]</span>
+<span class="cm">#        &quot;&quot;&quot;</span>
+
+<span class="kw">class</span> NestedIterator(object):
+
+    <span class="kw">def</span> __init__(<span class="ty">self</span>, nestedList):
+        &quot;&quot;&quot;
+        Initialize your data structure here.
+        :type nestedList: <span class="ty">List</span>[NestedInteger]
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> next(<span class="ty">self</span>):
+        &quot;&quot;&quot;
+        :rtype: <span class="ty">int</span>
+        &quot;&quot;&quot;
+        
+
+    <span class="kw">def</span> hasNext(<span class="ty">self</span>):
+        &quot;&quot;&quot;
+        :rtype: bool
+        &quot;&quot;&quot;
+        
+
+<span class="cm"># Your NestedIterator object will be instantiated <span class="kw">and</span> called as such:</span>
+<span class="cm"># i, v = NestedIterator(nestedList), []</span>
+<span class="cm"># <span class="kw">while</span> i.hasNext(): v.append(i.next())</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none">/**
+ * <span class="cm">// This is the interface that allows <span class="kw">for</span> creating nested lists.</span>
+ * <span class="cm">// You should not implement it, or speculate about its implementation</span>
+ * <span class="ty">class</span> NestedInteger {
+ *   <span class="ty">public</span>:
+ *     <span class="cm">// Return true <span class="kw">if</span> this NestedInteger holds a single integer, rather than a nested list.</span>
+ *     <span class="ty">bool</span> isInteger() <span class="ty">const</span>;
+ *
+ *     <span class="cm">// Return the single integer that this NestedInteger holds, <span class="kw">if</span> it holds a single integer</span>
+ *     <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a nested list</span>
+ *     <span class="ty">int</span> getInteger() <span class="ty">const</span>;
+ *
+ *     <span class="cm">// Return the nested list that this NestedInteger holds, <span class="kw">if</span> it holds a nested list</span>
+ *     <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a single integer</span>
+ *     <span class="ty">const</span> <span class="ty">vector</span>&lt;NestedInteger&gt; &amp;getList() <span class="ty">const</span>;
+ * };
+ */
+
+<span class="ty">class</span> NestedIterator {
+<span class="ty">public</span>:
+    NestedIterator(<span class="ty">vector</span>&lt;NestedInteger&gt; &amp;nestedList) {
+        
+    }
+    
+    <span class="ty">int</span> next() {
+        
+    }
+    
+    <span class="ty">bool</span> hasNext() {
+        
+    }
+};
+
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i(nestedList);
+ * <span class="kw">while</span> (i.hasNext()) cout &lt;&lt; i.next();
+ */</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="panel-analysis">
+                <div class="block analysis-compact">
+                    <div class="analysis-meta">
+                        <span class="pattern-chip">Stack</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                    </div>
+
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Stack kết hợp Tree.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+
+                    
+                    
+
+                    <details class="analysis-more">
+                        <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
+                        <p>Stack frame hoặc mảng stack — O worst case.</p>
+                    </details>
+                </div>
+                </div>
+            </div>
+
+            <footer class="problem-nav">
+                <a href="338-counting-bits.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Counting Bits</strong></span></a>
+                <a href="342-power-of-four.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Power of Four</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+            </footer>
+        </aside>
+
+        <div class="resize-divider" id="resize-divider" title="Kéo để đổi kích thước"></div>
+
+        <section class="sandbox-pane">
+            <div class="sandbox-bar">
+                <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
+                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+            </div>
+            <div class="sandbox-frame-wrap">
+                <iframe class="sandbox-iframe" src="../index.html?chapter=9&problem=Flatten%20Nested%20List%20Iterator&lc_id=341&embed=true"></iframe>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="detail.js"></script>
+</body>
+</html>
