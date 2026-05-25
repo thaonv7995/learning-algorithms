@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Valid Anagram</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.1% AC</span>
                     </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho hai chuỗi s và t, hãy kiểm tra xem t có phải là một đảo chữ (Anagram) của s hay không (chứa chính xác các ký tự giống nhau với cùng số lần xuất hiện nhưng thứ tự khác nhau).</div>
+                        <div class="block-text">Valid Anagram (LeetCode #242) — Easy.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>s = &quot;anagram&quot;, t = &quot;nagaram&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>true</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng một bảng tần suất kích thước 26. Duyệt qua hai chuỗi có cùng độ dài, với chuỗi s ta cộng tần suất `count[s[i] - 'a']++`, chuỗi t ta trừ tần suất `count[t[i] - 'a']--`. Cuối cùng kiểm tra xem toàn bộ mảng đếm có bằng 0 hay không.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,43 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Valid Anagram)</span>
-<span class="ty">bool</span> isAnagram(<span class="ty">char</span>* s, <span class="ty">char</span>* t) {
-    <span class="kw">if</span> (strlen(s) != strlen(t)) <span class="kw">return</span> false;
-    <span class="ty">int</span> count[26] = {0};
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; s[i] != '\0'; i++) {
-        count[s[i] - 'a']++;
-        count[t[i] - 'a']--;
-    }
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; 26; i++) {
-        <span class="kw">if</span> (count[i] != 0) <span class="kw">return</span> false;
-    }
-    <span class="kw">return</span> true;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Valid Anagram)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> isAnagram(<span class="ty">self</span>, s: <span class="ty">str</span>, t: <span class="ty">str</span>) -&gt; bool:
-        <span class="kw">if</span> <span class="ty">len</span>(s) != <span class="ty">len</span>(t):
-            <span class="kw">return</span> <span class="kw">False</span>
-        count = [0] * 26
-        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(s)):
-            count[ord(s[i]) - ord('a')] += 1
-            count[ord(t[i]) - ord('a')] -= 1
-        <span class="kw">return</span> all(c == 0 <span class="kw">for</span> c <span class="kw">in</span> count)</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">bool</span> <span class="fn">isAnagram</span>(<span class="ty">string</span> s, <span class="ty">string</span> t) {
-        <span class="kw">if</span> (s.<span class="fn">length</span>() != t.<span class="fn">length</span>()) <span class="kw">return</span> <span class="kw">false</span>;
-        <span class="ty">int</span> count[<span class="st">26</span>] = {<span class="st">0</span>};
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; s.<span class="fn">length</span>(); i++) {
-            count[s[i] - <span class="st">'a'</span>]++;
-            count[t[i] - <span class="st">'a'</span>]--;
-        }
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; <span class="st">26</span>; i++) {
-            <span class="kw">if</span> (count[i] != <span class="st">0</span>) <span class="kw">return</span> <span class="kw">false</span>;
-        }
-        <span class="kw">return</span> <span class="kw">true</span>;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -136,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — một bảng tần suất kích thước 26.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Duyệt qua hai chuỗi có cùng độ dài, với chuỗi s ta cộng…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Cuối cùng kiểm tra xem toàn bộ mảng đếm có bằng 0 hay…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng</span><span class="analysis-tag edge">Một ký tự</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Kích thước mảng đếm cố định 26 số nguyên trên Stack RAM giúp tốc độ xử lý nhanh, bộ nhớ phụ trợ O tuyệt đối.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

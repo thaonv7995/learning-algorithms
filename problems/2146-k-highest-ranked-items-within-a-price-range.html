@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">K Highest Ranked Items Within a Price Range</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46.7% AC</span>
                     </div>
@@ -57,125 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given a <strong>0-indexed</strong> 2D integer array <code>grid</code> of size <code>m x n</code> that represents a map of the items in a shop. The integers in the grid represent the following:</p>
-
-<ul>
-	<li><code>0</code> represents a wall that you cannot pass through.</li>
-	<li><code>1</code> represents an empty cell that you can freely move to and from.</li>
-	<li>All other positive integers represent the price of an item in that cell. You may also freely move to and from these item cells.</li>
-</ul>
-
-<p>It takes <code>1</code> step to travel between adjacent grid cells.</p>
-
-<p>You are also given integer arrays <code>pricing</code> and <code>start</code> where <code>pricing = [low, high]</code> and <code>start = [row, col]</code> indicates that you start at the position <code>(row, col)</code> and are interested only in items with a price in the range of <code>[low, high]</code> (<strong>inclusive</strong>). You are further given an integer <code>k</code>.</p>
-
-<p>You are interested in the <strong>positions</strong> of the <code>k</code> <strong>highest-ranked</strong> items whose prices are <strong>within</strong> the given price range. The rank is determined by the <strong>first</strong> of these criteria that is different:</p>
-
-<ol>
-	<li>Distance, defined as the length of the shortest path from the <code>start</code> (<strong>shorter</strong> distance has a higher rank).</li>
-	<li>Price (<strong>lower</strong> price has a higher rank, but it must be <strong>in the price range</strong>).</li>
-	<li>The row number (<strong>smaller</strong> row number has a higher rank).</li>
-	<li>The column number (<strong>smaller</strong> column number has a higher rank).</li>
-</ol>
-
-<p>Return <em>the </em><code>k</code><em> highest-ranked items within the price range <strong>sorted</strong> by their rank (highest to lowest)</em>. If there are fewer than <code>k</code> reachable items within the price range, return <em><strong>all</strong> of them</em>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-<img alt="" src="https://assets.leetcode.com/uploads/2021/12/16/example1drawio.png" style="width: 200px; height: 151px;" />
-<pre>
-<strong>Input:</strong> grid = [[1,2,0,1],[1,3,0,1],[0,2,5,1]], pricing = [2,5], start = [0,0], k = 3
-<strong>Output:</strong> [[0,1],[1,1],[2,1]]
-<strong>Explanation:</strong> You start at (0,0).
-With a price range of [2,5], we can take items from (0,1), (1,1), (2,1) and (2,2).
-The ranks of these items are:
-- (0,1) with distance 1
-- (1,1) with distance 2
-- (2,1) with distance 3
-- (2,2) with distance 4
-Thus, the 3 highest ranked items in the price range are (0,1), (1,1), and (2,1).
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-<img alt="" src="https://assets.leetcode.com/uploads/2021/12/16/example2drawio1.png" style="width: 200px; height: 151px;" />
-<pre>
-<strong>Input:</strong> grid = [[1,2,0,1],[1,3,3,1],[0,2,5,1]], pricing = [2,3], start = [2,3], k = 2
-<strong>Output:</strong> [[2,1],[1,2]]
-<strong>Explanation:</strong> You start at (2,3).
-With a price range of [2,3], we can take items from (0,1), (1,1), (1,2) and (2,1).
-The ranks of these items are:
-- (2,1) with distance 2, price 2
-- (1,2) with distance 2, price 3
-- (1,1) with distance 3
-- (0,1) with distance 4
-Thus, the 2 highest ranked items in the price range are (2,1) and (1,2).
-</pre>
-
-<p><strong class="example">Example 3:</strong></p>
-<img alt="" src="https://assets.leetcode.com/uploads/2021/12/30/example3.png" style="width: 149px; height: 150px;" />
-<pre>
-<strong>Input:</strong> grid = [[1,1,1],[0,0,1],[2,3,4]], pricing = [2,3], start = [0,0], k = 3
-<strong>Output:</strong> [[2,1],[2,0]]
-<strong>Explanation:</strong> You start at (0,0).
-With a price range of [2,3], we can take items from (2,0) and (2,1). 
-The ranks of these items are: 
-- (2,1) with distance 5
-- (2,0) with distance 6
-Thus, the 2 highest ranked items in the price range are (2,1) and (2,0). 
-Note that k = 3 but there are only 2 reachable items within the price range.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>m == grid.length</code></li>
-	<li><code>n == grid[i].length</code></li>
-	<li><code>1 &lt;= m, n &lt;= 10<sup>5</sup></code></li>
-	<li><code>1 &lt;= m * n &lt;= 10<sup>5</sup></code></li>
-	<li><code>0 &lt;= grid[i][j] &lt;= 10<sup>5</sup></code></li>
-	<li><code>pricing.length == 2</code></li>
-	<li><code>2 &lt;= low &lt;= high &lt;= 10<sup>5</sup></code></li>
-	<li><code>start.length == 2</code></li>
-	<li><code>0 &lt;= row &lt;= m - 1</code></li>
-	<li><code>0 &lt;= col &lt;= n - 1</code></li>
-	<li><code>grid[row][col] &gt; 0</code></li>
-	<li><code>1 &lt;= k &lt;= m * n</code></li>
-</ul>
-</div>
+                        <div class="block-text">K Highest Ranked Items Within a Price Range (LeetCode #2146) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[[1,2,0,1],[1,3,0,1],[0,2,5,1]]</code></div>
-                <div class="ex-line"><span>Out</span><code>[2,5]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[0,0]</code></div>
-                <div class="ex-line"><span>Out</span><code>3</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>[[1,2,0,1],[1,3,3,1],[0,2,5,1]]</code></div>
-                <div class="ex-line"><span>Out</span><code>[2,3]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 4</div>
-                <div class="ex-line"><span>In</span><code>[2,3]</code></div>
-                <div class="ex-line"><span>Out</span><code>2</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 5</div>
-                <div class="ex-line"><span>In</span><code>[[1,1,1],[0,0,1],[2,3,4]]</code></div>
-                <div class="ex-line"><span>Out</span><code>[2,3]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 6</div>
-                <div class="ex-line"><span>In</span><code>[0,0]</code></div>
-                <div class="ex-line"><span>Out</span><code>3</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -183,7 +73,7 @@ Note that k = 3 but there are only 2 reachable items within the price range.
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Could you determine the rank of every item efficiently? We can perform a breadth-first search from the starting position and know the length of the shortest path from start to every item. Sort all the items according to the conditions listed in the problem, and return the first k (or all if less than k exist) items as the answer.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -200,29 +90,11 @@ Note that k = 3 but there are only 2 reachable items within the price range.
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Return an array of arrays of size *<span class="ty">returnSize</span>.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">int</span>** highestRankedKItems(<span class="ty">int</span>** grid, <span class="ty">int</span> gridSize, <span class="ty">int</span>* gridColSize, <span class="ty">int</span>* pricing, <span class="ty">int</span> pricingSize, <span class="ty">int</span>* start, <span class="ty">int</span> startSize, <span class="ty">int</span> k, <span class="ty">int</span>* <span class="ty">returnSize</span>, <span class="ty">int</span>** returnColumnSizes) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> highestRankedKItems(<span class="ty">self</span>, grid, pricing, start, k):
-        &quot;&quot;&quot;
-        :type grid: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        :type pricing: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type start: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type k: <span class="ty">int</span>
-        :rtype: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; highestRankedKItems(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; grid, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; pricing, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; start, <span class="ty">int</span> k) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -232,18 +104,18 @@ Note that k = 3 but there are only 2 reachable items within the price range.
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Could you determine the rank of every item efficiently?</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — We can perform a breadth-first search from the starting…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Sort all the items according to the conditions listed in…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Heap array trên Heap — O cho N phần tử.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

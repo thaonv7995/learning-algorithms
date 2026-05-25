@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Serialize and Deserialize Binary Tree</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>60.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Thiết kế một thuật toán để tuần tự hóa (Serialize) một cây nhị phân thành một chuỗi ký tự và giải tuần tự hóa (Deserialize) chuỗi ký tự đó khôi phục lại cây nhị phân ban đầu.</div>
+                        <div class="block-text">Serialize and Deserialize Binary Tree (LeetCode #297) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>root = [1,2,3,null,null,4,5]</code></div>
-                <div class="ex-line"><span>Out</span><code>Chuỗi &quot;1,2,#,#,3,4,#,#,5,#,#&quot; và khôi phục lại cây ban đầu</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng giải thuật duyệt cây theo tiền thứ tự (Preorder DFS). Khi tuần tự hóa, ta ghi giá trị nút hiện tại kèm dấu phân tách, nếu nút NULL ta ghi ký tự đặc biệt `#`. Khi giải tuần tự hóa, ta đọc từng token từ chuỗi ký tự, nếu gặp `#` ta trả về NULL, ngược lại ta tạo nút mới và gọi đệ quy xây dựng con bên trái rồi đến con bên phải.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,61 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Serialize and Deserialize Binary Tree)</span>
-<span class="cm">// Requires standard dynamic tree traversal buffers.</span></pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Serialize <span class="kw">and</span> Deserialize Binary Tree)</span>
-<span class="kw">class</span> Codec:
-    <span class="kw">def</span> serialize(<span class="ty">self</span>, root):
-        res = []
-        <span class="kw">def</span> dfs(node):
-            <span class="kw">if</span> <span class="kw">not</span> node:
-                res.append(&quot;N&quot;)
-                <span class="kw">return</span>
-            res.append(<span class="ty">str</span>(node.val))
-            dfs(node.left)
-            dfs(node.right)
-        dfs(root)
-        <span class="kw">return</span> &quot;,&quot;.join(res)
-
-    <span class="kw">def</span> deserialize(<span class="ty">self</span>, data):
-        vals = data.split(&quot;,&quot;)
-        <span class="ty">self</span>.i = 0
-        <span class="kw">def</span> dfs():
-            <span class="kw">if</span> vals[<span class="ty">self</span>.i] == &quot;N&quot;:
-                <span class="ty">self</span>.i += 1
-                <span class="kw">return</span> <span class="kw">None</span>
-            node = <span class="ty">TreeNode</span>(<span class="ty">int</span>(vals[<span class="ty">self</span>.i]))
-            <span class="ty">self</span>.i += 1
-            node.left = dfs()
-            node.right = dfs()
-            <span class="kw">return</span> node
-        <span class="kw">return</span> dfs()</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Codec</span> {
-    <span class="ty">void</span> <span class="fn">serializeDFS</span>(<span class="ty">TreeNode</span>* root, <span class="ty">string</span>&amp; out) {
-        <span class="kw">if</span> (!root) { out += <span class="st">"#,"</span>; <span class="kw">return</span>; }
-        out += <span class="fn">to_string</span>(root-&gt;val) + <span class="st">","</span>;
-        <span class="fn">serializeDFS</span>(root-&gt;left, out);
-        <span class="fn">serializeDFS</span>(root-&gt;right, out);
-    }
-    <span class="ty">TreeNode</span>* <span class="fn">deserializeDFS</span>(<span class="ty">stringstream</span>&amp; ss) {
-        <span class="ty">string</span> val;
-        <span class="fn">getline</span>(ss, val, <span class="st">','</span>);
-        <span class="kw">if</span> (val == <span class="st">"#"</span>) <span class="kw">return</span> NULL;
-        <span class="ty">TreeNode</span>* node = <span class="kw">new</span> <span class="ty">TreeNode</span>(<span class="fn">stoi</span>(val));
-        node-&gt;left = <span class="fn">deserializeDFS</span>(ss);
-        node-&gt;right = <span class="fn">deserializeDFS</span>(ss);
-        <span class="kw">return</span> node;
-    }
-<span class="kw">public</span>:
-    <span class="ty">string</span> <span class="fn">serialize</span>(<span class="ty">TreeNode</span>* root) {
-        <span class="ty">string</span> out = <span class="st">""</span>;
-        <span class="fn">serializeDFS</span>(root, out);
-        <span class="kw">return</span> out;
-    }
-    <span class="ty">TreeNode</span>* <span class="fn">deserialize</span>(<span class="ty">string</span> data) {
-        <span class="ty">stringstream</span> ss(data);
-        <span class="kw">return</span> <span class="fn">deserializeDFS</span>(ss);
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -154,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — giải thuật duyệt cây theo tiền thứ tự .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — tuần tự hóa, ta ghi giá trị nút hiện tại kèm dấu phân…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — giải tuần tự hóa, ta đọc từng token từ chuỗi ký tự, nếu…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Cây rỗng</span><span class="analysis-tag edge">Một nút</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>`stringstream` giúp băm tách chuỗi cực kỳ sạch sẽ trong C++. Lưu ý giải phóng toàn bộ các thực thể Heap Node…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

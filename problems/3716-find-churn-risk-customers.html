@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Find Churn Risk Customers</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>46.6% AC</span>
                     </div>
@@ -57,147 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Table: <code>subscription_events</code></p>
-
-<pre>
-+------------------+---------+
-| Column Name      | Type    | 
-+------------------+---------+
-| event_id         | int     |
-| user_id          | int     |
-| event_date       | date    |
-| event_type       | varchar |
-| plan_name        | varchar |
-| monthly_amount   | decimal |
-+------------------+---------+
-event_id is the unique identifier for this table.
-event_type can be start, upgrade, downgrade, or cancel.
-plan_name can be basic, standard, premium, or NULL (when event_type is cancel).
-monthly_amount represents the monthly subscription cost after this event.
-For cancel events, monthly_amount is 0.
-</pre>
-
-<p>Write a solution to <strong>Find Churn Risk Customers</strong> - users who show warning signs before churning. A user is considered <b>churn risk customer</b>&nbsp;if they meet ALL the following criteria:</p>
-
-<ul>
-	<li>Currently have an <strong>active subscription</strong> (their last event is not cancel).</li>
-	<li>Have performed <strong>at least one</strong> downgrade in their subscription history.</li>
-	<li>Their <strong>current plan revenue</strong> is less than <code>50%</code> of their historical maximum plan revenue.</li>
-	<li>Have been a subscriber for <strong>at least</strong> <code>60</code> days.</li>
-</ul>
-
-<p>Return <em>the result table&nbsp;ordered by</em> <code>days_as_subscriber</code> <em>in <strong>descending</strong> order, then by</em> <code>user_id</code> <em>in <strong>ascending</strong> order</em>.</p>
-
-<p>The result format is in the following example.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong></p>
-
-<p>subscription_events table:</p>
-
-<pre class="example-io">
-+----------+---------+------------+------------+-----------+----------------+
-| event_id | user_id | event_date | event_type | plan_name | monthly_amount |
-+----------+---------+------------+------------+-----------+----------------+
-| 1        | 501     | 2024-01-01 | start      | premium   | 29.99          |
-| 2        | 501     | 2024-02-15 | downgrade  | standard  | 19.99          |
-| 3        | 501     | 2024-03-20 | downgrade  | basic     | 9.99           |
-| 4        | 502     | 2024-01-05 | start      | standard  | 19.99          |
-| 5        | 502     | 2024-02-10 | upgrade    | premium   | 29.99          |
-| 6        | 502     | 2024-03-15 | downgrade  | basic     | 9.99           |
-| 7        | 503     | 2024-01-10 | start      | basic     | 9.99           |
-| 8        | 503     | 2024-02-20 | upgrade    | standard  | 19.99          |
-| 9        | 503     | 2024-03-25 | upgrade    | premium   | 29.99          |
-| 10       | 504     | 2024-01-15 | start      | premium   | 29.99          |
-| 11       | 504     | 2024-03-01 | downgrade  | standard  | 19.99          |
-| 12       | 504     | 2024-03-30 | cancel     | NULL      | 0.00           |
-| 13       | 505     | 2024-02-01 | start      | basic     | 9.99           |
-| 14       | 505     | 2024-02-28 | upgrade    | standard  | 19.99          |
-| 15       | 506     | 2024-01-20 | start      | premium   | 29.99          |
-| 16       | 506     | 2024-03-10 | downgrade  | basic     | 9.99           |
-+----------+---------+------------+------------+-----------+----------------+
-</pre>
-
-<p><strong>Output:</strong></p>
-
-<pre class="example-io">
-+----------+--------------+------------------------+-----------------------+--------------------+
-| user_id  | current_plan | current_monthly_amount | max_historical_amount | days_as_subscriber |
-+----------+--------------+------------------------+-----------------------+--------------------+
-| 501      | basic        | 9.99                   | 29.99                 | 79                 |
-| 502      | basic        | 9.99                   | 29.99                 | 69                 |
-+----------+--------------+------------------------+-----------------------+--------------------+
-</pre>
-
-<p><strong>Explanation:</strong></p>
-
-<ul>
-	<li><strong>User 501</strong>:
-
-	<ul>
-		<li>Currently active: Last event is downgrade&nbsp;to basic (not cancelled)&nbsp;</li>
-		<li>Has downgrades: Yes, 2 downgrades in history&nbsp;</li>
-		<li>Current revenue (9.99) vs max (29.99): 9.99/29.99 = 33.3% (less than 50%)&nbsp;</li>
-		<li>Days as subscriber: Jan 1 to Mar 20 = 79 days (at least 60)&nbsp;</li>
-		<li>Result: <strong>Churn Risk Customer</strong></li>
-	</ul>
-	</li>
-	<li><strong>User 502</strong>:
-	<ul>
-		<li>Currently active: Last event is downgrade&nbsp;to basic (not cancelled)&nbsp;</li>
-		<li>Has downgrades: Yes, 1 downgrade in history&nbsp;</li>
-		<li>Current revenue (9.99) vs max (29.99): 9.99/29.99 = 33.3% (less than 50%)&nbsp;</li>
-		<li>Days as subscriber: Jan 5 to Mar 15 = 70 days (at least 60)&nbsp;</li>
-		<li>Result: <strong>Churn Risk Customer</strong></li>
-	</ul>
-	</li>
-	<li><strong>User 503</strong>:
-	<ul>
-		<li>Currently active: Last event is upgrade&nbsp;to premium (not cancelled)&nbsp;</li>
-		<li>Has downgrades: No downgrades in history&nbsp;</li>
-		<li>Result: <strong>Not at-risk</strong> (no downgrade history)</li>
-	</ul>
-	</li>
-	<li><strong>User 504</strong>:
-	<ul>
-		<li>Currently active: Last event is cancel</li>
-		<li>Result: <strong>Not at-risk</strong> (subscription cancelled)</li>
-	</ul>
-	</li>
-	<li><strong>User 505</strong>:
-	<ul>
-		<li>Currently active: Last event is &#39;upgrade&#39; to standard (not cancelled)&nbsp;</li>
-		<li>Has downgrades: No downgrades in history&nbsp;</li>
-		<li>Result: <strong>Not at-risk</strong> (no downgrade history)</li>
-	</ul>
-	</li>
-	<li><strong>User 506</strong>:
-	<ul>
-		<li>Currently active: Last event is downgrade&nbsp;to basic (not cancelled)&nbsp;</li>
-		<li>Has downgrades: Yes, 1 downgrade in history&nbsp;</li>
-		<li>Current revenue (9.99) vs max (29.99): 9.99/29.99 = 33.3% (less than 50%)&nbsp;</li>
-		<li>Days as subscriber: Jan 20 to Mar 10 = 50 days (less than 60)&nbsp;</li>
-		<li>Result: <strong>Not at-risk</strong> (insufficient subscription duration)</li>
-	</ul>
-	</li>
-</ul>
-
-<p>Result table is ordered by days_as_subscriber DESC, then user_id ASC.</p>
-
-<p><strong>Note:</strong> days_as_subscriber is calculated from the first event date to the last event date for each user.</p>
-</div>
-</div>
+                        <div class="block-text">Find Churn Risk Customers (LeetCode #3716) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>{&quot;headers&quot;:{&quot;subscription_events&quot;:[&quot;event_id&quot;,&quot;user_id&quot;,&quot;event_date&quot;,&quot;event_type&quot;,&quot;plan_name&quot;,&quot;monthly_amount&quot;]},&quot;rows&quot;:{&quot;subscription_events&quot;:[[1,501,&quot;2024-01-01&quot;,&quot;start&quot;,&quot;premium&quot;,29.99],[2,501,&quot;2024-02-15&quot;,&quot;downgrade&quot;,&quot;standard&quot;,19.99],[3,501,&quot;2024-03-20&quot;,&quot;downgrade&quot;,&quot;basic&quot;,9.99],[4,502,&quot;2024-01-05&quot;,&quot;start&quot;,&quot;standard&quot;,19.99],[5,502,&quot;2024-02-10&quot;,&quot;upgrade&quot;,&quot;premium&quot;,29.99],[6,502,&quot;2024-03-15&quot;,&quot;downgrade&quot;,&quot;basic&quot;,9.99],[7,503,&quot;2024-01-10&quot;,&quot;start&quot;,&quot;basic&quot;,9.99],[8,503,&quot;2024-02-20&quot;,&quot;upgrade&quot;,&quot;standard&quot;,19.99],[9,503,&quot;2024-03-25&quot;,&quot;upgrade&quot;,&quot;premium&quot;,29.99],[10,504,&quot;2024-01-15&quot;,&quot;start&quot;,&quot;premium&quot;,29.99],[11,504,&quot;2024-03-01&quot;,&quot;downgrade&quot;,&quot;standard&quot;,19.99],[12,504,&quot;2024-03-30&quot;,&quot;cancel&quot;,null,0.00],[13,505,&quot;2024-02-01&quot;,&quot;start&quot;,&quot;basic&quot;,9.99],[14,505,&quot;2024-02-28&quot;,&quot;upgrade&quot;,&quot;standard&quot;,19.99],[15,506,&quot;2024-01-20&quot;,&quot;start&quot;,&quot;premium&quot;,29.99],[16,506,&quot;2024-03-10&quot;,&quot;downgrade&quot;,&quot;basic&quot;,9.99]]}}</code></div>
-                <div class="ex-line"><span>Out</span><code>(xem LeetCode)</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -205,7 +73,7 @@ For cancel events, monthly_amount is 0.
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật thuật toán phù hợp. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -222,11 +90,12 @@ For cancel events, monthly_amount is 0.
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Template C — xem editorial LeetCode</span>
-</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Template Python — xem editorial LeetCode</span>
-</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// Template C++</span></pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+};</pre>
                         </div>
                     </div>
                 </div>
@@ -235,18 +104,18 @@ For cancel events, monthly_amount is 0.
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">General</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật thuật toán phù hợp.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

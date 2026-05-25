@@ -1,0 +1,26 @@
+{
+  "id": 66,
+  "title": "Plus One",
+  "difficulty": "Easy",
+  "category": "Array",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Mảng digits biểu diễn số không âm (MSB đầu). Cộng 1, trả mảng kết quả.",
+  "examples": [
+    { "input": "digits = [1,2,3]", "output": "[1,2,4]" },
+    { "input": "digits = [9,9,9]", "output": "[1,0,0,0]" }
+  ],
+  "approach": "Duyệt từ cuối: nếu digit < 9 thì +1 và return; else set 0, carry tiếp. Hết mảng thì insert 1 đầu.",
+  "memoryTip": "Carry từ phải sang trái — giống cộng tay.",
+  "solutions": {
+    "python": "class Solution:\n    def plusOne(self, d: List[int]) -> List[int]:\n        for i in range(len(d)-1, -1, -1):\n            if d[i] < 9: d[i] += 1; return d\n            d[i] = 0\n        return [1] + d",
+    "cpp": "class Solution {\npublic:\n    vector<int> plusOne(vector<int>& d) {\n        for (int i = d.size()-1; i >= 0; i--) {\n            if (d[i] < 9) { d[i]++; return d; }\n            d[i] = 0;\n        }\n        d.insert(d.begin(), 1);\n        return d;\n    }\n};",
+    "c": "int* plusOne(int* d, int n, int* rs) {\n    int i;\n    for (i = n - 1; i >= 0; i--) {\n        if (d[i] < 9) { d[i]++; *rs = n; return d; }\n        d[i] = 0;\n    }\n    int* out = (int*)malloc((n + 1) * sizeof(int));\n    out[0] = 1; for (i = 0; i < n; i++) out[i + 1] = 0;\n    *rs = n + 1; return out;\n}"
+  },
+  "analysis": {
+    "correctness": "Mọi carry được xử lý đúng từ LSD.",
+    "edgeCases": ["[9]", "[9,9,9]", "[0]"],
+    "pitfalls": ["Quên insert 1 khi overflow toàn 9"]
+  },
+  "tier": "done"
+}

@@ -1,0 +1,26 @@
+{
+  "id": 50,
+  "title": "Pow(x, n)",
+  "difficulty": "Medium",
+  "category": "Math",
+  "timeComplexity": "O(log N)",
+  "spaceComplexity": "O(1)",
+  "description": "Tính x^n (n có thể âm). Không dùng hàm pow có sẵn.",
+  "examples": [
+    { "input": "x = 2.0, n = 10", "output": "1024.0" },
+    { "input": "x = 2.0, n = -2", "output": "0.25" }
+  ],
+  "approach": "Binary exponentiation: n chẵn → (x²)^(n/2); n lẻ → x * x^(n-1). n<0 → đảo x, n=-n.",
+  "memoryTip": "Dùng long cho n khi n = INT_MIN.",
+  "solutions": {
+    "python": "class Solution:\n    def myPow(self, x: float, n: int) -> float:\n        if n < 0: x, n = 1/x, -n\n        res = 1.0\n        while n:\n            if n & 1: res *= x\n            x *= x; n >>= 1\n        return res",
+    "cpp": "class Solution {\npublic:\n    double myPow(double x, int n) {\n        long N = n;\n        if (N < 0) { x = 1/x; N = -N; }\n        double res = 1;\n        while (N) {\n            if (N & 1) res *= x;\n            x *= x; N >>= 1;\n        }\n        return res;\n    }\n};",
+    "c": "double myPow(double x, int n) {\n    long N = n;\n    if (N < 0) { x = 1.0 / x; N = -N; }\n    double res = 1.0;\n    while (N) {\n        if (N & 1) res *= x;\n        x *= x; N >>= 1;\n    }\n    return res;\n}"
+  },
+  "analysis": {
+    "correctness": "Mỗi bit của n nhân đúng lũy thừa x^(2^k).",
+    "edgeCases": ["n=0 → 1", "n=INT_MIN", "x=0"],
+    "pitfalls": ["INT_MIN overflow khi -n", "Dùng recursion sâu"]
+  },
+  "tier": "done"
+}

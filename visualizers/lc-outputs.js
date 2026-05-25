@@ -1,0 +1,271 @@
+/**
+ * Explicit Output resolvers for LC #1–50.
+ * Used by VizCore.resolveOutput before generic heuristics (avoids false positives).
+ */
+(function () {
+    const R = {};
+    window.LC_OUTPUT_RESOLVERS = R;
+
+    const done = s => !!s.done;
+    const flash = s => done(s) || (s.current && s.current.type === "found");
+
+    function val(value, suffix, s) {
+        return { kind: "value", value, suffix: suffix || "Kết quả", flash: done(s) };
+    }
+    function txt(text, s) {
+        const t = String(text);
+        return { kind: "text", text: t.startsWith('"') ? t : `"${t}"`, flash: done(s) };
+    }
+    function flow(text, s, partial) {
+        return { kind: "flow", text, flash: done(s) && !partial };
+    }
+    function arr(values, s, label) {
+        return { kind: "array", values: values.slice(), label, flash: done(s) };
+    }
+    function bool(value, s) {
+        return { kind: "bool", value: !!value, flash: done(s) };
+    }
+    function itemList(list, s, opts) {
+        opts = opts || {};
+        return {
+            kind: "items",
+            items: list,
+            progress: opts.progress != null ? opts.progress : list.length,
+            total: opts.total,
+            flash: opts.flash != null ? opts.flash : flash(s)
+        };
+    }
+    function comboItems(res, s) {
+        if (!res || !res.length) return done(s) ? itemList([], s) : null;
+        return itemList(
+            res.map(a => (Array.isArray(a) ? `[${a.join(", ")}]` : String(a))),
+            s,
+            { progress: res.length, total: done(s) ? res.length : undefined, flash: flash(s) }
+        );
+    }
+    function zigzagText(s) {
+        if (!s.str || !s.rows) return "";
+        const n = done(s) ? s.str.length : Math.max(0, s.i || 0);
+        if (!n) return "";
+        const buckets = Array.from({ length: s.rows }, () => []);
+        let r = 0, dir = 1;
+        for (let i = 0; i < n; i++) {
+            buckets[r].push(s.str[i]);
+            if (r === 0) dir = 1;
+            else if (r === s.rows - 1) dir = -1;
+            r += dir;
+        }
+        return buckets.map(b => b.join("")).join("");
+    }
+    function div29Result(s) {
+        const sign = (s.a < 0) ^ (s.b < 0) ? -1 : 1;
+        return s.q * sign;
+    }
+
+    R[1] = s => {
+        if (s.resultPair && s.resultPair.length) return arr(s.resultPair, s, "indices");
+        if (done(s)) return txt("Không tìm thấy cặp", s);
+        return null;
+    };
+
+    R[2] = s => (s.result && s.result.length ? flow(s.result.join(" → "), s) : null);
+
+    R[3] = s => (s.right >= 0 || done(s)) ? val(s.maxLen, "maxLen", s) : null;
+
+    R[4] = s => (done(s) && s.median != null) ? val(s.median, "median", s) : null;
+
+    R[5] = s => (s.best && s.best.length || done(s)) ? txt(s.best || '""', s) : null;
+
+    R[6] = s => {
+        const t = zigzagText(s);
+        return t ? txt(t + (done(s) ? "" : "…"), s) : null;
+    };
+
+    R[7] = s => ((s.digits && s.digits.length) || done(s)) ? val(s.res, "reversed", s) : null;
+
+    R[8] = s => {
+        const v = s.sign * s.res;
+        if (done(s) || (s.phase === "digit" && s.res > 0)) return val(v, "atoi", s);
+        return null;
+    };
+
+    R[9] = s => (s.result !== null && s.result !== undefined) ? bool(s.result, s) : null;
+
+    R[10] = s => (done(s) && s.dp) ? bool(s.dp[s.m][s.n], s) : null;
+
+    R[11] = s => (done(s) && s.maxArea != null) ? val(s.maxArea, "diện tích max", s) : null;
+
+    R[12] = s => (s.out || done(s)) ? txt(s.out || "", s) : null;
+
+    R[13] = s => (s.i > 0 || done(s)) ? val(s.sum, "tổng", s) : null;
+
+    R[14] = s => (s.prefix != null && (s.prefix.length || s.strIdx > 0 || done(s)))
+        ? txt(s.prefix, s) : null;
+
+    R[15] = s => comboItems(s.found, s);
+
+    R[16] = s => (s.best != null && (s.i > 0 || done(s))) ? val(s.best, "closest", s) : null;
+
+    R[17] = s => comboItems(s.res, s);
+
+    R[18] = s => comboItems(s.found, s);
+
+    R[19] = s => (done(s) && s.result) ? flow(s.result.join(" → "), s) : null;
+
+    R[20] = s => {
+        if (!done(s)) return null;
+        return bool(s.stack.length === 0 && s.left >= (s.str || "").length, s);
+    };
+
+    R[21] = s => {
+        if (!s.mergedList || !s.mergedList.length) return done(s) ? flow("—", s) : null;
+        const vals = s.mergedList.map(x => (x && x.val != null ? x.val : x));
+        return flow(vals.join(" → "), s);
+    };
+
+    R[22] = s => null; // manual Output section in lc22.js
+
+    R[23] = s => null; // manual Output section in lc23.js
+
+    R[24] = s => (done(s) ? flow(s.list.join(" → "), s) : null);
+
+    R[25] = s => (done(s) && s.work) ? flow(s.work.join(" → "), s) : null;
+
+    R[26] = s => (done(s) || s.w > 1) ? val(s.w, "k (unique)", s) : null;
+
+    R[27] = s => (done(s) || s.w > 0) ? val(s.w, "k (kept)", s) : null;
+
+    R[28] = s => {
+        if (done(s)) return val(s.result != null ? s.result : -1, "index", s);
+        return null;
+    };
+
+    R[29] = s => (done(s) ? val(div29Result(s), "quotient", s) : null);
+
+    R[30] = s => comboItems(s.found, s);
+
+    R[31] = s => (done(s) ? arr(s.nums, s, "next permutation") : null);
+
+    R[32] = s => (s.best > 0 || done(s)) ? val(s.best, "max length", s) : null;
+
+    R[33] = s => {
+        if (done(s)) return val(s.ans != null ? s.ans : -1, "index", s);
+        return null;
+    };
+
+    R[34] = s => (done(s) || s.ansL >= 0) ? arr([s.ansL, s.ansR], s, "range") : null;
+
+    R[35] = s => (done(s) ? val(s.l, "insert at", s) : null);
+
+    R[36] = s => (done(s) ? bool(s.ok, s) : null);
+
+    R[37] = s => {
+        if (!done(s) || !s.board) return null;
+        return { kind: "lines", lines: s.board.map(row => row.join(" ")), flash: true };
+    };
+
+    R[38] = s => (s.cur ? txt(s.cur, s) : null);
+
+    R[39] = s => comboItems(s.res, s);
+
+    R[40] = s => comboItems(s.res, s);
+
+    R[41] = s => (done(s) && s.answer != null) ? val(s.answer, "missing positive", s) : null;
+
+    R[42] = s => (done(s) ? val(s.water, "nước đọng", s) : null);
+
+    R[43] = s => (s.result || done(s)) ? txt(s.result || "", s) : null;
+
+    R[44] = s => {
+        if (!done(s) || !s.dp) return null;
+        return bool(s.dp[s.s.length][s.p.length], s);
+    };
+
+    R[45] = s => (done(s) ? val(s.steps, "bước nhảy", s) : null);
+
+    R[46] = s => null; // manual Output in lc46.js
+    R[47] = s => null;
+    R[48] = s => null;
+
+    R[49] = s => {
+        if (!s.groups) return null;
+        const keys = Object.keys(s.groups);
+        if (!keys.length && !done(s)) return null;
+        return itemList(keys.map(k => `${k}: [${s.groups[k].join(", ")}]`), s, { flash: done(s) });
+    };
+
+    R[50] = s => ((s.res != null && (s.bit > 0 || done(s))) ? val(Number(s.res.toFixed ? s.res.toFixed(4) : s.res), "x^n", s) : null);
+
+    /* ── LC #51–70 ── */
+    R[51] = s => {
+        if (!done(s) || !s.queens || !s.queens.every(q => q >= 0)) return null;
+        return arr(s.queens, s, "queens (cột/hàng)");
+    };
+    R[52] = s => (done(s) ? val(s.count, "cách xếp", s) : null);
+    R[53] = s => ((s.best != null && (done(s) || s.i > 0)) ? val(s.best, "max subarray", s) : null);
+    R[54] = s => (s.res && s.res.length ? arr(s.res, s, "spiral") : null);
+    R[55] = s => (done(s) ? bool(s.i >= (s.nums || []).length, s) : null);
+    R[56] = s => {
+        if (!s.res || !s.res.length) return done(s) ? itemList([], s) : null;
+        return itemList(s.res.map(iv => `[${iv[0]}, ${iv[1]}]`), s, { flash: done(s) });
+    };
+    R[57] = s => {
+        if (!s.res || !s.res.length) return done(s) ? itemList([], s) : null;
+        return itemList(s.res.map(iv => `[${iv[0]}, ${iv[1]}]`), s, { flash: done(s) });
+    };
+    R[58] = s => ((s.len > 0 || done(s)) ? val(s.len, "độ dài từ cuối", s) : null);
+    R[59] = s => (done(s) && s.m ? { kind: "matrix", matrix: s.m, flash: true } : null);
+    R[60] = s => (s.res ? txt(s.res, s) : null);
+    R[61] = s => {
+        const out = s.result || s.list;
+        return (done(s) && out) ? flow(out.join(" → "), s) : null;
+    };
+    R[62] = s => (done(s) && s.dp ? val(s.dp[s.m - 1][s.n - 1], "số đường", s) : null);
+    R[63] = s => (done(s) ? val(s.dp[s.n - 1], "số đường", s) : null);
+    R[64] = s => (done(s) ? val(s.dp[s.n - 1], "min sum", s) : null);
+    R[65] = s => (done(s) ? bool(!!s.valid, s) : null);
+    R[66] = s => (done(s) && s.digits ? arr(s.digits, s, "plus one") : null);
+    R[67] = s => (s.result || done(s)) ? txt(s.result || "", s) : null;
+    R[68] = s => (done(s) && s.lines ? { kind: "lines", lines: s.lines.slice(), flash: true } : null);
+    R[69] = s => (done(s) ? val(s.ans, "sqrt", s) : null);
+    R[70] = s => (done(s) ? val(s.b, "số cách", s) : null);
+
+    R[71] = s => (s.result ? txt(s.result, s) : null);
+    R[72] = s => (done(s) && s.dp ? val(s.dp[s.m][s.n], "edit distance", s) : null);
+    R[73] = s => (done(s) && s.matrix ? { kind: "matrix", matrix: s.matrix, flash: true } : null);
+    R[74] = s => (done(s) ? bool(!!s.ans, s) : null);
+    R[75] = s => (done(s) ? arr(s.nums, s, "sorted") : null);
+    R[76] = s => null; // premium — lc-patterns stub
+    R[77] = s => comboItems(s.res, s);
+    R[78] = s => comboItems(s.res, s);
+    R[79] = s => (done(s) ? bool(!!s.found, s) : null);
+    R[80] = s => (done(s) ? val(s.w, "k", s) : null);
+    R[81] = s => (done(s) && s.ans != null ? val(s.ans, "index", s) : null);
+    R[82] = s => (done(s) && s.result ? flow(s.result.join(" → "), s) : null);
+    R[83] = s => (done(s) && s.result ? flow(s.result.join(" → "), s) : null);
+    R[84] = s => null; // premium
+    R[85] = s => (done(s) && s.best != null ? val(s.best, "max area", s) : null);
+    R[86] = s => (done(s) && s.result ? flow(s.result.join(" → "), s) : null);
+    R[87] = s => (done(s) ? bool(!!s.ok, s) : null);
+    R[88] = s => (done(s) && s.work ? arr(s.work, s, "merged") : null);
+    R[89] = s => (s.res && s.res.length ? arr(s.res, s, "gray code") : null);
+    R[90] = s => comboItems(s.res, s);
+    R[91] = s => null; // premium
+    R[92] = s => (done(s) && s.list ? flow(s.list.join(" → "), s) : null);
+    R[93] = s => comboItems(s.res, s);
+    R[94] = s => (s.visit && s.visit.length ? arr(s.visit, s, "inorder") : null);
+    R[95] = s => comboItems(s.res, s);
+    R[96] = s => (done(s) ? val(s.ans, "BST count", s) : null);
+    R[97] = s => (done(s) ? bool(!!s.ok, s) : null);
+    R[98] = s => (done(s) ? bool(!!s.valid, s) : null);
+    R[99] = s => (done(s) && s.nums ? arr(s.nums, s, "recovered") : null);
+    R[100] = s => null; // premium — lc-patterns
+
+    /* Generic fallback — catalog visualizer sets outputText */
+    window.LC_OUTPUT_FALLBACK = function (s) {
+        if (!s || !s.done) return null;
+        if (s.outputText) return { kind: "text", text: String(s.outputText), flash: true };
+        if (s.outputResult != null) return { kind: "value", value: s.outputResult, flash: true };
+        return { kind: "text", text: "✓ Hoàn tất — xem log", flash: true };
+    };
+})();

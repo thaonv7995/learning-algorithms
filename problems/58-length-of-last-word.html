@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #58</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">String</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Length of Last Word</h1>
                     <div class="head-stats">
@@ -57,52 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given a string <code>s</code> consisting of words and spaces, return <em>the length of the <strong>last</strong> word in the string.</em></p>
-
-<p>A <strong>word</strong> is a maximal <span data-keyword="substring-nonempty">substring</span> consisting of non-space characters only.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> s = &quot;Hello World&quot;
-<strong>Output:</strong> 5
-<strong>Explanation:</strong> The last word is &quot;World&quot; with length 5.
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> s = &quot;   fly me   to   the moon  &quot;
-<strong>Output:</strong> 4
-<strong>Explanation:</strong> The last word is &quot;moon&quot; with length 4.
-</pre>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<pre>
-<strong>Input:</strong> s = &quot;luffy is still joyboy&quot;
-<strong>Output:</strong> 6
-<strong>Explanation:</strong> The last word is &quot;joyboy&quot; with length 6.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>
-	<li><code>s</code> consists of only English letters and spaces <code>&#39; &#39;</code>.</li>
-	<li>There will be at least one word in <code>s</code>.</li>
-</ul>
-</div>
+                        <div class="block-text">Trả độ dài từ cuối cùng trong chuỗi (các từ cách nhau bởi space).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;Hello World&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;   fly me   to   the moon  &quot;</code></div>
+                <div class="ex-line"><span>In</span><code>s = &quot;Hello World&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>5</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>s = &quot;   fly me   to   the moon  &quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>4</code></div>
             </div></div>
                     </div>
                 </div>
@@ -110,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật String. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">i = cuối chuỗi, bỏ space trailing, đếm ký tự đến khi gặp space.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -128,19 +96,24 @@
                                 <span class="ftype">C99</span>
                             </div>
                             <pre class="code-block" id="code-block-c"><span class="ty">int</span> lengthOfLastWord(<span class="ty">char</span>* s) {
-    
+    <span class="ty">int</span> n = (<span class="ty">int</span>)strlen(s), i = n - 1;
+    <span class="kw">while</span> (i &gt;= 0 &amp;&amp; s[i] == ' ') i--;
+    <span class="ty">int</span> end = i;
+    <span class="kw">while</span> (i &gt;= 0 &amp;&amp; s[i] != ' ') i--;
+    <span class="kw">return</span> end - i;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> lengthOfLastWord(<span class="ty">self</span>, s):
-        &quot;&quot;&quot;
-        :type s: <span class="ty">str</span>
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> lengthOfLastWord(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
+        s = s.rstrip()
+        <span class="kw">return</span> <span class="ty">len</span>(s) - s.rfind(' ') - 1 <span class="kw">if</span> ' ' <span class="kw">in</span> s <span class="kw">else</span> <span class="ty">len</span>(s)</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">int</span> lengthOfLastWord(<span class="ty">string</span> s) {
-        
+        <span class="ty">int</span> i=s.size()-1;
+        <span class="kw">while</span>(i&gt;=0&amp;&amp;s[i]==' ') i--;
+        <span class="ty">int</span> end=i;
+        <span class="kw">while</span>(i&gt;=0&amp;&amp;s[i]!=' ') i--;
+        <span class="kw">return</span> end-i;
     }
 };</pre>
                         </div>
@@ -155,14 +128,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật String.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — i = cuối chuỗi, bỏ space trailing, đếm ký tự đến khi gặp space.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng</span><span class="analysis-tag edge">Một ký tự</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Scan ngược bỏ space thừa rồi đếm word cuối.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một từ</span><span class="analysis-tag edge">Nhiều space cuối</span><span class="analysis-tag pit">Split toàn chuỗi tốn O(n) space</span><span class="analysis-tag pit">Không trim trailing</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Duyệt từ phải — O extra.</p>
                     </details>
                 </div>
                 </div>
@@ -179,7 +152,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Length%20of%20Last%20Word&lc_id=58&embed=true"></iframe>

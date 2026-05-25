@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Clone Graph</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(V + E)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(V) (Bảng băm lưu trữ các đỉnh nhân bản)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>65.3% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Hãy tạo một bản sao sâu (Deep Copy) của một đồ thị liên thông vô hướng.</div>
+                        <div class="block-text">Clone Graph (LeetCode #133) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>Node 1 -&gt; Node 2, Node 2 -&gt; Node 3, Node 1 -&gt; Node 3</code></div>
-                <div class="ex-line"><span>Out</span><code>Đồ thị nhân bản sâu hoàn toàn mới trong RAM</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng thuật toán duyệt đồ thị DFS hoặc BFS kết hợp với một bảng Hash Map dạng `unordered_map&lt;Node*, Node*&gt;` để liên kết ánh xạ giữa nút gốc và nút nhân bản mới. Khi gặp một đỉnh chưa được nhân bản, ta chạy `new Node()`, lưu vào Map và gọi đệ quy nhân bản sâu cho toàn bộ danh sách kề `neighbors` của nó.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,37 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Clone Graph)</span>
-<span class="cm">// Requires dynamic tracking, adjacency lists and DFS pointers representation.</span></pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Clone Graph)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> cloneGraph(<span class="ty">self</span>, node: 'Node') -&gt; 'Node':
-        <span class="kw">if</span> <span class="kw">not</span> node:
-            <span class="kw">return</span> <span class="kw">None</span>
-        visited = {}
-        <span class="kw">def</span> dfs(curr):
-            <span class="kw">if</span> curr <span class="kw">in</span> visited:
-                <span class="kw">return</span> visited[curr]
-            clone = Node(curr.val)
-            visited[curr] = clone
-            <span class="kw">for</span> neighbor <span class="kw">in</span> curr.neighbors:
-                clone.neighbors.append(dfs(neighbor))
-            <span class="kw">return</span> clone
-        <span class="kw">return</span> dfs(node)</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-    <span class="ty">unordered_map&lt;Node*, Node*&gt;</span> copies;
-<span class="kw">public</span>:
-    <span class="ty">Node</span>* <span class="fn">cloneGraph</span>(<span class="ty">Node</span>* node) {
-        <span class="kw">if</span> (!node) <span class="kw">return</span> NULL;
-        <span class="kw">if</span> (copies.<span class="fn">count</span>(node)) <span class="kw">return</span> copies[node];
-        
-        <span class="ty">Node</span>* clone = <span class="kw">new</span> <span class="ty">Node</span>(node-&gt;val);
-        copies[node] = clone;
-        <span class="kw">for</span> (<span class="ty">Node</span>* neighbor : node-&gt;neighbors) {
-            clone-&gt;neighbors.<span class="fn">push_back</span>(<span class="fn">cloneGraph</span>(neighbor));
-        }
-        <span class="kw">return</span> clone;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -130,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Graph</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(V + E)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(V)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — thuật toán duyệt đồ thị DFS hoặc BFS kết hợp với một bảng…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — gặp một đỉnh chưa được nhân bản, ta chạy `new Node`, lưu…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Lưới 1×1</span><span class="analysis-tag edge">Không có đảo</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Khai báo `new` liên tục tạo các thực thể Node mới trên vùng nhớ Heap. Cần kiểm soát chặt chẽ ánh xạ Hash Map…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

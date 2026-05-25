@@ -1,0 +1,25 @@
+{
+  "id": 57,
+  "title": "Insert Interval",
+  "difficulty": "Medium",
+  "category": "Array",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(N)",
+  "description": "Chèn newInterval vào danh sách interval đã sort, merge nếu overlap.",
+  "examples": [
+    { "input": "intervals = [[1,3],[6,9]], newInterval = [2,5]", "output": "[[1,5],[6,9]]" }
+  ],
+  "approach": "Ba phase: thêm interval trước new; merge overlap với new; thêm phần còn lại.",
+  "memoryTip": "Một pass O(n) — không cần sort lại.",
+  "solutions": {
+    "python": "class Solution:\n    def insert(self, intervals: List[List[int]], ni: List[int]) -> List[List[int]]:\n        res, i, n = [], 0, len(intervals)\n        while i < n and intervals[i][1] < ni[0]:\n            res.append(intervals[i]); i += 1\n        while i < n and intervals[i][0] <= ni[1]:\n            ni[0] = min(ni[0], intervals[i][0])\n            ni[1] = max(ni[1], intervals[i][1])\n            i += 1\n        res.append(ni)\n        res.extend(intervals[i:])\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> insert(vector<vector<int>>& in, vector<int>& ni) {\n        vector<vector<int>> res; int i=0,n=in.size();\n        while(i<n&&in[i][1]<ni[0]) res.push_back(in[i++]);\n        while(i<n&&in[i][0]<=ni[1]){ ni[0]=min(ni[0],in[i][0]); ni[1]=max(ni[1],in[i][1]); i++; }\n        res.push_back(ni);\n        while(i<n) res.push_back(in[i++]);\n        return res;\n    }\n};",
+    "c": "/* insert interval — 3 phases; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Intervals sorted → merge chỉ cần một pass.",
+    "edgeCases": ["intervals rỗng", "new nằm giữa không overlap"],
+    "pitfalls": ["Quên extend phần sau", "Merge thiếu min/max"]
+  },
+  "tier": "done"
+}

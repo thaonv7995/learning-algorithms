@@ -438,6 +438,7 @@
             const sec = V.section(stage, 1, "Input nums & output đang xây dựng");
             sec.appendChild(V.arrayRow(s.nums, { active: s.phase === "left" ? s.i : -1, pointers: [{ idx: s.i, label: "i ▼" }] }));
             const sec2 = V.section(stage, 2, "Mảng output");
+            sec2.classList.add("viz-output-section");
             sec2.appendChild(V.arrayRow(s.output, { highlight: idx => s.output[idx] !== 1 || s.done, active: s.i }));
             canvas.appendChild(stage);
         },

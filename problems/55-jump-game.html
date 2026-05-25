@@ -36,8 +36,8 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #55</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Greedy</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Jump Game</h1>
                     <div class="head-stats">
@@ -57,43 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given an integer array <code>nums</code>. You are initially positioned at the array&#39;s <strong>first index</strong>, and each element in the array represents your maximum jump length at that position.</p>
-
-<p>Return <code>true</code><em> if you can reach the last index, or </em><code>false</code><em> otherwise</em>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> nums = [2,3,1,1,4]
-<strong>Output:</strong> true
-<strong>Explanation:</strong> Jump 1 step from index 0 to 1, then 3 steps to the last index.
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> nums = [3,2,1,0,4]
-<strong>Output:</strong> false
-<strong>Explanation:</strong> You will always arrive at index 3 no matter what. Its maximum jump length is 0, which makes it impossible to reach the last index.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>
-	<li><code>0 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>
-</ul>
-</div>
+                        <div class="block-text">Từ index 0, nums[i] là bước nhảy tối đa. Có đến được index cuối không?</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[2,3,1,1,4]</code></div>
-                <div class="ex-line"><span>Out</span><code>[3,2,1,0,4]</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [2,3,1,1,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>true</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [3,2,1,0,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>false</code></div>
             </div></div>
                     </div>
                 </div>
@@ -101,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Array kết hợp Dynamic Programming. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Greedy: far = xa nhất đến được. Nếu i &gt; far → false. Cập nhật far = max(far, i+nums[i]).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -118,20 +95,30 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> canJump(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize) {
-    
+                            <pre class="code-block" id="code-block-c"><span class="ty">bool</span> canJump(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="ty">int</span> far = 0;
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="kw">if</span> (i &gt; far) <span class="kw">return</span> false;
+        <span class="kw">if</span> (i + nums[i] &gt; far) far = i + nums[i];
+    }
+    <span class="kw">return</span> true;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> canJump(<span class="ty">self</span>, nums):
-        &quot;&quot;&quot;
-        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
-        :rtype: bool
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> canJump(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; bool:
+        far = 0
+        <span class="kw">for</span> i, x <span class="kw">in</span> enumerate(nums):
+            <span class="kw">if</span> i &gt; far: <span class="kw">return</span> <span class="kw">False</span>
+            far = <span class="ty">max</span>(far, i + x)
+        <span class="kw">return</span> <span class="kw">True</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">bool</span> canJump(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
-        
+        <span class="ty">int</span> far=0;
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;(<span class="ty">int</span>)nums.size();i++){
+            <span class="kw">if</span>(i&gt;far) <span class="kw">return</span> false;
+            far=max(far,i+nums[i]);
+        }
+        <span class="kw">return</span> true;
     }
 };</pre>
                         </div>
@@ -141,19 +128,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
+                        <span class="pattern-chip">Greedy</span>
                         <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Array kết hợp Dynamic Programming.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Greedy: far = xa nhất đến được.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Nếu i &gt; far → false.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Cập nhật far = max.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>far là tập reachable — nếu i vượt far thì không tới được.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">nums[i]=0 giữa đường</span><span class="analysis-tag pit">DP O(n²) không cần</span><span class="analysis-tag pit">Nhầm với #45 min jumps</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                        <p>Một biến far — O.</p>
                     </details>
                 </div>
                 </div>
@@ -170,7 +157,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=12&problem=Jump%20Game&lc_id=55&embed=true"></iframe>

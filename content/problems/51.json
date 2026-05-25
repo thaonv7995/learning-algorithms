@@ -1,0 +1,25 @@
+{
+  "id": 51,
+  "title": "N-Queens",
+  "difficulty": "Hard",
+  "category": "Backtracking",
+  "timeComplexity": "O(N!)",
+  "spaceComplexity": "O(N)",
+  "description": "Xếp N quân hậu trên bàn cờ N×N sao cho không hai quân cùng hàng, cột hay đường chéo.",
+  "examples": [
+    { "input": "n = 4", "output": "[[\".Q..\",\"...Q\",\"Q...\",\"..Q.\"], [\"..Q.\",\"Q...\",\"...Q\",\".Q..\"]]" }
+  ],
+  "approach": "Backtracking từng hàng — thử từng cột, kiểm tra cột và 2 đường chéo bằng set/hash.",
+  "memoryTip": "cols, diag1 (r-c), diag2 (r+c) — O(1) check conflict.",
+  "solutions": {
+    "python": "class Solution:\n    def solveNQueens(self, n: int) -> List[List[str]]:\n        res, cols, d1, d2, board = [], set(), set(), set(), []\n        def bt(r):\n            if r == n:\n                res.append([''.join(row) for row in board]); return\n            for c in range(n):\n                if c in cols or (r-c) in d1 or (r+c) in d2: continue\n                cols.add(c); d1.add(r-c); d2.add(r+c)\n                board.append(['.']*n); board[-1][c] = 'Q'\n                bt(r+1); board.pop()\n                cols.remove(c); d1.remove(r-c); d2.remove(r+c)\n        bt(0); return res",
+    "cpp": "class Solution {\npublic:\n    vector<vector<string>> solveNQueens(int n) {\n        vector<vector<string>> res;\n        vector<string> board(n, string(n, '.'));\n        vector<bool> col(n), d1(2*n), d2(2*n);\n        function<void(int)> bt = [&](int r) {\n            if (r == n) { res.push_back(board); return; }\n            for (int c = 0; c < n; c++) {\n                if (col[c] || d1[r-c+n] || d2[r+c]) continue;\n                col[c]=d1[r-c+n]=d2[r+c]=true; board[r][c]='Q';\n                bt(r+1); board[r][c]='.';\n                col[c]=d1[r-c+n]=d2[r+c]=false;\n            }\n        };\n        bt(0); return res;\n    }\n};",
+    "c": "/* Backtracking + board build — xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Mỗi hàng đúng 1 queen; sets đảm bảo không conflict.",
+    "edgeCases": ["n=1", "n=4 classic"],
+    "pitfalls": ["Quên backtrack clear sets", "Đường chéo index sai"]
+  },
+  "tier": "done"
+}

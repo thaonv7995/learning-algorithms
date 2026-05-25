@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Binary Search</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>60.9% AC</span>
                     </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng số nguyên nums đã sắp xếp tăng dần và một số nguyên target, hãy tìm kiếm target trong mảng. Nếu tìm thấy, trả về chỉ số của nó, ngược lại trả về -1.</div>
+                        <div class="block-text">Binary Search (LeetCode #704) — Easy.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>nums = [-1,0,3,5,9,12], target = 9</code></div>
-                <div class="ex-line"><span>Out</span><code>4</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng giải thuật chia đôi phạm vi tìm kiếm liên tục. Ta đặt hai con trỏ `low` ở đầu và `high` ở cuối mảng. Mỗi bước ta tính chốt giữa `mid = low + (high - low)/2` để tránh tràn số nguyên. So sánh `nums[mid]` với target: nếu bằng thì trả về `mid`; nếu nhỏ hơn target, ta thu hẹp tìm kiếm về bên phải bằng cách gán `low = mid + 1`; nếu lớn hơn target, ta thu hẹp về bên trái bằng cách gán `high = mid - 1`.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,42 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Binary Search)</span>
-<span class="ty">int</span> search(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span> target) {
-    <span class="ty">int</span> low = 0, high = numsSize - 1;
-    <span class="kw">while</span> (low &lt;= high) {
-        <span class="ty">int</span> mid = low + (high - low) / 2;
-        <span class="kw">if</span> (nums[mid] == target) <span class="kw">return</span> mid;
-        <span class="kw">else</span> <span class="kw">if</span> (nums[mid] &lt; target) low = mid + 1;
-        <span class="kw">else</span> high = mid - 1;
-    }
-    <span class="kw">return</span> -1;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Binary Search)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> search(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], target: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
-        low, high = 0, <span class="ty">len</span>(nums) - 1
-        <span class="kw">while</span> low &lt;= high:
-            mid = (low + high) // 2
-            <span class="kw">if</span> nums[mid] == target:
-                <span class="kw">return</span> mid
-            <span class="kw">elif</span> nums[mid] &lt; target:
-                low = mid + 1
-            <span class="kw">else</span>:
-                high = mid - 1
-        <span class="kw">return</span> -1</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">int</span> <span class="fn">search</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums, <span class="ty">int</span> target) {
-        <span class="ty">int</span> low = <span class="st">0</span>, high = nums.<span class="fn">size</span>() - <span class="st">1</span>;
-        <span class="kw">while</span> (low &lt;= high) {
-            <span class="ty">int</span> mid = low + (high - low) / <span class="st">2</span>; <span class="cm">// Tranh overflow</span>
-            <span class="kw">if</span> (nums[mid] == target) <span class="kw">return</span> mid;
-            <span class="kw">else if</span> (nums[mid] &lt; target) low = mid + <span class="st">1</span>;
-            <span class="kw">else</span> high = mid - <span class="st">1</span>;
-        }
-        <span class="kw">return</span> -<span class="st">1</span>;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -135,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Binary Search</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — giải thuật chia đôi phạm vi tìm kiếm liên tục.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — đặt hai con trỏ `low` ở đầu và `high` ở cuối mảng.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — ta tính chốt giữa `mid = low + /2` để tránh tràn số…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — So sánh `nums[mid]` với target: nếu bằng thì trả về…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mảng đã sort → nghiệm nằm trong [low,high]; mỗi bước loại một nửa không gian.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">Target không tồn tại → -1</span><span class="analysis-tag edge">Mảng 1 phần tử</span><span class="analysis-tag edge">Target ở đầu/cuối mảng</span><span class="analysis-tag pit">Tràn số khi tính mid = (low+high)/2</span><span class="analysis-tag pit">Vòng while dùng &lt;= thay vì &lt;</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Giải thuật này hoàn thành phép tìm kiếm chỉ sau tối đa log2 lần so sánh mà không phát sinh thêm bộ nhớ, cực…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

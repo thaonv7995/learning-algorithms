@@ -1,0 +1,26 @@
+{
+  "id": 45,
+  "title": "Jump Game II",
+  "difficulty": "Medium",
+  "category": "Greedy",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Từ index 0, nums[i] là bước nhảy tối đa tới i+j. Tìm số bước nhảy tối thiểu để tới index n−1 (luôn đến được).",
+  "examples": [
+    { "input": "nums = [2,3,1,1,4]", "output": "2" },
+    { "input": "nums = [2,3,0,1,4]", "output": "2" }
+  ],
+  "approach": "Greedy BFS: end = tầng hiện tại, far = xa nhất trong tầng. Duyệt i: cập nhật far = max(far, i+nums[i]); khi i==end thì steps++, end=far.",
+  "memoryTip": "Chỉ 3 biến end/far/steps — O(1).",
+  "solutions": {
+    "python": "class Solution:\n    def jump(self, nums: List[int]) -> int:\n        end, far, steps = 0, 0, 0\n        for i in range(len(nums)-1):\n            far = max(far, i + nums[i])\n            if i == end:\n                steps += 1\n                end = far\n        return steps",
+    "cpp": "class Solution {\npublic:\n    int jump(vector<int>& nums) {\n        int end=0, far=0, steps=0;\n        for(int i=0;i<(int)nums.size()-1;i++){\n            far=max(far,i+nums[i]);\n            if(i==end){ steps++; end=far; }\n        }\n        return steps;\n    }\n};",
+    "c": "int jump(int* nums, int n) {\n    int end = 0, far = 0, steps = 0;\n    for (int i = 0; i < n - 1; i++) {\n        if (i + nums[i] > far) far = i + nums[i];\n        if (i == end) { steps++; end = far; }\n    }\n    return steps;\n}"
+  },
+  "analysis": {
+    "correctness": "Mỗi lần steps++ là một 'tầng' BFS — số tầng tối thiểu tới cuối.",
+    "edgeCases": ["n=1 → 0 bước", "Một bước tới cuối", "nums[i]=0 giữa đường"],
+    "pitfalls": ["Dùng DP O(n²) không cần", "Quên loop đến n-2"]
+  },
+  "tier": "done"
+}

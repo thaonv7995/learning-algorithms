@@ -80,7 +80,8 @@ window.LeetCodeVisualizers[23] = (function () {
                 }));
                 sec.appendChild(row);
             });
-            const out = VizCore.section(stage, 2, "Merged output");
+            const out = VizCore.section(stage, 2, "Output — merged list");
+            out.classList.add("viz-output-section");
             out.appendChild(VizCore.arrayRow(s.merged.length ? s.merged : ["—"], {
                 found: s.merged.length ? [s.merged.length - 1] : []
             }));

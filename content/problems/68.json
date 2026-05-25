@@ -1,0 +1,25 @@
+{
+  "id": 68,
+  "title": "Text Justification",
+  "difficulty": "Hard",
+  "category": "Array",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(N)",
+  "description": "Căn đều từng dòng trong words sao cho mỗi dòng (trừ dòng cuối) có đúng maxWidth ký tự, từ cách đều bằng space.",
+  "examples": [
+    { "input": "words = [\"This\",\"is\",\"an\",\"example\"], maxWidth = 16", "output": "[\"This    is    an\",\"example      \"]" }
+  ],
+  "approach": "Gom từ vào dòng cho đến khi vượt maxWidth. Phân bổ space: base = totalSpaces/slots, extra = totalSpaces%slots cho slot đầu.",
+  "memoryTip": "Hard nhưng pure simulation — không DP.",
+  "solutions": {
+    "python": "class Solution:\n    def fullJustify(self, words: List[str], w: int) -> List[str]:\n        res, i, n = [], 0, len(words)\n        while i < n:\n            j = i; ln = 0\n            while j < n and ln + len(words[j]) + (j - i) <= w:\n                ln += len(words[j]); j += 1\n            cnt = j - i\n            if j == n or cnt == 1:\n                line = ' '.join(words[i:j])\n                res.append(line + ' ' * (w - len(line)))\n            else:\n                spaces = w - ln; gap, extra = divmod(spaces, cnt - 1)\n                s = ''\n                for k in range(cnt - 1):\n                    s += words[i+k] + ' ' * (gap + (1 if k < extra else 0))\n                s += words[j-1]; res.append(s)\n            i = j\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<string> fullJustify(vector<string>& words, int w) {\n        vector<string> res; int i=0,n=words.size();\n        while(i<n){\n            int j=i,len=0;\n            while(j<n&&len+(int)words[j].size()+(j-i)<=w){len+=words[j].size();j++;}\n            int cnt=j-i; string line;\n            if(j==n||cnt==1){\n                for(int k=i;k<j;k++){line+=words[k];if(k<j-1)line+=' ';}\n                line+=string(w-line.size(),' ');\n            }else{\n                int sp=w-len, gap=sp/(cnt-1), ex=sp%(cnt-1);\n                for(int k=0;k<cnt-1;k++){line+=words[i+k]+string(gap+(k<ex), ' ');}\n                line+=words[j-1];\n            }\n            res.push_back(line); i=j;\n        }\n        return res;\n    }\n};",
+    "c": "/* fullJustify — simulation phân bổ space; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Dòng cuối căn trái; dòng giữa phân space đều + extra trái.",
+    "edgeCases": ["Một từ/dòng", "maxWidth = len(word)"],
+    "pitfalls": ["Dòng cuối justify sai", "Đếm space sai"]
+  },
+  "tier": "done"
+}

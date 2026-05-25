@@ -1,0 +1,26 @@
+{
+  "id": 62,
+  "title": "Unique Paths",
+  "difficulty": "Medium",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(m×n)",
+  "spaceComplexity": "O(m×n)",
+  "description": "Robot ở góc trên-trái lưới m×n, chỉ đi xuống hoặc sang phải. Đếm số đường tới góc dưới-phải.",
+  "examples": [
+    { "input": "m = 3, n = 7", "output": "28" },
+    { "input": "m = 3, n = 2", "output": "3" }
+  ],
+  "approach": "DP: dp[i][j] = dp[i-1][j] + dp[i][j-1]. Hàng/cột đầu = 1.",
+  "memoryTip": "Comb(m+n-2, m-1) — công thức tổ hợp tương đương.",
+  "solutions": {
+    "python": "class Solution:\n    def uniquePaths(self, m: int, n: int) -> int:\n        dp = [1]*n\n        for _ in range(1, m):\n            for j in range(1, n):\n                dp[j] += dp[j-1]\n        return dp[-1]",
+    "cpp": "class Solution {\npublic:\n    int uniquePaths(int m, int n) {\n        vector<int> dp(n, 1);\n        for (int i = 1; i < m; i++)\n            for (int j = 1; j < n; j++) dp[j] += dp[j-1];\n        return dp[n-1];\n    }\n};",
+    "c": "/* DP 1 hàng — xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Chỉ đi phải/xuống → mọi đường đi qua dp recurrence.",
+    "edgeCases": ["m=1 hoặc n=1 → 1"],
+    "pitfalls": ["Overflow với m,n lớn (dùng long)"]
+  },
+  "tier": "done"
+}

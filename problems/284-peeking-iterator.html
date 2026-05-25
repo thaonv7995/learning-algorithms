@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Peeking Iterator</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>61.5% AC</span>
                     </div>
@@ -57,58 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Design an iterator that supports the <code>peek</code> operation on an existing iterator in addition to the <code>hasNext</code> and the <code>next</code> operations.</p>
-
-<p>Implement the <code>PeekingIterator</code> class:</p>
-
-<ul>
-	<li><code>PeekingIterator(Iterator&lt;int&gt; nums)</code> Initializes the object with the given integer iterator <code>iterator</code>.</li>
-	<li><code>int next()</code> Returns the next element in the array and moves the pointer to the next element.</li>
-	<li><code>boolean hasNext()</code> Returns <code>true</code> if there are still elements in the array.</li>
-	<li><code>int peek()</code> Returns the next element in the array <strong>without</strong> moving the pointer.</li>
-</ul>
-
-<p><strong>Note:</strong> Each language may have a different implementation of the constructor and <code>Iterator</code>, but they all support the <code>int next()</code> and <code>boolean hasNext()</code> functions.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input</strong>
-[&quot;PeekingIterator&quot;, &quot;next&quot;, &quot;peek&quot;, &quot;next&quot;, &quot;next&quot;, &quot;hasNext&quot;]
-[[[1, 2, 3]], [], [], [], [], []]
-<strong>Output</strong>
-[null, 1, 2, 2, 3, false]
-
-<strong>Explanation</strong>
-PeekingIterator peekingIterator = new PeekingIterator([1, 2, 3]); // [<u><strong>1</strong></u>,2,3]
-peekingIterator.next();    // return 1, the pointer moves to the next element [1,<u><strong>2</strong></u>,3].
-peekingIterator.peek();    // return 2, the pointer does not move [1,<u><strong>2</strong></u>,3].
-peekingIterator.next();    // return 2, the pointer moves to the next element [1,2,<u><strong>3</strong></u>]
-peekingIterator.next();    // return 3, the pointer moves to the next element [1,2,3]
-peekingIterator.hasNext(); // return False
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= nums.length &lt;= 1000</code></li>
-	<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>
-	<li>All the calls to <code>next</code> and <code>peek</code> are valid.</li>
-	<li>At most <code>1000</code> calls will be made to <code>next</code>, <code>hasNext</code>, and <code>peek</code>.</li>
-</ul>
-
-<p>&nbsp;</p>
-<strong>Follow up:</strong> How would you extend your design to be generic and work with all types, not just integer?</div>
+                        <div class="block-text">Peeking Iterator (LeetCode #284) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[&quot;PeekingIterator&quot;,&quot;next&quot;,&quot;peek&quot;,&quot;next&quot;,&quot;next&quot;,&quot;hasNext&quot;]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[[1,2,3]],[],[],[],[],[]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -116,7 +73,7 @@ peekingIterator.hasNext(); // return False
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Think of &quot;looking ahead&quot;. You want to cache the next element. Is one variable sufficient? Why or why not? Test your design with call order of &lt;code&gt;peek()&lt;/code&gt; before &lt;code&gt;next()&lt;/code&gt; vs &lt;code&gt;next()&lt;/code&gt; before &lt;code&gt;peek()&lt;/code&gt;. For a clean implementation, check out &lt;a href=&quot;https://github.com/google/guava/blob/703ef758b8621cfbab16814f01ddcc5324bdea33/guava-gwt/src-super/com/google/common/collect/super/com/google/common/collect/Iterators.java#L1125&quot; target=&quot;_blank&quot;&gt;Google's guava library source code&lt;/a&gt;.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -133,142 +90,11 @@ peekingIterator.hasNext(); // return False
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/*
- *	<span class="ty">struct</span> Iterator {
- *		<span class="cm">// Returns true <span class="kw">if</span> the iteration has more elements.</span>
- *		<span class="ty">bool</span> (*hasNext)();
- *
- * 		<span class="cm">// Returns the next element in the iteration.</span>
- *		<span class="ty">int</span> (*next)();
- *	};
- */
-
-<span class="ty">struct</span> PeekingIterator {
-    
-};
-
-<span class="ty">struct</span> PeekingIterator* Constructor(<span class="ty">struct</span> Iterator* iter) {
-    <span class="ty">struct</span> PeekingIterator* piter = <span class="kw">malloc</span>(<span class="kw">sizeof</span>(<span class="ty">struct</span> PeekingIterator));
-    piter-&gt;iterator = iter;
-    piter-&gt;hasPeeked = false;
-    <span class="kw">return</span> piter;
-}
-
-<span class="ty">int</span> peek(<span class="ty">struct</span> PeekingIterator* obj) {
-    
-}
-
-<span class="ty">int</span> next(<span class="ty">struct</span> PeekingIterator* obj) {
-    
-}
-
-<span class="ty">bool</span> hasNext(<span class="ty">struct</span> PeekingIterator* obj) {
-    
-}
-
-/**
- * Your PeekingIterator <span class="ty">struct</span> will be instantiated and called as such:
- * PeekingIterator* obj = peekingIteratorCreate(arr, arrSize);
- * <span class="ty">int</span> param_1 = peek(obj);
- * <span class="ty">int</span> param_2 = next(obj);
- * <span class="ty">bool</span> param_3 = hasNext(obj);
- * peekingIteratorFree(obj);
-*/</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Below is the interface <span class="kw">for</span> Iterator, which is already defined <span class="kw">for</span> you.</span>
-<span class="cm">#</span>
-<span class="cm"># <span class="kw">class</span> Iterator(object):</span>
-<span class="cm">#     <span class="kw">def</span> __init__(<span class="ty">self</span>, nums):</span>
-<span class="cm">#         &quot;&quot;&quot;</span>
-<span class="cm">#         Initializes an iterator object to the beginning of a <span class="ty">list</span>.</span>
-<span class="cm">#         :type nums: <span class="ty">List</span>[<span class="ty">int</span>]</span>
-<span class="cm">#         &quot;&quot;&quot;</span>
-<span class="cm">#</span>
-<span class="cm">#     <span class="kw">def</span> hasNext(<span class="ty">self</span>):</span>
-<span class="cm">#         &quot;&quot;&quot;</span>
-<span class="cm">#         Returns true <span class="kw">if</span> the iteration has more elements.</span>
-<span class="cm">#         :rtype: bool</span>
-<span class="cm">#         &quot;&quot;&quot;</span>
-<span class="cm">#</span>
-<span class="cm">#     <span class="kw">def</span> next(<span class="ty">self</span>):</span>
-<span class="cm">#         &quot;&quot;&quot;</span>
-<span class="cm">#         Returns the next element <span class="kw">in</span> the iteration.</span>
-<span class="cm">#         :rtype: <span class="ty">int</span></span>
-<span class="cm">#         &quot;&quot;&quot;</span>
-
-<span class="kw">class</span> PeekingIterator(object):
-    <span class="kw">def</span> __init__(<span class="ty">self</span>, iterator):
-        &quot;&quot;&quot;
-        Initialize your data structure here.
-        :type iterator: Iterator
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> peek(<span class="ty">self</span>):
-        &quot;&quot;&quot;
-        Returns the next element <span class="kw">in</span> the iteration without advancing the iterator.
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> next(<span class="ty">self</span>):
-        &quot;&quot;&quot;
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> hasNext(<span class="ty">self</span>):
-        &quot;&quot;&quot;
-        :rtype: bool
-        &quot;&quot;&quot;
-        
-
-<span class="cm"># Your PeekingIterator object will be instantiated <span class="kw">and</span> called as such:</span>
-<span class="cm"># iter = PeekingIterator(Iterator(nums))</span>
-<span class="cm"># <span class="kw">while</span> iter.hasNext():</span>
-<span class="cm">#     val = iter.peek()   # Get the next element but <span class="kw">not</span> advance the iterator.</span>
-<span class="cm">#     iter.next()         # Should <span class="kw">return</span> the same value as [val].</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none">/*
- * Below is the interface <span class="kw">for</span> Iterator, which is already defined <span class="kw">for</span> you.
- * **DO NOT** modify the interface <span class="kw">for</span> Iterator.
- *
- *  <span class="ty">class</span> Iterator {
- *		<span class="ty">struct</span> Data;
- * 		Data* data;
- *  <span class="ty">public</span>:
- *		Iterator(<span class="ty">const</span> <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums);
- * 		Iterator(<span class="ty">const</span> Iterator&amp; iter);
- *
- * 		<span class="cm">// Returns the next element in the iteration.</span>
- *		<span class="ty">int</span> next();
- *
- *		<span class="cm">// Returns true <span class="kw">if</span> the iteration has more elements.</span>
- *		<span class="ty">bool</span> hasNext() <span class="ty">const</span>;
- *	};
- */
-
-<span class="ty">class</span> PeekingIterator : <span class="ty">public</span> Iterator {
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-	PeekingIterator(<span class="ty">const</span> <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) : Iterator(nums) {
-	    <span class="cm">// Initialize any member here.</span>
-	    <span class="cm">// **DO NOT** save a copy of nums and manipulate it directly.</span>
-	    <span class="cm">// You should only use the Iterator interface methods.</span>
-	    
-	}
-	
-    <span class="cm">// Returns the next element in the iteration without advancing the iterator.</span>
-	<span class="ty">int</span> peek() {
-        
-	}
-	
-	<span class="cm">// hasNext() and next() should behave the same as in the Iterator interface.</span>
-	<span class="cm">// Override them <span class="kw">if</span> needed.</span>
-	<span class="ty">int</span> next() {
-	    
-	}
-	
-	<span class="ty">bool</span> hasNext() <span class="ty">const</span> {
-	    
-	}
 };</pre>
                         </div>
                     </div>
@@ -278,18 +104,18 @@ peekingIterator.hasNext(); // return False
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Think of &quot;looking ahead&quot;.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — You want to cache the next element.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Is one variable sufficient?</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Why or why not? Test your design with call order of…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

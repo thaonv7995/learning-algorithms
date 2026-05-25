@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Number of Integers With Popcount-Depth Equal to K II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.5% AC</span>
                     </div>
@@ -57,302 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given an integer array <code>nums</code>.</p>
-
-<p>For any positive integer <code>x</code>, define the following sequence:</p>
-
-<ul>
-	<li><code>p<sub>0</sub> = x</code></li>
-	<li><code>p<sub>i+1</sub> = popcount(p<sub>i</sub>)</code> for all <code>i &gt;= 0</code>, where <code>popcount(y)</code> is the number of set bits (1&#39;s) in the binary representation of <code>y</code>.</li>
-</ul>
-
-<p>This sequence will eventually reach the value 1.</p>
-
-<p>The <strong>popcount-depth</strong> of <code>x</code> is defined as the <strong>smallest</strong> integer <code>d &gt;= 0</code> such that <code>p<sub>d</sub> = 1</code>.</p>
-
-<p>For example, if <code>x = 7</code> (binary representation <code>&quot;111&quot;</code>). Then, the sequence is: <code>7 &rarr; 3 &rarr; 2 &rarr; 1</code>, so the popcount-depth of 7 is 3.</p>
-
-<p>You are also given a 2D integer array <code>queries</code>, where each <code>queries[i]</code> is either:</p>
-
-<ul>
-	<li><code>[1, l, r, k]</code> - <strong>Determine</strong> the number of indices <code>j</code> such that <code>l &lt;= j &lt;= r</code> and the <strong>popcount-depth</strong> of <code>nums[j]</code> is equal to <code>k</code>.</li>
-	<li><code>[2, idx, val]</code> - <strong>Update</strong> <code>nums[idx]</code> to <code>val</code>.</li>
-</ul>
-
-<p>Return an integer array <code>answer</code>, where <code>answer[i]</code> is the number of indices for the <code>i<sup>th</sup></code> query of type <code>[1, l, r, k]</code>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">nums = [2,4], queries = [[1,0,1,1],[2,1,1],[1,0,1,0]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[2,1]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;"><code>i</code></th>
-			<th style="border: 1px solid black;"><code>queries[i]</code></th>
-			<th style="border: 1px solid black;"><code>nums</code></th>
-			<th style="border: 1px solid black;">binary(<code>nums</code>)</th>
-			<th style="border: 1px solid black;">popcount-<br />
-			depth</th>
-			<th style="border: 1px solid black;"><code>[l, r]</code></th>
-			<th style="border: 1px solid black;"><code>k</code></th>
-			<th style="border: 1px solid black;">Valid<br />
-			<code>nums[j]</code></th>
-			<th style="border: 1px solid black;">updated<br />
-			<code>nums</code></th>
-			<th style="border: 1px solid black;">Answer</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">[1,0,1,1]</td>
-			<td style="border: 1px solid black;">[2,4]</td>
-			<td style="border: 1px solid black;">[10, 100]</td>
-			<td style="border: 1px solid black;">[1, 1]</td>
-			<td style="border: 1px solid black;">[0, 1]</td>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[0, 1]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">2</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[2,1,1]</td>
-			<td style="border: 1px solid black;">[2,4]</td>
-			<td style="border: 1px solid black;">[10, 100]</td>
-			<td style="border: 1px solid black;">[1, 1]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">[2,1]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">[1,0,1,0]</td>
-			<td style="border: 1px solid black;">[2,1]</td>
-			<td style="border: 1px solid black;">[10, 1]</td>
-			<td style="border: 1px solid black;">[1, 0]</td>
-			<td style="border: 1px solid black;">[0, 1]</td>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">[1]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">1</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Thus, the final <code>answer</code> is <code>[2, 1]</code>.</p>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">nums = [3,5,6], queries = [[1,0,2,2],[2,1,4],[1,1,2,1],[1,0,1,0]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[3,1,0]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;"><code>i</code></th>
-			<th style="border: 1px solid black;"><code>queries[i]</code></th>
-			<th style="border: 1px solid black;"><code>nums</code></th>
-			<th style="border: 1px solid black;">binary(<code>nums</code>)</th>
-			<th style="border: 1px solid black;">popcount-<br />
-			depth</th>
-			<th style="border: 1px solid black;"><code>[l, r]</code></th>
-			<th style="border: 1px solid black;"><code>k</code></th>
-			<th style="border: 1px solid black;">Valid<br />
-			<code>nums[j]</code></th>
-			<th style="border: 1px solid black;">updated<br />
-			<code>nums</code></th>
-			<th style="border: 1px solid black;">Answer</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">[1,0,2,2]</td>
-			<td style="border: 1px solid black;">[3, 5, 6]</td>
-			<td style="border: 1px solid black;">[11, 101, 110]</td>
-			<td style="border: 1px solid black;">[2, 2, 2]</td>
-			<td style="border: 1px solid black;">[0, 2]</td>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">[0, 1, 2]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">3</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[2,1,4]</td>
-			<td style="border: 1px solid black;">[3, 5, 6]</td>
-			<td style="border: 1px solid black;">[11, 101, 110]</td>
-			<td style="border: 1px solid black;">[2, 2, 2]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">[3, 4, 6]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">[1,1,2,1]</td>
-			<td style="border: 1px solid black;">[3, 4, 6]</td>
-			<td style="border: 1px solid black;">[11, 100, 110]</td>
-			<td style="border: 1px solid black;">[2, 1, 2]</td>
-			<td style="border: 1px solid black;">[1, 2]</td>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[1]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">1</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">3</td>
-			<td style="border: 1px solid black;">[1,0,1,0]</td>
-			<td style="border: 1px solid black;">[3, 4, 6]</td>
-			<td style="border: 1px solid black;">[11, 100, 110]</td>
-			<td style="border: 1px solid black;">[2, 1, 2]</td>
-			<td style="border: 1px solid black;">[0, 1]</td>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">[]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">0</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Thus, the final <code>answer</code> is <code>[3, 1, 0]</code>.</p>
-</div>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">nums = [1,2], queries = [[1,0,1,1],[2,0,3],[1,0,0,1],[1,0,0,2]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[1,0,1]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;"><code>i</code></th>
-			<th style="border: 1px solid black;"><code>queries[i]</code></th>
-			<th style="border: 1px solid black;"><code>nums</code></th>
-			<th style="border: 1px solid black;">binary(<code>nums</code>)</th>
-			<th style="border: 1px solid black;">popcount-<br />
-			depth</th>
-			<th style="border: 1px solid black;"><code>[l, r]</code></th>
-			<th style="border: 1px solid black;"><code>k</code></th>
-			<th style="border: 1px solid black;">Valid<br />
-			<code>nums[j]</code></th>
-			<th style="border: 1px solid black;">updated<br />
-			<code>nums</code></th>
-			<th style="border: 1px solid black;">Answer</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">[1,0,1,1]</td>
-			<td style="border: 1px solid black;">[1, 2]</td>
-			<td style="border: 1px solid black;">[1, 10]</td>
-			<td style="border: 1px solid black;">[0, 1]</td>
-			<td style="border: 1px solid black;">[0, 1]</td>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[1]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">1</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[2,0,3]</td>
-			<td style="border: 1px solid black;">[1, 2]</td>
-			<td style="border: 1px solid black;">[1, 10]</td>
-			<td style="border: 1px solid black;">[0, 1]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">[3, 2]</td>
-			<td style="border: 1px solid black;">&nbsp;</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">[1,0,0,1]</td>
-			<td style="border: 1px solid black;">[3, 2]</td>
-			<td style="border: 1px solid black;">[11, 10]</td>
-			<td style="border: 1px solid black;">[2, 1]</td>
-			<td style="border: 1px solid black;">[0, 0]</td>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">0</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">3</td>
-			<td style="border: 1px solid black;">[1,0,0,2]</td>
-			<td style="border: 1px solid black;">[3, 2]</td>
-			<td style="border: 1px solid black;">[11, 10]</td>
-			<td style="border: 1px solid black;">[2, 1]</td>
-			<td style="border: 1px solid black;">[0, 0]</td>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">[0]</td>
-			<td style="border: 1px solid black;">&mdash;</td>
-			<td style="border: 1px solid black;">1</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Thus, the final <code>answer</code> is <code>[1, 0, 1]</code>.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= n == nums.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>1 &lt;= nums[i] &lt;= 10<sup>15</sup></code></li>
-	<li><code>1 &lt;= queries.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>queries[i].length == 3</code> or <code>4</code>
-	<ul>
-		<li><code>queries[i] == [1, l, r, k]</code> or,</li>
-		<li><code>queries[i] == [2, idx, val]</code></li>
-		<li><code>0 &lt;= l &lt;= r &lt;= n - 1</code></li>
-		<li><code>0 &lt;= k &lt;= 5</code></li>
-		<li><code>0 &lt;= idx &lt;= n - 1</code></li>
-		<li><code>1 &lt;= val &lt;= 10<sup>15</sup></code></li>
-	</ul>
-	</li>
-</ul>
-</div>
+                        <div class="block-text">Number of Integers With Popcount-Depth Equal to K II (LeetCode #3624) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[2,4]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[1,0,1,1],[2,1,1],[1,0,1,0]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[3,5,6]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[1,0,2,2],[2,1,4],[1,1,2,1],[1,0,1,0]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>[1,2]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[1,0,1,1],[2,0,3],[1,0,0,1],[1,0,0,2]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -360,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Precompute &lt;code&gt;depth[i]&lt;/code&gt; for each &lt;code&gt;nums[i]&lt;/code&gt; by applying popcount until you reach 1. Maintain six Fenwick trees &lt;code&gt;fenw[0]&lt;/code&gt; through &lt;code&gt;fenw[5]&lt;/code&gt;, where &lt;code&gt;fenw[d]&lt;/code&gt; stores a 1 at index &lt;code&gt;i&lt;/code&gt; iff &lt;code&gt;depth[i] == d&lt;/code&gt;. For an update &lt;code&gt;[2, idx, val]&lt;/code&gt;, remove index idx from its old &lt;code&gt;fenw[old_depth]&lt;/code&gt; and insert into &lt;code&gt;fenw[new_depth]&lt;/code&gt;; for a query &lt;code&gt;[1, l, r, k]&lt;/code&gt;, return &lt;code&gt;fenw[k].query(r) - fenw[k].query(l-1)&lt;/code&gt;.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -377,25 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">int</span>* popcountDepth(<span class="ty">long</span> <span class="ty">long</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">long</span> <span class="ty">long</span>** queries, <span class="ty">int</span> queriesSize, <span class="ty">int</span>* queriesColSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> popcountDepth(<span class="ty">self</span>, nums, queries):
-        &quot;&quot;&quot;
-        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type queries: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; popcountDepth(<span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt;&amp; nums, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt;&gt;&amp; queries) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -405,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Precompute &lt;code&gt;depth[i]&lt;/code&gt; for each…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Maintain six Fenwick trees &lt;code&gt;fenw[0]&lt;/code&gt; through…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — For an update &lt;code&gt;[2, idx, val]&lt;/code&gt;, remove index…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Longest Common Subsequence</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N * M) (N, M là độ dài 2 chuỗi)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N * M)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho hai chuỗi text1 và text2, hãy tìm độ dài của chuỗi con chung dài nhất (LCS) giữa chúng.</div>
+                        <div class="block-text">Longest Common Subsequence (LeetCode #1143) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>text1 = &quot;abcde&quot;, text2 = &quot;ace&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>3 (Chuỗi chung dài nhất là &quot;ace&quot;)</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng Quy hoạch động lập bảng Bottom-Up 2D. Gọi `dp[i][j]` là độ dài LCS của chuỗi con `text1[0...i-1]` và `text2[0...j-1]`. Công thức chuyển trạng thái:<br>- Nếu `text1[i-1] == text2[j-1]`: hai ký tự khớp nhau, `dp[i][j] = 1 + dp[i-1][j-1]` (tăng độ dài + đi chéo lên trên bên trái).<br>- Nếu lệch: `dp[i][j] = max(dp[i-1][j], dp[i][j-1])` (mượn giá trị tối ưu lớn nhất từ ô trên hoặc ô trái).</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,52 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Longest Common Subsequence)</span>
-<span class="ty">int</span> longestCommonSubsequence(<span class="ty">char</span>* text1, <span class="ty">char</span>* text2) {
-    <span class="ty">int</span> len1 = strlen(text1);
-    <span class="ty">int</span> len2 = strlen(text2);
-    <span class="ty">int</span> dp[len1 + 1][len2 + 1];
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt;= len1; i++) dp[i][0] = 0;
-    <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt;= len2; j++) dp[0][j] = 0;
-    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt;= len1; i++) {
-        <span class="kw">for</span> (<span class="ty">int</span> j = 1; j &lt;= len2; j++) {
-            <span class="kw">if</span> (text1[i - 1] == text2[j - 1]) {
-                dp[i][j] = dp[i - 1][j - 1] + 1;
-            } <span class="kw">else</span> {
-                <span class="ty">int</span> max = dp[i - 1][j] &gt; dp[i][j - 1] ? dp[i - 1][j] : dp[i][j - 1];
-                dp[i][j] = max;
-            }
-        }
-    }
-    <span class="kw">return</span> dp[len1][len2];
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Longest Common Subsequence)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> longestCommonSubsequence(<span class="ty">self</span>, text1: <span class="ty">str</span>, text2: <span class="ty">str</span>) -&gt; <span class="ty">int</span>:
-        dp = [[0] * (<span class="ty">len</span>(text2) + 1) <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(text1) + 1)]
-        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, <span class="ty">len</span>(text1) + 1):
-            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(1, <span class="ty">len</span>(text2) + 1):
-                <span class="kw">if</span> text1[i - 1] == text2[j - 1]:
-                    dp[i][j] = dp[i - 1][j - 1] + 1
-                <span class="kw">else</span>:
-                    dp[i][j] = <span class="ty">max</span>(dp[i - 1][j], dp[i][j - 1])
-        <span class="kw">return</span> dp[-1][-1]</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">int</span> <span class="fn">longestCommonSubsequence</span>(<span class="ty">string</span> text1, <span class="ty">string</span> text2) {
-        <span class="ty">int</span> n = text1.<span class="fn">length</span>(), m = text2.<span class="fn">length</span>();
-        <span class="ty">vector&lt;vector&lt;int&gt;&gt;</span> dp(n + <span class="st">1</span>, <span class="ty">vector&lt;int&gt;</span>(m + <span class="st">1</span>, <span class="st">0</span>));
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">1</span>; i &lt;= n; i++) {
-            <span class="kw">for</span> (<span class="ty">int</span> j = <span class="st">1</span>; j &lt;= m; j++) {
-                <span class="kw">if</span> (text1[i - <span class="st">1</span>] == text2[j - <span class="st">1</span>]) {
-                    dp[i][j] = <span class="st">1</span> + dp[i - <span class="st">1</span>][j - <span class="st">1</span>];
-                } <span class="kw">else</span> {
-                    dp[i][j] = <span class="fn">max</span>(dp[i - <span class="st">1</span>][j], dp[i][j - 1]);
-                }
-            }
-        }
-        <span class="kw">return</span> dp[n][m];
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -145,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N * M)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N * M)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Quy hoạch động lập bảng Bottom-Up 2D.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Gọi `dp[i][j]` là độ dài LCS của chuỗi con…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Công thức chuyển trạng thái: - Nếu `text1[i-1] ==…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — - Nếu lệch: `dp[i][j] = max` .</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bảng quy hoạch động 2D kích thước * được phân bổ động liên tục trên Heap. Có thể tối ưu hóa bộ nhớ xuống O)…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

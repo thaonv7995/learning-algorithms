@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Course Schedule</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(V + E)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(V + E)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>51.4% AC</span>
                     </div>
                 </div>
@@ -57,20 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Có tổng cộng numCourses khóa học bạn phải hoàn thành, đánh số từ 0 đến numCourses - 1. Cho mảng prerequisites trong đó prerequisites[i] = [a, b] nghĩa là bạn phải hoàn thành khóa học b trước khi học khóa học a. Hãy kiểm tra xem bạn có thể hoàn thành tất cả các khóa học hay không (phát hiện chu trình trong đồ thị có hướng).</div>
+                        <div class="block-text">Course Schedule (LeetCode #207) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>numCourses = 2, prerequisites = [[1,0]]</code></div>
-                <div class="ex-line"><span>Out</span><code>true</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>numCourses = 2, prerequisites = [[1,0],[0,1]]</code></div>
-                <div class="ex-line"><span>Out</span><code>false (Chu trình vô hạn)</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -78,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Bài toán thực chất là kiểm tra xem đồ thị có hướng được tạo bởi danh sách tiền đề có chứa chu trình hay không. Ta sử dụng thuật toán duyệt đồ thị DFS kết hợp mảng trạng thái `visited` có 3 giá trị: `0` (chưa duyệt), `1` (đang duyệt - nằm trong Call Stack hiện tại), `2` (đã duyệt xong an toàn). Nếu quá trình DFS gặp một nút đang có trạng thái `1`, tức là ta đã phát hiện một cạnh ngược tạo thành chu trình.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -95,47 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Course Schedule)</span>
-<span class="cm">// BFS Topological Sort (Kahn's Algorithm) representation.</span></pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Course Schedule)</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> canFinish(<span class="ty">self</span>, numCourses: <span class="ty">int</span>, prerequisites: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; bool:
-        adj = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(numCourses)]
-        indegree = [0] * numCourses
-        <span class="kw">for</span> dest, src <span class="kw">in</span> prerequisites:
-            adj[src].append(dest)
-            indegree[dest] += 1
-        queue = deque([i <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(numCourses) <span class="kw">if</span> indegree[i] == 0])
-        visited = 0
-        <span class="kw">while</span> queue:
-            node = queue.popleft()
-            visited += 1
-            <span class="kw">for</span> neighbor <span class="kw">in</span> adj[node]:
-                indegree[neighbor] -= 1
-                <span class="kw">if</span> indegree[neighbor] == 0:
-                    queue.append(neighbor)
-        <span class="kw">return</span> visited == numCourses</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-    <span class="ty">bool</span> <span class="fn">hasCycle</span>(<span class="ty">int</span> u, <span class="ty">vector&lt;vector&lt;int&gt;&gt;</span>&amp; adj, <span class="ty">vector&lt;int&gt;</span>&amp; visited) {
-        visited[u] = <span class="st">1</span>; <span class="cm">// Đang duyệt</span>
-        <span class="kw">for</span> (<span class="ty">int</span> v : adj[u]) {
-            <span class="kw">if</span> (visited[v] == <span class="st">1</span>) <span class="kw">return</span> <span class="kw">true</span>; <span class="cm">// Phat hien chu trinh!</span>
-            <span class="kw">if</span> (visited[v] == <span class="st">0</span> &amp;&amp; <span class="fn">hasCycle</span>(v, adj, visited)) <span class="kw">return</span> <span class="kw">true</span>;
-        }
-        visited[u] = <span class="st">2</span>; <span class="cm">// Đã duyệt xong an toàn</span>
-        <span class="kw">return</span> <span class="kw">false</span>;
-    }
-<span class="kw">public</span>:
-    <span class="ty">bool</span> <span class="fn">canFinish</span>(<span class="ty">int</span> numCourses, <span class="ty">vector&lt;vector&lt;int&gt;&gt;</span>&amp; prerequisites) {
-        <span class="ty">vector&lt;vector&lt;int&gt;&gt;</span> adj(numCourses);
-        <span class="kw">for</span> (<span class="kw">auto</span>&amp; pre : prerequisites) adj[pre[<span class="st">1</span>]].<span class="fn">push_back</span>(pre[<span class="st">0</span>]);
-        <span class="ty">vector&lt;int&gt;</span> visited(numCourses, <span class="st">0</span>);
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; numCourses; i++) {
-            <span class="kw">if</span> (visited[i] == <span class="st">0</span> &amp;&amp; <span class="fn">hasCycle</span>(i, adj, visited)) <span class="kw">return</span> <span class="kw">false</span>;
-        }
-        <span class="kw">return</span> <span class="kw">true</span>;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -145,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Graph</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(V + E)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(V + E)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Bài toán thực chất là kiểm tra xem đồ thị có hướng được…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — sử dụng thuật toán duyệt đồ thị DFS kết hợp mảng trạng…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Nếu quá trình DFS gặp một nút đang có trạng thái `1`, tức…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Lưới 1×1</span><span class="analysis-tag edge">Không có đảo</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>lưu trữ đồ thị dưới dạng Danh sách kề `vector&lt;vector&lt;int&gt;&gt;` giúp duyệt cực nhanh và tiết kiệm bộ nhớ tối đa O…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

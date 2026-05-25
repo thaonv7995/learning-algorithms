@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #59</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Matrix</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Spiral Matrix II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N²)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>75.1% AC</span>
                     </div>
@@ -57,38 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given a positive integer <code>n</code>, generate an <code>n x n</code> <code>matrix</code> filled with elements from <code>1</code> to <code>n<sup>2</sup></code> in spiral order.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-<img alt="" src="https://assets.leetcode.com/uploads/2020/11/13/spiraln.jpg" style="width: 242px; height: 242px;" />
-<pre>
-<strong>Input:</strong> n = 3
-<strong>Output:</strong> [[1,2,3],[8,9,4],[7,6,5]]
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> n = 1
-<strong>Output:</strong> [[1]]
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= n &lt;= 20</code></li>
-</ul>
-</div>
+                        <div class="block-text">Sinh ma trận n×n chứa 1..n² theo thứ tự spiral.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>3</code></div>
-                <div class="ex-line"><span>Out</span><code>1</code></div>
+                <div class="ex-line"><span>In</span><code>n = 3</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1,2,3],[8,9,4],[7,6,5]]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>n = 1</code></div>
+                <div class="ex-line"><span>Out</span><code>[[1]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -96,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Array kết hợp Matrix. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Biên t,b,l,r + dir; điền val++ theo spiral, thu hẹp biên sau mỗi cạnh.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -113,25 +95,37 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Return an array of arrays of size *<span class="ty">returnSize</span>.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">int</span>** generateMatrix(<span class="ty">int</span> n, <span class="ty">int</span>* <span class="ty">returnSize</span>, <span class="ty">int</span>** returnColumnSizes) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> generateMatrix(<span class="ty">self</span>, n):
-        &quot;&quot;&quot;
-        :type n: <span class="ty">int</span>
-        :rtype: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* generateMatrix — spiral fill; xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> generateMatrix(<span class="ty">self</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
+        m=[[0]*n <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(n)]
+        t,b,l,r,val=0,n-1,0,n-1,1
+        <span class="kw">while</span> t&lt;=b <span class="kw">and</span> l&lt;=r:
+            <span class="kw">for</span> c <span class="kw">in</span> <span class="ty">range</span>(l,r+1): m[t][c]=val; val+=1
+            t+=1
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(t,b+1): m[i][r]=val; val+=1
+            r-=1
+            <span class="kw">if</span> t&lt;=b:
+                <span class="kw">for</span> c <span class="kw">in</span> <span class="ty">range</span>(r,l-1,-1): m[b][c]=val; val+=1
+                b-=1
+            <span class="kw">if</span> l&lt;=r:
+                <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(b,t-1,-1): m[i][l]=val; val+=1
+                l+=1
+        <span class="kw">return</span> m</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; generateMatrix(<span class="ty">int</span> n) {
-        
+        <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; m(n,<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(n));
+        <span class="ty">int</span> t=0,b=n-1,l=0,r=n-1,v=1;
+        <span class="kw">while</span>(t&lt;=b&amp;&amp;l&lt;=r){
+            <span class="kw">for</span>(<span class="ty">int</span> c=l;c&lt;=r;c++) m[t][c]=v++;
+            t++;
+            <span class="kw">for</span>(<span class="ty">int</span> i=t;i&lt;=b;i++) m[i][r]=v++;
+            r--;
+            <span class="kw">if</span>(t&lt;=b){ <span class="kw">for</span>(<span class="ty">int</span> c=r;c&gt;=l;c--) m[b][c]=v++; b--; }
+            <span class="kw">if</span>(l&lt;=r){ <span class="kw">for</span>(<span class="ty">int</span> i=b;i&gt;=t;i--) m[i][l]=v++; l++; }
+        }
+        <span class="kw">return</span> m;
     }
 };</pre>
                         </div>
@@ -141,19 +135,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="pattern-chip">Matrix</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N²)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Array kết hợp Matrix.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Biên t,b,l,r + dir; điền val++ theo spiral, thu hẹp biên sau mỗi cạnh.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi ô nhận đúng một số 1..n².</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">n=2</span><span class="analysis-tag pit">Quên điều kiện t&lt;=b</span><span class="analysis-tag pit">val++ sai thứ tự</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Giống #54 nhưng fill thay vì read.</p>
                     </details>
                 </div>
                 </div>
@@ -170,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Spiral%20Matrix%20II&lc_id=59&embed=true"></iframe>

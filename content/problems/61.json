@@ -1,0 +1,26 @@
+{
+  "id": 61,
+  "title": "Rotate List",
+  "difficulty": "Medium",
+  "category": "Linked List",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Xoay danh sách liên kết sang phải k bước. k có thể lớn hơn độ dài — dùng k % len.",
+  "examples": [
+    { "input": "head = [1,2,3,4,5], k = 2", "output": "[4,5,1,2,3]" },
+    { "input": "head = [0,1,2], k = 4", "output": "[2,0,1]" }
+  ],
+  "approach": "Tìm độ dài len và tail. k = k % len. Tìm nút mới tại vị trí len-k-1 làm newTail; newHead = newTail.next; nối tail → head cũ.",
+  "memoryTip": "Hai con trỏ + modulo k — không cần xoay từng bước.",
+  "solutions": {
+    "python": "class Solution:\n    def rotateRight(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:\n        if not head or not head.next or k == 0: return head\n        n, tail = 1, head\n        while tail.next: tail, n = tail.next, n + 1\n        k %= n\n        if k == 0: return head\n        for _ in range(n - k - 1): head = head.next\n        new_head, head.next = head.next, new_head\n        tail.next = head\n        return new_head",
+    "cpp": "class Solution {\npublic:\n    ListNode* rotateRight(ListNode* head, int k) {\n        if (!head || !head->next || !k) return head;\n        int n = 1; ListNode* tail = head;\n        while (tail->next) { tail = tail->next; n++; }\n        k %= n; if (!k) return head;\n        ListNode* cur = head;\n        for (int i = 0; i < n - k - 1; i++) cur = cur->next;\n        ListNode* nh = cur->next;\n        cur->next = nullptr; tail->next = head;\n        return nh;\n    }\n};",
+    "c": "/* rotateRight — tìm len, k%=n, cắt tại n-k-1; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Xoay phải k bước = head mới ở vị trí len-k.",
+    "edgeCases": ["k=0", "k > len", "List 1 node"],
+    "pitfalls": ["Quên k %= len", "Quên nối tail → head cũ"]
+  },
+  "tier": "done"
+}

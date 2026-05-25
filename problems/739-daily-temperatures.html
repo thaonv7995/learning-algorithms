@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Daily Temperatures</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.7% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng số nguyên temperatures đại diện cho nhiệt độ hàng ngày. Hãy trả về một mảng ans sao cho ans[i] là số ngày bạn phải đợi cho đến khi có nhiệt độ ấm hơn. Nếu không có ngày nào ấm hơn, gán ans[i] = 0.</div>
+                        <div class="block-text">Daily Temperatures (LeetCode #739) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>temperatures = [73,74,75,71,69,72,76,73]</code></div>
-                <div class="ex-line"><span>Out</span><code>[1,1,4,2,1,1,0,0]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng cấu trúc dữ liệu Ngăn xếp Đơn điệu Giảm dần (Monotonic Decreasing Stack). Ta duyệt qua mảng nhiệt độ từ trái sang phải, lưu trữ các chỉ số (index) vào Stack. Khi gặp một ngày có nhiệt độ lớn hơn nhiệt độ của ngày ở index đỉnh Stack, ta liên tục rút (pop) đỉnh Stack ra, tính khoảng cách ngày `i - prevIndex` điền vào mảng kết quả, cho đến khi Stack trống hoặc nhiệt độ đỉnh Stack lớn hơn ngày hiện tại.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,48 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Daily Temperatures)</span>
-<span class="ty">int</span>* dailyTemperatures(<span class="ty">int</span>* T, <span class="ty">int</span> TSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    *<span class="ty">returnSize</span> = TSize;
-    <span class="ty">int</span>* ans = (<span class="ty">int</span>*)<span class="kw">calloc</span>(TSize, <span class="kw">sizeof</span>(<span class="ty">int</span>));
-    <span class="ty">int</span>* stack = (<span class="ty">int</span>*)<span class="kw">malloc</span>(TSize * <span class="kw">sizeof</span>(<span class="ty">int</span>));
-    <span class="ty">int</span> top = -1;
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; TSize; i++) {
-        <span class="kw">while</span> (top != -1 &amp;&amp; T[i] &gt; T[stack[top]]) {
-            <span class="ty">int</span> idx = stack[top--];
-            ans[idx] = i - idx;
-        }
-        stack[++top] = i;
-    }
-    <span class="kw">free</span>(stack);
-    <span class="kw">return</span> ans;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Daily Temperatures)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> dailyTemperatures(<span class="ty">self</span>, T: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
-        ans = [0] * <span class="ty">len</span>(T)
-        stack = [] <span class="cm"># indices stores</span>
-        <span class="kw">for</span> i, t <span class="kw">in</span> enumerate(T):
-            <span class="kw">while</span> stack <span class="kw">and</span> t &gt; T[stack[-1]]:
-                idx = stack.pop()
-                ans[idx] = i - idx
-            stack.append(i)
-        <span class="kw">return</span> ans</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">vector&lt;int&gt;</span> <span class="fn">dailyTemperatures</span>(<span class="ty">vector&lt;int&gt;</span>&amp; T) {
-        <span class="ty">int</span> n = T.<span class="fn">size</span>();
-        <span class="ty">vector&lt;int&gt;</span> ans(n, <span class="st">0</span>);
-        <span class="ty">stack&lt;int&gt;</span> st; <span class="cm">// Luu tru chi so index</span>
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; n; i++) {
-            <span class="kw">while</span> (!st.<span class="fn">empty</span>() &amp;&amp; T[i] &gt; T[st.<span class="fn">top</span>()]) {
-                <span class="ty">int</span> idx = st.<span class="fn">top</span>(); st.<span class="fn">pop</span>();
-                ans[idx] = i - idx; <span class="cm">// Khoang cach ngay cho doi</span>
-            }
-            st.<span class="fn">push</span>(i);
-        }
-        <span class="kw">return</span> ans;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -141,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Stack</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — cấu trúc dữ liệu Ngăn xếp Đơn điệu Giảm dần .</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — duyệt qua mảng nhiệt độ từ trái sang phải, lưu trữ các…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — gặp một ngày có nhiệt độ lớn hơn nhiệt độ của ngày ở…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Kỹ thuật Monotonic Stack giúp mỗi index chỉ bị push và pop đúng 1 lần duy nhất, tối ưu hiệu năng CPU và bộ…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Minimum Deletions to Make Alternating Substring</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>45.2% AC</span>
                     </div>
@@ -57,244 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given a string <code>s</code> of length <code>n</code> consisting only of the characters <code>&#39;A&#39;</code> and <code>&#39;B&#39;</code>.</p>
-
-<p>You are also given a 2D integer array <code>queries</code> of length <code>q</code>, where each <code>queries[i]</code> is one of the following:</p>
-
-<ul>
-	<li><code>[1, j]</code>: <strong>Flip</strong> the character at index <code>j</code> of <code>s</code> i.e. <code>&#39;A&#39;</code> changes to <code>&#39;B&#39;</code> (and vice versa). This operation mutates <code>s</code> and affects subsequent queries.</li>
-	<li><code>[2, l, r]</code>: <strong>Compute</strong> the <strong>minimum</strong> number of character deletions required to make the <strong>substring</strong> <code>s[l..r]</code> <strong>alternating</strong>. This operation does not modify <code>s</code>; the length of <code>s</code> remains <code>n</code>.</li>
-</ul>
-
-<p>A <strong><span data-keyword="substring-nonempty">substring</span></strong> is <strong>alternating</strong> if no two <strong>adjacent</strong> characters are <strong>equal</strong>. A substring of length 1 is always alternating.</p>
-
-<p>Return an integer array <code>answer</code>, where <code>answer[i]</code> is the result of the <code>i<sup>th</sup></code> query of type <code>[2, l, r]</code>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;ABA&quot;, queries = [[2,1,2],[1,1],[2,0,2]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[0,2]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th align="center" style="border: 1px solid black;"><code><strong>i</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>queries[i]</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>j</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>l</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>r</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><strong><code>s</code> before query</strong></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>s[l..r]</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><strong>Result</strong></th>
-			<th align="center" style="border: 1px solid black;"><strong>Answer</strong></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td align="center" style="border: 1px solid black;">0</td>
-			<td align="center" style="border: 1px solid black;">[2, 1, 2]</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">1</td>
-			<td align="center" style="border: 1px solid black;">2</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;ABA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;BA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">Already alternating</td>
-			<td align="center" style="border: 1px solid black;">0</td>
-		</tr>
-		<tr>
-			<td align="center" style="border: 1px solid black;">1</td>
-			<td align="center" style="border: 1px solid black;">[1, 1]</td>
-			<td align="center" style="border: 1px solid black;">1</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;ABA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">Flip <code>s[1]</code> from <code>&#39;B&#39;</code> to <code>&#39;A&#39;</code></td>
-			<td align="center" style="border: 1px solid black;">-</td>
-		</tr>
-		<tr>
-			<td align="center" style="border: 1px solid black;">2</td>
-			<td align="center" style="border: 1px solid black;">[2, 0, 2]</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">0</td>
-			<td align="center" style="border: 1px solid black;">2</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;AAA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;AAA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">Delete any two <code>&#39;A&#39;</code>s to get <code>&quot;A&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">2</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Thus, the answer is <code>[0, 2]</code>.</p>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;ABB&quot;, queries = [[2,0,2],[1,2],[2,0,2]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[1,0]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th align="center" style="border: 1px solid black;"><code><strong>i</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>queries[i]</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>j</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>l</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>r</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><strong><code>s</code> before query</strong></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>s[l..r]</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><strong>Result</strong></th>
-			<th align="center" style="border: 1px solid black;"><strong>Answer</strong></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td align="center" style="border: 1px solid black;">0</td>
-			<td align="center" style="border: 1px solid black;">[2, 0, 2]</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">0</td>
-			<td align="center" style="border: 1px solid black;">2</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;ABB&quot;</code></td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;ABB&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">Delete one <code>&#39;B&#39;</code> to get <code>&quot;AB&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">1</td>
-		</tr>
-		<tr>
-			<td align="center" style="border: 1px solid black;">1</td>
-			<td align="center" style="border: 1px solid black;">[1, 2]</td>
-			<td align="center" style="border: 1px solid black;">2</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;ABB&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">Flip <code>s[2]</code> from <code>&#39;B&#39;</code> to <code>&#39;A&#39;</code></td>
-			<td align="center" style="border: 1px solid black;">-</td>
-		</tr>
-		<tr>
-			<td align="center" style="border: 1px solid black;">2</td>
-			<td align="center" style="border: 1px solid black;">[2, 0, 2]</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">0</td>
-			<td align="center" style="border: 1px solid black;">2</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;ABA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;ABA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">Already alternating</td>
-			<td align="center" style="border: 1px solid black;">0</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Thus, the answer is <code>[1, 0]</code>.</p>
-</div>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;BABA&quot;, queries = [[2,0,3],[1,1],[2,1,3]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[0,1]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th align="center" style="border: 1px solid black;"><code><strong>i</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>queries[i]</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>j</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>l</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>r</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><strong><code>s</code> before query</strong></th>
-			<th align="center" style="border: 1px solid black;"><code><strong>s[l..r]</strong></code></th>
-			<th align="center" style="border: 1px solid black;"><strong>Result</strong></th>
-			<th align="center" style="border: 1px solid black;"><strong>Answer</strong></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td align="center" style="border: 1px solid black;">0</td>
-			<td align="center" style="border: 1px solid black;">[2, 0, 3]</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">0</td>
-			<td align="center" style="border: 1px solid black;">3</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;BABA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;BABA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">Already alternating</td>
-			<td align="center" style="border: 1px solid black;">0</td>
-		</tr>
-		<tr>
-			<td align="center" style="border: 1px solid black;">1</td>
-			<td align="center" style="border: 1px solid black;">[1, 1]</td>
-			<td align="center" style="border: 1px solid black;">1</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;BABA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">Flip <code>s[1]</code> from <code>&#39;A&#39;</code> to <code>&#39;B&#39;</code></td>
-			<td align="center" style="border: 1px solid black;">-</td>
-		</tr>
-		<tr>
-			<td align="center" style="border: 1px solid black;">2</td>
-			<td align="center" style="border: 1px solid black;">[2, 1, 3]</td>
-			<td align="center" style="border: 1px solid black;">-</td>
-			<td align="center" style="border: 1px solid black;">1</td>
-			<td align="center" style="border: 1px solid black;">3</td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;BBBA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;"><code>&quot;BBA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">Delete one <code>&#39;B&#39;</code> to get <code>&quot;BA&quot;</code></td>
-			<td align="center" style="border: 1px solid black;">1</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Thus, the answer is <code>[0, 1]</code>.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= n == s.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>s[i]</code> is either <code>&#39;A&#39;</code> or <code>&#39;B&#39;</code>.</li>
-	<li><code>1 &lt;= q == queries.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>queries[i].length == 2</code> or <code>3</code>
-	<ul>
-		<li><code>queries[i] == [1, j]</code> or,</li>
-		<li><code>queries[i] == [2, l, r]</code></li>
-		<li><code>0 &lt;= j &lt;= n - 1</code></li>
-		<li><code>0 &lt;= l &lt;= r &lt;= n - 1</code></li>
-	</ul>
-	</li>
-</ul>
-</div>
+                        <div class="block-text">Minimum Deletions to Make Alternating Substring (LeetCode #3777) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;ABA&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>[[2,1,2],[1,1],[2,0,2]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>&quot;ABB&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>[[2,0,2],[1,2],[2,0,2]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>&quot;BABA&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>[[2,0,3],[1,1],[2,1,3]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -302,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Use a Fenwick tree (BIT) over an auxiliary array &lt;code&gt;eq&lt;/code&gt;. Define &lt;code&gt;eq[i] = 1&lt;/code&gt; if &lt;code&gt;i &gt;= 1&lt;/code&gt; and &lt;code&gt;s[i] == s[i - 1]&lt;/code&gt;, otherwise &lt;code&gt;eq[i] = 0&lt;/code&gt;. For a type-2 query &lt;code&gt;[2, l, r]&lt;/code&gt; the answer is &lt;code&gt;sum(eq[l+1..r])&lt;/code&gt; (count of equal adjacent pairs in the substring). For a flip &lt;code&gt;[1, j]&lt;/code&gt;, recompute and update &lt;code&gt;eq[j]&lt;/code&gt; and &lt;code&gt;eq[j + 1]&lt;/code&gt;; each flip changes at most two &lt;code&gt;eq&lt;/code&gt; values.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -319,25 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">int</span>* minDeletions(<span class="ty">char</span>* s, <span class="ty">int</span>** queries, <span class="ty">int</span> queriesSize, <span class="ty">int</span>* queriesColSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> minDeletions(<span class="ty">self</span>, s, queries):
-        &quot;&quot;&quot;
-        :type s: <span class="ty">str</span>
-        :type queries: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; minDeletions(<span class="ty">string</span> s, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; queries) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -347,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Use a Fenwick tree over an auxiliary array…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Define &lt;code&gt;eq[i] = 1&lt;/code&gt; if &lt;code&gt;i &gt;= 1&lt;/code&gt; and…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — For a type-2 query &lt;code&gt;[2, l, r]&lt;/code&gt; the answer is…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — For a flip &lt;code&gt;[1, j]&lt;/code&gt;, recompute and update…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng</span><span class="analysis-tag edge">Một ký tự</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

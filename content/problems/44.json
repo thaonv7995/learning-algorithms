@@ -1,0 +1,27 @@
+{
+  "id": 44,
+  "title": "Wildcard Matching",
+  "difficulty": "Hard",
+  "category": "String",
+  "timeComplexity": "O(M·N)",
+  "spaceComplexity": "O(M·N)",
+  "description": "Khớp pattern p với chuỗi s. '?' khớp đúng 1 ký tự; '*' khớp 0 hoặc nhiều ký tự bất kỳ. Phải khớp toàn bộ s.",
+  "examples": [
+    { "input": "s = \"aa\", p = \"a\"", "output": "false" },
+    { "input": "s = \"aa\", p = \"*\"", "output": "true" },
+    { "input": "s = \"cb\", p = \"?a\"", "output": "false" }
+  ],
+  "approach": "DP[i][j]: s[0..i) khớp p[0..j). '*' → dp[i][j-1] (0 ký tự) hoặc dp[i-1][j] (≥1). '?' hoặc khớp char → dp[i-1][j-1].",
+  "memoryTip": "Bảng bool (m+1)×(n+1) — có thể tối ưu 1 hàng nếu cần.",
+  "solutions": {
+    "python": "class Solution:\n    def isMatch(self, s: str, p: str) -> bool:\n        m, n = len(s), len(p)\n        dp = [[False]*(n+1) for _ in range(m+1)]\n        dp[0][0] = True\n        for j in range(1, n+1):\n            if p[j-1] == '*': dp[0][j] = dp[0][j-1]\n        for i in range(1, m+1):\n            for j in range(1, n+1):\n                if p[j-1] == '*':\n                    dp[i][j] = dp[i][j-1] or dp[i-1][j]\n                elif p[j-1] == '?' or s[i-1] == p[j-1]:\n                    dp[i][j] = dp[i-1][j-1]\n        return dp[m][n]",
+    "cpp": "class Solution {\npublic:\n    bool isMatch(string s, string p) {\n        int m=s.size(), n=p.size();\n        vector<vector<bool>> dp(m+1, vector<bool>(n+1));\n        dp[0][0]=true;\n        for(int j=1;j<=n;j++) if(p[j-1]=='*') dp[0][j]=dp[0][j-1];\n        for(int i=1;i<=m;i++) for(int j=1;j<=n;j++){\n            if(p[j-1]=='*') dp[i][j]=dp[i][j-1]||dp[i-1][j];\n            else if(p[j-1]=='?'||s[i-1]==p[j-1]) dp[i][j]=dp[i-1][j-1];\n        }\n        return dp[m][n];\n    }\n};",
+    "c": "bool isMatch(char* s, char* p) {\n    int m = (int)strlen(s), n = (int)strlen(p);\n    bool* dp = (bool*)calloc((m+1)*(n+1), sizeof(bool));\n    #define D(i,j) dp[(i)*(n+1)+(j)]\n    D(0,0) = true;\n    for (int j = 1; j <= n; j++)\n        if (p[j-1] == '*') D(0,j) = D(0,j-1);\n    for (int i = 1; i <= m; i++)\n        for (int j = 1; j <= n; j++) {\n            if (p[j-1] == '*') D(i,j) = D(i,j-1) || D(i-1,j);\n            else if (p[j-1] == '?' || s[i-1] == p[j-1]) D(i,j) = D(i-1,j-1);\n        }\n    bool ans = D(m,n);\n    free(dp);\n    return ans;\n}"
+  },
+  "analysis": {
+    "correctness": "DP đầy đủ subproblems — mọi cách gán '*' được xét.",
+    "edgeCases": ["p chỉ toàn '*'", "s rỗng", "Không khớp cuối"],
+    "pitfalls": ["Khớp partial s", "Nhầm '?' với '*'"]
+  },
+  "tier": "done"
+}

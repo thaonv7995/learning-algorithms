@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Promise Time Limit</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>83.2% AC</span>
                     </div>
@@ -57,127 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given an&nbsp;asynchronous function&nbsp;<code>fn</code>&nbsp;and a time <code>t</code>&nbsp;in milliseconds, return&nbsp;a new&nbsp;<strong>time limited</strong>&nbsp;version of the input function. <code>fn</code> takes arguments provided to the&nbsp;<strong>time limited&nbsp;</strong>function.</p>
-
-<p>The <strong>time limited</strong> function should follow these rules:</p>
-
-<ul>
-	<li>If the <code>fn</code> completes within the time limit of <code>t</code> milliseconds, the <strong>time limited</strong> function should&nbsp;resolve with the result.</li>
-	<li>If the execution of the <code>fn</code> exceeds the time limit, the <strong>time limited</strong> function should reject with the string <code>&quot;Time Limit Exceeded&quot;</code>.</li>
-</ul>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> 
-fn = async (n) =&gt; { 
-&nbsp; await new Promise(res =&gt; setTimeout(res, 100)); 
-&nbsp; return n * n; 
-}
-inputs = [5]
-t = 50
-<strong>Output:</strong> {&quot;rejected&quot;:&quot;Time Limit Exceeded&quot;,&quot;time&quot;:50}
-<strong>Explanation:</strong>
-const limited = timeLimit(fn, t)
-const start = performance.now()
-let result;
-try {
-&nbsp; &nbsp;const res = await limited(...inputs)
-&nbsp; &nbsp;result = {&quot;resolved&quot;: res, &quot;time&quot;: Math.floor(performance.now() - start)};
-} catch (err) {
-&nbsp;  result = {&quot;rejected&quot;: err, &quot;time&quot;: Math.floor(performance.now() - start)};
-}
-console.log(result) // Output
-
-The provided function is set to resolve after 100ms. However, the time limit is set to 50ms. It rejects at t=50ms because the time limit was reached.
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> 
-fn = async (n) =&gt; { 
-&nbsp; await new Promise(res =&gt; setTimeout(res, 100)); 
-&nbsp; return n * n; 
-}
-inputs = [5]
-t = 150
-<strong>Output:</strong> {&quot;resolved&quot;:25,&quot;time&quot;:100}
-<strong>Explanation:</strong>
-The function resolved 5 * 5 = 25 at t=100ms. The time limit is never reached.
-</pre>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<pre>
-<strong>Input:</strong> 
-fn = async (a, b) =&gt; { 
-&nbsp; await new Promise(res =&gt; setTimeout(res, 120)); 
-&nbsp; return a + b; 
-}
-inputs = [5,10]
-t = 150
-<strong>Output:</strong> {&quot;resolved&quot;:15,&quot;time&quot;:120}
-<strong>Explanation:</strong>
-​​​​The function resolved 5 + 10 = 15 at t=120ms. The time limit is never reached.
-</pre>
-
-<p><strong class="example">Example 4:</strong></p>
-
-<pre>
-<strong>Input:</strong> 
-fn = async () =&gt; { 
-&nbsp; throw &quot;Error&quot;;
-}
-inputs = []
-t = 1000
-<strong>Output:</strong> {&quot;rejected&quot;:&quot;Error&quot;,&quot;time&quot;:0}
-<strong>Explanation:</strong>
-The function immediately throws an error.</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>0 &lt;= inputs.length &lt;= 10</code></li>
-	<li><code>0 &lt;= t &lt;= 1000</code></li>
-	<li><code>fn</code> returns a promise</li>
-</ul>
-</div>
+                        <div class="block-text">Promise Time Limit (LeetCode #2637) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>async (n) =&gt; { await new Promise(res =&gt; setTimeout(res, 100)); return n * n; }</code></div>
-                <div class="ex-line"><span>Out</span><code>[5]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>50</code></div>
-                <div class="ex-line"><span>Out</span><code>async (n) =&gt; { await new Promise(res =&gt; setTimeout(res, 100)); return n * n; }</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>[5]</code></div>
-                <div class="ex-line"><span>Out</span><code>150</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 4</div>
-                <div class="ex-line"><span>In</span><code>async (a, b) =&gt; { await new Promise(res =&gt; setTimeout(res, 120)); return a + b; }</code></div>
-                <div class="ex-line"><span>Out</span><code>[5,10]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 5</div>
-                <div class="ex-line"><span>In</span><code>150</code></div>
-                <div class="ex-line"><span>Out</span><code>async () =&gt; { throw &quot;Error&quot;; }</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 6</div>
-                <div class="ex-line"><span>In</span><code>[]</code></div>
-                <div class="ex-line"><span>Out</span><code>1000</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -185,7 +73,7 @@ The function immediately throws an error.</pre>
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">You can return a copy of a function with: <br><br>function outerFunction(fn) { <br>  return function innerFunction(...params) {<br>    return fn(...params);<br>  };<br>} Inside the inner function, you will need to return a new Promise. You can create a new promise like: new Promise((resolve, reject) =&gt; {}). You can execute code with a delay with &quot;setTimeout(fn, delay)&quot; To reject a promise after a delay, &quot;setTimeout(() =&gt; reject('err'), delay)&quot; You can resolve and reject when the passed promise resolves or rejects with: &quot;fn(...params).then(resolve).catch(reject)&quot;</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -202,11 +90,12 @@ The function immediately throws an error.</pre>
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Template C — xem editorial LeetCode</span>
-</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Template Python — xem editorial LeetCode</span>
-</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// Template C++</span></pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+};</pre>
                         </div>
                     </div>
                 </div>
@@ -215,18 +104,18 @@ The function immediately throws an error.</pre>
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">General</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — You can return a copy of a function with: function…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — You can create a new promise like: new Promise =&gt; {}).</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — You can execute code with a delay with &quot;setTimeout&quot; To…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

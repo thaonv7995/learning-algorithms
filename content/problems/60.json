@@ -1,0 +1,26 @@
+{
+  "id": 60,
+  "title": "Permutation Sequence",
+  "difficulty": "Hard",
+  "category": "Math",
+  "timeComplexity": "O(N²)",
+  "spaceComplexity": "O(N)",
+  "description": "Trả hoán vị thứ k (1-indexed) của tập {1..n} theo thứ tự từ điển.",
+  "examples": [
+    { "input": "n = 3, k = 3", "output": "\"213\"" },
+    { "input": "n = 4, k = 9", "output": "\"2314\"" }
+  ],
+  "approach": "Tính factorial. Mỗi vị trí: idx = (k-1)/fact[n-1-i], chọn số thứ idx từ list còn lại, k -= idx*fact[...].",
+  "memoryTip": "Không sinh n! hoán vị — Cantor/expansion O(n²).",
+  "solutions": {
+    "python": "class Solution:\n    def getPermutation(self, n: int, k: int) -> str:\n        fact=[1]*n\n        for i in range(1,n): fact[i]=fact[i-1]*i\n        nums=list(range(1,n+1)); k-=1; res=[]\n        for i in range(n,0,-1):\n            idx=k//fact[i-1]; res.append(str(nums.pop(idx))); k-=idx*fact[i-1]\n        return ''.join(res)",
+    "cpp": "class Solution {\npublic:\n    string getPermutation(int n, int k) {\n        vector<int> fact(n,1), nums;\n        for(int i=1;i<n;i++) fact[i]=fact[i-1]*i;\n        for(int i=1;i<=n;i++) nums.push_back(i);\n        k--;\n        string res;\n        for(int i=n;i>=1;i--){\n            int idx=k/fact[i-1];\n            res+=char('0'+nums[idx]); nums.erase(nums.begin()+idx);\n            k-=idx*fact[i-1];\n        }\n        return res;\n    }\n};",
+    "c": "/* getPermutation — factorial expansion; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Chia k theo factorial xác định từng chữ số đúng thứ tự lex.",
+    "edgeCases": ["k=1", "k=n!"],
+    "pitfalls": ["k 0-index vs 1-index", "Sinh hết permutations"]
+  },
+  "tier": "done"
+}

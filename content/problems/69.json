@@ -1,0 +1,26 @@
+{
+  "id": 69,
+  "title": "Sqrt(x)",
+  "difficulty": "Easy",
+  "category": "Math",
+  "timeComplexity": "O(log X)",
+  "spaceComplexity": "O(1)",
+  "description": "Tính căn bậc hai của x (làm tròn xuống integer), không dùng built-in sqrt.",
+  "examples": [
+    { "input": "x = 4", "output": "2" },
+    { "input": "x = 8", "output": "2" }
+  ],
+  "approach": "Binary search trên [0, x]: mid*mid <= x thì lưu ans=mid, tìm phải; else trái.",
+  "memoryTip": "BS trên câu trả lời — template căn bậc hai.",
+  "solutions": {
+    "python": "class Solution:\n    def mySqrt(self, x: int) -> int:\n        if x < 2: return x\n        lo, hi, ans = 1, x, 0\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if mid <= x // mid:\n                ans = mid; lo = mid + 1\n            else: hi = mid - 1\n        return ans",
+    "cpp": "class Solution {\npublic:\n    int mySqrt(int x) {\n        if (x < 2) return x;\n        long lo=1, hi=x, ans=0;\n        while(lo<=hi){\n            long mid=lo+(hi-lo)/2;\n            if(mid<=x/mid){ans=mid;lo=mid+1;}\n            else hi=mid-1;\n        }\n        return ans;\n    }\n};",
+    "c": "int mySqrt(int x) {\n    if (x < 2) return x;\n    long lo = 1, hi = x, ans = 0;\n    while (lo <= hi) {\n        long mid = lo + (hi - lo) / 2;\n        if (mid <= x / mid) { ans = mid; lo = mid + 1; }\n        else hi = mid - 1;\n    }\n    return (int)ans;\n}"
+  },
+  "analysis": {
+    "correctness": "BS tìm max mid với mid² ≤ x.",
+    "edgeCases": ["x=0", "x=1", "x=INT_MAX"],
+    "pitfalls": ["Overflow mid*mid — dùng x/mid"]
+  },
+  "tier": "done"
+}

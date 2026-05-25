@@ -1,0 +1,25 @@
+{
+  "id": 56,
+  "title": "Merge Intervals",
+  "difficulty": "Medium",
+  "category": "Array",
+  "timeComplexity": "O(N log N)",
+  "spaceComplexity": "O(N)",
+  "description": "Gộp các khoảng [start,end] chồng lấn thành khoảng không overlap.",
+  "examples": [
+    { "input": "intervals = [[1,3],[2,6],[8,10],[15,18]]", "output": "[[1,6],[8,10],[15,18]]" }
+  ],
+  "approach": "Sort theo start. Duyệt: nếu start ≤ end của khoảng cuối → merge max end; else push khoảng mới.",
+  "memoryTip": "Sort O(n log n); merge linear.",
+  "solutions": {
+    "python": "class Solution:\n    def merge(self, intervals: List[List[int]]) -> List[List[int]]:\n        intervals.sort(key=lambda x: x[0])\n        res = [intervals[0]]\n        for s, e in intervals[1:]:\n            if s <= res[-1][1]: res[-1][1] = max(res[-1][1], e)\n            else: res.append([s, e])\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> merge(vector<vector<int>>& in) {\n        sort(in.begin(), in.end());\n        vector<vector<int>> res={in[0]};\n        for(int i=1;i<(int)in.size();i++){\n            if(in[i][0]<=res.back()[1]) res.back()[1]=max(res.back()[1],in[i][1]);\n            else res.push_back(in[i]);\n        }\n        return res;\n    }\n};",
+    "c": "/* merge intervals — sort + linear merge; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Sau sort, overlap chỉ xảy ra với khoảng cuối res.",
+    "edgeCases": ["Một interval", "Chạm biên [1,4][4,5]"],
+    "pitfalls": ["Không sort", "So sánh start với end sai"]
+  },
+  "tier": "done"
+}

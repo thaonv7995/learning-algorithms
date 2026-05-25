@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Minimum Cost to Convert String II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.6% AC</span>
                     </div>
@@ -57,108 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given two <strong>0-indexed</strong> strings <code>source</code> and <code>target</code>, both of length <code>n</code> and consisting of <strong>lowercase</strong> English characters. You are also given two <strong>0-indexed</strong> string arrays <code>original</code> and <code>changed</code>, and an integer array <code>cost</code>, where <code>cost[i]</code> represents the cost of converting the string <code>original[i]</code> to the string <code>changed[i]</code>.</p>
-
-<p>You start with the string <code>source</code>. In one operation, you can pick a <strong>substring</strong> <code>x</code> from the string, and change it to <code>y</code> at a cost of <code>z</code> <strong>if</strong> there exists <strong>any</strong> index <code>j</code> such that <code>cost[j] == z</code>, <code>original[j] == x</code>, and <code>changed[j] == y</code>. You are allowed to do <strong>any</strong> number of operations, but any pair of operations must satisfy <strong>either</strong> of these two conditions:</p>
-
-<ul>
-	<li>The substrings picked in the operations are <code>source[a..b]</code> and <code>source[c..d]</code> with either <code>b &lt; c</code> <strong>or</strong> <code>d &lt; a</code>. In other words, the indices picked in both operations are <strong>disjoint</strong>.</li>
-	<li>The substrings picked in the operations are <code>source[a..b]</code> and <code>source[c..d]</code> with <code>a == c</code> <strong>and</strong> <code>b == d</code>. In other words, the indices picked in both operations are <strong>identical</strong>.</li>
-</ul>
-
-<p>Return <em>the <strong>minimum</strong> cost to convert the string </em><code>source</code><em> to the string </em><code>target</code><em> using <strong>any</strong> number of operations</em>. <em>If it is impossible to convert</em> <code>source</code> <em>to</em> <code>target</code>,<em> return</em> <code>-1</code>.</p>
-
-<p><strong>Note</strong> that there may exist indices <code>i</code>, <code>j</code> such that <code>original[j] == original[i]</code> and <code>changed[j] == changed[i]</code>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> source = &quot;abcd&quot;, target = &quot;acbe&quot;, original = [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;c&quot;,&quot;e&quot;,&quot;d&quot;], changed = [&quot;b&quot;,&quot;c&quot;,&quot;b&quot;,&quot;e&quot;,&quot;b&quot;,&quot;e&quot;], cost = [2,5,5,1,2,20]
-<strong>Output:</strong> 28
-<strong>Explanation:</strong> To convert &quot;abcd&quot; to &quot;acbe&quot;, do the following operations:
-- Change substring source[1..1] from &quot;b&quot; to &quot;c&quot; at a cost of 5.
-- Change substring source[2..2] from &quot;c&quot; to &quot;e&quot; at a cost of 1.
-- Change substring source[2..2] from &quot;e&quot; to &quot;b&quot; at a cost of 2.
-- Change substring source[3..3] from &quot;d&quot; to &quot;e&quot; at a cost of 20.
-The total cost incurred is 5 + 1 + 2 + 20 = 28. 
-It can be shown that this is the minimum possible cost.
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> source = &quot;abcdefgh&quot;, target = &quot;acdeeghh&quot;, original = [&quot;bcd&quot;,&quot;fgh&quot;,&quot;thh&quot;], changed = [&quot;cde&quot;,&quot;thh&quot;,&quot;ghh&quot;], cost = [1,3,5]
-<strong>Output:</strong> 9
-<strong>Explanation:</strong> To convert &quot;abcdefgh&quot; to &quot;acdeeghh&quot;, do the following operations:
-- Change substring source[1..3] from &quot;bcd&quot; to &quot;cde&quot; at a cost of 1.
-- Change substring source[5..7] from &quot;fgh&quot; to &quot;thh&quot; at a cost of 3. We can do this operation because indices [5,7] are disjoint with indices picked in the first operation.
-- Change substring source[5..7] from &quot;thh&quot; to &quot;ghh&quot; at a cost of 5. We can do this operation because indices [5,7] are disjoint with indices picked in the first operation, and identical with indices picked in the second operation.
-The total cost incurred is 1 + 3 + 5 = 9.
-It can be shown that this is the minimum possible cost.
-</pre>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<pre>
-<strong>Input:</strong> source = &quot;abcdefgh&quot;, target = &quot;addddddd&quot;, original = [&quot;bcd&quot;,&quot;defgh&quot;], changed = [&quot;ddd&quot;,&quot;ddddd&quot;], cost = [100,1578]
-<strong>Output:</strong> -1
-<strong>Explanation:</strong> It is impossible to convert &quot;abcdefgh&quot; to &quot;addddddd&quot;.
-If you select substring source[1..3] as the first operation to change &quot;abcdefgh&quot; to &quot;adddefgh&quot;, you cannot select substring source[3..7] as the second operation because it has a common index, 3, with the first operation.
-If you select substring source[3..7] as the first operation to change &quot;abcdefgh&quot; to &quot;abcddddd&quot;, you cannot select substring source[1..3] as the second operation because it has a common index, 3, with the first operation.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= source.length == target.length &lt;= 1000</code></li>
-	<li><code>source</code>, <code>target</code> consist only of lowercase English characters.</li>
-	<li><code>1 &lt;= cost.length == original.length == changed.length &lt;= 100</code></li>
-	<li><code>1 &lt;= original[i].length == changed[i].length &lt;= source.length</code></li>
-	<li><code>original[i]</code>, <code>changed[i]</code> consist only of lowercase English characters.</li>
-	<li><code>original[i] != changed[i]</code></li>
-	<li><code>1 &lt;= cost[i] &lt;= 10<sup>6</sup></code></li>
-</ul>
-</div>
+                        <div class="block-text">Minimum Cost to Convert String II (LeetCode #2977) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;abcd&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;acbe&quot;</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;c&quot;,&quot;e&quot;,&quot;d&quot;]</code></div>
-                <div class="ex-line"><span>Out</span><code>[&quot;b&quot;,&quot;c&quot;,&quot;b&quot;,&quot;e&quot;,&quot;b&quot;,&quot;e&quot;]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>[2,5,5,1,2,20]</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;abcdefgh&quot;</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 4</div>
-                <div class="ex-line"><span>In</span><code>&quot;acdeeghh&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>[&quot;bcd&quot;,&quot;fgh&quot;,&quot;thh&quot;]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 5</div>
-                <div class="ex-line"><span>In</span><code>[&quot;cde&quot;,&quot;thh&quot;,&quot;ghh&quot;]</code></div>
-                <div class="ex-line"><span>Out</span><code>[1,3,5]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 6</div>
-                <div class="ex-line"><span>In</span><code>&quot;abcdefgh&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;addddddd&quot;</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 7</div>
-                <div class="ex-line"><span>In</span><code>[&quot;bcd&quot;,&quot;defgh&quot;]</code></div>
-                <div class="ex-line"><span>Out</span><code>[&quot;ddd&quot;,&quot;ddddd&quot;]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -166,7 +73,7 @@ If you select substring source[3..7] as the first operation to change &quot;abcd
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Give each unique string in &lt;code&gt;original&lt;/code&gt; and &lt;code&gt;changed&lt;/code&gt; arrays a unique id. There are at most &lt;code&gt;2 * m&lt;/code&gt; unique strings in total where &lt;code&gt;m&lt;/code&gt; is the length of the arrays. We can put them into a hash map to assign ids. We can pre-compute the smallest costs between all pairs of unique strings using Floyd Warshall algorithm in &lt;code&gt;O(m ^ 3)&lt;/code&gt; time complexity. Let &lt;code&gt;dp[i]&lt;/code&gt; be the smallest cost to change the first &lt;code&gt;i&lt;/code&gt; characters (prefix) of &lt;code&gt;source&lt;/code&gt; into &lt;code&gt;target&lt;/code&gt;, leaving the suffix untouched.<br>We have &lt;code&gt;dp[0] = 0&lt;/code&gt;.<br>&lt;code&gt;dp[i] = min(<br>dp[i - 1] if (source[i - 1] == target[i - 1]),<br>dp[j-1] + cost[x][y] where x is the id of source[j..(i - 1)] and y is the id of target e[j..(i - 1)])<br>)&lt;/code&gt;.<br>If neither of the two conditions is satisfied, &lt;code&gt;dp[i] = infinity&lt;/code&gt;. We can use Trie to check for the second condition in &lt;code&gt;O(1)&lt;/code&gt;. The answer is &lt;code&gt;dp[n]&lt;/code&gt; where &lt;code&gt;n&lt;/code&gt; is &lt;code&gt;source.length&lt;/code&gt;.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -183,25 +90,11 @@ If you select substring source[3..7] as the first operation to change &quot;abcd
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">long</span> <span class="ty">long</span> minimumCost(<span class="ty">char</span>* source, <span class="ty">char</span>* target, <span class="ty">char</span>** original, <span class="ty">int</span> originalSize, <span class="ty">char</span>** changed, <span class="ty">int</span> changedSize, <span class="ty">int</span>* cost, <span class="ty">int</span> costSize) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> minimumCost(<span class="ty">self</span>, source, target, original, changed, cost):
-        &quot;&quot;&quot;
-        :type source: <span class="ty">str</span>
-        :type target: <span class="ty">str</span>
-        :type original: <span class="ty">List</span>[<span class="ty">str</span>]
-        :type changed: <span class="ty">List</span>[<span class="ty">str</span>]
-        :type cost: <span class="ty">List</span>[<span class="ty">int</span>]
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">long</span> <span class="ty">long</span> minimumCost(<span class="ty">string</span> source, <span class="ty">string</span> target, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; original, <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&amp; changed, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; cost) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -211,18 +104,18 @@ If you select substring source[3..7] as the first operation to change &quot;abcd
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Give each unique string in &lt;code&gt;original&lt;/code&gt; and…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — There are at most &lt;code&gt;2 * m&lt;/code&gt; unique strings in…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — We can put them into a hash map to assign ids.</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — We can pre-compute the smallest costs between all pairs…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">My Calendar II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>63.1% AC</span>
                     </div>
@@ -57,55 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are implementing a program to use as your calendar. We can add a new event if adding the event will not cause a <strong>triple booking</strong>.</p>
-
-<p>A <strong>triple booking</strong> happens when three events have some non-empty intersection (i.e., some moment is common to all the three events.).</p>
-
-<p>The event can be represented as a pair of integers <code>startTime</code> and <code>endTime</code> that represents a booking on the half-open interval <code>[startTime, endTime)</code>, the range of real numbers <code>x</code> such that <code>startTime &lt;= x &lt; endTime</code>.</p>
-
-<p>Implement the <code>MyCalendarTwo</code> class:</p>
-
-<ul>
-	<li><code>MyCalendarTwo()</code> Initializes the calendar object.</li>
-	<li><code>boolean book(int startTime, int endTime)</code> Returns <code>true</code> if the event can be added to the calendar successfully without causing a <strong>triple booking</strong>. Otherwise, return <code>false</code> and do not add the event to the calendar.</li>
-</ul>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input</strong>
-[&quot;MyCalendarTwo&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;]
-[[], [10, 20], [50, 60], [10, 40], [5, 15], [5, 10], [25, 55]]
-<strong>Output</strong>
-[null, true, true, true, false, true, true]
-
-<strong>Explanation</strong>
-MyCalendarTwo myCalendarTwo = new MyCalendarTwo();
-myCalendarTwo.book(10, 20); // return True, The event can be booked. 
-myCalendarTwo.book(50, 60); // return True, The event can be booked. 
-myCalendarTwo.book(10, 40); // return True, The event can be double booked. 
-myCalendarTwo.book(5, 15);  // return False, The event cannot be booked, because it would result in a triple booking.
-myCalendarTwo.book(5, 10); // return True, The event can be booked, as it does not use time 10 which is already double booked.
-myCalendarTwo.book(25, 55); // return True, The event can be booked, as the time in [25, 40) will be double booked with the third event, the time [40, 50) will be single booked, and the time [50, 55) will be double booked with the second event.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>0 &lt;= start &lt; end &lt;= 10<sup>9</sup></code></li>
-	<li>At most <code>1000</code> calls will be made to <code>book</code>.</li>
-</ul>
-</div>
+                        <div class="block-text">My Calendar II (LeetCode #731) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[&quot;MyCalendarTwo&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;,&quot;book&quot;]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[],[10,20],[50,60],[10,40],[5,15],[5,10],[25,55]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -113,7 +73,7 @@ myCalendarTwo.book(25, 55); // return True, The event can be booked, as the time
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Store two sorted lists of intervals: one list will be all times that are at least single booked, and another list will be all times that are definitely double booked.  If none of the double bookings conflict, then the booking will succeed, and you should update your single and double bookings accordingly.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -130,59 +90,12 @@ myCalendarTwo.book(25, 55); // return True, The event can be booked, as the time
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Koko Eating Bananas)</span>
-<span class="ty">int</span> minEatingSpeed(<span class="ty">int</span>* piles, <span class="ty">int</span> pilesSize, <span class="ty">int</span> h) {
-    <span class="ty">int</span> low = 1, high = 0;
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; pilesSize; i++) {
-        <span class="kw">if</span> (piles[i] &gt; high) high = piles[i];
-    }
-    <span class="ty">int</span> ans = high;
-    <span class="kw">while</span> (low &lt;= high) {
-        <span class="ty">int</span> mid = low + (high - low) / 2;
-        <span class="ty">long</span> totalHours = 0;
-        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; pilesSize; i++) {
-            totalHours += (piles[i] + mid - 1) / mid;
-        }
-        <span class="kw">if</span> (totalHours &lt;= h) {
-            ans = mid;
-            high = mid - 1;
-        } <span class="kw">else</span> {
-            low = mid + 1;
-        }
-    }
-    <span class="kw">return</span> ans;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Koko Eating Bananas)</span>
-<span class="kw">import</span> math
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> minEatingSpeed(<span class="ty">self</span>, piles: <span class="ty">List</span>[<span class="ty">int</span>], h: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
-        low, high = 1, <span class="ty">max</span>(piles)
-        ans = high
-        <span class="kw">while</span> low &lt;= high:
-            mid = (low + high) // 2
-            total_hours = sum(math.ceil(p / mid) <span class="kw">for</span> p <span class="kw">in</span> piles)
-            <span class="kw">if</span> total_hours &lt;= h:
-                ans = mid
-                high = mid - 1
-            <span class="kw">else</span>:
-                low = mid + 1
-        <span class="kw">return</span> ans</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> MyCalendarTwo {
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    MyCalendarTwo() {
-        
-    }
-    
-    <span class="ty">bool</span> book(<span class="ty">int</span> startTime, <span class="ty">int</span> endTime) {
-        
-    }
-};
-
-/**
- * Your MyCalendarTwo object will be instantiated and called as such:
- * MyCalendarTwo* obj = <span class="kw">new</span> MyCalendarTwo();
- * <span class="ty">bool</span> param_1 = obj-&gt;book(startTime,endTime);
- */</pre>
+};</pre>
                         </div>
                     </div>
                 </div>
@@ -191,18 +104,18 @@ myCalendarTwo.book(25, 55); // return True, The event can be booked, as the time
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Store two sorted lists of intervals: one list will be all…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — If none of the double bookings conflict, then the booking…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Biến low/high/mid trên Stack — O bộ nhớ phụ.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

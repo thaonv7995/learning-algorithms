@@ -1,0 +1,26 @@
+{
+  "id": 55,
+  "title": "Jump Game",
+  "difficulty": "Medium",
+  "category": "Greedy",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Từ index 0, nums[i] là bước nhảy tối đa. Có đến được index cuối không?",
+  "examples": [
+    { "input": "nums = [2,3,1,1,4]", "output": "true" },
+    { "input": "nums = [3,2,1,0,4]", "output": "false" }
+  ],
+  "approach": "Greedy: far = xa nhất đến được. Nếu i > far → false. Cập nhật far = max(far, i+nums[i]).",
+  "memoryTip": "Một biến far — O(1).",
+  "solutions": {
+    "python": "class Solution:\n    def canJump(self, nums: List[int]) -> bool:\n        far = 0\n        for i, x in enumerate(nums):\n            if i > far: return False\n            far = max(far, i + x)\n        return True",
+    "cpp": "class Solution {\npublic:\n    bool canJump(vector<int>& nums) {\n        int far=0;\n        for(int i=0;i<(int)nums.size();i++){\n            if(i>far) return false;\n            far=max(far,i+nums[i]);\n        }\n        return true;\n    }\n};",
+    "c": "bool canJump(int* nums, int n) {\n    int far = 0;\n    for (int i = 0; i < n; i++) {\n        if (i > far) return false;\n        if (i + nums[i] > far) far = i + nums[i];\n    }\n    return true;\n}"
+  },
+  "analysis": {
+    "correctness": "far là tập reachable — nếu i vượt far thì không tới được.",
+    "edgeCases": ["Một phần tử", "nums[i]=0 giữa đường"],
+    "pitfalls": ["DP O(n²) không cần", "Nhầm với #45 min jumps"]
+  },
+  "tier": "done"
+}

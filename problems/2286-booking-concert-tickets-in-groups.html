@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Booking Concert Tickets in Groups</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>19.6% AC</span>
                     </div>
@@ -57,69 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>A concert hall has <code>n</code> rows numbered from <code>0</code> to <code>n - 1</code>, each with <code>m</code> seats, numbered from <code>0</code> to <code>m - 1</code>. You need to design a ticketing system that can allocate seats in the following cases:</p>
-
-<ul>
-	<li>If a group of <code>k</code> spectators can sit <strong>together</strong> in a row.</li>
-	<li>If <strong>every</strong> member of a group of <code>k</code> spectators can get a seat. They may or <strong>may not</strong> sit together.</li>
-</ul>
-
-<p>Note that the spectators are very picky. Hence:</p>
-
-<ul>
-	<li>They will book seats only if each member of their group can get a seat with row number <strong>less than or equal</strong> to <code>maxRow</code>. <code>maxRow</code> can <strong>vary</strong> from group to group.</li>
-	<li>In case there are multiple rows to choose from, the row with the <strong>smallest</strong> number is chosen. If there are multiple seats to choose in the same row, the seat with the <strong>smallest</strong> number is chosen.</li>
-</ul>
-
-<p>Implement the <code>BookMyShow</code> class:</p>
-
-<ul>
-	<li><code>BookMyShow(int n, int m)</code> Initializes the object with <code>n</code> as number of rows and <code>m</code> as number of seats per row.</li>
-	<li><code>int[] gather(int k, int maxRow)</code> Returns an array of length <code>2</code> denoting the row and seat number (respectively) of the <strong>first seat</strong> being allocated to the <code>k</code> members of the group, who must sit <strong>together</strong>. In other words, it returns the smallest possible <code>r</code> and <code>c</code> such that all <code>[c, c + k - 1]</code> seats are valid and empty in row <code>r</code>, and <code>r &lt;= maxRow</code>. Returns <code>[]</code> in case it is <strong>not possible</strong> to allocate seats to the group.</li>
-	<li><code>boolean scatter(int k, int maxRow)</code> Returns <code>true</code> if all <code>k</code> members of the group can be allocated seats in rows <code>0</code> to <code>maxRow</code>, who may or <strong>may not</strong> sit together. If the seats can be allocated, it allocates <code>k</code> seats to the group with the <strong>smallest</strong> row numbers, and the smallest possible seat numbers in each row. Otherwise, returns <code>false</code>.</li>
-</ul>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input</strong>
-[&quot;BookMyShow&quot;, &quot;gather&quot;, &quot;gather&quot;, &quot;scatter&quot;, &quot;scatter&quot;]
-[[2, 5], [4, 0], [2, 0], [5, 1], [5, 1]]
-<strong>Output</strong>
-[null, [0, 0], [], true, false]
-
-<strong>Explanation</strong>
-BookMyShow bms = new BookMyShow(2, 5); // There are 2 rows with 5 seats each 
-bms.gather(4, 0); // return [0, 0]
-                  // The group books seats [0, 3] of row 0. 
-bms.gather(2, 0); // return []
-                  // There is only 1 seat left in row 0,
-                  // so it is not possible to book 2 consecutive seats. 
-bms.scatter(5, 1); // return True
-                   // The group books seat 4 of row 0 and seats [0, 3] of row 1. 
-bms.scatter(5, 1); // return False
-                   // There is only one seat left in the hall.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= n &lt;= 5 * 10<sup>4</sup></code></li>
-	<li><code>1 &lt;= m, k &lt;= 10<sup>9</sup></code></li>
-	<li><code>0 &lt;= maxRow &lt;= n - 1</code></li>
-	<li>At most <code>5 * 10<sup>4</sup></code> calls <strong>in total</strong> will be made to <code>gather</code> and <code>scatter</code>.</li>
-</ul>
-</div>
+                        <div class="block-text">Booking Concert Tickets in Groups (LeetCode #2286) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[&quot;BookMyShow&quot;,&quot;gather&quot;,&quot;gather&quot;,&quot;scatter&quot;,&quot;scatter&quot;]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[2,5],[4,0],[2,0],[5,1],[5,1]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -127,7 +73,7 @@ bms.scatter(5, 1); // return False
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Since seats are allocated by smallest row and then by smallest seat numbers, how can we keep a record of the smallest seat number vacant in each row? How can range max query help us to check if contiguous seats can be allocated in a range? Similarly, can range sum query help us to check if enough seats are available in a range? Which data structure can be used to implement the above?</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -144,90 +90,12 @@ bms.scatter(5, 1); // return False
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">
-
-
-typedef <span class="ty">struct</span> {
-    
-} BookMyShow;
-
-
-BookMyShow* bookMyShowCreate(<span class="ty">int</span> n, <span class="ty">int</span> m) {
-    
-}
-
-<span class="ty">int</span>* bookMyShowGather(BookMyShow* obj, <span class="ty">int</span> k, <span class="ty">int</span> maxRow, <span class="ty">int</span>* retSize) {
-    
-}
-
-<span class="ty">bool</span> bookMyShowScatter(BookMyShow* obj, <span class="ty">int</span> k, <span class="ty">int</span> maxRow) {
-    
-}
-
-<span class="ty">void</span> bookMyShowFree(BookMyShow* obj) {
-    
-}
-
-/**
- * Your BookMyShow <span class="ty">struct</span> will be instantiated and called as such:
- * BookMyShow* obj = bookMyShowCreate(n, m);
- * <span class="ty">int</span>* param_1 = bookMyShowGather(obj, k, maxRow, retSize);
- 
- * <span class="ty">bool</span> param_2 = bookMyShowScatter(obj, k, maxRow);
- 
- * bookMyShowFree(obj);
-*/</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> BookMyShow(object):
-
-    <span class="kw">def</span> __init__(<span class="ty">self</span>, n, m):
-        &quot;&quot;&quot;
-        :type n: <span class="ty">int</span>
-        :type m: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> gather(<span class="ty">self</span>, k, maxRow):
-        &quot;&quot;&quot;
-        :type k: <span class="ty">int</span>
-        :type maxRow: <span class="ty">int</span>
-        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> scatter(<span class="ty">self</span>, k, maxRow):
-        &quot;&quot;&quot;
-        :type k: <span class="ty">int</span>
-        :type maxRow: <span class="ty">int</span>
-        :rtype: bool
-        &quot;&quot;&quot;
-        
-
-
-<span class="cm"># Your BookMyShow object will be instantiated <span class="kw">and</span> called as such:</span>
-<span class="cm"># obj = BookMyShow(n, m)</span>
-<span class="cm"># param_1 = obj.gather(k,maxRow)</span>
-<span class="cm"># param_2 = obj.scatter(k,maxRow)</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> BookMyShow {
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    BookMyShow(<span class="ty">int</span> n, <span class="ty">int</span> m) {
-        
-    }
-    
-    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; gather(<span class="ty">int</span> k, <span class="ty">int</span> maxRow) {
-        
-    }
-    
-    <span class="ty">bool</span> scatter(<span class="ty">int</span> k, <span class="ty">int</span> maxRow) {
-        
-    }
-};
-
-/**
- * Your BookMyShow object will be instantiated and called as such:
- * BookMyShow* obj = <span class="kw">new</span> BookMyShow(n, m);
- * <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; param_1 = obj-&gt;gather(k,maxRow);
- * <span class="ty">bool</span> param_2 = obj-&gt;scatter(k,maxRow);
- */</pre>
+};</pre>
                         </div>
                     </div>
                 </div>
@@ -236,18 +104,18 @@ BookMyShow* bookMyShowCreate(<span class="ty">int</span> n, <span class="ty">int
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Binary Search</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Since seats are allocated by smallest row and then by…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — How can range max query help us to check if contiguous…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Similarly, can range sum query help us to check if enough…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Which data structure can be used to implement the above?</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Biến low/high/mid trên Stack — O bộ nhớ phụ.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

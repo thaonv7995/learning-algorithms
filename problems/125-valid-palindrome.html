@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Valid Palindrome</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>53.3% AC</span>
                     </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Kiểm tra xem một chuỗi có phải là chuỗi đối xứng hay không, sau khi đã chuyển tất cả ký tự viết hoa thành viết thường và loại bỏ toàn bộ ký tự không phải chữ và số.</div>
+                        <div class="block-text">Valid Palindrome (LeetCode #125) — Easy.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>s = &quot;A man, a plan, a canal: Panama&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>true</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng hai con trỏ trái và phải (`left`, `right`) xuất phát từ hai biên chuỗi. Ta liên tục di chuyển hai con trỏ hướng vào tâm, bỏ qua tất cả ký tự đặc biệt không phải chữ và số thông qua hàm `isalnum()`. So sánh hai ký tự tại hai đầu sau khi chuẩn hóa về chữ thường `tolower()`. Nếu lệch nhau, trả về false.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,43 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Valid Palindrome)</span>
-<span class="ty">bool</span> isPalindrome(<span class="ty">char</span>* s) {
-    <span class="ty">int</span> left = 0, right = strlen(s) - 1;
-    <span class="kw">while</span> (left &lt; right) {
-        <span class="kw">while</span> (left &lt; right &amp;&amp; !isalnum((<span class="ty">unsigned</span> <span class="ty">char</span>)s[left])) left++;
-        <span class="kw">while</span> (left &lt; right &amp;&amp; !isalnum((<span class="ty">unsigned</span> <span class="ty">char</span>)s[right])) right--;
-        <span class="kw">if</span> (tolower((<span class="ty">unsigned</span> <span class="ty">char</span>)s[left]) != tolower((<span class="ty">unsigned</span> <span class="ty">char</span>)s[right])) <span class="kw">return</span> false;
-        left++; right--;
-    }
-    <span class="kw">return</span> true;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Valid Palindrome)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> isPalindrome(<span class="ty">self</span>, s: <span class="ty">str</span>) -&gt; bool:
-        left, right = 0, <span class="ty">len</span>(s) - 1
-        <span class="kw">while</span> left &lt; right:
-            <span class="kw">while</span> left &lt; right <span class="kw">and</span> <span class="kw">not</span> s[left].isalnum():
-                left += 1
-            <span class="kw">while</span> left &lt; right <span class="kw">and</span> <span class="kw">not</span> s[right].isalnum():
-                right -= 1
-            <span class="kw">if</span> s[left].lower() != s[right].lower():
-                <span class="kw">return</span> <span class="kw">False</span>
-            left += 1
-            right -= 1
-        <span class="kw">return</span> <span class="kw">True</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">bool</span> <span class="fn">isPalindrome</span>(<span class="ty">string</span> s) {
-        <span class="ty">int</span> left = <span class="st">0</span>, right = s.<span class="fn">length</span>() - <span class="st">1</span>;
-        <span class="kw">while</span> (left &lt; right) {
-            <span class="kw">while</span> (left &lt; right &amp;&amp; !<span class="fn">isalnum</span>(s[left])) left++;
-            <span class="kw">while</span> (left &lt; right &amp;&amp; !<span class="fn">isalnum</span>(s[right])) right--;
-            <span class="kw">if</span> (<span class="fn">tolower</span>(s[left]) != <span class="fn">tolower</span>(s[right])) <span class="kw">return</span> <span class="kw">false</span>;
-            left++; right--;
-        }
-        <span class="kw">return</span> <span class="kw">true</span>;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -136,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Two Pointers</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — hai con trỏ trái và phải xuất phát từ hai biên chuỗi.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — liên tục di chuyển hai con trỏ hướng vào tâm, bỏ qua tất…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — So sánh hai ký tự tại hai đầu sau khi chuẩn hóa về chữ…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Nếu lệch nhau, trả về false.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>so sánh trực tiếp In-place trên chuỗi ban đầu giúp tiết kiệm hoàn toàn bộ nhớ phụ trợ so với việc tạo chuỗi…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

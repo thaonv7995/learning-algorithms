@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Min Stack</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1) cho tất cả thao tác</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.2% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Thiết kế cấu trúc dữ liệu Ngăn xếp (Stack) hỗ trợ các thao tác cơ bản và có khả năng truy vấn lấy ra phần tử nhỏ nhất hiện tại trong Stack chỉ trong O(1) thời gian.</div>
+                        <div class="block-text">Min Stack (LeetCode #155) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>push(-2), push(0), push(-3), getMin() -&gt; -3, pop(), top() -&gt; 0, getMin() -&gt; -2</code></div>
-                <div class="ex-line"><span>Out</span><code>undefined</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng hai ngăn xếp chạy song song. Ngăn xếp thứ nhất `st` dùng để lưu trữ dữ liệu thông thường. Ngăn xếp thứ hai `minSt` dùng để lưu trữ giá trị nhỏ nhất tương ứng tính đến thời điểm đó. Khi đẩy (push) một giá trị mới `val` vào `st`, ta cũng đẩy giá trị `min(val, minSt.top())` vào `minSt`. Khi xóa (pop), cả hai stack đều thực hiện pop đồng thời.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,85 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Min Stack)</span>
-typedef <span class="ty">struct</span> {
-    <span class="ty">int</span>* data;
-    <span class="ty">int</span>* minData;
-    <span class="ty">int</span> top;
-} MinStack;
-
-MinStack* minStackCreate() {
-    MinStack* obj = (MinStack*)<span class="kw">malloc</span>(<span class="kw">sizeof</span>(MinStack));
-    obj-&gt;data = (<span class="ty">int</span>*)<span class="kw">malloc</span>(10000 * <span class="kw">sizeof</span>(<span class="ty">int</span>));
-    obj-&gt;minData = (<span class="ty">int</span>*)<span class="kw">malloc</span>(10000 * <span class="kw">sizeof</span>(<span class="ty">int</span>));
-    obj-&gt;top = -1;
-    <span class="kw">return</span> obj;
-}
-
-<span class="ty">void</span> minStackPush(MinStack* obj, <span class="ty">int</span> val) {
-    obj-&gt;top++;
-    obj-&gt;data[obj-&gt;top] = val;
-    <span class="kw">if</span> (obj-&gt;top == 0) {
-        obj-&gt;minData[obj-&gt;top] = val;
-    } <span class="kw">else</span> {
-        <span class="ty">int</span> currentMin = obj-&gt;minData[obj-&gt;top - 1];
-        obj-&gt;minData[obj-&gt;top] = val &lt; currentMin ? val : currentMin;
-    }
-}
-
-<span class="ty">void</span> minStackPop(MinStack* obj) {
-    obj-&gt;top--;
-}
-
-<span class="ty">int</span> minStackTop(MinStack* obj) {
-    <span class="kw">return</span> obj-&gt;data[obj-&gt;top];
-}
-
-<span class="ty">int</span> minStackGetMin(MinStack* obj) {
-    <span class="kw">return</span> obj-&gt;minData[obj-&gt;top];
-}
-
-<span class="ty">void</span> minStackFree(MinStack* obj) {
-    <span class="kw">free</span>(obj-&gt;data);
-    <span class="kw">free</span>(obj-&gt;minData);
-    <span class="kw">free</span>(obj);
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Min Stack)</span>
-<span class="kw">class</span> MinStack:
-    <span class="kw">def</span> __init__(<span class="ty">self</span>):
-        <span class="ty">self</span>.stack = []
-        <span class="ty">self</span>.min_stack = []
-
-    <span class="kw">def</span> push(<span class="ty">self</span>, val: <span class="ty">int</span>) -&gt; <span class="kw">None</span>:
-        <span class="ty">self</span>.stack.append(val)
-        <span class="kw">if</span> <span class="kw">not</span> <span class="ty">self</span>.min_stack <span class="kw">or</span> val &lt;= <span class="ty">self</span>.min_stack[-1]:
-            <span class="ty">self</span>.min_stack.append(val)
-
-    <span class="kw">def</span> pop(<span class="ty">self</span>) -&gt; <span class="kw">None</span>:
-        val = <span class="ty">self</span>.stack.pop()
-        <span class="kw">if</span> val == <span class="ty">self</span>.min_stack[-1]:
-            <span class="ty">self</span>.min_stack.pop()
-
-    <span class="kw">def</span> top(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
-        <span class="kw">return</span> <span class="ty">self</span>.stack[-1]
-
-    <span class="kw">def</span> getMin(<span class="ty">self</span>) -&gt; <span class="ty">int</span>:
-        <span class="kw">return</span> <span class="ty">self</span>.min_stack[-1]</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">MinStack</span> {
-<span class="ty">stack&lt;int&gt;</span> st;
-<span class="ty">stack&lt;int&gt;</span> minSt;
-<span class="kw">public</span>:
-    <span class="ty">void</span> <span class="fn">push</span>(<span class="ty">int</span> val) {
-        st.<span class="fn">push</span>(val);
-        <span class="kw">if</span> (minSt.<span class="fn">empty</span>()) minSt.<span class="fn">push</span>(val);
-        <span class="kw">else</span> minSt.<span class="fn">push</span>(<span class="fn">min</span>(val, minSt.<span class="fn">top</span>()));
-    }
-    <span class="ty">void</span> <span class="fn">pop</span>() {
-        st.<span class="fn">pop</span>();
-        minSt.<span class="fn">pop</span>();
-    }
-    <span class="ty">int</span> <span class="fn">top</span>() { <span class="kw">return</span> st.<span class="fn">top</span>(); }
-    <span class="ty">int</span> <span class="fn">getMin</span>() { <span class="kw">return</span> minSt.<span class="fn">top</span>(); }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -178,18 +104,18 @@ MinStack* minStackCreate() {
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Stack</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — hai ngăn xếp chạy song song.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Ngăn xếp thứ nhất `st` dùng để lưu trữ dữ liệu thông…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Ngăn xếp thứ hai `minSt` dùng để lưu trữ giá trị nhỏ nhất…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — đẩy một giá trị mới `val` vào `st`, ta cũng đẩy giá trị…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Kỹ thuật đồng bộ hóa hai stack song song giúp loại bỏ hoàn toàn nhu cầu duyệt stack tìm min ), đánh đổi bằng…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

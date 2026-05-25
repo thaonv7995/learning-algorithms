@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Unique Paths</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(M * N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(m×n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(m×n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>66.8% AC</span>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Một robot ở góc trên bên trái của lưới m x n. Robot chỉ có thể di chuyển xuống dưới hoặc sang phải tại bất kỳ thời điểm nào. Robot muốn đi tới góc dưới bên phải. Hãy tính số lượng con đường độc nhất robot có thể đi.</div>
+                        <div class="block-text">Robot ở góc trên-trái lưới m×n, chỉ đi xuống hoặc sang phải. Đếm số đường tới góc dưới-phải.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
@@ -66,6 +66,11 @@
                 <div class="ex-label">Ví dụ 1</div>
                 <div class="ex-line"><span>In</span><code>m = 3, n = 7</code></div>
                 <div class="ex-line"><span>Out</span><code>28</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>m = 3, n = 2</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng Quy hoạch động lập bảng. Số lượng con đường đi đến ô `(r, c)` bằng tổng số con đường đi đến ô phía trên `(r-1, c)` và ô bên trái `(r, c-1)`. Do ta chỉ cần thông tin của hàng phía trên và ô bên trái hiện tại, ta có thể tối ưu bộ nhớ chỉ sử dụng mảng 1D kích thước `n` (số cột) liên tục cập nhật cộng dồn.</div>
+                        <div class="block-text">DP: dp[i][j] = dp[i-1][j] + dp[i][j-1]. Hàng/cột đầu = 1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,36 +95,21 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Unique Paths)</span>
-<span class="ty">int</span> uniquePaths(<span class="ty">int</span> m, <span class="ty">int</span> n) {
-    <span class="ty">int</span> dp[m][n];
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; m; i++) dp[i][0] = 1;
-    <span class="kw">for</span> (<span class="ty">int</span> j = 0; j &lt; n; j++) dp[0][j] = 1;
-    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; m; i++) {
-        <span class="kw">for</span> (<span class="ty">int</span> j = 1; j &lt; n; j++) {
-            dp[i][j] = dp[i-1][j] + dp[i][j-1];
-        }
-    }
-    <span class="kw">return</span> dp[m-1][n-1];
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Unique Paths)</span>
-<span class="kw">class</span> Solution:
+                            <pre class="code-block" id="code-block-c">/* DP 1 hàng — xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> uniquePaths(<span class="ty">self</span>, m: <span class="ty">int</span>, n: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
-        dp = [1] * n
-        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, m):
+        dp = [1]*n
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="ty">range</span>(1, m):
             <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(1, n):
-                dp[j] += dp[j - 1]
+                dp[j] += dp[j-1]
         <span class="kw">return</span> dp[-1]</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">int</span> <span class="fn">uniquePaths</span>(<span class="ty">int</span> m, <span class="ty">int</span> n) {
-        <span class="ty">vector&lt;int&gt;</span> dp(n, <span class="st">1</span>); <span class="cm">// Hang dau toan bo la 1</span>
-        <span class="kw">for</span> (<span class="ty">int</span> r = <span class="st">1</span>; r &lt; m; r++) {
-            <span class="kw">for</span> (<span class="ty">int</span> c = <span class="st">1</span>; c &lt; n; c++) {
-                dp[c] += dp[c - <span class="st">1</span>]; <span class="cm">// dp[c-1] la o ben trai, dp[c] cu la o phia tren</span>
-            }
-        }
-        <span class="kw">return</span> dp[n - <span class="st">1</span>];
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="ty">int</span> uniquePaths(<span class="ty">int</span> m, <span class="ty">int</span> n) {
+        <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; dp(n, 1);
+        <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; m; i++)
+            <span class="kw">for</span> (<span class="ty">int</span> j = 1; j &lt; n; j++) dp[j] += dp[j-1];
+        <span class="kw">return</span> dp[n-1];
     }
 };</pre>
                         </div>
@@ -130,18 +120,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(M * N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(m×n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(m×n)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Quy hoạch động lập bảng.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Số lượng con đường đi đến ô `` bằng tổng số con đường đi…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Do ta chỉ cần thông tin của hàng phía trên và ô bên trái…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — DP: dp[i][j] = dp[i-1][j] + dp[i][j-1].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Hàng/cột đầu = 1.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Chỉ đi phải/xuống → mọi đường đi qua dp recurrence.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">m=1 hoặc n=1 → 1</span><span class="analysis-tag pit">Overflow với m,n lớn (dùng long)</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>rút gọn không gian trạng thái từ bảng 2D kích thước M*N về mảng 1D kích thước N giúp giải thuật cực kỳ an…</p>
+                        <p>Comb — công thức tổ hợp tương đương.</p>
                     </details>
                 </div>
                 </div>

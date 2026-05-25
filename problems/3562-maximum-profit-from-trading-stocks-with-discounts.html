@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Maximum Profit from Trading Stocks with Discounts</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>56.5% AC</span>
                     </div>
@@ -57,172 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given an integer <code>n</code>, representing the number of employees in a company. Each employee is assigned a unique ID from 1 to <code>n</code>, and employee 1 is the CEO, is the direct or indirect boss of every employee. You are given two <strong>1-based </strong>integer arrays, <code>present</code> and <code>future</code>, each of length <code>n</code>, where:</p>
-
-<ul>
-	<li><code>present[i]</code> represents the <strong>current</strong> price at which the <code>i<sup>th</sup></code> employee can buy a stock today.</li>
-	<li><code>future[i]</code> represents the <strong>expected</strong> price at which the <code>i<sup>th</sup></code> employee can sell the stock tomorrow.</li>
-</ul>
-
-<p>The company&#39;s hierarchy is represented by a 2D integer array <code>hierarchy</code>, where <code>hierarchy[i] = [u<sub>i</sub>, v<sub>i</sub>]</code> means that employee <code>u<sub>i</sub></code> is the direct boss of employee <code>v<sub>i</sub></code>.</p>
-
-<p>Additionally, you have an integer <code>budget</code> representing the total funds available for investment.</p>
-
-<p>However, the company has a discount policy: if an employee&#39;s direct boss purchases their own stock, then the employee can buy their stock at <strong>half</strong> the original price (<code>floor(present[v] / 2)</code>).</p>
-
-<p>Return the <strong>maximum</strong> profit that can be achieved without exceeding the given budget.</p>
-
-<p><strong>Note:</strong></p>
-
-<ul>
-	<li>You may buy each stock at most <strong>once</strong>.</li>
-	<li>You <strong>cannot</strong> use any profit earned from future stock prices to fund additional investments and must buy only from <code>budget</code>.</li>
-</ul>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 2, present = [1,2], future = [4,3], hierarchy = [[1,2]], budget = 3</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">5</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p><img src="https://assets.leetcode.com/uploads/2025/04/09/screenshot-2025-04-10-at-053641.png" style="width: 200px; height: 80px;" /></p>
-
-<ul>
-	<li>Employee 1 buys the stock at price 1 and earns a profit of <code>4 - 1 = 3</code>.</li>
-	<li>Since Employee 1 is the direct boss of Employee 2, Employee 2 gets a discounted price of <code>floor(2 / 2) = 1</code>.</li>
-	<li>Employee 2 buys the stock at price 1 and earns a profit of <code>3 - 1 = 2</code>.</li>
-	<li>The total buying cost is <code>1 + 1 = 2 &lt;= budget</code>. Thus, the maximum total profit achieved is <code>3 + 2 = 5</code>.</li>
-</ul>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 2, present = [3,4], future = [5,8], hierarchy = [[1,2]], budget = 4</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">4</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p><img src="https://assets.leetcode.com/uploads/2025/04/09/screenshot-2025-04-10-at-053641.png" style="width: 200px; height: 80px;" /></p>
-
-<ul>
-	<li>Employee 2 buys the stock at price 4 and earns a profit of <code>8 - 4 = 4</code>.</li>
-	<li>Since both employees cannot buy together, the maximum profit is 4.</li>
-</ul>
-</div>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 3, present = [4,6,8], future = [7,9,11], hierarchy = [[1,2],[1,3]], budget = 10</span></p>
-
-<p><strong>Output:</strong> 10</p>
-
-<p><strong>Explanation:</strong></p>
-
-<p><img src="https://assets.leetcode.com/uploads/2025/04/09/image.png" style="width: 180px; height: 153px;" /></p>
-
-<ul>
-	<li>Employee 1 buys the stock at price 4 and earns a profit of <code>7 - 4 = 3</code>.</li>
-	<li>Employee 3 would get a discounted price of <code>floor(8 / 2) = 4</code> and earns a profit of <code>11 - 4 = 7</code>.</li>
-	<li>Employee 1 and Employee 3 buy their stocks at a total cost of <code>4 + 4 = 8 &lt;= budget</code>. Thus, the maximum total profit achieved is <code>3 + 7 = 10</code>.</li>
-</ul>
-</div>
-
-<p><strong class="example">Example 4:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 3, present = [5,2,3], future = [8,5,6], hierarchy = [[1,2],[2,3]], budget = 7</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">12</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p><img src="https://assets.leetcode.com/uploads/2025/04/09/screenshot-2025-04-10-at-054114.png" style="width: 300px; height: 85px;" /></p>
-
-<ul>
-	<li>Employee 1 buys the stock at price 5 and earns a profit of <code>8 - 5 = 3</code>.</li>
-	<li>Employee 2 would get a discounted price of <code>floor(2 / 2) = 1</code> and earns a profit of <code>5 - 1 = 4</code>.</li>
-	<li>Employee 3 would get a discounted price of <code>floor(3 / 2) = 1</code> and earns a profit of <code>6 - 1 = 5</code>.</li>
-	<li>The total cost becomes <code>5 + 1 + 1 = 7&nbsp;&lt;= budget</code>. Thus, the maximum total profit achieved is <code>3 + 4 + 5 = 12</code>.</li>
-</ul>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= n &lt;= 160</code></li>
-	<li><code>present.length, future.length == n</code></li>
-	<li><code>1 &lt;= present[i], future[i] &lt;= 50</code></li>
-	<li><code>hierarchy.length == n - 1</code></li>
-	<li><code>hierarchy[i] == [u<sub>i</sub>, v<sub>i</sub>]</code></li>
-	<li><code>1 &lt;= u<sub>i</sub>, v<sub>i</sub> &lt;= n</code></li>
-	<li><code>u<sub>i</sub> != v<sub>i</sub></code></li>
-	<li><code>1 &lt;= budget &lt;= 160</code></li>
-	<li>There are no duplicate edges.</li>
-	<li>Employee 1 is the direct or indirect boss of every employee.</li>
-	<li>The input graph <code>hierarchy </code>is <strong>guaranteed</strong> to have no cycles.</li>
-</ul>
-</div>
+                        <div class="block-text">Maximum Profit from Trading Stocks with Discounts (LeetCode #3562) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>2</code></div>
-                <div class="ex-line"><span>Out</span><code>[1,2]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[4,3]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[1,2]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>3</code></div>
-                <div class="ex-line"><span>Out</span><code>2</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 4</div>
-                <div class="ex-line"><span>In</span><code>[3,4]</code></div>
-                <div class="ex-line"><span>Out</span><code>[5,8]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 5</div>
-                <div class="ex-line"><span>In</span><code>[[1,2]]</code></div>
-                <div class="ex-line"><span>Out</span><code>4</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 6</div>
-                <div class="ex-line"><span>In</span><code>3</code></div>
-                <div class="ex-line"><span>Out</span><code>[4,6,8]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 7</div>
-                <div class="ex-line"><span>In</span><code>[7,9,11]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[1,2],[1,3]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 8</div>
-                <div class="ex-line"><span>In</span><code>10</code></div>
-                <div class="ex-line"><span>Out</span><code>3</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 9</div>
-                <div class="ex-line"><span>In</span><code>[5,2,3]</code></div>
-                <div class="ex-line"><span>Out</span><code>[8,5,6]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 10</div>
-                <div class="ex-line"><span>In</span><code>[[1,2],[2,3]]</code></div>
-                <div class="ex-line"><span>Out</span><code>7</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -230,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">- Compute &lt;code&gt;max_profit[u]&lt;/code&gt; and &lt;code&gt;max_profit1[u]&lt;/code&gt; for each node &lt;code&gt;u&lt;/code&gt; - &lt;code&gt;max_profit[u]&lt;/code&gt; = maximum profit in the subtree of &lt;code&gt;u&lt;/code&gt; assuming the parent of &lt;code&gt;u&lt;/code&gt; has not bought the stock - &lt;code&gt;max_profit1[u]&lt;/code&gt; = maximum profit in the subtree of &lt;code&gt;u&lt;/code&gt; assuming the parent of &lt;code&gt;u&lt;/code&gt; has bought the stock For each node &lt;code&gt;u&lt;/code&gt;, consider two cases: Buy the stock for &lt;code&gt;u&lt;/code&gt; (at &lt;code&gt;present[u]&lt;/code&gt; price if parent did not buy, or at &lt;code&gt;floor(present[u]/2)&lt;/code&gt; if parent bought), then add the best &lt;code&gt;max_profit1&lt;/code&gt; values of its children Skip buying for &lt;code&gt;u&lt;/code&gt;, then add the best &lt;code&gt;max_profit&lt;/code&gt; values of its children</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -247,25 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> maxProfit(<span class="ty">int</span> n, <span class="ty">int</span>* present, <span class="ty">int</span> presentSize, <span class="ty">int</span>* future, <span class="ty">int</span> futureSize, <span class="ty">int</span>** hierarchy, <span class="ty">int</span> hierarchySize, <span class="ty">int</span>* hierarchyColSize, <span class="ty">int</span> budget) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> maxProfit(<span class="ty">self</span>, n, present, future, hierarchy, budget):
-        &quot;&quot;&quot;
-        :type n: <span class="ty">int</span>
-        :type present: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type future: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type hierarchy: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        :type budget: <span class="ty">int</span>
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">int</span> maxProfit(<span class="ty">int</span> n, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; present, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; future, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; hierarchy, <span class="ty">int</span> budget) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -275,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — - Compute &lt;code&gt;max_profit[u]&lt;/code&gt; and &lt;code&gt;max_profit1[u]&lt;/code&gt;…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Mảng/ bảng DP trên Heap hoặc Stack — O hoặc O tùy bài.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

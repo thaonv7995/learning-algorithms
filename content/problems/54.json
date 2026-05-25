@@ -1,0 +1,25 @@
+{
+  "id": 54,
+  "title": "Spiral Matrix",
+  "difficulty": "Medium",
+  "category": "Matrix",
+  "timeComplexity": "O(M·N)",
+  "spaceComplexity": "O(1)",
+  "description": "Trả về mọi phần tử ma trận m×n theo thứ tự xoắn ốc (spiral).",
+  "examples": [
+    { "input": "matrix = [[1,2,3],[4,5,6],[7,8,9]]", "output": "[1,2,3,6,9,8,7,4,5]" }
+  ],
+  "approach": "Biên top/bot/left/right: đi phải → xuống → trái → lên, thu hẹp biên sau mỗi vòng.",
+  "memoryTip": "Chỉ mảng kết quả O(mn) — duyệt in-place biên.",
+  "solutions": {
+    "python": "class Solution:\n    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:\n        if not matrix: return []\n        t,b,l,r=0,len(matrix)-1,0,len(matrix[0])-1\n        res=[]\n        while t<=b and l<=r:\n            for c in range(l,r+1): res.append(matrix[t][c])\n            t+=1\n            for i in range(t,b+1): res.append(matrix[i][r])\n            r-=1\n            if t<=b:\n                for c in range(r,l-1,-1): res.append(matrix[b][c])\n                b-=1\n            if l<=r:\n                for i in range(b,t-1,-1): res.append(matrix[i][l])\n                l+=1\n        return res",
+    "cpp": "class Solution {\npublic:\n    vector<int> spiralOrder(vector<vector<int>>& m) {\n        vector<int> res; if(m.empty()) return res;\n        int t=0,b=m.size()-1,l=0,r=m[0].size()-1;\n        while(t<=b&&l<=r){\n            for(int c=l;c<=r;c++) res.push_back(m[t][c]); t++;\n            for(int i=t;i<=b;i++) res.push_back(m[i][r]); r--;\n            if(t<=b){ for(int c=r;c>=l;c--) res.push_back(m[b][c]); b--; }\n            if(l<=r){ for(int i=b;i>=t;i--) res.push_back(m[i][l]); l++; }\n        }\n        return res;\n    }\n};",
+    "c": "/* spiralOrder — four boundaries; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Mỗi ô vào res đúng một lần theo spiral.",
+    "edgeCases": ["1 hàng", "1 cột", "1×1"],
+    "pitfalls": ["Quên if t<=b / l<=r", "Nhầm chiều cuối"]
+  },
+  "tier": "done"
+}

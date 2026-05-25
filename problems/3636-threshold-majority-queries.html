@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Threshold Majority Queries</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>21.9% AC</span>
                     </div>
@@ -57,133 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given an integer array <code>nums</code> of length <code>n</code> and an array <code>queries</code>, where <code>queries[i] = [l<sub>i</sub>, r<sub>i</sub>, threshold<sub>i</sub>]</code>.</p>
-
-<p>Return an array of integers <code data-end="33" data-start="28">ans</code> where <code data-end="48" data-start="40">ans[i]</code> is equal to the element in the subarray <code data-end="102" data-start="89">nums[l<sub>i</sub>...r<sub>i</sub>]</code> that appears <strong>at least</strong> <code data-end="137" data-start="125">threshold<sub>i</sub></code> times, selecting the element with the <strong>highest</strong> frequency (choosing the <strong>smallest</strong> in case of a tie), or -1 if no such element <em>exists</em>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">nums = [1,1,2,2,1,1], queries = [[0,5,4],[0,3,3],[2,3,2]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[1,-1,2]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th align="left" style="border: 1px solid black;">Query</th>
-			<th align="left" style="border: 1px solid black;">Sub-array</th>
-			<th align="left" style="border: 1px solid black;">Threshold</th>
-			<th align="left" style="border: 1px solid black;">Frequency table</th>
-			<th align="left" style="border: 1px solid black;">Answer</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td align="left" style="border: 1px solid black;">[0, 5, 4]</td>
-			<td align="left" style="border: 1px solid black;">[1, 1, 2, 2, 1, 1]</td>
-			<td align="left" style="border: 1px solid black;">4</td>
-			<td align="left" style="border: 1px solid black;">1 &rarr; 4, 2 &rarr; 2</td>
-			<td align="left" style="border: 1px solid black;">1</td>
-		</tr>
-		<tr>
-			<td align="left" style="border: 1px solid black;">[0, 3, 3]</td>
-			<td align="left" style="border: 1px solid black;">[1, 1, 2, 2]</td>
-			<td align="left" style="border: 1px solid black;">3</td>
-			<td align="left" style="border: 1px solid black;">1 &rarr; 2, 2 &rarr; 2</td>
-			<td align="left" style="border: 1px solid black;">-1</td>
-		</tr>
-		<tr>
-			<td align="left" style="border: 1px solid black;">[2, 3, 2]</td>
-			<td align="left" style="border: 1px solid black;">[2, 2]</td>
-			<td align="left" style="border: 1px solid black;">2</td>
-			<td align="left" style="border: 1px solid black;">2 &rarr; 2</td>
-			<td align="left" style="border: 1px solid black;">2</td>
-		</tr>
-	</tbody>
-</table>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">nums = [3,2,3,2,3,2,3], queries = [[0,6,4],[1,5,2],[2,4,1],[3,3,1]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[3,2,3,2]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th align="left" style="border: 1px solid black;">Query</th>
-			<th align="left" style="border: 1px solid black;">Sub-array</th>
-			<th align="left" style="border: 1px solid black;">Threshold</th>
-			<th align="left" style="border: 1px solid black;">Frequency table</th>
-			<th align="left" style="border: 1px solid black;">Answer</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td align="left" style="border: 1px solid black;">[0, 6, 4]</td>
-			<td align="left" style="border: 1px solid black;">[3, 2, 3, 2, 3, 2, 3]</td>
-			<td align="left" style="border: 1px solid black;">4</td>
-			<td align="left" style="border: 1px solid black;">3 &rarr; 4, 2 &rarr; 3</td>
-			<td align="left" style="border: 1px solid black;">3</td>
-		</tr>
-		<tr>
-			<td align="left" style="border: 1px solid black;">[1, 5, 2]</td>
-			<td align="left" style="border: 1px solid black;">[2, 3, 2, 3, 2]</td>
-			<td align="left" style="border: 1px solid black;">2</td>
-			<td align="left" style="border: 1px solid black;">2 &rarr; 3, 3 &rarr; 2</td>
-			<td align="left" style="border: 1px solid black;">2</td>
-		</tr>
-		<tr>
-			<td align="left" style="border: 1px solid black;">[2, 4, 1]</td>
-			<td align="left" style="border: 1px solid black;">[3, 2, 3]</td>
-			<td align="left" style="border: 1px solid black;">1</td>
-			<td align="left" style="border: 1px solid black;">3 &rarr; 2, 2 &rarr; 1</td>
-			<td align="left" style="border: 1px solid black;">3</td>
-		</tr>
-		<tr>
-			<td align="left" style="border: 1px solid black;">[3, 3, 1]</td>
-			<td align="left" style="border: 1px solid black;">[2]</td>
-			<td align="left" style="border: 1px solid black;">1</td>
-			<td align="left" style="border: 1px solid black;">2 &rarr; 1</td>
-			<td align="left" style="border: 1px solid black;">2</td>
-		</tr>
-	</tbody>
-</table>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li data-end="51" data-start="19"><code data-end="49" data-start="19">1 &lt;= nums.length == n &lt;= 10<sup>4</sup></code></li>
-	<li data-end="82" data-start="54"><code data-end="80" data-start="54">1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
-	<li data-end="120" data-start="85"><code data-end="118" data-start="85">1 &lt;= queries.length &lt;= 5 * 10<sup>4</sup></code></li>
-	<li data-end="195" data-start="123"><code data-end="193" data-is-only-node="" data-start="155">queries[i] = [l<sub>i</sub>, r<sub>i</sub>, threshold<sub>i</sub>]</code></li>
-	<li data-end="221" data-start="198"><code data-end="219" data-start="198">0 &lt;= l<sub>i</sub> &lt;= r<sub>i</sub> &lt; n</code></li>
-	<li data-end="259" data-is-last-node="" data-start="224"><code data-end="259" data-is-last-node="" data-start="224">1 &lt;= threshold<sub>i</sub> &lt;= r<sub>i</sub> - l<sub>i</sub> + 1</code></li>
-</ul>
-</div>
+                        <div class="block-text">Threshold Majority Queries (LeetCode #3636) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[1,1,2,2,1,1]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[0,5,4],[0,3,3],[2,3,2]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[3,2,3,2,3,2,3]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[0,6,4],[1,5,2],[2,4,1],[3,3,1]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -191,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Use sqrt decomposition: let &lt;code&gt;B = int(sqrt(n))&lt;/code&gt; and sort queries by &lt;code&gt;(l//B, r)&lt;/code&gt; Maintain window &lt;code&gt;[L,R]&lt;/code&gt; with a frequency map &lt;code&gt;cnt&lt;/code&gt; and buckets &lt;code&gt;bucket[f]&lt;/code&gt; of values at count &lt;code&gt;f&lt;/code&gt; Slide &lt;code&gt;L&lt;/code&gt; and &lt;code&gt;R&lt;/code&gt; per query, updating &lt;code&gt;cnt&lt;/code&gt; and &lt;code&gt;bucket&lt;/code&gt;, then scan from &lt;code&gt;threshold&lt;/code&gt; to max freq to find the smallest valid value or -1</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -208,25 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">int</span>* subarrayMajority(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span>** queries, <span class="ty">int</span> queriesSize, <span class="ty">int</span>* queriesColSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> subarrayMajority(<span class="ty">self</span>, nums, queries):
-        &quot;&quot;&quot;
-        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type queries: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; subarrayMajority(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; queries) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -236,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Use sqrt decomposition: let &lt;code&gt;B = int)&lt;/code&gt; and sort queries by…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

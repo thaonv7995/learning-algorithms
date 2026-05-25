@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #48</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Matrix</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Rotate Image</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N²)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>80.1% AC</span>
                     </div>
@@ -57,42 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given an <code>n x n</code> 2D <code>matrix</code> representing an image, rotate the image by <strong>90</strong> degrees (clockwise).</p>
-
-<p>You have to rotate the image <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank"><strong>in-place</strong></a>, which means you have to modify the input 2D matrix directly. <strong>DO NOT</strong> allocate another 2D matrix and do the rotation.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-<img alt="" src="https://assets.leetcode.com/uploads/2020/08/28/mat1.jpg" style="width: 500px; height: 188px;" />
-<pre>
-<strong>Input:</strong> matrix = [[1,2,3],[4,5,6],[7,8,9]]
-<strong>Output:</strong> [[7,4,1],[8,5,2],[9,6,3]]
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-<img alt="" src="https://assets.leetcode.com/uploads/2020/08/28/mat2.jpg" style="width: 500px; height: 201px;" />
-<pre>
-<strong>Input:</strong> matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
-<strong>Output:</strong> [[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>n == matrix.length == matrix[i].length</code></li>
-	<li><code>1 &lt;= n &lt;= 20</code></li>
-	<li><code>-1000 &lt;= matrix[i][j] &lt;= 1000</code></li>
-</ul>
-</div>
+                        <div class="block-text">Xoay ma trận vuông n×n 90° theo chiều kim đồng hồ, in-place.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[[1,2,3],[4,5,6],[7,8,9]]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]</code></div>
+                <div class="ex-line"><span>In</span><code>matrix = [[1,2,3],[4,5,6],[7,8,9]]</code></div>
+                <div class="ex-line"><span>Out</span><code>[[7,4,1],[8,5,2],[9,6,3]]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -100,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Array kết hợp Math. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">(1) Transpose: swap matrix[i][j] với matrix[j][i]. (2) Reverse từng hàng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -117,20 +90,30 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">void</span> rotate(<span class="ty">int</span>** matrix, <span class="ty">int</span> matrixSize, <span class="ty">int</span>* matrixColSize) {
-    
+                            <pre class="code-block" id="code-block-c"><span class="ty">void</span> rotate(<span class="ty">int</span>** matrix, <span class="ty">int</span> n, <span class="ty">int</span>* cs) {
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++)
+        <span class="kw">for</span> (<span class="ty">int</span> j = i + 1; j &lt; n; j++) {
+            <span class="ty">int</span> t = matrix[i][j]; matrix[i][j] = matrix[j][i]; matrix[j][i] = t;
+        }
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++)
+        <span class="kw">for</span> (<span class="ty">int</span> l = 0, r = n - 1; l &lt; r; l++, r--) {
+            <span class="ty">int</span> t = matrix[i][l]; matrix[i][l] = matrix[i][r]; matrix[i][r] = t;
+        }
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> rotate(<span class="ty">self</span>, matrix):
-        &quot;&quot;&quot;
-        :type matrix: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        :rtype: <span class="kw">None</span> Do <span class="kw">not</span> <span class="kw">return</span> anything, modify matrix <span class="kw">in</span>-place instead.
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> rotate(<span class="ty">self</span>, matrix: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]) -&gt; <span class="kw">None</span>:
+        n = <span class="ty">len</span>(matrix)
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            <span class="kw">for</span> j <span class="kw">in</span> <span class="ty">range</span>(i+1, n):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+        <span class="kw">for</span> row <span class="kw">in</span> matrix:
+            row.reverse()</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">void</span> rotate(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; matrix) {
-        
+    <span class="ty">void</span> rotate(<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; m) {
+        <span class="ty">int</span> n=m.size();
+        <span class="kw">for</span>(<span class="ty">int</span> i=0;i&lt;n;i++) <span class="kw">for</span>(<span class="ty">int</span> j=i+1;j&lt;n;j++) swap(m[i][j],m[j][i]);
+        <span class="kw">for</span>(auto&amp; r:m) reverse(r.begin(),r.end());
     }
 };</pre>
                         </div>
@@ -140,19 +123,19 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="pattern-chip">Matrix</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N²)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Array kết hợp Math.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Transpose: swap matrix[i][j] với matrix[j][i].</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Reverse từng hàng.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Transpose + reverse hàng = xoay 90° CW.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=1</span><span class="analysis-tag edge">n=2</span><span class="analysis-tag pit">Tạo matrix mới</span><span class="analysis-tag pit">Xoay từng vòng 4 ô phức tạp hơn cần</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Chỉ swap in-place — O extra.</p>
                     </details>
                 </div>
                 </div>
@@ -169,7 +152,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Rotate%20Image&lc_id=48&embed=true"></iframe>

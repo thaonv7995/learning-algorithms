@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Mini Parser</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>42.6% AC</span>
                     </div>
@@ -57,50 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given a string s represents the serialization of a nested list, implement a parser to deserialize it and return <em>the deserialized</em> <code>NestedInteger</code>.</p>
-
-<p>Each element is either an integer or a list whose elements may also be integers or other lists.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> s = &quot;324&quot;
-<strong>Output:</strong> 324
-<strong>Explanation:</strong> You should return a NestedInteger object which contains a single integer 324.
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> s = &quot;[123,[456,[789]]]&quot;
-<strong>Output:</strong> [123,[456,[789]]]
-<strong>Explanation:</strong> Return a NestedInteger object containing a nested list with 2 elements:
-1. An integer containing value 123.
-2. A nested list containing two elements:
-    i.  An integer containing value 456.
-    ii. A nested list with one element:
-         a. An integer containing value 789
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= s.length &lt;= 5 * 10<sup>4</sup></code></li>
-	<li><code>s</code> consists of digits, square brackets <code>&quot;[]&quot;</code>, negative sign <code>&#39;-&#39;</code>, and commas <code>&#39;,&#39;</code>.</li>
-	<li><code>s</code> is the serialization of valid <code>NestedInteger</code>.</li>
-	<li>All the values in the input are in the range <code>[-10<sup>6</sup>, 10<sup>6</sup>]</code>.</li>
-</ul>
-</div>
+                        <div class="block-text">Mini Parser (LeetCode #385) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;324&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;[123,[456,[789]]]&quot;</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -108,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật String kết hợp Stack. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -125,124 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * *********************************************************************
- * <span class="cm">// This is the interface that allows <span class="kw">for</span> creating nested lists.</span>
- * <span class="cm">// You should not implement it, or speculate about its implementation</span>
- * *********************************************************************
- *
- * <span class="cm">// Initializes an empty nested list and <span class="kw">return</span> a reference to the nested integer.</span>
- * <span class="ty">struct</span> NestedInteger *NestedIntegerInit();
- *
- * <span class="cm">// Return true <span class="kw">if</span> this NestedInteger holds a single integer, rather than a nested list.</span>
- * <span class="ty">bool</span> NestedIntegerIsInteger(<span class="ty">struct</span> NestedInteger *);
- *
- * <span class="cm">// Return the single integer that this NestedInteger holds, <span class="kw">if</span> it holds a single integer</span>
- * <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a nested list</span>
- * <span class="ty">int</span> NestedIntegerGetInteger(<span class="ty">struct</span> NestedInteger *);
- *
- * <span class="cm">// Set this NestedInteger to hold a single integer.</span>
- * <span class="ty">void</span> NestedIntegerSetInteger(<span class="ty">struct</span> NestedInteger *ni, <span class="ty">int</span> value);
- *
- * <span class="cm">// Set this NestedInteger to hold a nested list and adds a nested integer elem to it.</span>
- * <span class="ty">void</span> NestedIntegerAdd(<span class="ty">struct</span> NestedInteger *ni, <span class="ty">struct</span> NestedInteger *elem);
- *
- * <span class="cm">// Return the nested list that this NestedInteger holds, <span class="kw">if</span> it holds a nested list</span>
- * <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a single integer</span>
- * <span class="ty">struct</span> NestedInteger **NestedIntegerGetList(<span class="ty">struct</span> NestedInteger *);
- *
- * <span class="cm">// Return the nested list's size that this NestedInteger holds, <span class="kw">if</span> it holds a nested list</span>
- * <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a single integer</span>
- * <span class="ty">int</span> NestedIntegerGetListSize(<span class="ty">struct</span> NestedInteger *);
- * };
- */
-<span class="ty">struct</span> NestedInteger* deserialize(<span class="ty">char</span>* s) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># &quot;&quot;&quot;</span>
-<span class="cm"># This is the interface that allows <span class="kw">for</span> creating nested lists.</span>
-<span class="cm"># You should <span class="kw">not</span> implement it, <span class="kw">or</span> speculate about its implementation</span>
-<span class="cm"># &quot;&quot;&quot;</span>
-<span class="cm">#<span class="kw">class</span> NestedInteger(object):</span>
-<span class="cm">#    <span class="kw">def</span> __init__(<span class="ty">self</span>, value=<span class="kw">None</span>):</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#        If value is <span class="kw">not</span> specified, initializes an empty <span class="ty">list</span>.</span>
-<span class="cm">#        Otherwise initializes a single integer equal to value.</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#</span>
-<span class="cm">#    <span class="kw">def</span> isInteger(<span class="ty">self</span>):</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#        @<span class="kw">return</span> <span class="kw">True</span> <span class="kw">if</span> this NestedInteger holds a single integer, rather than a nested <span class="ty">list</span>.</span>
-<span class="cm">#        :rtype bool</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#</span>
-<span class="cm">#    <span class="kw">def</span> add(<span class="ty">self</span>, elem):</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#        Set this NestedInteger to hold a nested <span class="ty">list</span> <span class="kw">and</span> adds a nested integer elem to it.</span>
-<span class="cm">#        :rtype void</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#</span>
-<span class="cm">#    <span class="kw">def</span> setInteger(<span class="ty">self</span>, value):</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#        Set this NestedInteger to hold a single integer equal to value.</span>
-<span class="cm">#        :rtype void</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#</span>
-<span class="cm">#    <span class="kw">def</span> getInteger(<span class="ty">self</span>):</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#        @<span class="kw">return</span> the single integer that this NestedInteger holds, <span class="kw">if</span> it holds a single integer</span>
-<span class="cm">#        Return <span class="kw">None</span> <span class="kw">if</span> this NestedInteger holds a nested <span class="ty">list</span></span>
-<span class="cm">#        :rtype <span class="ty">int</span></span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#</span>
-<span class="cm">#    <span class="kw">def</span> getList(<span class="ty">self</span>):</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-<span class="cm">#        @<span class="kw">return</span> the nested <span class="ty">list</span> that this NestedInteger holds, <span class="kw">if</span> it holds a nested <span class="ty">list</span></span>
-<span class="cm">#        Return <span class="kw">None</span> <span class="kw">if</span> this NestedInteger holds a single integer</span>
-<span class="cm">#        :rtype <span class="ty">List</span>[NestedInteger]</span>
-<span class="cm">#        &quot;&quot;&quot;</span>
-
-<span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> deserialize(<span class="ty">self</span>, s):
-        &quot;&quot;&quot;
-        :type s: <span class="ty">str</span>
-        :rtype: NestedInteger
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none">/**
- * <span class="cm">// This is the interface that allows <span class="kw">for</span> creating nested lists.</span>
- * <span class="cm">// You should not implement it, or speculate about its implementation</span>
- * <span class="ty">class</span> NestedInteger {
- *   <span class="ty">public</span>:
- *     <span class="cm">// Constructor initializes an empty nested list.</span>
- *     NestedInteger();
- *
- *     <span class="cm">// Constructor initializes a single integer.</span>
- *     NestedInteger(<span class="ty">int</span> value);
- *
- *     <span class="cm">// Return true <span class="kw">if</span> this NestedInteger holds a single integer, rather than a nested list.</span>
- *     <span class="ty">bool</span> isInteger() <span class="ty">const</span>;
- *
- *     <span class="cm">// Return the single integer that this NestedInteger holds, <span class="kw">if</span> it holds a single integer</span>
- *     <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a nested list</span>
- *     <span class="ty">int</span> getInteger() <span class="ty">const</span>;
- *
- *     <span class="cm">// Set this NestedInteger to hold a single integer.</span>
- *     <span class="ty">void</span> setInteger(<span class="ty">int</span> value);
- *
- *     <span class="cm">// Set this NestedInteger to hold a nested list and adds a nested integer to it.</span>
- *     <span class="ty">void</span> add(<span class="ty">const</span> NestedInteger &amp;ni);
- *
- *     <span class="cm">// Return the nested list that this NestedInteger holds, <span class="kw">if</span> it holds a nested list</span>
- *     <span class="cm">// The result is undefined <span class="kw">if</span> this NestedInteger holds a single integer</span>
- *     <span class="ty">const</span> <span class="ty">vector</span>&lt;NestedInteger&gt; &amp;getList() <span class="ty">const</span>;
- * };
- */
-<span class="ty">class</span> Solution {
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    NestedInteger deserialize(<span class="ty">string</span> s) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -252,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật String kết hợp Stack.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng</span><span class="analysis-tag edge">Một ký tự</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Stack frame hoặc mảng stack — O worst case.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

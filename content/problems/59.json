@@ -1,0 +1,26 @@
+{
+  "id": 59,
+  "title": "Spiral Matrix II",
+  "difficulty": "Medium",
+  "category": "Matrix",
+  "timeComplexity": "O(N²)",
+  "spaceComplexity": "O(1)",
+  "description": "Sinh ma trận n×n chứa 1..n² theo thứ tự spiral.",
+  "examples": [
+    { "input": "n = 3", "output": "[[1,2,3],[8,9,4],[7,6,5]]" },
+    { "input": "n = 1", "output": "[[1]]" }
+  ],
+  "approach": "Biên t,b,l,r + dir; điền val++ theo spiral, thu hẹp biên sau mỗi cạnh.",
+  "memoryTip": "Giống #54 nhưng fill thay vì read.",
+  "solutions": {
+    "python": "class Solution:\n    def generateMatrix(self, n: int) -> List[List[int]]:\n        m=[[0]*n for _ in range(n)]\n        t,b,l,r,val=0,n-1,0,n-1,1\n        while t<=b and l<=r:\n            for c in range(l,r+1): m[t][c]=val; val+=1\n            t+=1\n            for i in range(t,b+1): m[i][r]=val; val+=1\n            r-=1\n            if t<=b:\n                for c in range(r,l-1,-1): m[b][c]=val; val+=1\n                b-=1\n            if l<=r:\n                for i in range(b,t-1,-1): m[i][l]=val; val+=1\n                l+=1\n        return m",
+    "cpp": "class Solution {\npublic:\n    vector<vector<int>> generateMatrix(int n) {\n        vector<vector<int>> m(n,vector<int>(n));\n        int t=0,b=n-1,l=0,r=n-1,v=1;\n        while(t<=b&&l<=r){\n            for(int c=l;c<=r;c++) m[t][c]=v++;\n            t++;\n            for(int i=t;i<=b;i++) m[i][r]=v++;\n            r--;\n            if(t<=b){ for(int c=r;c>=l;c--) m[b][c]=v++; b--; }\n            if(l<=r){ for(int i=b;i>=t;i--) m[i][l]=v++; l++; }\n        }\n        return m;\n    }\n};",
+    "c": "/* generateMatrix — spiral fill; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Mỗi ô nhận đúng một số 1..n².",
+    "edgeCases": ["n=1", "n=2"],
+    "pitfalls": ["Quên điều kiện t<=b", "val++ sai thứ tự"]
+  },
+  "tier": "done"
+}

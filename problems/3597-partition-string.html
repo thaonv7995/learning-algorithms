@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Partition String </h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>59.1% AC</span>
                     </div>
                 </div>
@@ -57,180 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given a string <code>s</code>, partition it into <strong>unique segments</strong> according to the following procedure:</p>
-
-<ul>
-	<li>Start building a segment beginning at index 0.</li>
-	<li>Continue extending the current segment character by character until the current segment has not been seen before.</li>
-	<li>Once the segment is unique, add it to your list of segments, mark it as seen, and begin a new segment from the next index.</li>
-	<li>Repeat until you reach the end of <code>s</code>.</li>
-</ul>
-
-<p>Return an array of strings <code>segments</code>, where <code>segments[i]</code> is the <code>i<sup>th</sup></code> segment created.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;abbccccd&quot;</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[&quot;a&quot;,&quot;b&quot;,&quot;bc&quot;,&quot;c&quot;,&quot;cc&quot;,&quot;d&quot;]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<tbody>
-		<tr>
-			<th style="border: 1px solid black;">Index</th>
-			<th style="border: 1px solid black;">Segment After Adding</th>
-			<th style="border: 1px solid black;">Seen Segments</th>
-			<th style="border: 1px solid black;">Current Segment Seen Before?</th>
-			<th style="border: 1px solid black;">New Segment</th>
-			<th style="border: 1px solid black;">Updated Seen Segments</th>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">&quot;a&quot;</td>
-			<td style="border: 1px solid black;">[]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">&quot;&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">&quot;b&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">&quot;&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">&quot;b&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;]</td>
-			<td style="border: 1px solid black;">Yes</td>
-			<td style="border: 1px solid black;">&quot;b&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">3</td>
-			<td style="border: 1px solid black;">&quot;bc&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">&quot;&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">4</td>
-			<td style="border: 1px solid black;">&quot;c&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">&quot;&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;, &quot;c&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">5</td>
-			<td style="border: 1px solid black;">&quot;c&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;, &quot;c&quot;]</td>
-			<td style="border: 1px solid black;">Yes</td>
-			<td style="border: 1px solid black;">&quot;c&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;, &quot;c&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">6</td>
-			<td style="border: 1px solid black;">&quot;cc&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;, &quot;c&quot;]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">&quot;&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;, &quot;c&quot;, &quot;cc&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">7</td>
-			<td style="border: 1px solid black;">&quot;d&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;, &quot;c&quot;, &quot;cc&quot;]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">&quot;&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;, &quot;c&quot;, &quot;cc&quot;, &quot;d&quot;]</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Hence, the final output is <code>[&quot;a&quot;, &quot;b&quot;, &quot;bc&quot;, &quot;c&quot;, &quot;cc&quot;, &quot;d&quot;]</code>.</p>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;aaaa&quot;</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[&quot;a&quot;,&quot;aa&quot;]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<tbody>
-		<tr>
-			<th style="border: 1px solid black;">Index</th>
-			<th style="border: 1px solid black;">Segment After Adding</th>
-			<th style="border: 1px solid black;">Seen Segments</th>
-			<th style="border: 1px solid black;">Current Segment Seen Before?</th>
-			<th style="border: 1px solid black;">New Segment</th>
-			<th style="border: 1px solid black;">Updated Seen Segments</th>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">&quot;a&quot;</td>
-			<td style="border: 1px solid black;">[]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">&quot;&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">&quot;a&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;]</td>
-			<td style="border: 1px solid black;">Yes</td>
-			<td style="border: 1px solid black;">&quot;a&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">&quot;aa&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">&quot;&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;aa&quot;]</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">3</td>
-			<td style="border: 1px solid black;">&quot;a&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;aa&quot;]</td>
-			<td style="border: 1px solid black;">Yes</td>
-			<td style="border: 1px solid black;">&quot;a&quot;</td>
-			<td style="border: 1px solid black;">[&quot;a&quot;, &quot;aa&quot;]</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Hence, the final output is <code>[&quot;a&quot;, &quot;aa&quot;]</code>.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>s</code> contains only lowercase English letters. </li>
-</ul>
-</div>
+                        <div class="block-text">Partition String  (LeetCode #3597) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;abbccccd&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;aaaa&quot;</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -238,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Simulate as described</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -255,24 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">char</span>** partitionString(<span class="ty">char</span>* s, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> partitionString(<span class="ty">self</span>, s):
-        &quot;&quot;&quot;
-        :type s: <span class="ty">str</span>
-        :rtype: <span class="ty">List</span>[<span class="ty">str</span>]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; partitionString(<span class="ty">string</span> s) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -282,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Simulate as described</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

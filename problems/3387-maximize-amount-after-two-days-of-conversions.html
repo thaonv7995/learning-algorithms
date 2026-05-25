@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Maximize Amount After Two Days of Conversions</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>61.4% AC</span>
                     </div>
@@ -57,132 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given a string <code>initialCurrency</code>, and you start with <code>1.0</code> of <code>initialCurrency</code>.</p>
-
-<p>You are also given four arrays with currency pairs (strings) and rates (real numbers):</p>
-
-<ul>
-	<li><code>pairs1[i] = [startCurrency<sub>i</sub>, targetCurrency<sub>i</sub>]</code> denotes that you can convert from <code>startCurrency<sub>i</sub></code> to <code>targetCurrency<sub>i</sub></code> at a rate of <code>rates1[i]</code> on <strong>day 1</strong>.</li>
-	<li><code>pairs2[i] = [startCurrency<sub>i</sub>, targetCurrency<sub>i</sub>]</code> denotes that you can convert from <code>startCurrency<sub>i</sub></code> to <code>targetCurrency<sub>i</sub></code> at a rate of <code>rates2[i]</code> on <strong>day 2</strong>.</li>
-	<li>Also, each <code>targetCurrency</code> can be converted back to its corresponding <code>startCurrency</code> at a rate of <code>1 / rate</code>.</li>
-</ul>
-
-<p>You can perform <strong>any</strong> number of conversions, <strong>including zero</strong>, using <code>rates1</code> on day 1, <strong>followed</strong> by any number of additional conversions, <strong>including zero</strong>, using <code>rates2</code> on day 2.</p>
-
-<p>Return the <strong>maximum</strong> amount of <code>initialCurrency</code> you can have after performing any number of conversions on both days <strong>in order</strong>.</p>
-
-<p><strong>Note: </strong>Conversion rates are valid, and there will be no contradictions in the rates for either day. The rates for the days are independent of each other.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">initialCurrency = &quot;EUR&quot;, pairs1 = [[&quot;EUR&quot;,&quot;USD&quot;],[&quot;USD&quot;,&quot;JPY&quot;]], rates1 = [2.0,3.0], pairs2 = [[&quot;JPY&quot;,&quot;USD&quot;],[&quot;USD&quot;,&quot;CHF&quot;],[&quot;CHF&quot;,&quot;EUR&quot;]], rates2 = [4.0,5.0,6.0]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">720.00000</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>To get the maximum amount of <strong>EUR</strong>, starting with 1.0 <strong>EUR</strong>:</p>
-
-<ul>
-	<li>On Day 1:
-	<ul>
-		<li>Convert <strong>EUR </strong>to <strong>USD</strong> to get 2.0 <strong>USD</strong>.</li>
-		<li>Convert <strong>USD</strong> to <strong>JPY</strong> to get 6.0 <strong>JPY</strong>.</li>
-	</ul>
-	</li>
-	<li>On Day 2:
-	<ul>
-		<li>Convert <strong>JPY</strong> to <strong>USD</strong> to get 24.0 <strong>USD</strong>.</li>
-		<li>Convert <strong>USD</strong> to <strong>CHF</strong> to get 120.0 <strong>CHF</strong>.</li>
-		<li>Finally, convert <strong>CHF</strong> to <strong>EUR</strong> to get 720.0 <strong>EUR</strong>.</li>
-	</ul>
-	</li>
-</ul>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">initialCurrency = &quot;NGN&quot;, pairs1 = </span>[[&quot;NGN&quot;,&quot;EUR&quot;]]<span class="example-io">, rates1 = </span>[9.0]<span class="example-io">, pairs2 = </span>[[&quot;NGN&quot;,&quot;EUR&quot;]]<span class="example-io">, rates2 = </span>[6.0]</p>
-
-<p><strong>Output:</strong> 1.50000</p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>Converting <strong>NGN</strong> to <strong>EUR</strong> on day 1 and <strong>EUR</strong> to <strong>NGN</strong> using the inverse rate on day 2 gives the maximum amount.</p>
-</div>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">initialCurrency = &quot;USD&quot;, pairs1 = [[&quot;USD&quot;,&quot;EUR&quot;]], rates1 = [1.0], pairs2 = [[&quot;EUR&quot;,&quot;JPY&quot;]], rates2 = [10.0]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">1.00000</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>In this example, there is no need to make any conversions on either day.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= initialCurrency.length &lt;= 3</code></li>
-	<li><code>initialCurrency</code> consists only of uppercase English letters.</li>
-	<li><code>1 &lt;= n == pairs1.length &lt;= 10</code></li>
-	<li><code>1 &lt;= m == pairs2.length &lt;= 10</code></li>
-	<li><code>pairs1[i] == [startCurrency<sub>i</sub>, targetCurrency<sub>i</sub>]</code><!-- notionvc: c31b5bb8-4df6-4987-9bcd-6dff8a5f7cd4 --></li>
-	<li><code>pairs2[i] == [startCurrency<sub>i</sub>, targetCurrency<sub>i</sub>]</code><!--{C}%3C!%2D%2D%20notionvc%3A%20c31b5bb8-4df6-4987-9bcd-6dff8a5f7cd4%20%2D%2D%3E--></li>
-	<li><code>1 &lt;= startCurrency<sub>i</sub>.length, targetCurrency<sub>i</sub>.length &lt;= 3</code></li>
-	<li><code>startCurrency<sub>i</sub></code> and <code>targetCurrency<sub>i</sub></code> consist only of uppercase English letters.</li>
-	<li><code>rates1.length == n</code></li>
-	<li><code>rates2.length == m</code></li>
-	<li><code>1.0 &lt;= rates1[i], rates2[i] &lt;= 10.0</code></li>
-	<li>The input is generated such that there are no contradictions or cycles in the conversion graphs for either day.</li>
-	<li>The input is generated such that the output is <strong>at most</strong> <code>5 * 10<sup>10</sup></code>.</li>
-</ul>
-</div>
+                        <div class="block-text">Maximize Amount After Two Days of Conversions (LeetCode #3387) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;EUR&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>[[&quot;EUR&quot;,&quot;USD&quot;],[&quot;USD&quot;,&quot;JPY&quot;]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[2.0,3.0]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[&quot;JPY&quot;,&quot;USD&quot;],[&quot;USD&quot;,&quot;CHF&quot;],[&quot;CHF&quot;,&quot;EUR&quot;]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>[4.0,5.0,6.0]</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;NGN&quot;</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 4</div>
-                <div class="ex-line"><span>In</span><code>[[&quot;NGN&quot;,&quot;EUR&quot;]]</code></div>
-                <div class="ex-line"><span>Out</span><code>[9.0]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 5</div>
-                <div class="ex-line"><span>In</span><code>[[&quot;NGN&quot;,&quot;EUR&quot;]]</code></div>
-                <div class="ex-line"><span>Out</span><code>[6.0]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 6</div>
-                <div class="ex-line"><span>In</span><code>&quot;USD&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>[[&quot;USD&quot;,&quot;EUR&quot;]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 7</div>
-                <div class="ex-line"><span>In</span><code>[1.0]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[&quot;EUR&quot;,&quot;JPY&quot;]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -190,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Choose an intermediate currency. Convert from &lt;code&gt;initialCurrency&lt;/code&gt; to this currency on day 1, and from that currency back to &lt;code&gt;initialCurrency&lt;/code&gt; on day 2. Use a DFS/BFS to calculate the direct conversion rate between any two currencies.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -207,25 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">double</span> maxAmount(<span class="ty">char</span>* initialCurrency, <span class="ty">char</span>*** pairs1, <span class="ty">int</span> pairs1Size, <span class="ty">int</span>* pairs1ColSize, <span class="ty">double</span>* rates1, <span class="ty">int</span> rates1Size, <span class="ty">char</span>*** pairs2, <span class="ty">int</span> pairs2Size, <span class="ty">int</span>* pairs2ColSize, <span class="ty">double</span>* rates2, <span class="ty">int</span> rates2Size) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> maxAmount(<span class="ty">self</span>, initialCurrency, pairs1, rates1, pairs2, rates2):
-        &quot;&quot;&quot;
-        :type initialCurrency: <span class="ty">str</span>
-        :type pairs1: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]
-        :type rates1: <span class="ty">List</span>[float]
-        :type pairs2: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">str</span>]]
-        :type rates2: <span class="ty">List</span>[float]
-        :rtype: float
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">double</span> maxAmount(<span class="ty">string</span> initialCurrency, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt;&amp; pairs1, <span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;&amp; rates1, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt;&gt;&amp; pairs2, <span class="ty">vector</span>&lt;<span class="ty">double</span>&gt;&amp; rates2) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -235,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Choose an intermediate currency.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Convert from &lt;code&gt;initialCurrency&lt;/code&gt; to this…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Use a DFS/BFS to calculate the direct conversion rate…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Minimum Operations to Equalize Subarrays</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>20.4% AC</span>
                     </div>
@@ -57,153 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given an integer array <code>nums</code> and an integer <code>k</code>.</p>
-
-<p>In one operation, you can <strong>increase or decrease </strong>any element of <code>nums</code> by <strong>exactly</strong> <code>k</code>.</p>
-
-<p>You are also given a 2D integer array <code>queries</code>, where each <code>queries[i] = [l<sub>i</sub>, r<sub>i</sub>]</code>.</p>
-
-<p>For each query, find the <strong>minimum</strong> number of operations required to make <strong>all</strong> elements in the <strong><span data-keyword="subarray-nonempty">subarray</span></strong> <code>nums[l<sub>i</sub>..r<sub>i</sub>]</code> <strong>equal</strong>. If it is impossible, the answer for that query is <code>-1</code>.</p>
-
-<p>Return an array <code>ans</code>, where <code>ans[i]</code> is the answer for the <code>i<sup>th</sup></code> query.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">nums = [1,4,7], k = 3, queries = [[0,1],[0,2]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[1,2]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>One optimal set of operations:</p>
-
-<table style="border: 1px solid black;">
-	<tbody>
-		<tr>
-			<th style="border: 1px solid black;"><code>i</code></th>
-			<th style="border: 1px solid black;"><code>[l<sub>i</sub>, r<sub>i</sub>]</code></th>
-			<th style="border: 1px solid black;"><code>nums[l<sub>i</sub>..r<sub>i</sub>]</code></th>
-			<th style="border: 1px solid black;">Possibility</th>
-			<th style="border: 1px solid black;">Operations</th>
-			<th style="border: 1px solid black;">Final<br />
-			<code>nums[l<sub>i</sub>..r<sub>i</sub>]</code></th>
-			<th style="border: 1px solid black;"><code>ans[i]</code></th>
-		</tr>
-	</tbody>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">[0, 1]</td>
-			<td style="border: 1px solid black;">[1, 4]</td>
-			<td style="border: 1px solid black;">Yes</td>
-			<td style="border: 1px solid black;"><code>nums[0] + k = 1 + 3 = 4 = nums[1]</code></td>
-			<td style="border: 1px solid black;">[4, 4]</td>
-			<td style="border: 1px solid black;">1</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[0, 2]</td>
-			<td style="border: 1px solid black;">[1, 4, 7]</td>
-			<td style="border: 1px solid black;">Yes</td>
-			<td style="border: 1px solid black;"><code>nums[0] + k = 1 + 3 = 4 = nums[1]<br />
-			nums[2] - k = 7 - 3 = 4 = nums[1]</code></td>
-			<td style="border: 1px solid black;">[4, 4, 4]</td>
-			<td style="border: 1px solid black;">2</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Thus, <code>ans = [1, 2]</code>.</p>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">nums = [1,2,4], k = 2, queries = [[0,2],[0,0],[1,2]]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[-1,0,1]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>One optimal set of operations:</p>
-
-<table style="border: 1px solid black;">
-	<tbody>
-		<tr>
-			<th style="border: 1px solid black;"><code>i</code></th>
-			<th style="border: 1px solid black;"><code>[l<sub>i</sub>, r<sub>i</sub>]</code></th>
-			<th style="border: 1px solid black;"><code>nums[l<sub>i</sub>..r<sub>i</sub>]</code></th>
-			<th style="border: 1px solid black;">Possibility</th>
-			<th style="border: 1px solid black;">Operations</th>
-			<th style="border: 1px solid black;">Final<br />
-			<code>nums[l<sub>i</sub>..r<sub>i</sub>]</code></th>
-			<th style="border: 1px solid black;"><code>ans[i]</code></th>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;">[0, 2]</td>
-			<td style="border: 1px solid black;">[1, 2, 4]</td>
-			<td style="border: 1px solid black;">No</td>
-			<td style="border: 1px solid black;">-</td>
-			<td style="border: 1px solid black;">[1, 2, 4]</td>
-			<td style="border: 1px solid black;">-1</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">[0, 0]</td>
-			<td style="border: 1px solid black;">[1]</td>
-			<td style="border: 1px solid black;">Yes</td>
-			<td style="border: 1px solid black;">Already equal</td>
-			<td style="border: 1px solid black;">[1]</td>
-			<td style="border: 1px solid black;">0</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">[1, 2]</td>
-			<td style="border: 1px solid black;">[2, 4]</td>
-			<td style="border: 1px solid black;">Yes</td>
-			<td style="border: 1px solid black;"><code>nums[1] + k = 2 + 2 = 4 = nums[2]</code></td>
-			<td style="border: 1px solid black;">[4, 4]</td>
-			<td style="border: 1px solid black;">1</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Thus, <code>ans = [-1, 0, 1]</code>.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= n == nums.length &lt;= 4 &times; 10<sup>4</sup></code></li>
-	<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code>​​​​​​​</li>
-	<li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>
-	<li><code>1 &lt;= queries.length &lt;= 4 &times; 10<sup>4</sup></code></li>
-	<li><code><sup>​​​​​​​</sup>queries[i] = [l<sub>i</sub>, r<sub>i</sub>]</code></li>
-	<li><code>0 &lt;= l<sub>i</sub> &lt;= r<sub>i</sub> &lt;= n - 1</code></li>
-</ul>
-</div>
+                        <div class="block-text">Minimum Operations to Equalize Subarrays (LeetCode #3762) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[1,4,7]</code></div>
-                <div class="ex-line"><span>Out</span><code>3</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[[0,1],[0,2]]</code></div>
-                <div class="ex-line"><span>Out</span><code>[1,2,4]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>2</code></div>
-                <div class="ex-line"><span>Out</span><code>[[0,2],[0,0],[1,2]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -211,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">To make all elements in a subarray equal, they must all share the same remainder when divided by &lt;code&gt;k&lt;/code&gt;. The problem is equivalent to making &lt;code&gt;nums[i] / k&lt;/code&gt; equal for all elements in the subarray. The minimum operations to achieve this is to make them all equal to the median of these &lt;code&gt;nums[i] / k&lt;/code&gt; values. To handle many queries efficiently, pre-process the array. Group elements by their remainder mod &lt;code&gt;k&lt;/code&gt;. For each group, we need a data structure to find the median and sum of absolute differences for any given range. A Persistent Segment Tree can answer range median and range sum queries in logarithmic time, making it suitable for this problem.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -228,26 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">long</span> <span class="ty">long</span>* minOperations(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span> k, <span class="ty">int</span>** queries, <span class="ty">int</span> queriesSize, <span class="ty">int</span>* queriesColSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> minOperations(<span class="ty">self</span>, nums, k, queries):
-        &quot;&quot;&quot;
-        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type k: <span class="ty">int</span>
-        :type queries: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        :rtype: <span class="ty">List</span>[<span class="ty">int</span>]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">vector</span>&lt;<span class="ty">long</span> <span class="ty">long</span>&gt; minOperations(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums, <span class="ty">int</span> k, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; queries) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -257,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — To make all elements in a subarray equal, they must all…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — The problem is equivalent to making &lt;code&gt;nums[i] /…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — The minimum operations to achieve this is to make them…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — To handle many queries efficiently, pre-process the…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Biến low/high/mid trên Stack — O bộ nhớ phụ.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

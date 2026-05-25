@@ -99,10 +99,12 @@ window.LeetCodeVisualizers[10] = {
         const sec2 = VizCore.section(stage, 2, "Bảng DP (T/F) — hàng = prefix s, cột = prefix p");
         sec2.appendChild(_lc10DpGrid(s.str, s.pat, s.dp, s.i, s.j));
         if (s.done) {
-            const sec3 = VizCore.section(stage, 3, "Kết quả");
+            const sec3 = VizCore.section(stage, 3, "Output");
+            sec3.classList.add("viz-output-section");
             const box = document.createElement("div");
-            box.style.cssText = "padding:10px 14px;border-radius:8px;font-family:monospace;font-size:1rem;background:" + (s.result ? "#22c55e22" : "#ef444422") + ";border:1px solid " + (s.result ? "#22c55e" : "#ef4444") + ";color:" + (s.result ? "#86efac" : "#fca5a5");
-            box.textContent = s.result ? "true — khớp toàn bộ chuỗi" : "false";
+            box.className = "viz-output-hero flash";
+            box.style.borderColor = s.result ? "#34d399" : "#f87171";
+            box.innerHTML = `<div class="viz-output-scalar" style="color:${s.result ? "#86efac" : "#fca5a5"}">${s.result ? "✓ true" : "✗ false"}</div>`;
             sec3.appendChild(box);
         }
         canvas.appendChild(stage);

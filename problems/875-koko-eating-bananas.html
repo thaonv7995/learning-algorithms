@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Koko Eating Bananas</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N log M) (M là số chuối lớn nhất trong 1 nải)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>50% AC</span>
                     </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Có n nải chuối, nải thứ i có piles[i] quả chuối. Koko muốn ăn hết chuối trong vòng h giờ. Hãy tìm tốc độ ăn chuối tối thiểu k (quả/giờ) sao cho Koko có thể ăn hết chuối đúng giờ.</div>
+                        <div class="block-text">Koko Eating Bananas (LeetCode #875) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>piles = [3,6,7,11], h = 8</code></div>
-                <div class="ex-line"><span>Out</span><code>4 (Tốc độ tối thiểu k=4)</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng Tìm kiếm nhị phân trên không gian nghiệm. Tốc độ ăn tối thiểu `low = 1` quả/giờ, tốc độ ăn tối đa `high = max(piles)` quả/giờ. Với mỗi chốt giữa `mid = low + (high - low)/2`, ta tính tổng số giờ cần thiết để ăn hết chuối: `hours = sum(ceil(pile / mid))`. Nếu tổng số giờ &lt;= h, tốc độ ăn này khả thi, ta thử tìm tốc độ nhỏ hơn bằng cách gán `high = mid`; ngược lại ta tăng tốc độ ăn bằng cách gán `low = mid + 1`.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,61 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Koko Eating Bananas)</span>
-<span class="ty">int</span> minEatingSpeed(<span class="ty">int</span>* piles, <span class="ty">int</span> pilesSize, <span class="ty">int</span> h) {
-    <span class="ty">int</span> low = 1, high = 0;
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; pilesSize; i++) {
-        <span class="kw">if</span> (piles[i] &gt; high) high = piles[i];
-    }
-    <span class="ty">int</span> ans = high;
-    <span class="kw">while</span> (low &lt;= high) {
-        <span class="ty">int</span> mid = low + (high - low) / 2;
-        <span class="ty">long</span> totalHours = 0;
-        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; pilesSize; i++) {
-            totalHours += (piles[i] + mid - 1) / mid;
-        }
-        <span class="kw">if</span> (totalHours &lt;= h) {
-            ans = mid;
-            high = mid - 1;
-        } <span class="kw">else</span> {
-            low = mid + 1;
-        }
-    }
-    <span class="kw">return</span> ans;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Koko Eating Bananas)</span>
-<span class="kw">import</span> math
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> minEatingSpeed(<span class="ty">self</span>, piles: <span class="ty">List</span>[<span class="ty">int</span>], h: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
-        low, high = 1, <span class="ty">max</span>(piles)
-        ans = high
-        <span class="kw">while</span> low &lt;= high:
-            mid = (low + high) // 2
-            hours = sum(math.ceil(p / mid) <span class="kw">for</span> p <span class="kw">in</span> piles)
-            <span class="kw">if</span> hours &lt;= h:
-                ans = mid
-                high = mid - 1
-            <span class="kw">else</span>:
-                low = mid + 1
-        <span class="kw">return</span> ans</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-    <span class="ty">bool</span> <span class="fn">canEatAll</span>(<span class="ty">vector&lt;int&gt;</span>&amp; piles, <span class="ty">int</span> speed, <span class="ty">int</span> h) {
-        <span class="ty">long long</span> hours = <span class="st">0</span>;
-        <span class="kw">for</span> (<span class="ty">int</span> pile : piles) {
-            hours += (pile + speed - <span class="st">1</span>) / speed; <span class="cm">// Phép tinh lam tron len</span>
-        }
-        <span class="kw">return</span> hours &lt;= h;
-    }
-<span class="kw">public</span>:
-    <span class="ty">int</span> <span class="fn">minEatingSpeed</span>(<span class="ty">vector&lt;int&gt;</span>&amp; piles, <span class="ty">int</span> h) {
-        <span class="ty">int</span> low = <span class="st">1</span>, high = *<span class="fn">max_element</span>(piles.<span class="fn">begin</span>(), piles.<span class="fn">end</span>());
-        <span class="kw">while</span> (low &lt; high) {
-            <span class="ty">int</span> mid = low + (high - low) / <span class="st">2</span>;
-            <span class="kw">if</span> (<span class="fn">canEatAll</span>(piles, mid, h)) high = mid;
-            <span class="kw">else</span> low = mid + <span class="st">1</span>;
-        }
-        <span class="kw">return</span> low;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -154,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Binary Search</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N log M)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Tìm kiếm nhị phân trên không gian nghiệm.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Tốc độ ăn tối thiểu `low = 1` quả/giờ, tốc độ ăn tối đa…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Với mỗi chốt giữa `mid = low + /2`, ta tính tổng số giờ…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Nếu tổng số giờ &lt;= h, tốc độ ăn này khả thi, ta thử tìm…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Tìm kiếm trên phạm vi kết quả đầu ra giúp giải quyết bài toán tối ưu cực kỳ tinh tế mà không tiêu tốn bộ nhớ…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

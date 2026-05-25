@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">House Robber</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>53.2% AC</span>
                     </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Bạn là một kẻ trộm đang lên kế hoạch cướp các ngôi nhà trên một con phố. Mỗi ngôi nhà có một lượng tiền nhất định. Tuy nhiên, các ngôi nhà liền kề có hệ thống báo động kết nối trực tiếp, bạn không được phép cướp hai nhà liên tiếp. Hãy tìm số tiền lớn nhất bạn có thể cướp được.</div>
+                        <div class="block-text">House Robber (LeetCode #198) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>nums = [2,7,9,3,1]</code></div>
-                <div class="ex-line"><span>Out</span><code>12 (Cướp nhà 1, 3, 5: 2 + 9 + 1 = 12)</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng quy hoạch động. Tại mỗi ngôi nhà `i`, ta có hai lựa chọn:<br>- Lựa chọn 1: Cướp ngôi nhà này -&gt; Số tiền nhận được bằng tiền nhà này `nums[i]` cộng tiền tối đa cướp được tính đến nhà `i-2`.<br>- Lựa chọn 2: Bỏ qua nhà này -&gt; Tiền tối đa giữ nguyên của nhà `i-1`.<br>Công thức: `dp[i] = max(dp[i-1], nums[i] + dp[i-2])`.<br>Ta có thể tối ưu hóa bộ nhớ chỉ cần dùng 2 biến lưu giữ kết quả nhà `i-1` và `i-2` liên tục cập nhật.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,44 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (House Robber)</span>
-<span class="ty">int</span> rob(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize) {
-    <span class="kw">if</span> (numsSize == 0) <span class="kw">return</span> 0;
-    <span class="kw">if</span> (numsSize == 1) <span class="kw">return</span> nums[0];
-    <span class="ty">int</span> prev2 = 0;
-    <span class="ty">int</span> prev1 = 0;
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; numsSize; i++) {
-        <span class="ty">int</span> temp = prev1;
-        <span class="ty">int</span> current = prev2 + nums[i] &gt; prev1 ? prev2 + nums[i] : prev1;
-        prev2 = temp;
-        prev1 = current;
-    }
-    <span class="kw">return</span> prev1;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (House Robber)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> rob(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
-        prev2 = prev1 = 0
-        <span class="kw">for</span> num <span class="kw">in</span> nums:
-            temp = prev1
-            prev1 = <span class="ty">max</span>(prev2 + num, prev1)
-            prev2 = temp
-        <span class="kw">return</span> prev1</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">int</span> <span class="fn">rob</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums) {
-        <span class="ty">int</span> n = nums.<span class="fn">size</span>();
-        <span class="kw">if</span> (n == <span class="st">0</span>) <span class="kw">return</span> <span class="st">0</span>;
-        <span class="kw">if</span> (n == <span class="st">1</span>) <span class="kw">return</span> nums[<span class="st">0</span>];
-        <span class="ty">int</span> prev2 = <span class="st">0</span>; <span class="cm">// Luu dp[i-2]</span>
-        <span class="ty">int</span> prev1 = <span class="st">0</span>; <span class="cm">// Luu dp[i-1]</span>
-        <span class="kw">for</span> (<span class="ty">int</span> num : nums) {
-            <span class="ty">int</span> temp = <span class="fn">max</span>(prev1, num + prev2);
-            prev2 = prev1;
-            prev1 = temp;
-        }
-        <span class="kw">return</span> prev1;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -137,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Dynamic Programming</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — quy hoạch động.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Tại mỗi ngôi nhà `i`, ta có hai lựa chọn: - Lựa chọn 1:…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — - Lựa chọn 2: Bỏ qua nhà này -&gt; Tiền tối đa giữ nguyên…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Công thức: `dp[i] = max`. Ta có thể tối ưu hóa bộ nhớ chỉ…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>dp[i] = max(rob i, skip i); quyết định tại i chỉ phụ thuộc i-1 và i-2.</p>
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bằng việc sử dụng kỹ thuật cuộn biến , độ phức tạp không gian phụ trợ đạt O tuyệt đối, loại bỏ hoàn toàn việc…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

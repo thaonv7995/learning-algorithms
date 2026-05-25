@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #69</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Sqrt(x)</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log X)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>41.8% AC</span>
                     </div>
@@ -57,46 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given a non-negative integer <code>x</code>, return <em>the square root of </em><code>x</code><em> rounded down to the nearest integer</em>. The returned integer should be <strong>non-negative</strong> as well.</p>
-
-<p>You <strong>must not use</strong> any built-in exponent function or operator.</p>
-
-<ul>
-	<li>For example, do not use <code>pow(x, 0.5)</code> in c++ or <code>x ** 0.5</code> in python.</li>
-</ul>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> x = 4
-<strong>Output:</strong> 2
-<strong>Explanation:</strong> The square root of 4 is 2, so we return 2.
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> x = 8
-<strong>Output:</strong> 2
-<strong>Explanation:</strong> The square root of 8 is 2.82842..., and since we round it down to the nearest integer, 2 is returned.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>0 &lt;= x &lt;= 2<sup>31</sup> - 1</code></li>
-</ul>
-</div>
+                        <div class="block-text">Tính căn bậc hai của x (làm tròn xuống integer), không dùng built-in sqrt.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>4</code></div>
-                <div class="ex-line"><span>Out</span><code>8</code></div>
+                <div class="ex-line"><span>In</span><code>x = 4</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>x = 8</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
             </div></div>
                     </div>
                 </div>
@@ -104,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Try exploring all integers. (Credits: @annujoshi) Use the sorted property of integers to reduced the search space. (Credits: @annujoshi)</div>
+                        <div class="block-text">Binary search trên [0, x]: mid*mid &lt;= x thì lưu ans=mid, tìm phải; else trái.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -122,19 +96,36 @@
                                 <span class="ftype">C99</span>
                             </div>
                             <pre class="code-block" id="code-block-c"><span class="ty">int</span> mySqrt(<span class="ty">int</span> x) {
-    
+    <span class="kw">if</span> (x &lt; 2) <span class="kw">return</span> x;
+    <span class="ty">long</span> lo = 1, hi = x, ans = 0;
+    <span class="kw">while</span> (lo &lt;= hi) {
+        <span class="ty">long</span> mid = lo + (hi - lo) / 2;
+        <span class="kw">if</span> (mid &lt;= x / mid) { ans = mid; lo = mid + 1; }
+        <span class="kw">else</span> hi = mid - 1;
+    }
+    <span class="kw">return</span> (<span class="ty">int</span>)ans;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> mySqrt(<span class="ty">self</span>, x):
-        &quot;&quot;&quot;
-        :type x: <span class="ty">int</span>
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> mySqrt(<span class="ty">self</span>, x: <span class="ty">int</span>) -&gt; <span class="ty">int</span>:
+        <span class="kw">if</span> x &lt; 2: <span class="kw">return</span> x
+        lo, hi, ans = 1, x, 0
+        <span class="kw">while</span> lo &lt;= hi:
+            mid = (lo + hi) // 2
+            <span class="kw">if</span> mid &lt;= x // mid:
+                ans = mid; lo = mid + 1
+            <span class="kw">else</span>: hi = mid - 1
+        <span class="kw">return</span> ans</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">int</span> mySqrt(<span class="ty">int</span> x) {
-        
+        <span class="kw">if</span> (x &lt; 2) <span class="kw">return</span> x;
+        <span class="ty">long</span> lo=1, hi=x, ans=0;
+        <span class="kw">while</span>(lo&lt;=hi){
+            <span class="ty">long</span> mid=lo+(hi-lo)/2;
+            <span class="kw">if</span>(mid&lt;=x/mid){ans=mid;lo=mid+1;}
+            <span class="kw">else</span> hi=mid-1;
+        }
+        <span class="kw">return</span> ans;
     }
 };</pre>
                         </div>
@@ -145,18 +136,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log X)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Try exploring all integers.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Use the sorted property of integers to reduced the search…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — </span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Binary search trên [0, x]: mid*mid &lt;= x thì lưu ans=mid, tìm phải; else…</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>BS tìm max mid với mid² ≤ x.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">x=0</span><span class="analysis-tag edge">x=1</span><span class="analysis-tag edge">x=INT_MAX</span><span class="analysis-tag pit">Overflow mid*mid — dùng x/mid</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Biến low/high/mid trên Stack — O bộ nhớ phụ.</p>
+                        <p>BS trên câu trả lời — template căn bậc hai.</p>
                     </details>
                 </div>
                 </div>
@@ -173,7 +164,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Sqrt(x)&lc_id=69&embed=true"></iframe>

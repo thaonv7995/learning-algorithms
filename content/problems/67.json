@@ -1,0 +1,26 @@
+{
+  "id": 67,
+  "title": "Add Binary",
+  "difficulty": "Easy",
+  "category": "Math",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(N)",
+  "description": "Cộng hai chuỗi nhị phân a và b, trả kết quả dạng chuỗi nhị phân.",
+  "examples": [
+    { "input": "a = \"11\", b = \"1\"", "output": "\"100\"" },
+    { "input": "a = \"1010\", b = \"1011\"", "output": "\"10101\"" }
+  ],
+  "approach": "Two pointers từ cuối, cộng bit + carry. Push vào result, reverse.",
+  "memoryTip": "Giống Plus One nhưng hai chuỗi song song.",
+  "solutions": {
+    "python": "class Solution:\n    def addBinary(self, a: str, b: str) -> str:\n        i, j, carry, res = len(a)-1, len(b)-1, 0, []\n        while i >= 0 or j >= 0 or carry:\n            s = carry\n            if i >= 0: s += int(a[i]); i -= 1\n            if j >= 0: s += int(b[j]); j -= 1\n            res.append(str(s % 2)); carry = s // 2\n        return ''.join(reversed(res))",
+    "cpp": "class Solution {\npublic:\n    string addBinary(string a, string b) {\n        string res; int i=a.size()-1, j=b.size()-1, c=0;\n        while(i>=0||j>=0||c){\n            int s=c;\n            if(i>=0) s+=a[i--]-'0';\n            if(j>=0) s+=b[j--]-'0';\n            res+=char('0'+s%2); c=s/2;\n        }\n        reverse(res.begin(),res.end());\n        return res;\n    }\n};",
+    "c": "char* addBinary(char* a, char* b) {\n    int la=strlen(a), lb=strlen(b), mx=la+lb+2;\n    char* r=(char*)malloc(mx); int k=0, i=la-1, j=lb-1, c=0;\n    while(i>=0||j>=0||c){ int s=c; if(i>=0)s+=a[i--]-'0'; if(j>=0)s+=b[j--]-'0'; r[k++]=('0'+s%2); c=s/2; }\n    r[k]=0; for(int l=0,h=k-1;l<h;l++,h--){char t=r[l];r[l]=r[h];r[h]=t;} return r;\n}"
+  },
+  "analysis": {
+    "correctness": "Simulate binary addition bit-by-bit.",
+    "edgeCases": ["\"0\"+\"0\"", "Độ dài khác nhau"],
+    "pitfalls": ["Quên reverse result", "Quên carry cuối"]
+  },
+  "tier": "done"
+}

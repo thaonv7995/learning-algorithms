@@ -40,6 +40,15 @@ window.LeetCodeVisualizers[22] = {
         VizCore.statsBar(stats, [{ label: "open", value: s.open, cls: "accent" }, { label: "path", value: s.path.join("") || "—", cls: "warn" }, { label: "found", value: s.res.length, cls: "success" }]);
         const stage = VizCore.stage();
         VizCore.section(stage, 1, "Backtracking").appendChild(VizCore.charRow(s.path.join("") || "∅", {}));
+        const outSec = VizCore.section(stage, 2, "Output — chuỗi ngoặc hợp lệ");
+        outSec.classList.add("viz-output-section");
+        const flashIdx = s.res.length && !s.done ? s.res.length - 1 : -1;
+        VizCore.renderOutputItems(
+            outSec,
+            s.res,
+            flashIdx,
+            flashIdx >= 0 ? `Chuỗi mới #${s.res.length}` : null
+        );
         canvas.appendChild(stage);
     },
     renderControls(s, c, cv) {

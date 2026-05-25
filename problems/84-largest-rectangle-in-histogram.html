@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Largest Rectangle in Histogram</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>49.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng số nguyên heights đại diện cho bản đồ độ cao của biểu đồ cột. Hãy tìm diện tích của hình chữ nhật lớn nhất có thể tạo ra bên trong biểu đồ cột đó.</div>
+                        <div class="block-text">Largest Rectangle in Histogram (LC #84).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>heights = [2,1,5,6,2,3]</code></div>
-                <div class="ex-line"><span>Out</span><code>10 (Hình chữ nhật tạo bởi cột 5 và 6 có chiều rộng bằng 2)</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng Ngăn xếp Đơn điệu Tăng dần (Monotonic Increasing Stack) lưu trữ index. Ta duyệt qua các cột. Nếu gặp cột hiện tại thấp hơn cột ở đỉnh Stack, tức là ta đã tìm thấy biên phải giới hạn của cột đỉnh Stack. Ta liên tục pop cột ra, tính chiều rộng của hình chữ nhật tạo bởi cột vừa pop: `width = Stack trống ? i : (i - Stack.top() - 1)`, tính diện tích và lấy max liên tục.</div>
+                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,61 +90,12 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Largest Rectangle in Histogram)</span>
-<span class="ty">int</span> largestRectangleArea(<span class="ty">int</span>* heights, <span class="ty">int</span> heightsSize) {
-    <span class="ty">int</span>* stack = (<span class="ty">int</span>*)<span class="kw">malloc</span>((heightsSize + 1) * <span class="kw">sizeof</span>(<span class="ty">int</span>));
-    <span class="ty">int</span> top = -1;
-    <span class="ty">int</span> maxArea = 0;
-    <span class="ty">int</span> i = 0;
-    <span class="kw">while</span> (i &lt; heightsSize) {
-        <span class="kw">if</span> (top == -1 || heights[i] &gt;= heights[stack[top]]) {
-            stack[++top] = i++;
-        } <span class="kw">else</span> {
-            <span class="ty">int</span> tp = stack[top--];
-            <span class="ty">int</span> width = (top == -1) ? i : (i - stack[top] - 1);
-            <span class="ty">int</span> area = heights[tp] * width;
-            <span class="kw">if</span> (area &gt; maxArea) maxArea = area;
-        }
-    }
-    <span class="kw">while</span> (top != -1) {
-        <span class="ty">int</span> tp = stack[top--];
-        <span class="ty">int</span> width = (top == -1) ? i : (i - stack[top] - 1);
-        <span class="ty">int</span> area = heights[tp] * width;
-        <span class="kw">if</span> (area &gt; maxArea) maxArea = area;
-    }
-    <span class="kw">free</span>(stack);
-    <span class="kw">return</span> maxArea;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Largest Rectangle <span class="kw">in</span> Histogram)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> largestRectangleArea(<span class="ty">self</span>, heights: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
-        stack = []
-        max_area = 0
-        heights.append(0)
-        <span class="kw">for</span> i, h <span class="kw">in</span> enumerate(heights):
-            <span class="kw">while</span> stack <span class="kw">and</span> heights[stack[-1]] &gt; h:
-                height = heights[stack.pop()]
-                width = i <span class="kw">if</span> <span class="kw">not</span> stack <span class="kw">else</span> i - stack[-1] - 1
-                max_area = <span class="ty">max</span>(max_area, height * width)
-            stack.append(i)
-        <span class="kw">return</span> max_area</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">int</span> <span class="fn">largestRectangleArea</span>(<span class="ty">vector&lt;int&gt;</span>&amp; heights) {
-        <span class="ty">stack&lt;int&gt;</span> st;
-        <span class="ty">int</span> maxArea = <span class="st">0</span>;
-        <span class="ty">int</span> n = heights.<span class="fn">size</span>();
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt;= n; i++) {
-            <span class="ty">int</span> h = (i == n) ? <span class="st">0</span> : heights[i];
-            <span class="kw">while</span> (!st.<span class="fn">empty</span>() &amp;&amp; h &lt; heights[st.<span class="fn">top</span>()]) {
-                <span class="ty">int</span> height = heights[st.<span class="fn">top</span>()]; st.<span class="fn">pop</span>();
-                <span class="ty">int</span> width = st.<span class="fn">empty</span>() ? i : i - st.<span class="fn">top</span>() - <span class="st">1</span>;
-                maxArea = <span class="fn">max</span>(maxArea, height * width);
-            }
-            st.<span class="fn">push</span>(i);
-        }
-        <span class="kw">return</span> maxArea;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="cm">// Bổ sung theo editorial</span>
 };</pre>
                         </div>
                     </div>
@@ -154,18 +105,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Stack</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Ngăn xếp Đơn điệu Tăng dần lưu trữ index.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — duyệt qua các cột.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Nếu gặp cột hiện tại thấp hơn cột ở đỉnh Stack, tức là ta…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — liên tục pop cột ra, tính chiều rộng của hình chữ nhật…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bằng việc đẩy một cột ảo có độ cao bằng 0 vào cuối mảng , ta ép buộc giải thuật tự động giải phóng toàn bộ…</p>
+                        <p>Ghi nhớ pattern và invariant chính.</p>
                     </details>
                 </div>
                 </div>

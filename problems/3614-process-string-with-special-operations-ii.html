@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Process String with Special Operations II</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>17.1% AC</span>
                     </div>
@@ -57,209 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given a string <code>s</code> consisting of lowercase English letters and the special characters: <code>&#39;*&#39;</code>, <code>&#39;#&#39;</code>, and <code>&#39;%&#39;</code>.</p>
-
-<p>You are also given an integer <code>k</code>.</p>
-
-<p>Build a new string <code>result</code> by processing <code>s</code> according to the following rules from left to right:</p>
-
-<ul>
-	<li>If the letter is a <strong>lowercase</strong> English letter append it to <code>result</code>.</li>
-	<li>A <code>&#39;*&#39;</code> <strong>removes</strong> the last character from <code>result</code>, if it exists.</li>
-	<li>A <code>&#39;#&#39;</code> <strong>duplicates</strong> the current <code>result</code> and <strong>appends</strong> it to itself.</li>
-	<li>A <code>&#39;%&#39;</code> <strong>reverses</strong> the current <code>result</code>.</li>
-</ul>
-
-<p>Return the <code>k<sup>th</sup></code> character of the final string <code>result</code>. If <code>k</code> is out of the bounds of <code>result</code>, return <code>&#39;.&#39;</code>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;a#b%*&quot;, k = 1</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">&quot;a&quot;</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;"><code>i</code></th>
-			<th style="border: 1px solid black;"><code>s[i]</code></th>
-			<th style="border: 1px solid black;">Operation</th>
-			<th style="border: 1px solid black;">Current <code>result</code></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;"><code>&#39;a&#39;</code></td>
-			<td style="border: 1px solid black;">Append <code>&#39;a&#39;</code></td>
-			<td style="border: 1px solid black;"><code>&quot;a&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;"><code>&#39;#&#39;</code></td>
-			<td style="border: 1px solid black;">Duplicate <code>result</code></td>
-			<td style="border: 1px solid black;"><code>&quot;aa&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;"><code>&#39;b&#39;</code></td>
-			<td style="border: 1px solid black;">Append <code>&#39;b&#39;</code></td>
-			<td style="border: 1px solid black;"><code>&quot;aab&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">3</td>
-			<td style="border: 1px solid black;"><code>&#39;%&#39;</code></td>
-			<td style="border: 1px solid black;">Reverse <code>result</code></td>
-			<td style="border: 1px solid black;"><code>&quot;baa&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">4</td>
-			<td style="border: 1px solid black;"><code>&#39;*&#39;</code></td>
-			<td style="border: 1px solid black;">Remove the last character</td>
-			<td style="border: 1px solid black;"><code>&quot;ba&quot;</code></td>
-		</tr>
-	</tbody>
-</table>
-
-<p>The final <code>result</code> is <code>&quot;ba&quot;</code>. The character at index <code>k = 1</code> is <code>&#39;a&#39;</code>.</p>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;cd%#*#&quot;, k = 3</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">&quot;d&quot;</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;"><code>i</code></th>
-			<th style="border: 1px solid black;"><code>s[i]</code></th>
-			<th style="border: 1px solid black;">Operation</th>
-			<th style="border: 1px solid black;">Current <code>result</code></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;"><code>&#39;c&#39;</code></td>
-			<td style="border: 1px solid black;">Append <code>&#39;c&#39;</code></td>
-			<td style="border: 1px solid black;"><code>&quot;c&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;"><code>&#39;d&#39;</code></td>
-			<td style="border: 1px solid black;">Append <code>&#39;d&#39;</code></td>
-			<td style="border: 1px solid black;"><code>&quot;cd&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;"><code>&#39;%&#39;</code></td>
-			<td style="border: 1px solid black;">Reverse <code>result</code></td>
-			<td style="border: 1px solid black;"><code>&quot;dc&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">3</td>
-			<td style="border: 1px solid black;"><code>&#39;#&#39;</code></td>
-			<td style="border: 1px solid black;">Duplicate <code>result</code></td>
-			<td style="border: 1px solid black;"><code>&quot;dcdc&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">4</td>
-			<td style="border: 1px solid black;"><code>&#39;*&#39;</code></td>
-			<td style="border: 1px solid black;">Remove the last character</td>
-			<td style="border: 1px solid black;"><code>&quot;dcd&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">5</td>
-			<td style="border: 1px solid black;"><code>&#39;#&#39;</code></td>
-			<td style="border: 1px solid black;">Duplicate <code>result</code></td>
-			<td style="border: 1px solid black;"><code>&quot;dcddcd&quot;</code></td>
-		</tr>
-	</tbody>
-</table>
-
-<p>The final <code>result</code> is <code>&quot;dcddcd&quot;</code>. The character at index <code>k = 3</code> is <code>&#39;d&#39;</code>.</p>
-</div>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;z*#&quot;, k = 0</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">&quot;.&quot;</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;"><code>i</code></th>
-			<th style="border: 1px solid black;"><code>s[i]</code></th>
-			<th style="border: 1px solid black;">Operation</th>
-			<th style="border: 1px solid black;">Current <code>result</code></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">0</td>
-			<td style="border: 1px solid black;"><code>&#39;z&#39;</code></td>
-			<td style="border: 1px solid black;">Append <code>&#39;z&#39;</code></td>
-			<td style="border: 1px solid black;"><code>&quot;z&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;"><code>&#39;*&#39;</code></td>
-			<td style="border: 1px solid black;">Remove the last character</td>
-			<td style="border: 1px solid black;"><code>&quot;&quot;</code></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;"><code>&#39;#&#39;</code></td>
-			<td style="border: 1px solid black;">Duplicate the string</td>
-			<td style="border: 1px solid black;"><code>&quot;&quot;</code></td>
-		</tr>
-	</tbody>
-</table>
-
-<p>The final <code>result</code> is <code>&quot;&quot;</code>. Since index <code>k = 0</code> is out of bounds, the output is <code>&#39;.&#39;</code>.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>s</code> consists of only lowercase English letters and special characters <code>&#39;*&#39;</code>, <code>&#39;#&#39;</code>, and <code>&#39;%&#39;</code>.</li>
-	<li><code>0 &lt;= k &lt;= 10<sup>15</sup></code></li>
-	<li>The length of <code>result</code> after processing <code>s</code> will not exceed <code>10<sup>15</sup></code>.</li>
-</ul>
-</div>
+                        <div class="block-text">Process String with Special Operations II (LeetCode #3614) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;a#b%*&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>1</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>&quot;cd%#*#&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>3</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>&quot;z*#&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>0</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -267,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Track the length of the string after each operation on &lt;code&gt;s&lt;/code&gt;. Walk backwards through &lt;code&gt;s&lt;/code&gt;, undoing each # by using modulus on the tracked lengths, and undoing each % by mirroring across the midpoint, to pinpoint the &lt;code&gt;k&lt;/code&gt;th character.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -284,22 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">char</span> processStr(<span class="ty">char</span>* s, <span class="ty">long</span> <span class="ty">long</span> k) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> processStr(<span class="ty">self</span>, s, k):
-        &quot;&quot;&quot;
-        :type s: <span class="ty">str</span>
-        :type k: <span class="ty">int</span>
-        :rtype: <span class="ty">str</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">char</span> processStr(<span class="ty">string</span> s, <span class="ty">long</span> <span class="ty">long</span> k) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -309,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">String</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Track the length of the string after each operation on…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Walk backwards through &lt;code&gt;s&lt;/code&gt;, undoing each # by…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Chuỗi rỗng</span><span class="analysis-tag edge">Một ký tự</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

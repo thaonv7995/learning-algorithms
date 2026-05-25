@@ -37,12 +37,12 @@
                         <span class="lc-num">LC #67</span>
                         <span class="diff-badge easy">Easy</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Add Binary</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.1% AC</span>
                     </div>
                 </div>
@@ -57,38 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given two binary strings <code>a</code> and <code>b</code>, return <em>their sum as a binary string</em>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-<pre><strong>Input:</strong> a = "11", b = "1"
-<strong>Output:</strong> "100"
-</pre><p><strong class="example">Example 2:</strong></p>
-<pre><strong>Input:</strong> a = "1010", b = "1011"
-<strong>Output:</strong> "10101"
-</pre>
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= a.length, b.length &lt;= 10<sup>4</sup></code></li>
-	<li><code>a</code> and <code>b</code> consist&nbsp;only of <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code> characters.</li>
-	<li>Each string does not contain leading zeros except for the zero itself.</li>
-</ul>
-</div>
+                        <div class="block-text">Cộng hai chuỗi nhị phân a và b, trả kết quả dạng chuỗi nhị phân.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;11&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;1&quot;</code></div>
+                <div class="ex-line"><span>In</span><code>a = &quot;11&quot;, b = &quot;1&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;100&quot;</code></div>
             </div>
             <div class="example-block">
                 <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>&quot;1010&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;1011&quot;</code></div>
+                <div class="ex-line"><span>In</span><code>a = &quot;1010&quot;, b = &quot;1011&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>&quot;10101&quot;</code></div>
             </div></div>
                     </div>
                 </div>
@@ -96,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Math kết hợp String. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Two pointers từ cuối, cộng bit + carry. Push vào result, reverse.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -114,20 +96,32 @@
                                 <span class="ftype">C99</span>
                             </div>
                             <pre class="code-block" id="code-block-c"><span class="ty">char</span>* addBinary(<span class="ty">char</span>* a, <span class="ty">char</span>* b) {
-    
+    <span class="ty">int</span> la=strlen(a), lb=strlen(b), mx=la+lb+2;
+    <span class="ty">char</span>* r=(<span class="ty">char</span>*)<span class="kw">malloc</span>(mx); <span class="ty">int</span> k=0, i=la-1, j=lb-1, c=0;
+    <span class="kw">while</span>(i&gt;=0||j&gt;=0||c){ <span class="ty">int</span> s=c; <span class="kw">if</span>(i&gt;=0)s+=a[i--]-'0'; <span class="kw">if</span>(j&gt;=0)s+=b[j--]-'0'; r[k++]=('0'+s%2); c=s/2; }
+    r[k]=0; <span class="kw">for</span>(<span class="ty">int</span> l=0,h=k-1;l&lt;h;l++,h--){<span class="ty">char</span> t=r[l];r[l]=r[h];r[h]=t;} <span class="kw">return</span> r;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> addBinary(<span class="ty">self</span>, a, b):
-        &quot;&quot;&quot;
-        :type a: <span class="ty">str</span>
-        :type b: <span class="ty">str</span>
-        :rtype: <span class="ty">str</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> addBinary(<span class="ty">self</span>, a: <span class="ty">str</span>, b: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
+        i, j, carry, res = <span class="ty">len</span>(a)-1, <span class="ty">len</span>(b)-1, 0, []
+        <span class="kw">while</span> i &gt;= 0 <span class="kw">or</span> j &gt;= 0 <span class="kw">or</span> carry:
+            s = carry
+            <span class="kw">if</span> i &gt;= 0: s += <span class="ty">int</span>(a[i]); i -= 1
+            <span class="kw">if</span> j &gt;= 0: s += <span class="ty">int</span>(b[j]); j -= 1
+            res.append(<span class="ty">str</span>(s % 2)); carry = s // 2
+        <span class="kw">return</span> ''.join(reversed(res))</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">string</span> addBinary(<span class="ty">string</span> a, <span class="ty">string</span> b) {
-        
+        <span class="ty">string</span> res; <span class="ty">int</span> i=a.size()-1, j=b.size()-1, c=0;
+        <span class="kw">while</span>(i&gt;=0||j&gt;=0||c){
+            <span class="ty">int</span> s=c;
+            <span class="kw">if</span>(i&gt;=0) s+=a[i--]-'0';
+            <span class="kw">if</span>(j&gt;=0) s+=b[j--]-'0';
+            res+=<span class="ty">char</span>('0'+s%2); c=s/2;
+        }
+        reverse(res.begin(),res.end());
+        <span class="kw">return</span> res;
     }
 };</pre>
                         </div>
@@ -138,18 +132,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Math kết hợp String.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Two pointers từ cuối, cộng bit + carry.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Push vào result, reverse.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Simulate binary addition bit-by-bit.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">&quot;0&quot;+&quot;0&quot;</span><span class="analysis-tag edge">Độ dài khác nhau</span><span class="analysis-tag pit">Quên reverse result</span><span class="analysis-tag pit">Quên carry cuối</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Giống Plus One nhưng hai chuỗi song song.</p>
                     </details>
                 </div>
                 </div>
@@ -166,7 +160,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Add%20Binary&lc_id=67&embed=true"></iframe>

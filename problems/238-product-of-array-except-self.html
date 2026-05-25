@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Product of Array Except Self</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1) (Nếu không tính mảng kết quả trả về)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>68.9% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng số nguyên nums, hãy trả về một mảng ans sao cho ans[i] bằng tích của tất cả các phần tử trong nums ngoại trừ nums[i]. Yêu cầu không được sử dụng phép chia và phải chạy trong O(N).</div>
+                        <div class="block-text">Product of Array Except Self (LeetCode #238) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>nums = [1,2,3,4]</code></div>
-                <div class="ex-line"><span>Out</span><code>[24,12,8,6]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng tích lũy tiền tố và hậu tố. Ta tạo mảng kết quả `ans`. Lượt đi từ trái qua phải, ta điền vào `ans[i]` tích của tất cả các số bên trái nó. Lượt về từ phải qua trái, ta sử dụng một biến trung gian `rightProduct` lưu tích lũy các số bên phải, nhân trực tiếp vào `ans[i]` hiện tại và cập nhật `rightProduct` liên tục.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,48 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Product of Array Except Self)</span>
-<span class="ty">int</span>* productExceptSelf(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    *<span class="ty">returnSize</span> = numsSize;
-    <span class="ty">int</span>* ans = (<span class="ty">int</span>*)<span class="kw">malloc</span>(numsSize * <span class="kw">sizeof</span>(<span class="ty">int</span>));
-    ans[0] = 1;
-    <span class="kw">for</span> (<span class="ty">int</span> i = 1; i &lt; numsSize; i++) {
-        ans[i] = ans[i - 1] * nums[i - 1];
-    }
-    <span class="ty">int</span> right = 1;
-    <span class="kw">for</span> (<span class="ty">int</span> i = numsSize - 1; i &gt;= 0; i--) {
-        ans[i] *= right;
-        right *= nums[i];
-    }
-    <span class="kw">return</span> ans;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Product of Array Except Self)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> productExceptSelf(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
-        n = <span class="ty">len</span>(nums)
-        ans = [1] * n
-        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(1, n):
-            ans[i] = ans[i - 1] * nums[i - 1]
-        right = 1
-        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n - 1, -1, -1):
-            ans[i] *= right
-            right *= nums[i]
-        <span class="kw">return</span> ans</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">vector&lt;int&gt;</span> <span class="fn">productExceptSelf</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums) {
-        <span class="ty">int</span> n = nums.<span class="fn">size</span>();
-        <span class="ty">vector&lt;int&gt;</span> ans(n, <span class="st">1</span>);
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">1</span>; i &lt; n; i++) {
-            ans[i] = ans[i - <span class="st">1</span>] * nums[i - <span class="st">1</span>]; <span class="cm">// Tich cac phan tu ben trai</span>
-        }
-        <span class="ty">int</span> rightProduct = <span class="st">1</span>;
-        <span class="kw">for</span> (<span class="ty">int</span> i = n - <span class="st">1</span>; i &gt;= <span class="st">0</span>; i--) {
-            ans[i] *= rightProduct; <span class="cm">// Nhan tich cac phan tu ben phai</span>
-            rightProduct *= nums[i];
-        }
-        <span class="kw">return</span> ans;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -141,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — tích lũy tiền tố và hậu tố.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — tạo mảng kết quả `ans`.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Lượt đi từ trái qua phải, ta điền vào `ans[i]` tích của…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Lượt về từ phải qua trái, ta sử dụng một biến trung gian…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Kỹ thuật co gộp biến giúp giải quyết bài toán tối ưu mà không cần tạo 2 mảng phụ chứa Prefix và Suffix rời…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

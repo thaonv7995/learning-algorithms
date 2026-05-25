@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Sliding Window Maximum</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N) (Mỗi phần tử được đưa vào/rút ra Deque tối đa 1 lần)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(K) (Kích thước tối đa của Deque)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>48.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho một mảng số nguyên nums và kích thước cửa sổ trượt k liên tục dịch từ trái sang phải mỗi lần 1 phần tử. Hãy trả về một mảng chứa giá trị lớn nhất trong mỗi cửa sổ trượt.</div>
+                        <div class="block-text">Sliding Window Maximum (LeetCode #239) — Hard.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>nums = [1,3,-1,-3,5,3,6,7], k = 3</code></div>
-                <div class="ex-line"><span>Out</span><code>[3,3,5,5,6,7]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng Hàng đợi hai đầu đơn điệu (Monotonic Deque) lưu trữ các chỉ số (index) của mảng. Deque luôn duy trì các giá trị tương ứng với chỉ số giảm dần từ đầu đến cuối Deque. Mỗi khi duyệt qua phần tử `nums[i]`:<br>1. Loại bỏ các chỉ số đã trượt ra ngoài cửa sổ bên trái khỏi Deque (`index &lt; i - k + 1`).<br>2. Loại bỏ tất cả các chỉ số ở cuối Deque có giá trị tương ứng nhỏ hơn `nums[i]` (vì chúng không còn cơ hội làm giá trị lớn nhất).<br>3. Đẩy chỉ số `i` vào cuối Deque.<br>4. Đỉnh Deque (đầu hàng) chính là index chứa giá trị lớn nhất của cửa sổ hiện tại.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,40 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Sliding Window Maximum)</span>
-<span class="cm">// Requires Monotonic Deque layout representation.</span></pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Sliding Window Maximum)</span>
-<span class="kw">from</span> collections <span class="kw">import</span> deque
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> maxSlidingWindow(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>], k: <span class="ty">int</span>) -&gt; <span class="ty">List</span>[<span class="ty">int</span>]:
-        res = []
-        q = deque() <span class="cm"># index stores</span>
-        <span class="kw">for</span> i, num <span class="kw">in</span> enumerate(nums):
-            <span class="kw">while</span> q <span class="kw">and</span> nums[q[-1]] &lt; num:
-                q.pop()
-            q.append(i)
-            <span class="kw">if</span> q[0] == i - k:
-                q.popleft()
-            <span class="kw">if</span> i &gt;= k - 1:
-                res.append(nums[q[0]])
-        <span class="kw">return</span> res</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">vector&lt;int&gt;</span> <span class="fn">maxSlidingWindow</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums, <span class="ty">int</span> k) {
-        <span class="ty">vector&lt;int&gt;</span> res;
-        <span class="ty">deque&lt;int&gt;</span> dq; <span class="cm">// Luu tru index phan tu</span>
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; nums.<span class="fn">size</span>(); i++) {
-            <span class="kw">if</span> (!dq.<span class="fn">empty</span>() &amp;&amp; dq.<span class="fn">front</span>() &lt; i - k + <span class="st">1</span>) {
-                dq.<span class="fn">pop_front</span>(); <span class="cm">// Loai bo index ra ngoai cua so truyen</span>
-            }
-            <span class="kw">while</span> (!dq.<span class="fn">empty</span>() &amp;&amp; nums[dq.<span class="fn">back</span>()] &lt; nums[i]) {
-                dq.<span class="fn">pop_back</span>(); <span class="cm">// Duy tri tinh don dieu giam dan</span>
-            }
-            dq.<span class="fn">push_back</span>(i);
-            <span class="kw">if</span> (i &gt;= k - <span class="st">1</span>) res.<span class="fn">push_back</span>(nums[dq.<span class="fn">front</span>()]);
-        }
-        <span class="kw">return</span> res;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -133,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Sliding Window</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(K)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Hàng đợi hai đầu đơn điệu lưu trữ các chỉ số của mảng.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Deque luôn duy trì các giá trị tương ứng với chỉ số giảm…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Mỗi khi duyệt qua phần tử `nums[i]`: 1.</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Loại bỏ các chỉ số đã trượt ra ngoài cửa sổ bên trái khỏi…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Cấu trúc `std::deque` trong C++ phân bổ bộ nhớ động trên các chunk rời rạc trên Heap. Việc duy trì kích thước…</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

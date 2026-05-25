@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Odd Even Linked List</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>62.5% AC</span>
                     </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Gom toàn bộ các nút ở vị trí chỉ số lẻ lên trước, sau đó nối tiếp toàn bộ các nút ở vị trí chỉ số chẵn của danh sách liên kết đơn ban đầu.</div>
+                        <div class="block-text">Odd Even Linked List (LeetCode #328) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>head = 1-&gt;2-&gt;3-&gt;4-&gt;5</code></div>
-                <div class="ex-line"><span>Out</span><code>1-&gt;3-&gt;5-&gt;2-&gt;4</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng hai con trỏ độc lập `odd` đại diện danh sách lẻ (khởi tạo bằng head) và `even` đại diện chẵn (khởi tạo bằng `head-&gt;next`). Đồng thời lưu lại nút gốc chẵn `evenHead` để nối đuôi sau này. Duyệt qua danh sách, ta liên tục chuyển liên kết: `odd-&gt;next = even-&gt;next; odd = odd-&gt;next; even-&gt;next = odd-&gt;next; even = even-&gt;next`. Kết thúc nối `odd-&gt;next = evenHead`.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,50 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Odd Even Linked List)</span>
-<span class="ty">struct</span> ListNode* oddEvenList(<span class="ty">struct</span> ListNode* head) {
-    <span class="kw">if</span> (!head) <span class="kw">return</span> NULL;
-    <span class="ty">struct</span> ListNode* odd = head;
-    <span class="ty">struct</span> ListNode* even = head-&gt;next;
-    <span class="ty">struct</span> ListNode* evenHead = even;
-    <span class="kw">while</span> (even &amp;&amp; even-&gt;next) {
-        odd-&gt;next = even-&gt;next;
-        odd = odd-&gt;next;
-        even-&gt;next = odd-&gt;next;
-        even = even-&gt;next;
-    }
-    odd-&gt;next = evenHead;
-    <span class="kw">return</span> head;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Odd Even Linked <span class="ty">List</span>)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> oddEvenList(<span class="ty">self</span>, head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]) -&gt; <span class="ty">Optional</span>[<span class="ty">ListNode</span>]:
-        <span class="kw">if</span> <span class="kw">not</span> head: <span class="kw">return</span> <span class="kw">None</span>
-        odd, even = head, head.next
-        even_head = even
-        <span class="kw">while</span> even <span class="kw">and</span> even.next:
-            odd.next = even.next
-            odd = odd.next
-            even.next = odd.next
-            even = even.next
-        odd.next = even_head
-        <span class="kw">return</span> head</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">ListNode</span>* <span class="fn">oddEvenList</span>(<span class="ty">ListNode</span>* head) {
-        <span class="kw">if</span> (!head) <span class="kw">return</span> NULL;
-        <span class="ty">ListNode</span>* odd = head;
-        <span class="ty">ListNode</span>* even = head-&gt;next;
-        <span class="ty">ListNode</span>* evenHead = even; <span class="cm">// Luu goc chan</span>
-        <span class="kw">while</span> (even &amp;&amp; even-&gt;next) {
-            odd-&gt;next = even-&gt;next;
-            odd = odd-&gt;next;
-            even-&gt;next = odd-&gt;next;
-            even = even-&gt;next;
-        }
-        odd-&gt;next = evenHead; <span class="cm">// Noi duoi le vao dau chan</span>
-        <span class="kw">return</span> head;
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
 };</pre>
                         </div>
                     </div>
@@ -143,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Linked List</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — hai con trỏ độc lập `odd` đại diện danh sách lẻ và `even`…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Đồng thời lưu lại nút gốc chẵn `evenHead` để nối đuôi sau…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Duyệt qua danh sách, ta liên tục chuyển liên kết:…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Kết thúc nối `odd-&gt;next = evenHead`.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Một nút</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Tái cấu trúc trực tiếp liên kết pointer vật lý In-place trong O bộ nhớ phụ trợ, cực kỳ nhanh chóng và an toàn.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

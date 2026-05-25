@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #41</span>
                         <span class="diff-badge hard">Hard</span>
                         <span class="cat-chip">Array</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">First Missing Positive</h1>
                     <div class="head-stats">
@@ -57,51 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given an unsorted integer array <code>nums</code>. Return the <em>smallest positive integer</em> that is <em>not present</em> in <code>nums</code>.</p>
-
-<p>You must implement an algorithm that runs in <code>O(n)</code> time and uses <code>O(1)</code> auxiliary space.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> nums = [1,2,0]
-<strong>Output:</strong> 3
-<strong>Explanation:</strong> The numbers in the range [1,2] are all in the array.
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> nums = [3,4,-1,1]
-<strong>Output:</strong> 2
-<strong>Explanation:</strong> 1 is in the array but 2 is missing.
-</pre>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<pre>
-<strong>Input:</strong> nums = [7,8,9,11,12]
-<strong>Output:</strong> 1
-<strong>Explanation:</strong> The smallest positive integer 1 is missing.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>
-	<li><code>-2<sup>31</sup> &lt;= nums[i] &lt;= 2<sup>31</sup> - 1</code></li>
-</ul>
-</div>
+                        <div class="block-text">Cho mảng số nguyên chưa sort. Trả về số nguyên dương nhỏ nhất không xuất hiện trong mảng. Yêu cầu O(n) thời gian và O(1) bộ nhớ phụ.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[1,2,0]</code></div>
-                <div class="ex-line"><span>Out</span><code>[3,4,-1,1]</code></div>
+                <div class="ex-line"><span>In</span><code>nums = [1,2,0]</code></div>
+                <div class="ex-line"><span>Out</span><code>3</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>nums = [3,4,-1,1]</code></div>
+                <div class="ex-line"><span>Out</span><code>2</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>nums = [7,8,9,11,12]</code></div>
+                <div class="ex-line"><span>Out</span><code>1</code></div>
             </div></div>
                     </div>
                 </div>
@@ -109,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Think about how you would solve the problem in non-constant space.  Can you apply that logic to the existing space? We don't care about duplicates or non-positive integers Remember that O(2n) = O(n)</div>
+                        <div class="block-text">Cyclic sort in-place: với mỗi i, trong khi 1 ≤ nums[i] ≤ n và nums[i] ≠ nums[nums[i]-1], hoán vị nums[i] về đúng vị trí nums[i]-1. Sau đó quét tìm i đầu tiên sao nums[i] ≠ i+1 → trả i+1; nếu không có trả n+1.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -126,20 +100,38 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> firstMissingPositive(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize) {
-    
+                            <pre class="code-block" id="code-block-c">static <span class="ty">void</span> swapInt(<span class="ty">int</span>* a, <span class="ty">int</span>* b) { <span class="ty">int</span> t = *a; *a = *b; *b = t; }
+<span class="ty">int</span> firstMissingPositive(<span class="ty">int</span>* nums, <span class="ty">int</span> n) {
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+        <span class="kw">while</span> (nums[i] &gt;= 1 &amp;&amp; nums[i] &lt;= n &amp;&amp; nums[nums[i]-1] != nums[i])
+            swapInt(&amp;nums[i], &amp;nums[nums[i]-1]);
+    }
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++)
+        <span class="kw">if</span> (nums[i] != i + 1) <span class="kw">return</span> i + 1;
+    <span class="kw">return</span> n + 1;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> firstMissingPositive(<span class="ty">self</span>, nums):
-        &quot;&quot;&quot;
-        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> firstMissingPositive(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">int</span>:
+        n = <span class="ty">len</span>(nums)
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            <span class="kw">while</span> 1 &lt;= nums[i] &lt;= n <span class="kw">and</span> nums[nums[i] - 1] != nums[i]:
+                j = nums[i] - 1
+                nums[i], nums[j] = nums[j], nums[i]
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(n):
+            <span class="kw">if</span> nums[i] != i + 1:
+                <span class="kw">return</span> i + 1
+        <span class="kw">return</span> n + 1</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">int</span> firstMissingPositive(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; nums) {
-        
+        <span class="ty">int</span> n = nums.size();
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++) {
+            <span class="kw">while</span> (nums[i] &gt;= 1 &amp;&amp; nums[i] &lt;= n &amp;&amp; nums[nums[i]-1] != nums[i])
+                swap(nums[i], nums[nums[i]-1]);
+        }
+        <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; n; i++)
+            <span class="kw">if</span> (nums[i] != i + 1) <span class="kw">return</span> i + 1;
+        <span class="kw">return</span> n + 1;
     }
 };</pre>
                         </div>
@@ -154,14 +146,14 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Think about how you would solve the problem in…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Can you apply that logic to the existing space?</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — We don't care about duplicates or non-positive integers…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Cyclic sort in-place: với mỗi i, trong khi 1 ≤ nums[i] ≤…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Sau đó quét tìm i đầu tiên sao nums[i] ≠ i+1 → trả i+1;…</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Sau cyclic sort, mọi số trong [1,n] nằm đúng index nếu có mặt — quét tìm lỗ hổng đầu tiên cho đáp án.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Toàn số âm/lớn hơn n → 1</span><span class="analysis-tag edge">Đã đủ 1..n → n+1</span><span class="analysis-tag edge">Trùng lặp</span><span class="analysis-tag pit">Dùng hash O(n) space</span><span class="analysis-tag pit">Điều kiện while thiếu nums[nums[i]-1]!=nums[i] → vòng lặp vô hạn</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                        <p>Chỉ hoán vị trên mảng gốc — không cần hash set. Mỗi phần tử di chuyển tối đa một lần → O.</p>
                     </details>
                 </div>
                 </div>
@@ -178,7 +170,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=First%20Missing%20Positive&lc_id=41&embed=true"></iframe>

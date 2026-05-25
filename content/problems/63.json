@@ -1,0 +1,26 @@
+{
+  "id": 63,
+  "title": "Unique Paths II",
+  "difficulty": "Medium",
+  "category": "Dynamic Programming",
+  "timeComplexity": "O(M × N)",
+  "spaceComplexity": "O(N)",
+  "description": "Robot từ góc trên-trái đến dưới-phải, chỉ ↓ hoặc →. Ô chướng ngại (1) không đi được. Đếm số đường.",
+  "examples": [
+    { "input": "obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]", "output": "2" },
+    { "input": "obstacleGrid = [[0,1],[0,0]]", "output": "1" }
+  ],
+  "approach": "DP giống #62: dp[j] += dp[j-1]. Nếu ô là chướng ngại thì dp[j]=0. Hàng/cột đầu gặp 1 thì dừng.",
+  "memoryTip": "Obstacle = reset dp về 0 tại ô đó.",
+  "solutions": {
+    "python": "class Solution:\n    def uniquePathsWithObstacles(self, g: List[List[int]]) -> int:\n        m, n = len(g), len(g[0])\n        if g[0][0] or g[m-1][n-1]: return 0\n        dp = [0]*n; dp[0] = 1\n        for i in range(m):\n            for j in range(n):\n                if g[i][j]: dp[j] = 0\n                elif j: dp[j] += dp[j-1]\n        return dp[-1]",
+    "cpp": "class Solution {\npublic:\n    int uniquePathsWithObstacles(vector<vector<int>>& g) {\n        int m=g.size(), n=g[0].size();\n        if(g[0][0]||g[m-1][n-1]) return 0;\n        vector<int> dp(n); dp[0]=1;\n        for(int i=0;i<m;i++){\n            for(int j=0;j<n;j++){\n                if(g[i][j]) dp[j]=0;\n                else if(j) dp[j]+=dp[j-1];\n            }\n        }\n        return dp[n-1];\n    }\n};",
+    "c": "/* uniquePathsWithObstacles — DP 1D; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Mọi đường đi qua obstacle đều bị loại bằng dp=0.",
+    "edgeCases": ["Start/end là obstacle", "Một hàng/cột"],
+    "pitfalls": ["Quên reset hàng đầu khi gặp 1", "Cộng dp[j-1] khi j=0"]
+  },
+  "tier": "done"
+}

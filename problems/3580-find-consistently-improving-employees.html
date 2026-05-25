@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Find Consistently Improving Employees</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>56.6% AC</span>
                     </div>
@@ -57,152 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Table: <code>employees</code></p>
-
-<pre>
-+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| employee_id | int     |
-| name        | varchar |
-+-------------+---------+
-employee_id is the unique identifier for this table.
-Each row contains information about an employee.
-</pre>
-
-<p>Table: <code>performance_reviews</code></p>
-
-<pre>
-+-------------+------+
-| Column Name | Type |
-+-------------+------+
-| review_id   | int  |
-| employee_id | int  |
-| review_date | date |
-| rating      | int  |
-+-------------+------+
-review_id is the unique identifier for this table.
-Each row represents a performance review for an employee. The rating is on a scale of 1-5 where 5 is excellent and 1 is poor.
-</pre>
-
-<p>Write a solution to find employees who have consistently improved their performance over <strong>their last three reviews</strong>.</p>
-
-<ul>
-	<li>An employee must have <strong>at least </strong><code>3</code><strong> review</strong> to be considered</li>
-	<li>The employee&#39;s <strong>last </strong><code>3</code><strong> reviews</strong> must show <strong>strictly increasing ratings</strong> (each review better than the previous)</li>
-	<li>Use the most recent <code>3</code> reviews based on <code>review_date</code> for each employee</li>
-	<li>Calculate the <strong>improvement score</strong> as the difference between the latest rating and the earliest rating among the last <code>3</code> reviews</li>
-</ul>
-
-<p>Return <em>the result table ordered by <strong>improvement score</strong> in <strong>descending</strong> order, then by <strong>name</strong> in <strong>ascending</strong> order</em>.</p>
-
-<p>The result format is in the following example.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong></p>
-
-<p>employees table:</p>
-
-<pre class="example-io">
-+-------------+----------------+
-| employee_id | name           |
-+-------------+----------------+
-| 1           | Alice Johnson  |
-| 2           | Bob Smith      |
-| 3           | Carol Davis    |
-| 4           | David Wilson   |
-| 5           | Emma Brown     |
-+-------------+----------------+
-</pre>
-
-<p>performance_reviews table:</p>
-
-<pre class="example-io">
-+-----------+-------------+-------------+--------+
-| review_id | employee_id | review_date | rating |
-+-----------+-------------+-------------+--------+
-| 1         | 1           | 2023-01-15  | 2      |
-| 2         | 1           | 2023-04-15  | 3      |
-| 3         | 1           | 2023-07-15  | 4      |
-| 4         | 1           | 2023-10-15  | 5      |
-| 5         | 2           | 2023-02-01  | 3      |
-| 6         | 2           | 2023-05-01  | 2      |
-| 7         | 2           | 2023-08-01  | 4      |
-| 8         | 2           | 2023-11-01  | 5      |
-| 9         | 3           | 2023-03-10  | 1      |
-| 10        | 3           | 2023-06-10  | 2      |
-| 11        | 3           | 2023-09-10  | 3      |
-| 12        | 3           | 2023-12-10  | 4      |
-| 13        | 4           | 2023-01-20  | 4      |
-| 14        | 4           | 2023-04-20  | 4      |
-| 15        | 4           | 2023-07-20  | 4      |
-| 16        | 5           | 2023-02-15  | 3      |
-| 17        | 5           | 2023-05-15  | 2      |
-+-----------+-------------+-------------+--------+
-</pre>
-
-<p><strong>Output:</strong></p>
-
-<pre class="example-io">
-+-------------+----------------+-------------------+
-| employee_id | name           | improvement_score |
-+-------------+----------------+-------------------+
-| 2           | Bob Smith      | 3                 |
-| 1           | Alice Johnson  | 2                 |
-| 3           | Carol Davis    | 2                 |
-+-------------+----------------+-------------------+
-</pre>
-
-<p><strong>Explanation:</strong></p>
-
-<ul>
-	<li><strong>Alice Johnson (employee_id = 1):</strong>
-
-	<ul>
-		<li>Has 4 reviews with ratings: 2, 3, 4, 5</li>
-		<li>Last 3 reviews (by date): 2023-04-15 (3), 2023-07-15 (4), 2023-10-15 (5)</li>
-		<li>Ratings are strictly increasing: 3 &rarr; 4 &rarr; 5</li>
-		<li>Improvement score: 5 - 3 = 2</li>
-	</ul>
-	</li>
-	<li><strong>Carol Davis (employee_id = 3):</strong>
-	<ul>
-		<li>Has 4 reviews with ratings: 1, 2, 3, 4</li>
-		<li>Last 3 reviews (by date): 2023-06-10 (2), 2023-09-10 (3), 2023-12-10 (4)</li>
-		<li>Ratings are strictly increasing: 2 &rarr; 3 &rarr; 4</li>
-		<li>Improvement score: 4 - 2 = 2</li>
-	</ul>
-	</li>
-	<li><strong>Bob Smith (employee_id = 2):</strong>
-	<ul>
-		<li>Has 4 reviews with ratings: 3, 2, 4, 5</li>
-		<li>Last 3 reviews (by date): 2023-05-01 (2), 2023-08-01 (4), 2023-11-01 (5)</li>
-		<li>Ratings are strictly increasing: 2 &rarr; 4 &rarr; 5</li>
-		<li>Improvement score: 5 - 2 = 3</li>
-	</ul>
-	</li>
-	<li><strong>Employees not included:</strong>
-	<ul>
-		<li>David Wilson (employee_id = 4): Last 3 reviews are all 4 (no improvement)</li>
-		<li>Emma Brown (employee_id = 5): Only has 2 reviews (needs at least 3)</li>
-	</ul>
-	</li>
-</ul>
-
-<p>The output table is ordered by improvement_score in descending order, then by name in ascending order.</p>
-</div>
-</div>
+                        <div class="block-text">Find Consistently Improving Employees (LeetCode #3580) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>{&quot;headers&quot;:{&quot;employees&quot;:[&quot;employee_id&quot;,&quot;name&quot;],&quot;performance_reviews&quot;:[&quot;review_id&quot;,&quot;employee_id&quot;,&quot;review_date&quot;,&quot;rating&quot;]},&quot;rows&quot;:{&quot;employees&quot;:[[1,&quot;Alice Johnson&quot;],[2,&quot;Bob Smith&quot;],[3,&quot;Carol Davis&quot;],[4,&quot;David Wilson&quot;],[5,&quot;Emma Brown&quot;]],&quot;performance_reviews&quot;:[[1,1,&quot;2023-01-15&quot;,2],[2,1,&quot;2023-04-15&quot;,3],[3,1,&quot;2023-07-15&quot;,4],[4,1,&quot;2023-10-15&quot;,5],[5,2,&quot;2023-02-01&quot;,3],[6,2,&quot;2023-05-01&quot;,2],[7,2,&quot;2023-08-01&quot;,4],[8,2,&quot;2023-11-01&quot;,5],[9,3,&quot;2023-03-10&quot;,1],[10,3,&quot;2023-06-10&quot;,2],[11,3,&quot;2023-09-10&quot;,3],[12,3,&quot;2023-12-10&quot;,4],[13,4,&quot;2023-01-20&quot;,4],[14,4,&quot;2023-04-20&quot;,4],[15,4,&quot;2023-07-20&quot;,4],[16,5,&quot;2023-02-15&quot;,3],[17,5,&quot;2023-05-15&quot;,2]]}}</code></div>
-                <div class="ex-line"><span>Out</span><code>(xem LeetCode)</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -210,7 +73,7 @@ Each row represents a performance review for an employee. The rating is on a sca
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Database. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -227,11 +90,12 @@ Each row represents a performance review for an employee. The rating is on a sca
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Template C — xem editorial LeetCode</span>
-</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Template Python — xem editorial LeetCode</span>
-</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="cm">// Template C++</span></pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+};</pre>
                         </div>
                     </div>
                 </div>
@@ -240,18 +104,18 @@ Each row represents a performance review for an employee. The rating is on a sca
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Database</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Database.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

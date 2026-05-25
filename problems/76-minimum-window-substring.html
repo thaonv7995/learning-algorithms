@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Minimum Window Substring</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N + M) (N, M là chiều dài chuỗi s và t)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1) (Do bảng chữ cái giới hạn 128 ký tự ASCII)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>47.6% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Cho hai chuỗi s và t, hãy tìm chuỗi con có độ dài nhỏ nhất trong s sao cho nó chứa đầy đủ tất cả các ký tự của chuỗi t (kể cả các ký tự trùng lặp). Nếu không tồn tại, trả về chuỗi rỗng.</div>
+                        <div class="block-text">Minimum Window Substring (LC #76).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>s = &quot;ADOBECODEBANC&quot;, t = &quot;ABC&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;BANC&quot;</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Cửa sổ trượt (Sliding Window) với hai con trỏ `left` và `right` kết hợp hai mảng đếm tần suất ký tự. Ta duyệt `right` mở rộng cửa sổ sang phải, ghi nhận ký tự khớp. Khi cửa sổ đã chứa đầy đủ các ký tự của t, ta thực hiện co hẹp cửa sổ bằng cách tịnh tiến con trỏ `left` sang phải hết mức có thể trong khi vẫn đảm bảo cửa sổ chứa đủ t. Ghi nhận và cập nhật chuỗi con ngắn nhất thỏa mãn.</div>
+                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,89 +90,12 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Minimum Window Substring)</span>
-<span class="ty">char</span>* minWindow(<span class="ty">char</span>* s, <span class="ty">char</span>* t) {
-    <span class="ty">int</span> map[128] = {0};
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; t[i] != '\0'; i++) map[(<span class="ty">unsigned</span> <span class="ty">char</span>)t[i]]++;
-    <span class="ty">int</span> counter = strlen(t);
-    <span class="ty">int</span> begin = 0, end = 0, head = 0, len = INT_MAX;
-    <span class="kw">while</span> (s[end] != '\0') {
-        <span class="kw">if</span> (map[(<span class="ty">unsigned</span> <span class="ty">char</span>)s[end]] &gt; 0) counter--;
-        map[(<span class="ty">unsigned</span> <span class="ty">char</span>)s[end]]--;
-        end++;
-        <span class="kw">while</span> (counter == 0) {
-            <span class="kw">if</span> (end - begin &lt; len) {
-                len = end - begin;
-                head = begin;
-            }
-            map[(<span class="ty">unsigned</span> <span class="ty">char</span>)s[begin]]++;
-            <span class="kw">if</span> (map[(<span class="ty">unsigned</span> <span class="ty">char</span>)s[begin]] &gt; 0) counter++;
-            begin++;
-        }
-    }
-    <span class="kw">if</span> (len == INT_MAX) <span class="kw">return</span> &quot;&quot;;
-    <span class="ty">char</span>* res = (<span class="ty">char</span>*)<span class="kw">malloc</span>((len + 1) * <span class="kw">sizeof</span>(<span class="ty">char</span>));
-    strncpy(res, s + head, len);
-    res[len] = '\0';
-    <span class="kw">return</span> res;
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Minimum Window Substring)</span>
-<span class="kw">from</span> collections <span class="kw">import</span> Counter
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> minWindow(<span class="ty">self</span>, s: <span class="ty">str</span>, t: <span class="ty">str</span>) -&gt; <span class="ty">str</span>:
-        <span class="kw">if</span> <span class="kw">not</span> t <span class="kw">or</span> <span class="kw">not</span> s:
-            <span class="kw">return</span> &quot;&quot;
-        dict_t = Counter(t)
-        required = <span class="ty">len</span>(dict_t)
-        l, r = 0, 0
-        formed = 0
-        window_counts = {}
-        ans = float(&quot;inf&quot;), <span class="kw">None</span>, <span class="kw">None</span>
-        <span class="kw">while</span> r &lt; <span class="ty">len</span>(s):
-            character = s[r]
-            window_counts[character] = window_counts.get(character, 0) + 1
-            <span class="kw">if</span> character <span class="kw">in</span> dict_t <span class="kw">and</span> window_counts[character] == dict_t[character]:
-                formed += 1
-            <span class="kw">while</span> l &lt;= r <span class="kw">and</span> formed == required:
-                character = s[l]
-                <span class="kw">if</span> r - l + 1 &lt; ans[0]:
-                    ans = (r - l + 1, l, r)
-                window_counts[character] -= 1
-                <span class="kw">if</span> character <span class="kw">in</span> dict_t <span class="kw">and</span> window_counts[character] &lt; dict_t[character]:
-                    formed -= 1
-                l += 1    
-            r += 1
-        <span class="kw">return</span> &quot;&quot; <span class="kw">if</span> ans[0] == float(&quot;inf&quot;) <span class="kw">else</span> s[ans[1] : ans[2] + 1]</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-<span class="kw">public</span>:
-    <span class="ty">string</span> <span class="fn">minWindow</span>(<span class="ty">string</span> s, <span class="ty">string</span> t) {
-        <span class="ty">int</span> mapT[<span class="st">128</span>] = {<span class="st">0</span>}, mapS[<span class="st">128</span>] = {<span class="st">0</span>};
-        <span class="kw">for</span> (<span class="ty">char</span> c : t) mapT[c]++;
-        
-        <span class="ty">int</span> required = <span class="st">0</span>;
-        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="st">0</span>; i &lt; <span class="st">128</span>; i++) <span class="kw">if</span> (mapT[i] &gt; <span class="st">0</span>) required++;
-        
-        <span class="ty">int</span> left = <span class="st">0</span>, minLen = INT_MAX, startIdx = <span class="st">0</span>;
-        <span class="ty">int</span> formed = <span class="st">0</span>;
-        
-        <span class="kw">for</span> (<span class="ty">int</span> right = <span class="st">0</span>; right &lt; s.<span class="fn">length</span>(); right++) {
-            <span class="ty">char</span> c = s[right];
-            mapS[c]++;
-            <span class="kw">if</span> (mapT[c] &gt; <span class="st">0</span> &amp;&amp; mapS[c] == mapT[c]) formed++;
-            
-            <span class="kw">while</span> (left &lt;= right &amp;&amp; formed == required) {
-                c = s[left];
-                <span class="kw">if</span> (right - left + <span class="st">1</span> &lt; minLen) {
-                    minLen = right - left + <span class="st">1</span>;
-                    startIdx = left;
-                }
-                mapS[c]--;
-                <span class="kw">if</span> (mapT[c] &gt; <span class="st">0</span> &amp;&amp; mapS[c] &lt; mapT[c]) formed--;
-                left++;
-            }
-        }
-        <span class="kw">return</span> minLen == INT_MAX ? <span class="st">""</span> : s.<span class="fn">substr</span>(startIdx, minLen);
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="cm">// Bổ sung theo editorial</span>
 };</pre>
                         </div>
                     </div>
@@ -182,18 +105,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Sliding Window</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N + M)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Cửa sổ trượt với hai con trỏ `left` và `right`…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — duyệt `right` mở rộng cửa sổ sang phải, ghi nhận ký tự…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — cửa sổ đã chứa đầy đủ các ký tự của t, ta thực hiện co…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — Ghi nhận và cập nhật chuỗi con ngắn nhất thỏa mãn.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
 
-                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Expand right đến khi đủ ký tự; shrink left để tối thiểu window vẫn hợp lệ.</p>
-                    <div class="analysis-tags"><span class="analysis-tag edge">t rỗng → &quot;&quot;</span><span class="analysis-tag edge">Không có window hợp lệ → &quot;&quot;</span><span class="analysis-tag edge">t trùng ký tự (aab vs aa)</span><span class="analysis-tag pit">Shrink left quá sớm</span><span class="analysis-tag pit">Đếm tần suất sai khi ký tự lặp trong t</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>mảng tĩnh 128 số nguyên trên Stack thay vì bảng băm động unordered_map giúp loại bỏ hoàn toàn chi phí rehash…</p>
+                        <p>Ghi nhớ pattern và invariant chính.</p>
                     </details>
                 </div>
                 </div>

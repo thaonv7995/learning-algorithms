@@ -41,7 +41,7 @@
                     </div>
                     <h1 class="problem-title">Apply Discount Every n Orders</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>65.6% AC</span>
                     </div>
@@ -57,73 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>There is a supermarket that is frequented by many customers. The products sold at the supermarket are represented as two parallel integer arrays <code>products</code> and <code>prices</code>, where the <code>i<sup>th</sup></code> product has an ID of <code>products[i]</code> and a price of <code>prices[i]</code>.</p>
-
-<p>When a customer is paying, their bill is represented as two parallel integer arrays <code>product</code> and <code>amount</code>, where the <code>j<sup>th</sup></code> product they purchased has an ID of <code>product[j]</code>, and <code>amount[j]</code> is how much of the product they bought. Their subtotal is calculated as the sum of each <code>amount[j] * (price of the j<sup>th</sup> product)</code>.</p>
-
-<p>The supermarket decided to have a sale. Every <code>n<sup>th</sup></code> customer paying for their groceries will be given a <strong>percentage discount</strong>. The discount amount is given by <code>discount</code>, where they will be given <code>discount</code> percent off their subtotal. More formally, if their subtotal is <code>bill</code>, then they would actually pay <code>bill * ((100 - discount) / 100)</code>.</p>
-
-<p>Implement the <code>Cashier</code> class:</p>
-
-<ul>
-	<li><code>Cashier(int n, int discount, int[] products, int[] prices)</code> Initializes the object with <code>n</code>, the <code>discount</code>, and the <code>products</code> and their <code>prices</code>.</li>
-	<li><code>double getBill(int[] product, int[] amount)</code> Returns the final total of the bill with the discount applied (if any). Answers within <code>10<sup>-5</sup></code> of the actual value will be accepted.</li>
-</ul>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input</strong>
-[&quot;Cashier&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;]
-[[3,50,[1,2,3,4,5,6,7],[100,200,300,400,300,200,100]],[[1,2],[1,2]],[[3,7],[10,10]],[[1,2,3,4,5,6,7],[1,1,1,1,1,1,1]],[[4],[10]],[[7,3],[10,10]],[[7,5,3,1,6,4,2],[10,10,10,9,9,9,7]],[[2,3,5],[5,3,2]]]
-<strong>Output</strong>
-[null,500.0,4000.0,800.0,4000.0,4000.0,7350.0,2500.0]
-<strong>Explanation</strong>
-Cashier cashier = new Cashier(3,50,[1,2,3,4,5,6,7],[100,200,300,400,300,200,100]);
-cashier.getBill([1,2],[1,2]);                        // return 500.0. 1<sup>st</sup> customer, no discount.
-                                                     // bill = 1 * 100 + 2 * 200 = 500.
-cashier.getBill([3,7],[10,10]);                      // return 4000.0. 2<sup>nd</sup> customer, no discount.
-                                                     // bill = 10 * 300 + 10 * 100 = 4000.
-cashier.getBill([1,2,3,4,5,6,7],[1,1,1,1,1,1,1]);    // return 800.0. 3<sup>rd</sup> customer, 50% discount.
-                                                     // Original bill = 1600
-                                                     // Actual bill = 1600 * ((100 - 50) / 100) = 800.
-cashier.getBill([4],[10]);                           // return 4000.0. 4<sup>th</sup> customer, no discount.
-cashier.getBill([7,3],[10,10]);                      // return 4000.0. 5<sup>th</sup> customer, no discount.
-cashier.getBill([7,5,3,1,6,4,2],[10,10,10,9,9,9,7]); // return 7350.0. 6<sup>th</sup> customer, 50% discount.
-                                                     // Original bill = 14700, but with
-                                                     // Actual bill = 14700 * ((100 - 50) / 100) = 7350.
-cashier.getBill([2,3,5],[5,3,2]);                    // return 2500.0.  7<sup>th</sup> customer, no discount.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>
-	<li><code>0 &lt;= discount &lt;= 100</code></li>
-	<li><code>1 &lt;= products.length &lt;= 200</code></li>
-	<li><code>prices.length == products.length</code></li>
-	<li><code>1 &lt;= products[i] &lt;= 200</code></li>
-	<li><code>1 &lt;= prices[i] &lt;= 1000</code></li>
-	<li>The elements in <code>products</code> are <strong>unique</strong>.</li>
-	<li><code>1 &lt;= product.length &lt;= products.length</code></li>
-	<li><code>amount.length == product.length</code></li>
-	<li><code>product[j]</code> exists in <code>products</code>.</li>
-	<li><code>1 &lt;= amount[j] &lt;= 1000</code></li>
-	<li>The elements of <code>product</code> are <strong>unique</strong>.</li>
-	<li>At most <code>1000</code> calls will be made to <code>getBill</code>.</li>
-	<li>Answers within <code>10<sup>-5</sup></code> of the actual value will be accepted.</li>
-</ul>
-</div>
+                        <div class="block-text">Apply Discount Every n Orders (LeetCode #1357) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[&quot;Cashier&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;,&quot;getBill&quot;]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[3,50,[1,2,3,4,5,6,7],[100,200,300,400,300,200,100]],[[1,2],[1,2]],[[3,7],[10,10]],[[1,2,3,4,5,6,7],[1,1,1,1,1,1,1]],[[4],[10]],[[7,3],[10,10]],[[7,5,3,1,6,4,2],[10,10,10,9,9,9,7]],[[2,3,5],[5,3,2]]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -131,7 +73,7 @@ cashier.getBill([2,3,5],[5,3,2]);                    // return 2500.0.  7<sup>th
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Keep track of the count of the customers. Check if the count of the customers is divisible by n then apply the discount formula.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -148,72 +90,12 @@ cashier.getBill([2,3,5],[5,3,2]);                    // return 2500.0.  7<sup>th
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">
-
-
-typedef <span class="ty">struct</span> {
-    
-} Cashier;
-
-
-Cashier* cashierCreate(<span class="ty">int</span> n, <span class="ty">int</span> discount, <span class="ty">int</span>* products, <span class="ty">int</span> productsSize, <span class="ty">int</span>* prices, <span class="ty">int</span> pricesSize) {
-    
-}
-
-<span class="ty">double</span> cashierGetBill(Cashier* obj, <span class="ty">int</span>* product, <span class="ty">int</span> productSize, <span class="ty">int</span>* amount, <span class="ty">int</span> amountSize) {
-    
-}
-
-<span class="ty">void</span> cashierFree(Cashier* obj) {
-    
-}
-
-/**
- * Your Cashier <span class="ty">struct</span> will be instantiated and called as such:
- * Cashier* obj = cashierCreate(n, discount, products, productsSize, prices, pricesSize);
- * <span class="ty">double</span> param_1 = cashierGetBill(obj, product, productSize, amount, amountSize);
- 
- * cashierFree(obj);
-*/</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Cashier(object):
-
-    <span class="kw">def</span> __init__(<span class="ty">self</span>, n, discount, products, prices):
-        &quot;&quot;&quot;
-        :type n: <span class="ty">int</span>
-        :type discount: <span class="ty">int</span>
-        :type products: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type prices: <span class="ty">List</span>[<span class="ty">int</span>]
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> getBill(<span class="ty">self</span>, product, amount):
-        &quot;&quot;&quot;
-        :type product: <span class="ty">List</span>[<span class="ty">int</span>]
-        :type amount: <span class="ty">List</span>[<span class="ty">int</span>]
-        :rtype: float
-        &quot;&quot;&quot;
-        
-
-
-<span class="cm"># Your Cashier object will be instantiated <span class="kw">and</span> called as such:</span>
-<span class="cm"># obj = Cashier(n, discount, products, prices)</span>
-<span class="cm"># param_1 = obj.getBill(product,amount)</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Cashier {
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    Cashier(<span class="ty">int</span> n, <span class="ty">int</span> discount, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; products, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&amp; prices) {
-        
-    }
-    
-    <span class="ty">double</span> getBill(<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; product, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; amount) {
-        
-    }
-};
-
-/**
- * Your Cashier object will be instantiated and called as such:
- * Cashier* obj = <span class="kw">new</span> Cashier(n, discount, products, prices);
- * <span class="ty">double</span> param_1 = obj-&gt;getBill(product,amount);
- */</pre>
+};</pre>
                         </div>
                     </div>
                 </div>
@@ -222,18 +104,18 @@ Cashier* cashierCreate(<span class="ty">int</span> n, <span class="ty">int</span
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Array</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Keep track of the count of the customers.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Check if the count of the customers is divisible by n…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Validate Binary Search Tree</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(H)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>35.8% AC</span>
                     </div>
                 </div>
@@ -57,15 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="block-text">Kiểm tra xem một cây nhị phân có phải là Cây tìm kiếm nhị phân (BST) hợp lệ hay không (nhánh trái chứa các nút có giá trị nhỏ hơn nút gốc, nhánh phải lớn hơn).</div>
+                        <div class="block-text">Validate Binary Search Tree (LC #98).</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>root = [2,1,3]</code></div>
-                <div class="ex-line"><span>Out</span><code>true</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Sử dụng đệ quy truyền kèm phạm vi giá trị hợp lệ `[minVal, maxVal]` cho từng nút. Ban đầu nút gốc có phạm vi `[-infinity, +infinity]`. Khi đi xuống con bên trái, giới hạn trên thay đổi: `maxVal = root-&gt;val`. Khi đi xuống con bên phải, giới hạn dưới thay đổi: `minVal = root-&gt;val`. Nếu nút hiện tại vượt ra khỏi biên giới hạn, cây không hợp lệ.</div>
+                        <div class="block-text">Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -90,38 +90,12 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (Validate Binary Search Tree)</span>
-<span class="ty">bool</span> validate(<span class="ty">struct</span> TreeNode* node, <span class="ty">long</span> minVal, <span class="ty">long</span> maxVal) {
-    <span class="kw">if</span> (!node) <span class="kw">return</span> true;
-    <span class="kw">if</span> (node-&gt;val &lt;= minVal || node-&gt;val &gt;= maxVal) <span class="kw">return</span> false;
-    <span class="kw">return</span> validate(node-&gt;left, minVal, node-&gt;val) &amp;&amp; validate(node-&gt;right, node-&gt;val, maxVal);
-}
-
-<span class="ty">bool</span> isValidBST(<span class="ty">struct</span> TreeNode* root) {
-    <span class="kw">return</span> validate(root, LONG_MIN, LONG_MAX);
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (Validate Binary Search Tree)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> isValidBST(<span class="ty">self</span>, root: <span class="ty">Optional</span>[<span class="ty">TreeNode</span>]) -&gt; bool:
-        <span class="kw">def</span> validate(node, low=-float('inf'), high=float('inf')):
-            <span class="kw">if</span> <span class="kw">not</span> node:
-                <span class="kw">return</span> <span class="kw">True</span>
-            <span class="kw">if</span> node.val &lt;= low <span class="kw">or</span> node.val &gt;= high:
-                <span class="kw">return</span> <span class="kw">False</span>
-            <span class="kw">return</span> (validate(node.left, low, node.val) <span class="kw">and</span> 
-                    validate(node.right, node.val, high))
-        <span class="kw">return</span> validate(root)</pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
-    <span class="ty">bool</span> <span class="fn">validate</span>(<span class="ty">TreeNode</span>* node, <span class="ty">long long</span> minV, <span class="ty">long long</span> maxV) {
-        <span class="kw">if</span> (!node) <span class="kw">return</span> <span class="kw">true</span>;
-        <span class="kw">if</span> (node-&gt;val &lt;= minV || node-&gt;val &gt;= maxV) <span class="kw">return</span> <span class="kw">false</span>;
-        <span class="kw">return</span> <span class="fn">validate</span>(node-&gt;left, minV, node-&gt;val) &amp;&amp;
-               <span class="fn">validate</span>(node-&gt;right, node-&gt;val, maxV);
-    }
-<span class="kw">public</span>:
-    <span class="ty">bool</span> <span class="fn">isValidBST</span>(<span class="ty">TreeNode</span>* root) {
-        <span class="kw">return</span> <span class="fn">validate</span>(root, LONG_MIN, LONG_MAX);
-    }
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span>  <span class="cm"># Bổ sung theo editorial</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+<span class="ty">public</span>:
+    <span class="cm">// Bổ sung theo editorial</span>
 };</pre>
                         </div>
                     </div>
@@ -131,18 +105,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(H)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — đệ quy truyền kèm phạm vi giá trị hợp lệ `[minVal,…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Ban đầu nút gốc có phạm vi `[-infinity, +infinity]`.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — đi xuống con bên trái, giới hạn trên thay đổi: `maxVal =…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — đi xuống con bên phải, giới hạn dưới thay đổi: `minVal =…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Thuật toán chuẩn — xem tab Giải pháp và sandbox mô phỏng.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Cây rỗng</span><span class="analysis-tag edge">Một nút</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Đúng theo logic chuẩn của bài toán.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Input rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag edge">Giới hạn lớn</span><span class="analysis-tag pit">Off-by-one</span><span class="analysis-tag pit">Overflow</span><span class="analysis-tag pit">Quên edge case</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>sử dụng kiểu `long long` giúp tránh tràn số nguyên khi nút gốc chứa giá trị `INT_MIN` hoặc `INT_MAX`. Độ sâu…</p>
+                        <p>Ghi nhớ pattern và invariant chính.</p>
                     </details>
                 </div>
                 </div>

@@ -1,0 +1,26 @@
+{
+  "id": 46,
+  "title": "Permutations",
+  "difficulty": "Medium",
+  "category": "Backtracking",
+  "timeComplexity": "O(N·N!)",
+  "spaceComplexity": "O(N)",
+  "description": "Cho mảng số nguyên phân biệt nums. Trả về mọi hoán vị có thể (thứ tự bất kỳ).",
+  "examples": [
+    { "input": "nums = [1,2,3]", "output": "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]" },
+    { "input": "nums = [0,1]", "output": "[[0,1],[1,0]]" }
+  ],
+  "approach": "Backtracking DFS: path + used[]. Chọn từng nums[i] chưa dùng → đệ quy → backtrack pop.",
+  "memoryTip": "Mảng used + path trên stack — O(n).",
+  "solutions": {
+    "python": "class Solution:\n    def permute(self, nums: List[int]) -> List[List[int]]:\n        res = []\n        def dfs(path, used):\n            if len(path) == len(nums):\n                res.append(path[:]); return\n            for i, x in enumerate(nums):\n                if used[i]: continue\n                used[i] = True; path.append(x)\n                dfs(path, used)\n                path.pop(); used[i] = False\n        dfs([], [False]*len(nums))\n        return res",
+    "cpp": "class Solution {\n    vector<vector<int>> res;\n    void dfs(vector<int>& nums, vector<int>& path, vector<bool>& used) {\n        if (path.size() == nums.size()) { res.push_back(path); return; }\n        for (int i = 0; i < (int)nums.size(); i++) {\n            if (used[i]) continue;\n            used[i]=true; path.push_back(nums[i]);\n            dfs(nums, path, used);\n            path.pop_back(); used[i]=false;\n        }\n    }\npublic:\n    vector<vector<int>> permute(vector<int>& nums) {\n        vector<int> path; vector<bool> used(nums.size());\n        dfs(nums, path, used); return res;\n    }\n};",
+    "c": "/* permute — backtracking; xem Python/C++ */"
+  },
+  "analysis": {
+    "correctness": "Mọi hoán vị được sinh đúng một lần nhờ used[].",
+    "edgeCases": ["n=1", "n=2"],
+    "pitfalls": ["Quên backtrack", "Không copy path khi push"]
+  },
+  "tier": "done"
+}

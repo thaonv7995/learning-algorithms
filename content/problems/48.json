@@ -1,0 +1,25 @@
+{
+  "id": 48,
+  "title": "Rotate Image",
+  "difficulty": "Medium",
+  "category": "Matrix",
+  "timeComplexity": "O(N²)",
+  "spaceComplexity": "O(1)",
+  "description": "Xoay ma trận vuông n×n 90° theo chiều kim đồng hồ, in-place.",
+  "examples": [
+    { "input": "matrix = [[1,2,3],[4,5,6],[7,8,9]]", "output": "[[7,4,1],[8,5,2],[9,6,3]]" }
+  ],
+  "approach": "(1) Transpose: swap matrix[i][j] với matrix[j][i]. (2) Reverse từng hàng.",
+  "memoryTip": "Chỉ swap in-place — O(1) extra.",
+  "solutions": {
+    "python": "class Solution:\n    def rotate(self, matrix: List[List[int]]) -> None:\n        n = len(matrix)\n        for i in range(n):\n            for j in range(i+1, n):\n                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]\n        for row in matrix:\n            row.reverse()",
+    "cpp": "class Solution {\npublic:\n    void rotate(vector<vector<int>>& m) {\n        int n=m.size();\n        for(int i=0;i<n;i++) for(int j=i+1;j<n;j++) swap(m[i][j],m[j][i]);\n        for(auto& r:m) reverse(r.begin(),r.end());\n    }\n};",
+    "c": "void rotate(int** matrix, int n, int* cs) {\n    for (int i = 0; i < n; i++)\n        for (int j = i + 1; j < n; j++) {\n            int t = matrix[i][j]; matrix[i][j] = matrix[j][i]; matrix[j][i] = t;\n        }\n    for (int i = 0; i < n; i++)\n        for (int l = 0, r = n - 1; l < r; l++, r--) {\n            int t = matrix[i][l]; matrix[i][l] = matrix[i][r]; matrix[i][r] = t;\n        }\n}"
+  },
+  "analysis": {
+    "correctness": "Transpose + reverse hàng = xoay 90° CW.",
+    "edgeCases": ["n=1", "n=2"],
+    "pitfalls": ["Tạo matrix mới", "Xoay từng vòng 4 ô phức tạp hơn cần"]
+  },
+  "tier": "done"
+}

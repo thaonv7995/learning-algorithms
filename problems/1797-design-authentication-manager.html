@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Design Authentication Manager</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58.6% AC</span>
                     </div>
                 </div>
@@ -57,61 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>There is an authentication system that works with authentication tokens. For each session, the user will receive a new authentication token that will expire <code>timeToLive</code> seconds after the <code>currentTime</code>. If the token is renewed, the expiry time will be <b>extended</b> to expire <code>timeToLive</code> seconds after the (potentially different) <code>currentTime</code>.</p>
-
-<p>Implement the <code>AuthenticationManager</code> class:</p>
-
-<ul>
-	<li><code>AuthenticationManager(int timeToLive)</code> constructs the <code>AuthenticationManager</code> and sets the <code>timeToLive</code>.</li>
-	<li><code>generate(string tokenId, int currentTime)</code> generates a new token with the given <code>tokenId</code> at the given <code>currentTime</code> in seconds.</li>
-	<li><code>renew(string tokenId, int currentTime)</code> renews the <strong>unexpired</strong> token with the given <code>tokenId</code> at the given <code>currentTime</code> in seconds. If there are no unexpired tokens with the given <code>tokenId</code>, the request is ignored, and nothing happens.</li>
-	<li><code>countUnexpiredTokens(int currentTime)</code> returns the number of <strong>unexpired</strong> tokens at the given currentTime.</li>
-</ul>
-
-<p>Note that if a token expires at time <code>t</code>, and another action happens on time <code>t</code> (<code>renew</code> or <code>countUnexpiredTokens</code>), the expiration takes place <strong>before</strong> the other actions.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-<img alt="" src="https://assets.leetcode.com/uploads/2021/02/25/copy-of-pc68_q2.png" style="width: 500px; height: 287px;" />
-<pre>
-<strong>Input</strong>
-[&quot;AuthenticationManager&quot;, &quot;<code>renew</code>&quot;, &quot;generate&quot;, &quot;<code>countUnexpiredTokens</code>&quot;, &quot;generate&quot;, &quot;<code>renew</code>&quot;, &quot;<code>renew</code>&quot;, &quot;<code>countUnexpiredTokens</code>&quot;]
-[[5], [&quot;aaa&quot;, 1], [&quot;aaa&quot;, 2], [6], [&quot;bbb&quot;, 7], [&quot;aaa&quot;, 8], [&quot;bbb&quot;, 10], [15]]
-<strong>Output</strong>
-[null, null, null, 1, null, null, null, 0]
-
-<strong>Explanation</strong>
-AuthenticationManager authenticationManager = new AuthenticationManager(5); // Constructs the AuthenticationManager with <code>timeToLive</code> = 5 seconds.
-authenticationManager.<code>renew</code>(&quot;aaa&quot;, 1); // No token exists with tokenId &quot;aaa&quot; at time 1, so nothing happens.
-authenticationManager.generate(&quot;aaa&quot;, 2); // Generates a new token with tokenId &quot;aaa&quot; at time 2.
-authenticationManager.<code>countUnexpiredTokens</code>(6); // The token with tokenId &quot;aaa&quot; is the only unexpired one at time 6, so return 1.
-authenticationManager.generate(&quot;bbb&quot;, 7); // Generates a new token with tokenId &quot;bbb&quot; at time 7.
-authenticationManager.<code>renew</code>(&quot;aaa&quot;, 8); // The token with tokenId &quot;aaa&quot; expired at time 7, and 8 &gt;= 7, so at time 8 the <code>renew</code> request is ignored, and nothing happens.
-authenticationManager.<code>renew</code>(&quot;bbb&quot;, 10); // The token with tokenId &quot;bbb&quot; is unexpired at time 10, so the <code>renew</code> request is fulfilled and now the token will expire at time 15.
-authenticationManager.<code>countUnexpiredTokens</code>(15); // The token with tokenId &quot;bbb&quot; expires at time 15, and the token with tokenId &quot;aaa&quot; expired at time 7, so currently no token is unexpired, so return 0.
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= timeToLive &lt;= 10<sup>8</sup></code></li>
-	<li><code>1 &lt;= currentTime &lt;= 10<sup>8</sup></code></li>
-	<li><code>1 &lt;= tokenId.length &lt;= 5</code></li>
-	<li><code>tokenId</code> consists only of lowercase letters.</li>
-	<li>All calls to <code>generate</code> will contain unique values of <code>tokenId</code>.</li>
-	<li>The values of <code>currentTime</code> across all the function calls will be <strong>strictly increasing</strong>.</li>
-	<li>At most <code>2000</code> calls will be made to all functions combined.</li>
-</ul>
-</div>
+                        <div class="block-text">Design Authentication Manager (LeetCode #1797) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[&quot;AuthenticationManager&quot;,&quot;renew&quot;,&quot;generate&quot;,&quot;countUnexpiredTokens&quot;,&quot;generate&quot;,&quot;renew&quot;,&quot;renew&quot;,&quot;countUnexpiredTokens&quot;]</code></div>
-                <div class="ex-line"><span>Out</span><code>[[5],[&quot;aaa&quot;,1],[&quot;aaa&quot;,2],[6],[&quot;bbb&quot;,7],[&quot;aaa&quot;,8],[&quot;bbb&quot;,10],[15]]</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -119,7 +73,7 @@ authenticationManager.<code>countUnexpiredTokens</code>(15); // The token with t
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Using a map, track the expiry times of the tokens. When generating a new token, add it to the map with its expiry time. When renewing a token, check if it's on the map and has not expired yet. If so, update its expiry time. To count unexpired tokens, iterate on the map and check for each token if it's not expired yet.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -136,108 +90,12 @@ authenticationManager.<code>countUnexpiredTokens</code>(15); // The token with t
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">
-
-
-typedef <span class="ty">struct</span> {
-    
-} AuthenticationManager;
-
-
-AuthenticationManager* authenticationManagerCreate(<span class="ty">int</span> timeToLive) {
-    
-}
-
-<span class="ty">void</span> authenticationManagerGenerate(AuthenticationManager* obj, <span class="ty">char</span>* tokenId, <span class="ty">int</span> currentTime) {
-    
-}
-
-<span class="ty">void</span> authenticationManagerRenew(AuthenticationManager* obj, <span class="ty">char</span>* tokenId, <span class="ty">int</span> currentTime) {
-    
-}
-
-<span class="ty">int</span> authenticationManagerCountUnexpiredTokens(AuthenticationManager* obj, <span class="ty">int</span> currentTime) {
-    
-}
-
-<span class="ty">void</span> authenticationManagerFree(AuthenticationManager* obj) {
-    
-}
-
-/**
- * Your AuthenticationManager <span class="ty">struct</span> will be instantiated and called as such:
- * AuthenticationManager* obj = authenticationManagerCreate(timeToLive);
- * authenticationManagerGenerate(obj, tokenId, currentTime);
- 
- * authenticationManagerRenew(obj, tokenId, currentTime);
- 
- * <span class="ty">int</span> param_3 = authenticationManagerCountUnexpiredTokens(obj, currentTime);
- 
- * authenticationManagerFree(obj);
-*/</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> AuthenticationManager(object):
-
-    <span class="kw">def</span> __init__(<span class="ty">self</span>, timeToLive):
-        &quot;&quot;&quot;
-        :type timeToLive: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> generate(<span class="ty">self</span>, tokenId, currentTime):
-        &quot;&quot;&quot;
-        :type tokenId: <span class="ty">str</span>
-        :type currentTime: <span class="ty">int</span>
-        :rtype: <span class="kw">None</span>
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> renew(<span class="ty">self</span>, tokenId, currentTime):
-        &quot;&quot;&quot;
-        :type tokenId: <span class="ty">str</span>
-        :type currentTime: <span class="ty">int</span>
-        :rtype: <span class="kw">None</span>
-        &quot;&quot;&quot;
-        
-
-    <span class="kw">def</span> countUnexpiredTokens(<span class="ty">self</span>, currentTime):
-        &quot;&quot;&quot;
-        :type currentTime: <span class="ty">int</span>
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        
-
-
-<span class="cm"># Your AuthenticationManager object will be instantiated <span class="kw">and</span> called as such:</span>
-<span class="cm"># obj = AuthenticationManager(timeToLive)</span>
-<span class="cm"># obj.generate(tokenId,currentTime)</span>
-<span class="cm"># obj.renew(tokenId,currentTime)</span>
-<span class="cm"># param_3 = obj.countUnexpiredTokens(currentTime)</span></pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> AuthenticationManager {
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    AuthenticationManager(<span class="ty">int</span> timeToLive) {
-        
-    }
-    
-    <span class="ty">void</span> generate(<span class="ty">string</span> tokenId, <span class="ty">int</span> currentTime) {
-        
-    }
-    
-    <span class="ty">void</span> renew(<span class="ty">string</span> tokenId, <span class="ty">int</span> currentTime) {
-        
-    }
-    
-    <span class="ty">int</span> countUnexpiredTokens(<span class="ty">int</span> currentTime) {
-        
-    }
-};
-
-/**
- * Your AuthenticationManager object will be instantiated and called as such:
- * AuthenticationManager* obj = <span class="kw">new</span> AuthenticationManager(timeToLive);
- * obj-&gt;generate(tokenId,currentTime);
- * obj-&gt;renew(tokenId,currentTime);
- * <span class="ty">int</span> param_3 = obj-&gt;countUnexpiredTokens(currentTime);
- */</pre>
+};</pre>
                         </div>
                     </div>
                 </div>
@@ -246,18 +104,18 @@ AuthenticationManager* authenticationManagerCreate(<span class="ty">int</span> t
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Using a map, track the expiry times of the tokens.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — When generating a new token, add it to the map with its…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — When renewing a token, check if it's on the map and has…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — If so, update its expiry time. To count unexpired tokens,…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

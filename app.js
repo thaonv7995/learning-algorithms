@@ -505,7 +505,12 @@ function startApp() {
         const inputPattern = document.getElementById("lc-input-pattern");
         if (inputPattern) cv.pattern = inputPattern.value;
         const inputBoard = document.getElementById("lc-input-board");
-        if (inputBoard) cv.board = inputBoard.value;
+        if (inputBoard) {
+            document.querySelectorAll(".viz-matrix-editor").forEach(me => {
+                if (window.VizCore) VizCore.syncMatrixEditorHidden(me);
+            });
+            cv.board = inputBoard.value;
+        }
         const inputLists = document.getElementById("lc-input-lists");
         if (inputLists) cv.lists = inputLists.value;
         const inputPreset = document.getElementById("lc-input-preset");
@@ -651,6 +656,9 @@ function startApp() {
             const viz = window.LeetCodeVisualizers && window.LeetCodeVisualizers[state.id];
             if (viz && viz.render) {
                 viz.render(state, sandboxCanvas, statsPanel);
+                if (window.VizCore && VizCore.ensureOutputPanel) {
+                    VizCore.ensureOutputPanel(sandboxCanvas, state);
+                }
             } else {
                 renderMissingVisualizer();
             }
@@ -696,7 +704,10 @@ function startApp() {
 
         // Dynamically load visualizer script, initialize states, bind controls and render
         loadVisualizerScript(lcId, () => {
-            const viz = window.LeetCodeVisualizers && window.LeetCodeVisualizers[lcId];
+            let viz = window.LeetCodeVisualizers && window.LeetCodeVisualizers[lcId];
+            if (!viz && window.ensureCatalogVisualizer) {
+                viz = window.ensureCatalogVisualizer(lcId, problemTitle);
+            }
             if (viz && viz.initialize) {
                 viz.initialize(state, log, customValues);
             } else {

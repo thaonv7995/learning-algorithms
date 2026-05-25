@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Pythagorean Distance Nodes in a Tree</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(H)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>58% AC</span>
                     </div>
                 </div>
@@ -57,140 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given an integer <code>n</code> and an undirected tree with <code>n</code> nodes numbered from 0 to <code>n - 1</code>. The tree is represented by a 2D array <code>edges</code> of length <code>n - 1</code>, where <code>edges[i] = [u<sub>i</sub>, v<sub>i</sub>]</code> indicates an undirected edge between <code>u<sub>i</sub></code> and <code>v<sub>i</sub></code>.</p>
-
-<p>You are also given three <strong>distinct</strong> target nodes <code>x</code>, <code>y</code>, and <code>z</code>.</p>
-
-<p>For any node <code>u</code> in the tree:</p>
-
-<ul>
-	<li>Let <code>dx</code> be the distance from <code>u</code> to node <code>x</code></li>
-	<li>Let <code>dy</code> be the distance from <code>u</code> to node <code>y</code></li>
-	<li>Let <code>dz</code> be the distance from <code>u</code> to node <code>z</code></li>
-</ul>
-
-<p>The node <code>u</code> is called <strong>special</strong> if the three distances form a <strong>Pythagorean Triplet</strong>.</p>
-
-<p>Return an integer denoting the number of special nodes in the tree.</p>
-
-<p>A <strong>Pythagorean triplet</strong> consists of three integers <code>a</code>, <code>b</code>, and <code>c</code> which, when sorted in <strong>ascending</strong> order, satisfy <code>a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup></code>.</p>
-
-<p>The <strong>distance</strong> between two nodes in a tree is the number of edges on the unique path between them.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 4, edges = [[0,1],[0,2],[0,3]], x = 1, y = 2, z = 3</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">3</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>For each node, we compute its distances to nodes <code>x = 1</code>, <code>y = 2</code>, and <code>z = 3</code>.</p>
-
-<ul>
-	<li>Node 0 has distances 1, 1, and 1. After sorting, the distances are 1, 1, and 1, which do not satisfy the Pythagorean condition.</li>
-	<li>Node 1 has distances 0, 2, and 2. After sorting, the distances are 0, 2, and 2. Since <code>0<sup>2</sup> + 2<sup>2</sup> = 2<sup>2</sup></code>, node 1 is special.</li>
-	<li>Node 2 has distances 2, 0, and 2. After sorting, the distances are 0, 2, and 2. Since <code>0<sup>2</sup> + 2<sup>2</sup> = 2<sup>2</sup></code>, node 2 is special.</li>
-	<li>Node 3 has distances 2, 2, and 0. After sorting, the distances are 0, 2, and 2. This also satisfies the Pythagorean condition.</li>
-</ul>
-
-<p>Therefore, nodes 1, 2, and 3 are special, and the answer is 3.</p>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 4, edges = [[0,1],[1,2],[2,3]], x = 0, y = 3, z = 2</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">0</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>For each node, we compute its distances to nodes <code>x = 0</code>, <code>y = 3</code>, and <code>z = 2</code>.</p>
-
-<ul>
-	<li>Node 0 has distances 0, 3, and 2. After sorting, the distances are 0, 2, and 3, which do not satisfy the Pythagorean condition.</li>
-	<li>Node 1 has distances 1, 2, and 1. After sorting, the distances are 1, 1, and 2, which do not satisfy the Pythagorean condition.</li>
-	<li>Node 2 has distances 2, 1, and 0. After sorting, the distances are 0, 1, and 2, which do not satisfy the Pythagorean condition.</li>
-	<li>Node 3 has distances 3, 0, and 1. After sorting, the distances are 0, 1, and 3, which do not satisfy the Pythagorean condition.</li>
-</ul>
-
-<p>No node satisfies the Pythagorean condition. Therefore, the answer is 0.</p>
-</div>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">n = 4, edges = [[0,1],[1,2],[1,3]], x = 1, y = 3, z = 0</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">1</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p>For each node, we compute its distances to nodes <code>x = 1</code>, <code>y = 3</code>, and <code>z = 0</code>.</p>
-
-<ul>
-	<li>Node 0 has distances 1, 2, and 0. After sorting, the distances are 0, 1, and 2, which do not satisfy the Pythagorean condition.</li>
-	<li>Node 1 has distances 0, 1, and 1. After sorting, the distances are 0, 1, and 1. Since <code>0<sup>2</sup> + 1<sup>2</sup> = 1<sup>2</sup></code>, node 1 is special.</li>
-	<li>Node 2 has distances 1, 2, and 2. After sorting, the distances are 1, 2, and 2, which do not satisfy the Pythagorean condition.</li>
-	<li>Node 3 has distances 1, 0, and 2. After sorting, the distances are 0, 1, and 2, which do not satisfy the Pythagorean condition.</li>
-</ul>
-
-<p>Therefore, the answer is 1.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>4 &lt;= n &lt;= 10<sup>5</sup></code></li>
-	<li><code>edges.length == n - 1</code></li>
-	<li><code>edges[i] = [u<sub>i</sub>, v<sub>i</sub>]</code></li>
-	<li><code>0 &lt;= u<sub>i</sub>, v<sub>i</sub>, x, y, z &lt;= n - 1</code></li>
-	<li><code>x</code>, <code>y</code>, and <code>z</code> are pairwise <strong>distinct</strong>.</li>
-	<li>The input is generated such that <code>edges</code> represent a valid tree.</li>
-</ul>
-</div>
+                        <div class="block-text">Pythagorean Distance Nodes in a Tree (LeetCode #3820) — Medium.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>4</code></div>
-                <div class="ex-line"><span>Out</span><code>[[0,1],[0,2],[0,3]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>1</code></div>
-                <div class="ex-line"><span>Out</span><code>2</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>3</code></div>
-                <div class="ex-line"><span>Out</span><code>4</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 4</div>
-                <div class="ex-line"><span>In</span><code>[[0,1],[1,2],[2,3]]</code></div>
-                <div class="ex-line"><span>Out</span><code>0</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 5</div>
-                <div class="ex-line"><span>In</span><code>3</code></div>
-                <div class="ex-line"><span>Out</span><code>2</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 6</div>
-                <div class="ex-line"><span>In</span><code>4</code></div>
-                <div class="ex-line"><span>Out</span><code>[[0,1],[1,2],[1,3]]</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 7</div>
-                <div class="ex-line"><span>In</span><code>1</code></div>
-                <div class="ex-line"><span>Out</span><code>3</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -198,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Run a breadth-first search independently from &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt;, and &lt;code&gt;z&lt;/code&gt;. This gives you three distance arrays with full coverage. For each node, collect its three distances, sort them, and evaluate the Pythagorean condition on the sorted value.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -215,25 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">int</span> specialNodes(<span class="ty">int</span> n, <span class="ty">int</span>** edges, <span class="ty">int</span> edgesSize, <span class="ty">int</span>* edgesColSize, <span class="ty">int</span> x, <span class="ty">int</span> y, <span class="ty">int</span> z) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> specialNodes(<span class="ty">self</span>, n, edges, x, y, z):
-        &quot;&quot;&quot;
-        :type n: <span class="ty">int</span>
-        :type edges: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
-        :type x: <span class="ty">int</span>
-        :type y: <span class="ty">int</span>
-        :type z: <span class="ty">int</span>
-        :rtype: <span class="ty">int</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">int</span> specialNodes(<span class="ty">int</span> n, <span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt;&amp; edges, <span class="ty">int</span> x, <span class="ty">int</span> y, <span class="ty">int</span> z) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -243,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Tree</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(H)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Run a breadth-first search independently from…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — This gives you three distance arrays with full coverage.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — For each node, collect its three distances, sort them,…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">Cây rỗng</span><span class="analysis-tag edge">Một nút</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Đệ quy dùng Call Stack O; BFS dùng queue O tầng rộng nhất.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

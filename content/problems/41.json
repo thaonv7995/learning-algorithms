@@ -1,0 +1,27 @@
+{
+  "id": 41,
+  "title": "First Missing Positive",
+  "difficulty": "Hard",
+  "category": "Array",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho mảng số nguyên chưa sort. Trả về số nguyên dương nhỏ nhất không xuất hiện trong mảng. Yêu cầu O(n) thời gian và O(1) bộ nhớ phụ.",
+  "examples": [
+    { "input": "nums = [1,2,0]", "output": "3" },
+    { "input": "nums = [3,4,-1,1]", "output": "2" },
+    { "input": "nums = [7,8,9,11,12]", "output": "1" }
+  ],
+  "approach": "Cyclic sort in-place: với mỗi i, trong khi 1 ≤ nums[i] ≤ n và nums[i] ≠ nums[nums[i]-1], hoán vị nums[i] về đúng vị trí nums[i]-1. Sau đó quét tìm i đầu tiên sao nums[i] ≠ i+1 → trả i+1; nếu không có trả n+1.",
+  "memoryTip": "Chỉ hoán vị trên mảng gốc — không cần hash set. Mỗi phần tử di chuyển tối đa một lần → O(n).",
+  "solutions": {
+    "python": "class Solution:\n    def firstMissingPositive(self, nums: List[int]) -> int:\n        n = len(nums)\n        for i in range(n):\n            while 1 <= nums[i] <= n and nums[nums[i] - 1] != nums[i]:\n                j = nums[i] - 1\n                nums[i], nums[j] = nums[j], nums[i]\n        for i in range(n):\n            if nums[i] != i + 1:\n                return i + 1\n        return n + 1",
+    "cpp": "class Solution {\npublic:\n    int firstMissingPositive(vector<int>& nums) {\n        int n = nums.size();\n        for (int i = 0; i < n; i++) {\n            while (nums[i] >= 1 && nums[i] <= n && nums[nums[i]-1] != nums[i])\n                swap(nums[i], nums[nums[i]-1]);\n        }\n        for (int i = 0; i < n; i++)\n            if (nums[i] != i + 1) return i + 1;\n        return n + 1;\n    }\n};",
+    "c": "static void swapInt(int* a, int* b) { int t = *a; *a = *b; *b = t; }\nint firstMissingPositive(int* nums, int n) {\n    for (int i = 0; i < n; i++) {\n        while (nums[i] >= 1 && nums[i] <= n && nums[nums[i]-1] != nums[i])\n            swapInt(&nums[i], &nums[nums[i]-1]);\n    }\n    for (int i = 0; i < n; i++)\n        if (nums[i] != i + 1) return i + 1;\n    return n + 1;\n}"
+  },
+  "analysis": {
+    "correctness": "Sau cyclic sort, mọi số trong [1,n] nằm đúng index nếu có mặt — quét tìm lỗ hổng đầu tiên cho đáp án.",
+    "edgeCases": ["Toàn số âm/lớn hơn n → 1", "Đã đủ 1..n → n+1", "Trùng lặp"],
+    "pitfalls": ["Dùng hash O(n) space", "Điều kiện while thiếu nums[nums[i]-1]!=nums[i] → vòng lặp vô hạn"]
+  },
+  "tier": "done"
+}

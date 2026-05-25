@@ -37,11 +37,11 @@
                         <span class="lc-num">LC #50</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Math</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Pow(x, n)</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(log N)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>38.7% AC</span>
                     </div>
@@ -57,60 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Implement <a href="http://www.cplusplus.com/reference/valarray/pow/" target="_blank">pow(x, n)</a>, which calculates <code>x</code> raised to the power <code>n</code> (i.e., <code>x<sup>n</sup></code>).</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> x = 2.00000, n = 10
-<strong>Output:</strong> 1024.00000
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> x = 2.10000, n = 3
-<strong>Output:</strong> 9.26100
-</pre>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<pre>
-<strong>Input:</strong> x = 2.00000, n = -2
-<strong>Output:</strong> 0.25000
-<strong>Explanation:</strong> 2<sup>-2</sup> = 1/2<sup>2</sup> = 1/4 = 0.25
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>-100.0 &lt; x &lt; 100.0</code></li>
-	<li><code>-2<sup>31</sup> &lt;= n &lt;= 2<sup>31</sup>-1</code></li>
-	<li><code>n</code> is an integer.</li>
-	<li>Either <code>x</code> is not zero or <code>n &gt; 0</code>.</li>
-	<li><code>-10<sup>4</sup> &lt;= x<sup>n</sup> &lt;= 10<sup>4</sup></code></li>
-</ul>
-</div>
+                        <div class="block-text">Tính x^n (n có thể âm). Không dùng hàm pow có sẵn.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>2.00000</code></div>
-                <div class="ex-line"><span>Out</span><code>10</code></div>
+                <div class="ex-line"><span>In</span><code>x = 2.0, n = 10</code></div>
+                <div class="ex-line"><span>Out</span><code>1024.0</code></div>
             </div>
             <div class="example-block">
                 <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>2.10000</code></div>
-                <div class="ex-line"><span>Out</span><code>3</code></div>
-            </div>
-            <div class="example-block">
-                <div class="ex-label">Ví dụ 3</div>
-                <div class="ex-line"><span>In</span><code>2.00000</code></div>
-                <div class="ex-line"><span>Out</span><code>-2</code></div>
+                <div class="ex-line"><span>In</span><code>x = 2.0, n = -2</code></div>
+                <div class="ex-line"><span>Out</span><code>0.25</code></div>
             </div></div>
                     </div>
                 </div>
@@ -118,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Math kết hợp Recursion. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Binary exponentiation: n chẵn → (x²)^(n/2); n lẻ → x * x^(n-1). n&lt;0 → đảo x, n=-n.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -136,20 +96,34 @@
                                 <span class="ftype">C99</span>
                             </div>
                             <pre class="code-block" id="code-block-c"><span class="ty">double</span> myPow(<span class="ty">double</span> x, <span class="ty">int</span> n) {
-    
+    <span class="ty">long</span> N = n;
+    <span class="kw">if</span> (N &lt; 0) { x = 1.0 / x; N = -N; }
+    <span class="ty">double</span> res = 1.0;
+    <span class="kw">while</span> (N) {
+        <span class="kw">if</span> (N &amp; 1) res *= x;
+        x *= x; N &gt;&gt;= 1;
+    }
+    <span class="kw">return</span> res;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> myPow(<span class="ty">self</span>, x, n):
-        &quot;&quot;&quot;
-        :type x: float
-        :type n: <span class="ty">int</span>
-        :rtype: float
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> myPow(<span class="ty">self</span>, x: float, n: <span class="ty">int</span>) -&gt; float:
+        <span class="kw">if</span> n &lt; 0: x, n = 1/x, -n
+        res = 1.0
+        <span class="kw">while</span> n:
+            <span class="kw">if</span> n &amp; 1: res *= x
+            x *= x; n &gt;&gt;= 1
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     <span class="ty">double</span> myPow(<span class="ty">double</span> x, <span class="ty">int</span> n) {
-        
+        <span class="ty">long</span> N = n;
+        <span class="kw">if</span> (N &lt; 0) { x = 1/x; N = -N; }
+        <span class="ty">double</span> res = 1;
+        <span class="kw">while</span> (N) {
+            <span class="kw">if</span> (N &amp; 1) res *= x;
+            x *= x; N &gt;&gt;= 1;
+        }
+        <span class="kw">return</span> res;
     }
 };</pre>
                         </div>
@@ -160,18 +134,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Math</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(1)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(log N)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Math kết hợp Recursion.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Binary exponentiation: n chẵn → ^; n lẻ → x * x^.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — n&lt;0 → đảo x, n=-n.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi bit của n nhân đúng lũy thừa x^(2^k).</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">n=0 → 1</span><span class="analysis-tag edge">n=INT_MIN</span><span class="analysis-tag edge">x=0</span><span class="analysis-tag pit">INT_MIN overflow khi -n</span><span class="analysis-tag pit">Dùng recursion sâu</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Thuật toán chạy in-place hoặc dùng cấu trúc phụ tỉ lệ với input — xem phân tích độ phức tạp.</p>
+                        <p>Dùng long cho n khi n = INT_MIN.</p>
                     </details>
                 </div>
                 </div>
@@ -188,7 +162,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=2&problem=Pow(x%2C%20n)&lc_id=50&embed=true"></iframe>

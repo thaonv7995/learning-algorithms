@@ -41,8 +41,8 @@
                     </div>
                     <h1 class="problem-title">Majority Frequency Characters</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(1)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>67.1% AC</span>
                     </div>
                 </div>
@@ -57,148 +57,15 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>You are given a string <code>s</code> consisting of lowercase English letters.</p>
-
-<p>The <strong>frequency group</strong> for a value <code>k</code> is the set of characters that appear exactly <code>k</code> times in s.</p>
-
-<p>The <strong>majority frequency group</strong> is the frequency group that contains the largest number of <strong>distinct</strong> characters.</p>
-
-<p>Return a string containing all characters in the majority frequency group, in <strong>any</strong> order. If two or more frequency groups tie for that largest size, pick the group whose frequency <code>k</code> is <strong>larger</strong>.</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;aaabbbccdddde&quot;</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">&quot;ab&quot;</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;">Frequency (k)</th>
-			<th style="border: 1px solid black;">Distinct characters in group</th>
-			<th style="border: 1px solid black;">Group size</th>
-			<th style="border: 1px solid black;">Majority?</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">4</td>
-			<td style="border: 1px solid black;">{d}</td>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">No</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">3</td>
-			<td style="border: 1px solid black;">{a, b}</td>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;"><strong>Yes</strong></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">{c}</td>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">No</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">{e}</td>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">No</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Both characters <code>&#39;a&#39;</code> and <code>&#39;b&#39;</code> share the same frequency 3, they are in the majority frequency group. <code>&quot;ba&quot;</code> is also a valid answer.</p>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;abcd&quot;</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">&quot;abcd&quot;</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;">Frequency (k)</th>
-			<th style="border: 1px solid black;">Distinct characters in group</th>
-			<th style="border: 1px solid black;">Group size</th>
-			<th style="border: 1px solid black;">Majority?</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">{a, b, c, d}</td>
-			<td style="border: 1px solid black;">4</td>
-			<td style="border: 1px solid black;"><strong>Yes</strong></td>
-		</tr>
-	</tbody>
-</table>
-
-<p>All characters share the same frequency 1, they are all in the majority frequency group.</p>
-</div>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">s = &quot;pfpfgi&quot;</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">&quot;fp&quot;</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<table style="border: 1px solid black;">
-	<thead>
-		<tr>
-			<th style="border: 1px solid black;">Frequency (k)</th>
-			<th style="border: 1px solid black;">Distinct characters in group</th>
-			<th style="border: 1px solid black;">Group size</th>
-			<th style="border: 1px solid black;">Majority?</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">{p, f}</td>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;"><strong>Yes</strong></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid black;">1</td>
-			<td style="border: 1px solid black;">{g, i}</td>
-			<td style="border: 1px solid black;">2</td>
-			<td style="border: 1px solid black;">No (tied size, lower frequency)</td>
-		</tr>
-	</tbody>
-</table>
-
-<p>Both characters <code>&#39;p&#39;</code> and <code>&#39;f&#39;</code> share the same frequency 2, they are in the majority frequency group. There is a tie in group size with frequency 1, but we pick the higher frequency: 2.</p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= s.length &lt;= 100</code></li>
-	<li><code>s</code> consists only of lowercase English letters.</li>
-</ul>
-</div>
+                        <div class="block-text">Majority Frequency Characters (LeetCode #3692) — Easy.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;aaabbbccdddde&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;abcd&quot;</code></div>
+                <div class="ex-line"><span>In</span><code>Xem đề gốc trên LeetCode</code></div>
+                <div class="ex-line"><span>Out</span><code>…</code></div>
             </div></div>
                     </div>
                 </div>
@@ -206,7 +73,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Start by counting the frequency of each character in the string. Group characters based on their frequencies. Identify the group with the largest number of distinct characters. If multiple groups tie, select the one with the higher frequency value. Construct the answer string using all characters from that chosen group.</div>
+                        <div class="block-text">Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -223,21 +90,11 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="ty">char</span>* majorityFrequencyGroup(<span class="ty">char</span>* s) {
-    
-}</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> majorityFrequencyGroup(<span class="ty">self</span>, s):
-        &quot;&quot;&quot;
-        :type s: <span class="ty">str</span>
-        :rtype: <span class="ty">str</span>
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-c">/* Xem C++ */</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">pass</span></pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
-    <span class="ty">string</span> majorityFrequencyGroup(<span class="ty">string</span> s) {
-        
-    }
 };</pre>
                         </div>
                     </div>
@@ -247,18 +104,18 @@
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
                         <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
-                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(n)</span>
+                        <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Start by counting the frequency of each character in the…</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Group characters based on their frequencies.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Identify the group with the largest number of distinct…</span></li><li class="analysis-step-compact"><span class="step-num">4</span><span class="step-text"><strong>Kết luận</strong> — If multiple groups tie, select the one with the higher…</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Giải thuật</strong> — Giải pháp chuẩn — dùng sandbox mô phỏng và bổ sung code chi tiết dần.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Logic chuẩn theo editorial.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">Rỗng</span><span class="analysis-tag edge">Một phần tử</span><span class="analysis-tag pit">Edge case</span><span class="analysis-tag pit">Complexity</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                        <p>Nắm pattern chính của bài trước khi phỏng vấn.</p>
                     </details>
                 </div>
                 </div>

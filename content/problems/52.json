@@ -1,0 +1,26 @@
+{
+  "id": 52,
+  "title": "N-Queens II",
+  "difficulty": "Hard",
+  "category": "Backtracking",
+  "timeComplexity": "O(N!)",
+  "spaceComplexity": "O(N)",
+  "description": "Đếm số cách đặt n quân hậu trên bàn n×n sao cho không tấn công nhau.",
+  "examples": [
+    { "input": "n = 4", "output": "2" },
+    { "input": "n = 1", "output": "1" }
+  ],
+  "approach": "Backtracking hàng: thử cột c, kiểm tra cột/chéo bằng set. Hết hàng → count++.",
+  "memoryTip": "Chỉ lưu cột + 2 chéo — O(n) state.",
+  "solutions": {
+    "python": "class Solution:\n    def totalNQueens(self, n: int) -> int:\n        cols, d1, d2, count = set(), set(), set(), [0]\n        def dfs(r):\n            if r == n: count[0] += 1; return\n            for c in range(n):\n                if c in cols or r-c in d1 or r+c in d2: continue\n                cols.add(c); d1.add(r-c); d2.add(r+c)\n                dfs(r+1)\n                cols.remove(c); d1.remove(r-c); d2.remove(r+c)\n        dfs(0); return count[0]",
+    "cpp": "class Solution {\n    int ans=0;\n    void dfs(int r,int n,vector<bool>& col,vector<bool>& d1,vector<bool>& d2){\n        if(r==n){ ans++; return; }\n        for(int c=0;c<n;c++){\n            if(col[c]||d1[r-c+n]||d2[r+c]) continue;\n            col[c]=d1[r-c+n]=d2[r+c]=true;\n            dfs(r+1,n,col,d1,d2);\n            col[c]=d1[r-c+n]=d2[r+c]=false;\n        }\n    }\npublic:\n    int totalNQueens(int n){\n        vector<bool> col(n),d1(2*n),d2(2*n);\n        dfs(0,n,col,d1,d2); return ans;\n    }\n};",
+    "c": "/* totalNQueens — backtracking; xem C++ */"
+  },
+  "analysis": {
+    "correctness": "Mỗi hàng đặt đúng 1 queen, ràng buộc cột/chéo loại xung đột.",
+    "edgeCases": ["n=1", "n=2 → 0"],
+    "pitfalls": ["Index chéo sai", "Đếm partial board"]
+  },
+  "tier": "done"
+}
