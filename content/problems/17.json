@@ -1,0 +1,26 @@
+{
+  "id": 17,
+  "title": "Letter Combinations of a Phone Number",
+  "difficulty": "Medium",
+  "category": "Backtracking",
+  "timeComplexity": "O(4^N)",
+  "spaceComplexity": "O(N)",
+  "description": "Cho chuỗi digits (2–9), trả về mọi chuỗi chữ cái tương ứng bàn phím điện thoại.",
+  "examples": [
+    { "input": "digits = \"23\"", "output": "[\"ad\",\"ae\",\"af\",\"bd\",\"be\",\"bf\",\"cd\",\"ce\",\"cf\"]" },
+    { "input": "digits = \"\"", "output": "[]" }
+  ],
+  "approach": "Backtracking: map digit → letters, dfs(idx, path). Tại idx chọn từng chữ cái của digits[idx], đệ quy idx+1. Khi idx == len → push path.",
+  "memoryTip": "Độ sâu đệ quy = len(digits) trên call stack.",
+  "solutions": {
+    "c": "void dfs(char* digits, int idx, char* path, int plen, char** res, int* rs, char map[10][5]) {\n    if (!digits[idx]) { res[(*rs)++] = strdup(path); return; }\n    int d = digits[idx]-'0';\n    for (int i = 0; map[d][i]; i++) {\n        path[plen] = map[d][i]; path[plen+1] = 0;\n        dfs(digits, idx+1, path, plen+1, res, rs, map);\n    }\n}",
+    "python": "class Solution:\n    def letterCombinations(self, digits: str) -> List[str]:\n        if not digits: return []\n        m = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}\n        res = []\n        def dfs(i, path):\n            if i == len(digits):\n                res.append(''.join(path)); return\n            for c in m[digits[i]]:\n                path.append(c); dfs(i+1, path); path.pop()\n        dfs(0, [])\n        return res",
+    "cpp": "class Solution {\n    map<char,string> m = {{'2',\"abc\"},{'3',\"def\"},{'4',\"ghi\"},{'5',\"jkl\"},{'6',\"mno\"},{'7',\"pqrs\"},{'8',\"tuv\"},{'9',\"wxyz\"}};\n    vector<string> res;\n    string path;\n    void dfs(string& d, int i) {\n        if (i == (int)d.size()) { res.push_back(path); return; }\n        for (char c : m[d[i]]) { path += c; dfs(d, i+1); path.pop_back(); }\n    }\npublic:\n    vector<string> letterCombinations(string digits) {\n        if (digits.empty()) return {};\n        dfs(digits, 0); return res;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "DFS duyệt đủ Cartesian product các chữ cái — không trùng, không thiếu.",
+    "edgeCases": ["digits rỗng → []", "một digit", "digit 7 có 4 chữ"],
+    "pitfalls": ["Quên pop backtrack", "Map thiếu digit 7 pqrs"]
+  },
+  "tier": "done"
+}

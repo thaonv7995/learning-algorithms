@@ -1,0 +1,27 @@
+{
+  "id": 24,
+  "title": "Swap Nodes in Pairs",
+  "difficulty": "Medium",
+  "category": "Linked List",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Hoán đổi từng cặp nút liền kề trong linked list và trả về head mới.",
+  "examples": [
+    { "input": "head = [1,2,3,4]", "output": "[2,1,4,3]" },
+    { "input": "head = []", "output": "[]" },
+    { "input": "head = [1]", "output": "[1]" }
+  ],
+  "approach": "Dummy node trước head. Con trỏ prev đứng trước cặp cần swap: first=prev.next, second=first.next; nối prev→second, first→second.next, second→first; prev=first.",
+  "memoryTip": "Chỉ vài con trỏ — O(1) extra.",
+  "solutions": {
+    "python": "class Solution:\n    def swapPairs(self, head):\n        dummy = ListNode(0, head); prev = dummy\n        while prev.next and prev.next.next:\n            a, b = prev.next, prev.next.next\n            prev.next = b; a.next = b.next; b.next = a\n            prev = a\n        return dummy.next",
+    "cpp": "class Solution {\npublic:\n    ListNode* swapPairs(ListNode* head) {\n        ListNode dummy(0, head); ListNode* prev = &dummy;\n        while (prev->next && prev->next->next) {\n            auto *a = prev->next, *b = a->next;\n            prev->next = b; a->next = b->next; b->next = a;\n            prev = a;\n        }\n        return dummy.next;\n    }\n};",
+    "c": "struct ListNode* swapPairs(struct ListNode* head) {\n    struct ListNode dummy = {0, head}, *prev = &dummy;\n    while (prev->next && prev->next->next) {\n        struct ListNode *a = prev->next, *b = a->next;\n        prev->next = b; a->next = b->next; b->next = a;\n        prev = a;\n    }\n    return dummy.next;\n}"
+  },
+  "analysis": {
+    "correctness": "Mỗi cặp được swap đúng một lần; prev luôn trước cặp tiếp theo.",
+    "edgeCases": ["List rỗng", "Một nút", "Số nút lẻ"],
+    "pitfalls": ["Mất liên kết", "Không dùng dummy"]
+  },
+  "tier": "done"
+}

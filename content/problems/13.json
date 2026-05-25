@@ -1,0 +1,27 @@
+{
+  "id": 13,
+  "title": "Roman to Integer",
+  "difficulty": "Easy",
+  "category": "Hash Table",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Chuyển chuỗi số La Mã hợp lệ thành số nguyên.",
+  "examples": [
+    { "input": "s = \"III\"", "output": "3" },
+    { "input": "s = \"LVIII\"", "output": "58" },
+    { "input": "s = \"MCMXCIV\"", "output": "1994" }
+  ],
+  "approach": "Duyệt trái sang phải: nếu s[i] < s[i+1] thì trừ giá trị (subtractive), ngược lại cộng.",
+  "memoryTip": "Map 7 ký tự I,V,X,L,C,D,M — O(1).",
+  "solutions": {
+    "c": "int romanToInt(char* s) {\n    int map[128] = {0};\n    map['I']=1; map['V']=5; map['X']=10; map['L']=50;\n    map['C']=100; map['D']=500; map['M']=1000;\n    int res = 0;\n    for (int i = 0; s[i]; i++) {\n        if (s[i+1] && map[s[i]] < map[s[i+1]]) res -= map[s[i]];\n        else res += map[s[i]];\n    }\n    return res;\n}",
+    "python": "class Solution:\n    def romanToInt(self, s: str) -> int:\n        m = {'I':1,'V':5,'X':10,'L':50,'C':100,'D':500,'M':1000}\n        res = 0\n        for i, c in enumerate(s):\n            if i+1 < len(s) and m[c] < m[s[i+1]]: res -= m[c]\n            else: res += m[c]\n        return res",
+    "cpp": "class Solution {\npublic:\n    int romanToInt(string s) {\n        unordered_map<char,int> m = {{'I',1},{'V',5},{'X',10},{'L',50},{'C',100},{'D',500},{'M',1000}};\n        int res = 0;\n        for (int i = 0; i < (int)s.size(); i++)\n            if (i+1 < (int)s.size() && m[s[i]] < m[s[i+1]]) res -= m[s[i]];\n            else res += m[s[i]];\n        return res;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Subtractive chỉ xảy ra khi ký tự nhỏ đứng trước lớn — quy tắc cộng/trừ duy nhất.",
+    "edgeCases": ["Một ký tự", "Chuỗi dài IV, IX", "Chỉ additive III"],
+    "pitfalls": ["Luôn cộng", "Map thiếu ký tự"]
+  },
+  "tier": "done"
+}

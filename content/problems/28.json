@@ -1,0 +1,26 @@
+{
+  "id": 28,
+  "title": "Find the Index of the First Occurrence in a String",
+  "difficulty": "Easy",
+  "category": "String",
+  "timeComplexity": "O(M·N)",
+  "spaceComplexity": "O(1)",
+  "description": "Tìm index đầu tiên của needle trong haystack, hoặc -1 nếu không có.",
+  "examples": [
+    { "input": "haystack = \"sadbutsad\", needle = \"sad\"", "output": "0" },
+    { "input": "haystack = \"leetcode\", needle = \"leeto\"", "output": "-1" }
+  ],
+  "approach": "Với mỗi i trong haystack, so sánh haystack[i..i+len(needle)) với needle. Hoặc built-in find/KMP nâng cao.",
+  "memoryTip": "Brute force O(1) extra — KMP O(N) optional.",
+  "solutions": {
+    "python": "class Solution:\n    def strStr(self, haystack: str, needle: str) -> int:\n        if not needle: return 0\n        n, m = len(haystack), len(needle)\n        for i in range(n - m + 1):\n            if haystack[i:i+m] == needle: return i\n        return -1",
+    "cpp": "class Solution {\npublic:\n    int strStr(string haystack, string needle) {\n        if (needle.empty()) return 0;\n        for (int i = 0; i + (int)needle.size() <= (int)haystack.size(); i++)\n            if (haystack.compare(i, needle.size(), needle) == 0) return i;\n        return -1;\n    }\n};",
+    "c": "int strStr(char* haystack, char* needle) {\n    int n = strlen(haystack), m = strlen(needle);\n    if (!m) return 0;\n    for (int i = 0; i <= n - m; i++)\n        if (!strncmp(haystack + i, needle, m)) return i;\n    return -1;\n}"
+  },
+  "analysis": {
+    "correctness": "Mọi vị trí khởi đầu hợp lệ được kiểm tra.",
+    "edgeCases": ["needle rỗng", "needle dài hơn haystack", "khớp cuối chuỗi"],
+    "pitfalls": ["Off-by-one vòng for", "Quên return -1"]
+  },
+  "tier": "done"
+}

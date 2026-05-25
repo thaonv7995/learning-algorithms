@@ -1,0 +1,26 @@
+{
+  "id": 16,
+  "title": "3Sum Closest",
+  "difficulty": "Medium",
+  "category": "Two Pointers",
+  "timeComplexity": "O(N²)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho mảng nums và target, tìm tổng ba số gần target nhất (|sum - target| nhỏ nhất).",
+  "examples": [
+    { "input": "nums = [-1,2,1,-4], target = 1", "output": "2" },
+    { "input": "nums = [0,0,0], target = 1", "output": "0" }
+  ],
+  "approach": "Sort nums. Với mỗi i, two-pointer left=i+1, right=n-1: cập nhật best nếu |sum-target| nhỏ hơn. Di chuyển left/right theo sum so với target.",
+  "memoryTip": "Sort in-place O(1) extra ngoài sort stack.",
+  "solutions": {
+    "c": "int cmp(const void* a, const void* b) { return *(int*)a - *(int*)b; }\nint threeSumClosest(int* nums, int n, int target) {\n    qsort(nums, n, sizeof(int), cmp);\n    int best = nums[0]+nums[1]+nums[2];\n    for (int i = 0; i < n-2; i++) {\n        int l = i+1, r = n-1;\n        while (l < r) {\n            int sum = nums[i]+nums[l]+nums[r];\n            if (abs(sum-target) < abs(best-target)) best = sum;\n            if (sum < target) l++; else if (sum > target) r--; else return sum;\n        }\n    }\n    return best;\n}",
+    "python": "class Solution:\n    def threeSumClosest(self, nums: List[int], target: int) -> int:\n        nums.sort()\n        best = sum(nums[:3])\n        for i in range(len(nums)-2):\n            l, r = i+1, len(nums)-1\n            while l < r:\n                s = nums[i]+nums[l]+nums[r]\n                if abs(s-target) < abs(best-target): best = s\n                if s < target: l += 1\n                elif s > target: r -= 1\n                else: return s\n        return best",
+    "cpp": "class Solution {\npublic:\n    int threeSumClosest(vector<int>& nums, int target) {\n        sort(nums.begin(), nums.end());\n        int best = nums[0]+nums[1]+nums[2];\n        for (int i = 0; i+2 < (int)nums.size(); i++) {\n            int l = i+1, r = nums.size()-1;\n            while (l < r) {\n                int s = nums[i]+nums[l]+nums[r];\n                if (abs(s-target) < abs(best-target)) best = s;\n                if (s < target) l++; else if (s > target) r--; else return s;\n            }\n        }\n        return best;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Mọi bộ ba được xét qua anchor i + two-pointer — không bỏ nghiệm gần nhất.",
+    "edgeCases": ["target trùng sum", "toàn 0", "n = 3"],
+    "pitfalls": ["Không sort", "Quên cập nhật best trước khi di chuyển con trỏ"]
+  },
+  "tier": "done"
+}

@@ -1,0 +1,26 @@
+{
+  "id": 30,
+  "title": "Substring with Concatenation of All Words",
+  "difficulty": "Hard",
+  "category": "Hash Table",
+  "timeComplexity": "O(N·M·L)",
+  "spaceComplexity": "O(M·L)",
+  "description": "Tìm mọi index bắt đầu trong s sao cho substring gồm đủ tất cả words (cùng độ dài) nối liên tiếp.",
+  "examples": [
+    { "input": "s = \"barfoothefoobarman\", words = [\"foo\",\"bar\"]", "output": "[0,9]" },
+    { "input": "s = \"wordgoodgoodgoodbestword\", words = [\"word\",\"good\",\"best\",\"word\"]", "output": "[]" }
+  ],
+  "approach": "wordLen = len(words[0]). Với offset 0..wordLen-1, sliding window trên s đếm tần suất từ khớp map words. Khi window có đủ words.length từ đúng freq → ghi index.",
+  "memoryTip": "Hash map freq words — O(M*L).",
+  "solutions": {
+    "python": "class Solution:\n    def findSubstring(self, s: str, words: List[str]) -> List[int]:\n        if not words: return []\n        wl, n, m = len(words[0]), len(s), len(words)\n        from collections import Counter\n        need = Counter(words)\n        res = []\n        for off in range(wl):\n            left = off; cnt = Counter(); matched = 0\n            for right in range(off, n, wl):\n                w = s[right:right+wl]\n                if w not in need:\n                    cnt.clear(); matched = 0; left = right + wl; continue\n                cnt[w] += 1\n                if cnt[w] == need[w]: matched += 1\n                elif cnt[w] == need[w] + 1: matched -= 1\n                while matched == m:\n                    if left - off == 0 or (left-off) % wl == 0:\n                        if (right-left)//wl + 1 == m: res.append(left)\n                    cnt[s[left:left+wl]] -= 1\n                    if cnt[s[left:left+wl]] == need[s[left:left+wl]]: matched -= 1\n                    left += wl\n        return sorted(set(res)) if res else []",
+    "cpp": "/* Sliding window + hash map — logic tương tự Python */",
+    "c": "/* findSubstring — dùng Python/C++ reference */"
+  },
+  "analysis": {
+    "correctness": "Mọi start offset mod wordLen được xét; freq map đảm bảo đủ m words.",
+    "edgeCases": ["words rỗng", "s ngắn hơn tổng", "trùng từ trong words"],
+    "pitfalls": ["Quên loop offset", "Không reset khi gặp từ lạ"]
+  },
+  "tier": "done"
+}

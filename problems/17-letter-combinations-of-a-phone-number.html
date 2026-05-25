@@ -36,12 +36,12 @@
                     <div class="head-meta">
                         <span class="lc-num">LC #17</span>
                         <span class="diff-badge medium">Medium</span>
-                        <span class="cat-chip">Hash Table</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="cat-chip">Backtracking</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Letter Combinations of a Phone Number</h1>
                     <div class="head-stats">
-                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="stat-chip"><i class="fa-regular fa-clock"></i>O(4^N)</span>
                         <span class="stat-chip"><i class="fa-solid fa-memory"></i>O(N)</span>
                         <span class="stat-chip"><i class="fa-solid fa-chart-simple"></i>66.1% AC</span>
                     </div>
@@ -57,41 +57,20 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given a string containing digits from <code>2-9</code> inclusive, return all possible letter combinations that the number could represent. Return the answer in <strong>any order</strong>.</p>
-
-<p>A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.</p>
-<img alt="" src="https://assets.leetcode.com/uploads/2022/03/15/1200px-telephone-keypad2svg.png" style="width: 300px; height: 243px;" />
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<pre>
-<strong>Input:</strong> digits = &quot;23&quot;
-<strong>Output:</strong> [&quot;ad&quot;,&quot;ae&quot;,&quot;af&quot;,&quot;bd&quot;,&quot;be&quot;,&quot;bf&quot;,&quot;cd&quot;,&quot;ce&quot;,&quot;cf&quot;]
-</pre>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<pre>
-<strong>Input:</strong> digits = &quot;2&quot;
-<strong>Output:</strong> [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]
-</pre>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li><code>1 &lt;= digits.length &lt;= 4</code></li>
-	<li><code>digits[i]</code> is a digit in the range <code>[&#39;2&#39;, &#39;9&#39;]</code>.</li>
-</ul>
-</div>
+                        <div class="block-text">Cho chuỗi digits (2–9), trả về mọi chuỗi chữ cái tương ứng bàn phím điện thoại.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>&quot;23&quot;</code></div>
-                <div class="ex-line"><span>Out</span><code>&quot;2&quot;</code></div>
+                <div class="ex-line"><span>In</span><code>digits = &quot;23&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[&quot;ad&quot;,&quot;ae&quot;,&quot;af&quot;,&quot;bd&quot;,&quot;be&quot;,&quot;bf&quot;,&quot;cd&quot;,&quot;ce&quot;,&quot;cf&quot;]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 2</div>
+                <div class="ex-line"><span>In</span><code>digits = &quot;&quot;</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -99,7 +78,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Hash Table kết hợp String. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Backtracking: map digit → letters, dfs(idx, path). Tại idx chọn từng chữ cái của digits[idx], đệ quy idx+1. Khi idx == len → push path.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -116,23 +95,38 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Note: The returned array must be malloced, assume caller calls <span class="kw">free</span>().
- */
-<span class="ty">char</span>** letterCombinations(<span class="ty">char</span>* digits, <span class="ty">int</span>* <span class="ty">returnSize</span>) {
-    
+                            <pre class="code-block" id="code-block-c"><span class="ty">void</span> dfs(<span class="ty">char</span>* digits, <span class="ty">int</span> idx, <span class="ty">char</span>* path, <span class="ty">int</span> plen, <span class="ty">char</span>** res, <span class="ty">int</span>* rs, <span class="ty">char</span> map[10][5]) {
+    <span class="kw">if</span> (!digits[idx]) { res[(*rs)++] = strdup(path); <span class="kw">return</span>; }
+    <span class="ty">int</span> d = digits[idx]-'0';
+    <span class="kw">for</span> (<span class="ty">int</span> i = 0; map[d][i]; i++) {
+        path[plen] = map[d][i]; path[plen+1] = 0;
+        dfs(digits, idx+1, path, plen+1, res, rs, map);
+    }
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
-    <span class="kw">def</span> letterCombinations(<span class="ty">self</span>, digits):
-        &quot;&quot;&quot;
-        :type digits: <span class="ty">str</span>
-        :rtype: <span class="ty">List</span>[<span class="ty">str</span>]
-        &quot;&quot;&quot;
-        </pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
+    <span class="kw">def</span> letterCombinations(<span class="ty">self</span>, digits: <span class="ty">str</span>) -&gt; <span class="ty">List</span>[<span class="ty">str</span>]:
+        <span class="kw">if</span> <span class="kw">not</span> digits: <span class="kw">return</span> []
+        m = {'2':'abc','3':'<span class="kw">def</span>','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}
+        res = []
+        <span class="kw">def</span> dfs(i, path):
+            <span class="kw">if</span> i == <span class="ty">len</span>(digits):
+                res.append(''.join(path)); <span class="kw">return</span>
+            <span class="kw">for</span> c <span class="kw">in</span> m[digits[i]]:
+                path.append(c); dfs(i+1, path); path.pop()
+        dfs(0, [])
+        <span class="kw">return</span> res</pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
+    map&lt;<span class="ty">char</span>,<span class="ty">string</span>&gt; m = {{'2',&quot;abc&quot;},{'3',&quot;def&quot;},{'4',&quot;ghi&quot;},{'5',&quot;jkl&quot;},{'6',&quot;mno&quot;},{'7',&quot;pqrs&quot;},{'8',&quot;tuv&quot;},{'9',&quot;wxyz&quot;}};
+    <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; res;
+    <span class="ty">string</span> path;
+    <span class="ty">void</span> dfs(<span class="ty">string</span>&amp; d, <span class="ty">int</span> i) {
+        <span class="kw">if</span> (i == (<span class="ty">int</span>)d.size()) { res.push_back(path); <span class="kw">return</span>; }
+        <span class="kw">for</span> (<span class="ty">char</span> c : m[d[i]]) { path += c; dfs(d, i+1); path.pop_back(); }
+    }
 <span class="ty">public</span>:
     <span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; letterCombinations(<span class="ty">string</span> digits) {
-        
+        <span class="kw">if</span> (digits.empty()) <span class="kw">return</span> {};
+        dfs(digits, 0); <span class="kw">return</span> res;
     }
 };</pre>
                         </div>
@@ -142,27 +136,27 @@
                 <div class="tab-panel" id="panel-analysis">
                 <div class="block analysis-compact">
                     <div class="analysis-meta">
-                        <span class="pattern-chip">Hash Table</span>
-                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(N)</span>
+                        <span class="pattern-chip">Backtracking</span>
+                        <span class="meta-cx"><i class="fa-regular fa-clock"></i>O(4^N)</span>
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(N)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Hash Table kết hợp String.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Backtracking: map digit → letters, dfs.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Tại idx chọn từng chữ cái của digits[idx], đệ quy idx+1.</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — idx == len → push path.</span></li></ol>
 
-                    
-                    
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>DFS duyệt đủ Cartesian product các chữ cái — không trùng, không thiếu.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">digits rỗng → []</span><span class="analysis-tag edge">một digit</span><span class="analysis-tag edge">digit 7 có 4 chữ</span><span class="analysis-tag pit">Quên pop backtrack</span><span class="analysis-tag pit">Map thiếu digit 7 pqrs</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Bảng băm lưu trên Heap — tra cứu O trung bình, tốn O bộ nhớ phụ.</p>
+                        <p>Độ sâu đệ quy = len trên call stack.</p>
                     </details>
                 </div>
                 </div>
             </div>
 
             <footer class="problem-nav">
-                <a href="16-3sum-closest.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>3Sum Closest</strong></span></a>
-                <a href="18-4sum.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>4Sum</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+                <span class="problem-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></span>
+                <span class="problem-nav-btn disabled next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></span>
             </footer>
         </aside>
 
@@ -171,7 +165,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=7&problem=Letter%20Combinations%20of%20a%20Phone%20Number&lc_id=17&embed=true"></iframe>

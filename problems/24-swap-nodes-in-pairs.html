@@ -37,7 +37,7 @@
                         <span class="lc-num">LC #24</span>
                         <span class="diff-badge medium">Medium</span>
                         <span class="cat-chip">Linked List</span>
-                        <span class="tier-badge catalog"><i class="fa-brands fa-leetcode"></i> Catalog</span>
+                        <span class="tier-badge premium"><i class="fa-solid fa-star"></i> Premium</span>
                     </div>
                     <h1 class="problem-title">Swap Nodes in Pairs</h1>
                     <div class="head-stats">
@@ -57,66 +57,25 @@
                 <div class="tab-panel active" id="panel-overview">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-circle-question"></i> Mô tả</div>
-                        <div class="lc-content"><p>Given a&nbsp;linked list, swap every two adjacent nodes and return its head. You must solve the problem without&nbsp;modifying the values in the list&#39;s nodes (i.e., only nodes themselves may be changed.)</p>
-
-<p>&nbsp;</p>
-<p><strong class="example">Example 1:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">head = [1,2,3,4]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[2,1,4,3]</span></p>
-
-<p><strong>Explanation:</strong></p>
-
-<p><img alt="" src="https://assets.leetcode.com/uploads/2020/10/03/swap_ex1.jpg" style="width: 422px; height: 222px;" /></p>
-</div>
-
-<p><strong class="example">Example 2:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">head = []</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[]</span></p>
-</div>
-
-<p><strong class="example">Example 3:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">head = [1]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[1]</span></p>
-</div>
-
-<p><strong class="example">Example 4:</strong></p>
-
-<div class="example-block">
-<p><strong>Input:</strong> <span class="example-io">head = [1,2,3]</span></p>
-
-<p><strong>Output:</strong> <span class="example-io">[2,1,3]</span></p>
-</div>
-
-<p>&nbsp;</p>
-<p><strong>Constraints:</strong></p>
-
-<ul>
-	<li>The number of nodes in the&nbsp;list&nbsp;is in the range <code>[0, 100]</code>.</li>
-	<li><code>0 &lt;= Node.val &lt;= 100</code></li>
-</ul>
-</div>
+                        <div class="block-text">Hoán đổi từng cặp nút liền kề trong linked list và trả về head mới.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-flask"></i> Ví dụ</div>
                         <div class="drawer-example">
             <div class="example-block">
                 <div class="ex-label">Ví dụ 1</div>
-                <div class="ex-line"><span>In</span><code>[1,2,3,4]</code></div>
-                <div class="ex-line"><span>Out</span><code>[]</code></div>
+                <div class="ex-line"><span>In</span><code>head = [1,2,3,4]</code></div>
+                <div class="ex-line"><span>Out</span><code>[2,1,4,3]</code></div>
             </div>
             <div class="example-block">
                 <div class="ex-label">Ví dụ 2</div>
-                <div class="ex-line"><span>In</span><code>[1]</code></div>
-                <div class="ex-line"><span>Out</span><code>[1,2,3]</code></div>
+                <div class="ex-line"><span>In</span><code>head = []</code></div>
+                <div class="ex-line"><span>Out</span><code>[]</code></div>
+            </div>
+            <div class="example-block">
+                <div class="ex-label">Ví dụ 3</div>
+                <div class="ex-line"><span>In</span><code>head = [1]</code></div>
+                <div class="ex-line"><span>Out</span><code>[1]</code></div>
             </div></div>
                     </div>
                 </div>
@@ -124,7 +83,7 @@
                 <div class="tab-panel" id="panel-solution">
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-lightbulb"></i> Ý tưởng</div>
-                        <div class="block-text">Áp dụng kỹ thuật Linked List kết hợp Recursion. Xác định trạng thái cần duy trì, duyệt input theo một hướng rõ ràng, cập nhật đáp án tại mỗi bước và trả kết quả khi xong. Xem editorial trên LeetCode để biết lời giải tối ưu.</div>
+                        <div class="block-text">Dummy node trước head. Con trỏ prev đứng trước cặp cần swap: first=prev.next, second=first.next; nối prev→second, first→second.next, second→first; prev=first.</div>
                     </div>
                     <div class="block">
                         <div class="block-label"><i class="fa-solid fa-terminal"></i> Mã nguồn</div>
@@ -141,42 +100,33 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c">/**
- * Definition <span class="kw">for</span> singly-linked list.
- * <span class="ty">struct</span> ListNode {
- *     <span class="ty">int</span> val;
- *     <span class="ty">struct</span> ListNode *next;
- * };
- */
-<span class="ty">struct</span> ListNode* swapPairs(<span class="ty">struct</span> ListNode* head) {
-    
+                            <pre class="code-block" id="code-block-c"><span class="ty">struct</span> ListNode* swapPairs(<span class="ty">struct</span> ListNode* head) {
+    <span class="ty">struct</span> ListNode dummy = {0, head}, *prev = &amp;dummy;
+    <span class="kw">while</span> (prev-&gt;next &amp;&amp; prev-&gt;next-&gt;next) {
+        <span class="ty">struct</span> ListNode *a = prev-&gt;next, *b = a-&gt;next;
+        prev-&gt;next = b; a-&gt;next = b-&gt;next; b-&gt;next = a;
+        prev = a;
+    }
+    <span class="kw">return</span> dummy.next;
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Definition <span class="kw">for</span> singly-linked <span class="ty">list</span>.</span>
-<span class="cm"># <span class="kw">class</span> <span class="ty">ListNode</span>(object):</span>
-<span class="cm">#     <span class="kw">def</span> __init__(<span class="ty">self</span>, val=0, next=<span class="kw">None</span>):</span>
-<span class="cm">#         <span class="ty">self</span>.val = val</span>
-<span class="cm">#         <span class="ty">self</span>.next = next</span>
-<span class="kw">class</span> Solution(object):
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution:
     <span class="kw">def</span> swapPairs(<span class="ty">self</span>, head):
-        &quot;&quot;&quot;
-        :type head: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        :rtype: <span class="ty">Optional</span>[<span class="ty">ListNode</span>]
-        &quot;&quot;&quot;
-        </pre>
-                            <pre class="code-block" id="code-block-cpp" style="display:none">/**
- * Definition <span class="kw">for</span> singly-linked list.
- * <span class="ty">struct</span> ListNode {
- *     <span class="ty">int</span> val;
- *     ListNode *next;
- *     ListNode() : val(0), next(<span class="kw">nullptr</span>) {}
- *     ListNode(<span class="ty">int</span> x) : val(x), next(<span class="kw">nullptr</span>) {}
- *     ListNode(<span class="ty">int</span> x, ListNode *next) : val(x), next(next) {}
- * };
- */
-<span class="ty">class</span> Solution {
+        dummy = <span class="ty">ListNode</span>(0, head); prev = dummy
+        <span class="kw">while</span> prev.next <span class="kw">and</span> prev.next.next:
+            a, b = prev.next, prev.next.next
+            prev.next = b; a.next = b.next; b.next = a
+            prev = a
+        <span class="kw">return</span> dummy.next</pre>
+                            <pre class="code-block" id="code-block-cpp" style="display:none"><span class="ty">class</span> Solution {
 <span class="ty">public</span>:
     ListNode* swapPairs(ListNode* head) {
-        
+        ListNode dummy(0, head); ListNode* prev = &amp;dummy;
+        <span class="kw">while</span> (prev-&gt;next &amp;&amp; prev-&gt;next-&gt;next) {
+            auto *a = prev-&gt;next, *b = a-&gt;next;
+            prev-&gt;next = b; a-&gt;next = b-&gt;next; b-&gt;next = a;
+            prev = a;
+        }
+        <span class="kw">return</span> dummy.next;
     }
 };</pre>
                         </div>
@@ -191,22 +141,22 @@
                         <span class="meta-cx"><i class="fa-solid fa-memory"></i>O(1)</span>
                     </div>
 
-                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — kỹ thuật Linked List kết hợp Recursion.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Xác định trạng thái cần duy trì, duyệt input theo một…</span></li><li class="analysis-step-compact"><span class="step-num">3</span><span class="step-text"><strong>Cập nhật</strong> — Xem editorial trên LeetCode để biết lời giải tối ưu.</span></li></ol>
+                    <ol class="analysis-steps-compact"><li class="analysis-step-compact"><span class="step-num">1</span><span class="step-text"><strong>Khởi tạo</strong> — Dummy node trước head.</span></li><li class="analysis-step-compact"><span class="step-num">2</span><span class="step-text"><strong>Duyệt chính</strong> — Con trỏ prev đứng trước cặp cần swap: first=prev.next,…</span></li></ol>
 
-                    
-                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Một nút</span></div>
+                    <p class="analysis-insight-line"><i class="fa-solid fa-check"></i>Mỗi cặp được swap đúng một lần; prev luôn trước cặp tiếp theo.</p>
+                    <div class="analysis-tags"><span class="analysis-tag edge">List rỗng</span><span class="analysis-tag edge">Một nút</span><span class="analysis-tag edge">Số nút lẻ</span><span class="analysis-tag pit">Mất liên kết</span><span class="analysis-tag pit">Không dùng dummy</span></div>
 
                     <details class="analysis-more">
                         <summary><i class="fa-solid fa-microchip"></i> Bộ nhớ &amp; chi tiết thêm</summary>
-                        <p>Chỉ con trỏ duyệt tại chỗ — O nếu không tạo nút mới.</p>
+                        <p>Chỉ vài con trỏ — O extra.</p>
                     </details>
                 </div>
                 </div>
             </div>
 
             <footer class="problem-nav">
-                <a href="23-merge-k-sorted-lists.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Merge k Sorted Lists</strong></span></a>
-                <a href="25-reverse-nodes-in-k-group.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>Reverse Nodes in k-Group</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+                <span class="problem-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></span>
+                <span class="problem-nav-btn disabled next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></span>
             </footer>
         </aside>
 
@@ -215,7 +165,7 @@
         <section class="sandbox-pane">
             <div class="sandbox-bar">
                 <span class="live-badge"><span class="live-dot"></span> Live Sandbox</span>
-                <span class="sandbox-hint">Mô phỏng cơ bản — đang mở rộng dần</span>
+                <span class="sandbox-hint">Sandbox đầy đủ</span>
             </div>
             <div class="sandbox-frame-wrap">
                 <iframe class="sandbox-iframe" src="../index.html?chapter=3&problem=Swap%20Nodes%20in%20Pairs&lc_id=24&embed=true"></iframe>

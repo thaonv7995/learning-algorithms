@@ -1,0 +1,26 @@
+{
+  "id": 14,
+  "title": "Longest Common Prefix",
+  "difficulty": "Easy",
+  "category": "String",
+  "timeComplexity": "O(S)",
+  "spaceComplexity": "O(1)",
+  "description": "Cho mảng chuỗi strs, trả về tiền tố chung dài nhất.",
+  "examples": [
+    { "input": "strs = [\"flower\",\"flow\",\"flight\"]", "output": "\"fl\"" },
+    { "input": "strs = [\"dog\",\"racecar\",\"car\"]", "output": "\"\"" }
+  ],
+  "approach": "Lấy strs[0] làm prefix, lặp i=1..n: rút ngắn prefix cho đến khi strs[i].startsWith(prefix).",
+  "memoryTip": "Chỉ biến prefix string — không cần trie cho input nhỏ.",
+  "solutions": {
+    "c": "char* longestCommonPrefix(char** strs, int strsSize) {\n    if (!strsSize) return \"\";\n    char* pre = strdup(strs[0]);\n    for (int i = 1; i < strsSize; i++) {\n        int j = 0;\n        while (pre[j] && strs[i][j] && pre[j] == strs[i][j]) j++;\n        pre[j] = 0;\n        if (!pre[0]) break;\n    }\n    return pre;\n}",
+    "python": "class Solution:\n    def longestCommonPrefix(self, strs: List[str]) -> str:\n        if not strs: return \"\"\n        pre = strs[0]\n        for s in strs[1:]:\n            while not s.startswith(pre):\n                pre = pre[:-1]\n                if not pre: return \"\"\n        return pre",
+    "cpp": "class Solution {\npublic:\n    string longestCommonPrefix(vector<string>& strs) {\n        if (strs.empty()) return \"\";\n        string pre = strs[0];\n        for (int i = 1; i < (int)strs.size(); i++) {\n            while (strs[i].find(pre) != 0) {\n                pre.pop_back();\n                if (pre.empty()) return \"\";\n            }\n        }\n        return pre;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Prefix chỉ thu hẹp, không bao giờ mở rộng sai — kết thúc đúng LCP.",
+    "edgeCases": ["Một chuỗi", "Chuỗi rỗng trong mảng", "Không có chung → \"\""],
+    "pitfalls": ["So sánh từng cặp thay vì rút prefix", "Quên break khi prefix rỗng"]
+  },
+  "tier": "done"
+}

@@ -1,0 +1,26 @@
+{
+  "id": 26,
+  "title": "Remove Duplicates from Sorted Array",
+  "difficulty": "Easy",
+  "category": "Array",
+  "timeComplexity": "O(N)",
+  "spaceComplexity": "O(1)",
+  "description": "Xóa trùng lặp in-place trong mảng đã sort, trả về số phần tử unique k.",
+  "examples": [
+    { "input": "nums = [1,1,2]", "output": "2, nums = [1,2,_]" },
+    { "input": "nums = [0,0,1,1,1,2,2,3,3,4]", "output": "5" }
+  ],
+  "approach": "Con trỏ write=1. Duyệt read từ 1: nếu nums[read] != nums[write-1] thì nums[write++]=nums[read]. Trả write.",
+  "memoryTip": "Two-pointer in-place — không mảng phụ.",
+  "solutions": {
+    "python": "class Solution:\n    def removeDuplicates(self, nums: List[int]) -> int:\n        if not nums: return 0\n        w = 1\n        for r in range(1, len(nums)):\n            if nums[r] != nums[w-1]:\n                nums[w] = nums[r]; w += 1\n        return w",
+    "cpp": "class Solution {\npublic:\n    int removeDuplicates(vector<int>& nums) {\n        if (nums.empty()) return 0;\n        int w = 1;\n        for (int r = 1; r < (int)nums.size(); r++)\n            if (nums[r] != nums[w-1]) nums[w++] = nums[r];\n        return w;\n    }\n};",
+    "c": "int removeDuplicates(int* nums, int n) {\n    if (!n) return 0;\n    int w = 1;\n    for (int r = 1; r < n; r++)\n        if (nums[r] != nums[w-1]) nums[w++] = nums[r];\n    return w;\n}"
+  },
+  "analysis": {
+    "correctness": "Mảng sort → unique luôn nằm prefix [0..k).",
+    "edgeCases": ["Mảng rỗng", "Một phần tử", "Toàn giống nhau"],
+    "pitfalls": ["So sánh sai với write thay vì write-1", "Trả read thay vì write"]
+  },
+  "tier": "done"
+}

@@ -1,0 +1,27 @@
+{
+  "id": 12,
+  "title": "Integer to Roman",
+  "difficulty": "Medium",
+  "category": "Math",
+  "timeComplexity": "O(1)",
+  "spaceComplexity": "O(1)",
+  "description": "Chuyển số nguyên num (1–3999) sang chuỗi số La Mã.",
+  "examples": [
+    { "input": "num = 3749", "output": "\"MMMDCCXLIX\"" },
+    { "input": "num = 58", "output": "\"LVIII\"" },
+    { "input": "num = 1994", "output": "\"MCMXCIV\"" }
+  ],
+  "approach": "Greedy với bảng cặp (value, symbol) gồm cả subtractive (900→CM, 400→CD, …). Lặp từ lớn đến nhỏ: while num >= val { append symbol; num -= val }.",
+  "memoryTip": "13 cặp cố định trên stack — O(1).",
+  "solutions": {
+    "c": "char* intToRoman(int num) {\n    int vals[] = {1000,900,500,400,100,90,50,40,10,9,5,4,1};\n    char* syms[] = {\"M\",\"CM\",\"D\",\"CD\",\"C\",\"XC\",\"L\",\"XL\",\"X\",\"IX\",\"V\",\"IV\",\"I\"};\n    char* out = calloc(16, 1);\n    for (int i = 0; i < 13; i++)\n        while (num >= vals[i]) { strcat(out, syms[i]); num -= vals[i]; }\n    return out;\n}",
+    "python": "class Solution:\n    def intToRoman(self, num: int) -> str:\n        pairs = [(1000,'M'),(900,'CM'),(500,'D'),(400,'CD'),(100,'C'),(90,'XC'),(50,'L'),(40,'XL'),(10,'X'),(9,'IX'),(5,'V'),(4,'IV'),(1,'I')]\n        res = []\n        for v, s in pairs:\n            while num >= v:\n                res.append(s); num -= v\n        return ''.join(res)",
+    "cpp": "class Solution {\npublic:\n    string intToRoman(int num) {\n        vector<pair<int,string>> p = {{1000,\"M\"},{900,\"CM\"},{500,\"D\"},{400,\"CD\"},{100,\"C\"},{90,\"XC\"},{50,\"L\"},{40,\"XL\"},{10,\"X\"},{9,\"IX\"},{5,\"V\"},{4,\"IV\"},{1,\"I\"}};\n        string res;\n        for (auto& [v,s] : p) while (num >= v) { res += s; num -= v; }\n        return res;\n    }\n};"
+  },
+  "analysis": {
+    "correctness": "Mỗi bước greedy lấy symbol lớn nhất còn fit — đúng với hệ La Mã chuẩn.",
+    "edgeCases": ["num = 1", "num = 3999", "số có subtractive (4,9,40,…)"],
+    "pitfalls": ["Thiếu cặp subtractive", "Thứ tự value không giảm dần"]
+  },
+  "tier": "done"
+}

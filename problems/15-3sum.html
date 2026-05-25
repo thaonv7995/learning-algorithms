@@ -90,62 +90,21 @@
                                 <span class="fname">solution.c</span>
                                 <span class="ftype">C99</span>
                             </div>
-                            <pre class="code-block" id="code-block-c"><span class="cm">// Solution in C (3Sum)</span>
-<span class="ty">int</span> compare(<span class="ty">const</span> <span class="ty">void</span>* a, <span class="ty">const</span> <span class="ty">void</span>* b) {
-    <span class="kw">return</span> (*(<span class="ty">int</span>*)a - *(<span class="ty">int</span>*)b);
-}
-
+                            <pre class="code-block" id="code-block-c">/**
+ * Return an array of arrays of size *<span class="ty">returnSize</span>.
+ * The sizes of the arrays are returned as *returnColumnSizes array.
+ * Note: Both returned array and *columnSizes array must be malloced, assume caller calls <span class="kw">free</span>().
+ */
 <span class="ty">int</span>** threeSum(<span class="ty">int</span>* nums, <span class="ty">int</span> numsSize, <span class="ty">int</span>* <span class="ty">returnSize</span>, <span class="ty">int</span>** returnColumnSizes) {
-    qsort(nums, numsSize, <span class="kw">sizeof</span>(<span class="ty">int</span>), compare);
-    <span class="ty">int</span>** res = (<span class="ty">int</span>**)<span class="kw">malloc</span>(numsSize * numsSize * <span class="kw">sizeof</span>(<span class="ty">int</span>*));
-    *returnColumnSizes = (<span class="ty">int</span>*)<span class="kw">malloc</span>(numsSize * numsSize * <span class="kw">sizeof</span>(<span class="ty">int</span>));
-    <span class="ty">int</span> count = 0;
-    <span class="kw">for</span> (<span class="ty">int</span> i = 0; i &lt; numsSize; i++) {
-        <span class="kw">if</span> (i &gt; 0 &amp;&amp; nums[i] == nums[i - 1]) continue;
-        <span class="ty">int</span> left = i + 1, right = numsSize - 1;
-        <span class="kw">while</span> (left &lt; right) {
-            <span class="ty">int</span> sum = nums[i] + nums[left] + nums[right];
-            <span class="kw">if</span> (sum == 0) {
-                res[count] = (<span class="ty">int</span>*)<span class="kw">malloc</span>(3 * <span class="kw">sizeof</span>(<span class="ty">int</span>));
-                res[count][0] = nums[i];
-                res[count][1] = nums[left];
-                res[count][2] = nums[right];
-                (*returnColumnSizes)[count] = 3;
-                count++;
-                <span class="kw">while</span> (left &lt; right &amp;&amp; nums[left] == nums[left + 1]) left++;
-                <span class="kw">while</span> (left &lt; right &amp;&amp; nums[right] == nums[right - 1]) right--;
-                left++; right--;
-            } <span class="kw">else</span> <span class="kw">if</span> (sum &lt; 0) left++;
-            <span class="kw">else</span> right--;
-        }
-    }
-    *<span class="ty">returnSize</span> = count;
-    <span class="kw">return</span> res;
+    
 }</pre>
-                            <pre class="code-block" id="code-block-python" style="display:none"><span class="cm"># Solution <span class="kw">in</span> Python (3Sum)</span>
-<span class="kw">class</span> Solution:
-    <span class="kw">def</span> threeSum(<span class="ty">self</span>, nums: <span class="ty">List</span>[<span class="ty">int</span>]) -&gt; <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]:
-        res = []
-        nums.sort()
-        <span class="kw">for</span> i <span class="kw">in</span> <span class="ty">range</span>(<span class="ty">len</span>(nums)):
-            <span class="kw">if</span> i &gt; 0 <span class="kw">and</span> nums[i] == nums[i - 1]:
-                continue
-            left, right = i + 1, <span class="ty">len</span>(nums) - 1
-            <span class="kw">while</span> left &lt; right:
-                three_sum = nums[i] + nums[left] + nums[right]
-                <span class="kw">if</span> three_sum == 0:
-                    res.append([nums[i], nums[left], nums[right]])
-                    <span class="kw">while</span> left &lt; right <span class="kw">and</span> nums[left] == nums[left + 1]:
-                        left += 1
-                    <span class="kw">while</span> left &lt; right <span class="kw">and</span> nums[right] == nums[right - 1]:
-                        right -= 1
-                    left += 1
-                    right -= 1
-                <span class="kw">elif</span> three_sum &lt; 0:
-                    left += 1
-                <span class="kw">else</span>:
-                    right -= 1
-        <span class="kw">return</span> res</pre>
+                            <pre class="code-block" id="code-block-python" style="display:none"><span class="kw">class</span> Solution(object):
+    <span class="kw">def</span> threeSum(<span class="ty">self</span>, nums):
+        &quot;&quot;&quot;
+        :type nums: <span class="ty">List</span>[<span class="ty">int</span>]
+        :rtype: <span class="ty">List</span>[<span class="ty">List</span>[<span class="ty">int</span>]]
+        &quot;&quot;&quot;
+        </pre>
                             <pre class="code-block" id="code-block-cpp" style="display:none"><span class="kw">class</span> <span class="ty">Solution</span> {
 <span class="kw">public</span>:
     <span class="ty">vector&lt;vector&lt;int&gt;&gt;</span> <span class="fn">threeSum</span>(<span class="ty">vector&lt;int&gt;</span>&amp; nums) {
@@ -194,8 +153,8 @@
             </div>
 
             <footer class="problem-nav">
-                <a href="14-longest-common-prefix.html" class="problem-nav-btn"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>Longest Common Prefix</strong></span></a>
-                <a href="16-3sum-closest.html" class="problem-nav-btn next"><span class="nav-label"><small>Sau</small><strong>3Sum Closest</strong></span><i class="fa-solid fa-chevron-right"></i></a>
+                <span class="problem-nav-btn disabled"><i class="fa-solid fa-chevron-left"></i><span class="nav-label"><small>Trước</small><strong>—</strong></span></span>
+                <span class="problem-nav-btn disabled next"><span class="nav-label"><small>Sau</small><strong>—</strong></span><i class="fa-solid fa-chevron-right"></i></span>
             </footer>
         </aside>
 

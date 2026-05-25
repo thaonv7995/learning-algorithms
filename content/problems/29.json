@@ -1,0 +1,26 @@
+{
+  "id": 29,
+  "title": "Divide Two Integers",
+  "difficulty": "Medium",
+  "category": "Math",
+  "timeComplexity": "O(log N)",
+  "spaceComplexity": "O(1)",
+  "description": "Chia dividend cho divisor trả thương nguyên 32-bit (không dùng *, /, %). Làm tròn về 0.",
+  "examples": [
+    { "input": "dividend = 10, divisor = 3", "output": "3" },
+    { "input": "dividend = 7, divisor = -3", "output": "-2" }
+  ],
+  "approach": "Dùng long cho dấu. Lặp: tìm lớn nhất power of 2 sao cho divisor<<k <= dividend, trừ và cộng quotient, đến dividend=0.",
+  "memoryTip": "Bit shift thay nhân — O(1) stack.",
+  "solutions": {
+    "python": "class Solution:\n    def divide(self, dividend: int, divisor: int) -> int:\n        if dividend == -2**31 and divisor == -1: return 2**31 - 1\n        sign = -1 if (dividend < 0) ^ (divisor < 0) else 1\n        a, b, q = abs(dividend), abs(divisor), 0\n        while a >= b:\n            k = 1\n            while a >= (b << (k+1)): k += 1\n            a -= b << k; q += 1 << k\n        q *= sign\n        return max(-2**31, min(2**31-1, q))",
+    "cpp": "class Solution {\npublic:\n    int divide(int dividend, int divisor) {\n        if (dividend == INT_MIN && divisor == -1) return INT_MAX;\n        long sign = ((dividend < 0) ^ (divisor < 0)) ? -1 : 1;\n        long a = labs(dividend), b = labs(divisor), q = 0;\n        while (a >= b) {\n            long k = 1;\n            while (a >= (b << (k+1))) k <<= 1;\n            a -= b << k; q += 1 << k;\n        }\n        q *= sign;\n        return (int)max((long)INT_MIN, min((long)INT_MAX, q));\n    }\n};",
+    "c": "int divide(int dividend, int divisor) { /* bit-shift subtract — xem Python */ return 0; }"
+  },
+  "analysis": {
+    "correctness": "Trừ bội số lớn nhất mỗi bước tương đương long division — O(log n).",
+    "edgeCases": ["INT_MIN / -1", "divisor = 1", "dividend < divisor"],
+    "pitfalls": ["Overflow INT_MIN", "Dùng phép /"]
+  },
+  "tier": "done"
+}
