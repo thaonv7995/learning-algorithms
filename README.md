@@ -18,6 +18,7 @@ Tài liệu tương tác *Cấu trúc dữ liệu & Giải thuật*, kèm thư v
 - [Tổng quan](#tổng-quan)
 - [Cài đặt](#cài-đặt)
 - [Sử dụng hàng ngày](#sử-dụng-hàng-ngày)
+- [Cập nhật & gỡ cài đặt](#cập-nhật--gỡ-cài-đặt)
 - [Nội dung](#nội-dung)
 - [Kiến trúc](#kiến-trúc)
 - [Cấu hình](#cấu-hình)
@@ -125,10 +126,109 @@ export PATH="$HOME/.local/bin:$PATH"
 
 Thư viện hỗ trợ phân trang qua query string: `algorithms.html?page=12` — reload vẫn giữ trang hiện tại.
 
-### Gỡ cài đặt
+---
+
+## Cập nhật & gỡ cài đặt
+
+### Quản lý process
+
+```bash
+algo-explorer status      # đang chạy? pid? URL?
+algo-explorer stop        # dừng server nền
+algo-explorer restart     # khởi động lại (sau khi đổi config)
+algo-explorer logs        # xem log (mặc định 40 dòng)
+algo-explorer logs 100    # xem 100 dòng log gần nhất
+```
+
+**Windows** — dùng cùng lệnh nếu `algo-explorer.exe` đã có trong PATH, hoặc:
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\algorithms-explorer\bin\algo-explorer.exe" stop
+```
+
+### Cập nhật lên bản mới
+
+Tải release mới nhất, ghi đè binary + `www/`, giữ port và config hiện tại:
+
+**macOS / Linux**
+
+```bash
+curl -fsSL https://github.com/thaonv7995/learning-algorithms/releases/latest/download/install.sh | bash -s -- --upgrade
+```
+
+Cài đúng một phiên bản cụ thể:
+
+```bash
+curl -fsSL https://github.com/thaonv7995/learning-algorithms/releases/latest/download/install.sh | bash -s -- \
+  --upgrade \
+  --version v0.0.2
+```
+
+**Windows (PowerShell)**
+
+```powershell
+# Dừng rồi cài lại (one-liner)
+algo-explorer stop 2>$null; irm https://github.com/thaonv7995/learning-algorithms/releases/latest/download/install.ps1 | iex
+
+# Hoặc dùng flag -Upgrade (tải script về trước)
+Invoke-WebRequest -Uri https://github.com/thaonv7995/learning-algorithms/releases/latest/download/install.ps1 -OutFile install.ps1
+.\install.ps1 -Upgrade
+```
+
+Sau khi update, kiểm tra:
+
+```bash
+algo-explorer status
+algo-explorer open
+```
+
+### Gỡ cài đặt hoàn toàn
+
+Dừng process, xoá binary, `www/`, config và symlink CLI:
 
 ```bash
 algo-explorer uninstall
+```
+
+Lệnh trên xoá:
+
+| Path | Nội dung bị xoá |
+|---|---|
+| `~/.local/share/algorithms-explorer/` | Binary + bundle `www/` |
+| `~/.local/state/algorithms-explorer/` | PID, log |
+| `~/.local/bin/algo-explorer` | Symlink CLI |
+
+File config `~/.config/algorithms-explorer/config.env` **được giữ lại** — xoá thủ công nếu không cần:
+
+```bash
+rm -rf ~/.config/algorithms-explorer
+```
+
+**Windows**
+
+```powershell
+& "$env:LOCALAPPDATA\Programs\algorithms-explorer\bin\algo-explorer.exe" uninstall
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\algorithms-explorer" -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Programs\algorithms-explorer" -ErrorAction SilentlyContinue
+```
+
+### Gỡ service nền (nếu process vẫn còn)
+
+Trường hợp hiếm — `stop` / `uninstall` không dọn sạch service:
+
+**macOS**
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.algorithms-explorer.server.plist 2>/dev/null || true
+rm -f ~/Library/LaunchAgents/com.algorithms-explorer.server.plist
+```
+
+**Linux**
+
+```bash
+systemctl --user disable --now algorithms-explorer.service 2>/dev/null || true
+rm -f ~/.config/systemd/user/algorithms-explorer.service
+systemctl --user daemon-reload
 ```
 
 ---

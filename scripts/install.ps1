@@ -5,7 +5,8 @@ param(
     [string]$Repo = "thaonv7995/learning-algorithms",
     [string]$Version = "latest",
     [switch]$NoStart,
-    [switch]$Open
+    [switch]$Open,
+    [switch]$Upgrade
 )
 
 $ErrorActionPreference = "Stop"
@@ -40,6 +41,13 @@ Write-Host "-> Installing"
 $installRoot = Join-Path $env:LOCALAPPDATA "algorithms-explorer"
 $cli = Join-Path $installRoot "algo-explorer.exe"
 $binDir = Join-Path $env:LOCALAPPDATA "Programs\algorithms-explorer\bin"
+$cliInstalled = Join-Path $binDir "algo-explorer.exe"
+
+if ($Upgrade -and (Test-Path $cliInstalled)) {
+    Write-Host "-> Stopping existing instance (-Upgrade)"
+    & $cliInstalled stop 2>$null
+}
+
 New-Item -ItemType Directory -Path $binDir -Force | Out-Null
 Copy-Item -Force $cli (Join-Path $binDir "algo-explorer.exe")
 
@@ -51,7 +59,7 @@ if (-not $NoStart) {
 Write-Host ""
 Write-Host "Algorithms Explorer installed."
 Write-Host "  URL: http://${BindHost}:$Port/"
-Write-Host "  CLI: algo-explorer status | open | stop | logs"
+Write-Host "  CLI: algo-explorer status | open | stop | restart | logs | uninstall"
 
 if ($Open) {
     Start-Process "http://${BindHost}:$Port/"

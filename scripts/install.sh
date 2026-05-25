@@ -78,6 +78,14 @@ chmod +x "$BIN"
 export ALGO_EXPLORER_PORT="$PORT"
 export ALGO_EXPLORER_HOST="$HOST"
 
+BIN_DIR="${HOME}/.local/bin"
+CLI="${BIN_DIR}/algo-explorer"
+
+if [[ "$UPGRADE" -eq 1 ]] && command -v "$CLI" >/dev/null 2>&1; then
+  echo "→ Stopping existing instance (--upgrade)"
+  "$CLI" stop 2>/dev/null || true
+fi
+
 echo "→ Installing to ~/.local/share/algorithms-explorer"
 "$BIN" install --bundle "$TMP" --port "$PORT" --host "$HOST"
 
@@ -95,7 +103,7 @@ fi
 echo ""
 echo "Algorithms Explorer installed."
 echo "  URL:  http://${HOST}:${PORT}/"
-echo "  CLI:  algo-explorer status | open | stop | logs"
+echo "  CLI:  algo-explorer status | open | stop | restart | logs | uninstall"
 if [[ ":$PATH:" != *":${BIN_DIR}:"* ]]; then
   echo "  Add to PATH:  export PATH=\"${BIN_DIR}:\$PATH\""
 fi
