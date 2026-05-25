@@ -318,29 +318,83 @@
     R[149] = s => null;
     R[150] = s => (done(s) ? val(s.stack[0], "result", s) : null);
 
-    function outFromState(s) {
-        if (!done(s)) return null;
+    function extractOutput(s) {
+        if (!s || !s.done) return null;
         if (s.outputText != null) return { kind: "text", text: String(s.outputText), flash: true };
+        if (s.outputResult != null) return val(s.outputResult, "kết quả", s);
         if (s.result != null) {
             if (typeof s.result === "boolean") return bool(s.result, s);
-            if (Array.isArray(s.result)) return arr(s.result, s, "kết quả");
+            if (Array.isArray(s.result)) {
+                if (s.result.length && typeof s.result[0] === "object") {
+                    return { kind: "text", text: JSON.stringify(s.result), flash: true };
+                }
+                return arr(s.result, s, "kết quả");
+            }
+            if (typeof s.result === "string") return txt(s.result, s);
             return val(s.result, "kết quả", s);
         }
-        if (s.best != null) return val(s.best, "kết quả", s);
+        const scalars = [
+            ["best", "kết quả"], ["ans", "kết quả"], ["answer", "kết quả"],
+            ["maxProfit", "lợi nhuận"], ["profit", "lợi nhuận"], ["water", "nước"],
+            ["count", "count"], ["total", "tổng"], ["sum", "tổng"], ["xor", "xor"],
+            ["ones", "ones"], ["maxLen", "độ dài"], ["found", "found"], ["second", "kết quả"],
+            ["islands", "islands"], ["maxArea", "diện tích"], ["k", "k"], ["w", "k"],
+            ["len", "độ dài"], ["placed", "placed"], ["startHp", "min HP"], ["minHp", "min HP"]
+        ];
+        for (const [key, label] of scalars) {
+            const v = s[key];
+            if (v != null && typeof v !== "object") return val(v, label, s);
+        }
+        if (typeof s.valid === "boolean") return bool(s.valid, s);
+        if (typeof s.ok === "boolean") return bool(s.ok, s);
+        if (s.dp && Array.isArray(s.dp[0]) && s.dp[0][0] != null && s.dp[0][0] !== Infinity) {
+            return val(s.dp[0][0], "min HP", s);
+        }
+        if (s.dp && s.target != null && s.dp[s.target] != null && s.dp[s.target] !== Infinity) {
+            return val(s.dp[s.target], "dp[target]", s);
+        }
+        if (Array.isArray(s.out) && s.out.length) {
+            return { kind: "text", text: JSON.stringify(s.out), flash: true };
+        }
+        if (Array.isArray(s.cands) && s.cands.length) {
+            return itemList(s.cands.map(String), s);
+        }
+        if (Array.isArray(s.res) && s.res.length) {
+            const first = s.res[0];
+            if (Array.isArray(first)) {
+                return itemList(s.res.map(a => `[${a.join(", ")}]`), s);
+            }
+            if (typeof first === "string") return itemList(s.res.map(String), s);
+            if (typeof first === "number") return arr(s.res, s, "kết quả");
+            if (typeof first === "object") {
+                return { kind: "text", text: JSON.stringify(s.res), flash: true };
+            }
+        }
+        if (Array.isArray(s.visit) && s.visit.length) return flow(s.visit.join(" → "), s);
+        if (Array.isArray(s.work) && s.work.length) return flow(s.work.join(" → "), s);
+        if (Array.isArray(s.mergedList) && s.mergedList.length) {
+            const vals = s.mergedList.map(x => (x && x.val != null ? x.val : x));
+            return flow(vals.join(" → "), s);
+        }
+        if (Array.isArray(s.digits) && s.digits.length) return arr(s.digits, s, "digits");
+        if (typeof s.hex === "string" && s.hex) return txt(s.hex, s);
         return null;
     }
 
-    for (let id = 201; id <= 800; id++) {
-        if (R[id] == null) R[id] = outFromState;
+    function outFromState(s) { return extractOutput(s); }
+    window.LC_EXTRACT_OUTPUT = extractOutput;
+
+    for (let id = 151; id <= 800; id++) {
+        if (!(id in R)) R[id] = outFromState;
     }
 
-    /* Generic fallback — catalog visualizer sets outputText */
+    /* Generic fallback — shared extract when resolver returns null */
     window.LC_OUTPUT_FALLBACK = function (s) {
         if (!s) return null;
         if (s.vizError) return { kind: "text", text: `✗ ${s.vizError}`, flash: true };
         if (!s.done) return null;
-        if (s.outputText) return { kind: "text", text: String(s.outputText), flash: true };
-        if (s.outputResult != null) return { kind: "value", value: s.outputResult, flash: true };
+        const ex = extractOutput(s);
+        if (ex) return ex;
         if (s._catalogFallback) {
             return {
                 kind: "text",

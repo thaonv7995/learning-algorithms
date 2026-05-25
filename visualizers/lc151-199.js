@@ -489,7 +489,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (s.r < 0) { s.done = true; log(`[KẾT QUẢ] min HP = ${s.dp[0][0]}`, "success"); return; }
+            if (s.r < 0) { s.done = true; s.outputText = String(s.dp[0][0]); log(`[KẾT QUẢ] min HP = ${s.dp[0][0]}`, "success"); return; }
             s.dp[s.r][s.c] = Math.max(1, Math.min(s.dp[s.r + 1][s.c], s.dp[s.r][s.c + 1]) - s.grid[s.r][s.c]);
             log(`dp[${s.r}][${s.c}]=${s.dp[s.r][s.c]} (cell ${s.grid[s.r][s.c]})`, "info");
             s.c--;
@@ -518,7 +518,7 @@ window.LeetCodeVisualizers = window.LeetCodeVisualizers || {};
         },
         step(s, log) {
             if (s.done) return;
-            if (s.i >= s.person.length) { s.done = true; log(`[KẾT QUẢ] ${JSON.stringify(s.out)}`, "success"); return; }
+            if (s.i >= s.person.length) { s.done = true; s.outputText = JSON.stringify(s.out); log(`[KẾT QUẢ] ${JSON.stringify(s.out)}`, "success"); return; }
             const p = s.person[s.i];
             const addr = s.address.find(a => a.pid === p.id);
             const row = { FirstName: p.name.split(" ")[0] || p.name, LastName: p.name.split(" ")[1] || "", City: addr ? addr.city : null, State: addr ? addr.city : null };

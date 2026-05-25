@@ -587,7 +587,12 @@ window.VizCore = {
 
         const resolvers = window.LC_OUTPUT_RESOLVERS;
         if (resolvers && state.id != null && Object.prototype.hasOwnProperty.call(resolvers, state.id)) {
-            return resolvers[state.id](state);
+            const spec = resolvers[state.id](state);
+            if (spec != null) return spec;
+        }
+        if (window.LC_EXTRACT_OUTPUT) {
+            const extracted = window.LC_EXTRACT_OUTPUT(state);
+            if (extracted) return extracted;
         }
         if (window.LC_OUTPUT_FALLBACK) {
             const fb = window.LC_OUTPUT_FALLBACK(state);
@@ -786,6 +791,15 @@ window.VizCore = {
                         flash: true
                     };
                 }
+            }
+            if (state.dp && Array.isArray(state.dp[0]) && state.dp[0][0] != null && state.dp[0][0] !== Infinity) {
+                return { kind: "value", value: state.dp[0][0], suffix: "min HP", flash: true };
+            }
+            if (Array.isArray(state.out) && state.out.length) {
+                return { kind: "text", text: JSON.stringify(state.out), flash: true };
+            }
+            if (state.outputText != null) {
+                return { kind: "text", text: String(state.outputText), flash: true };
             }
         }
 
